@@ -8,40 +8,55 @@ class Dashboard extends BaseManager
 {
     public function statistics()
     {
-        $totalCommunities = Db::name('community')->where('delete_time', null)->count();
-        $totalRooms = Db::name('room')->where('delete_time', null)->count();
-        $totalOwners = Db::name('owner')->where('delete_time', null)->count();
-        $monthIncome = Db::name('bill_payment')
-            ->whereBetween('pay_time', [date('Y-m-01 00:00:00'), date('Y-m-t 23:59:59')])
+        $cid = $this->getCommunityId();
+
+        $totalRooms = Db::name('room')->where('community_id', $cid)->where('delete_time', null)->count();
+        $totalOwners = Db::name('owner')->where('community_id', $cid)->where('delete_time', null)->count();
+        $totalBills = Db::name('bill')->where('community_id', $cid)->where('delete_time', null)->count();
+        $pendingRepairs = Db::name('repair_order')->where('community_id', $cid)
+            ->whereIn('status', [1, 2])->where('delete_time', null)->count();
+        $pendingComplaints = Db::name('complaint')->where('community_id', $cid)
+            ->whereIn('status', [1, 2])->where('delete_time', null)->count();
+
+        $monthStart = date('Y-m-01 00:00:00');
+        $monthEnd   = date('Y-m-t 23:59:59');
+        $monthIncome = Db::name('bill_payment')->where('community_id', $cid)
+            ->whereBetween('pay_time', [$monthStart, $monthEnd])
             ->where('delete_time', null)->sum('amount');
-        $unpaidAmount = Db::name('bill')->whereIn('status', [1, 2])->where('delete_time', null)
+
+        $unpaidAmount = Db::name('bill')->where('community_id', $cid)
+            ->where('status', 1)->where('delete_time', null)
             ->sum('total_amount - paid_amount');
+
         $chargeRate = 0;
-        $totalBillAmount = Db::name('bill')->where('delete_time', null)->sum('total_amount');
+        $totalBillAmount = Db::name('bill')->where('community_id', $cid)->where('delete_time', null)->sum('total_amount');
         if ($totalBillAmount > 0) {
-            $paidAmount = Db::name('bill')->where('delete_time', null)->sum('paid_amount');
+            $paidAmount = Db::name('bill')->where('community_id', $cid)->where('delete_time', null)->sum('paid_amount');
             $chargeRate = round($paidAmount / $totalBillAmount * 100, 2);
         }
 
         return $this->success([
-            'total_communities' => $totalCommunities,
-            'total_rooms' => $totalRooms,
-            'total_owners' => $totalOwners,
-            'month_income' => $monthIncome,
-            'unpaid_amount' => $unpaidAmount,
-            'charge_rate' => $chargeRate,
+            'total_rooms'       => $totalRooms,
+            'total_owners'      => $totalOwners,
+            'total_bills'       => $totalBills,
+            'pending_repairs'   => $pendingRepairs,
+            'pending_complaints'=> $pendingComplaints,
+            'month_income'      => $monthIncome,
+            'unpaid_amount'     => $unpaidAmount,
+            'charge_rate'       => $chargeRate,
         ]);
     }
 
     public function incomeTrend()
     {
+        $cid  = $this->getCommunityId();
         $year = $this->request->param('year', date('Y'));
         $data = [];
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = $i . '月';
             $monthStr = sprintf('%s-%02d', $year, $i);
-            $data[] = Db::name('bill_payment')
+            $data[] = Db::name('bill_payment')->where('community_id', $cid)
                 ->where('pay_time', 'like', $monthStr . '%')
                 ->where('delete_time', null)->sum('amount');
         }
@@ -50,68 +65,142 @@ class Dashboard extends BaseManager
 
     public function repairStats()
     {
-        $total = Db::name('repair_order')->where('delete_time', null)->count();
-        $pending = Db::name('repair_order')->whereIn('status', [1, 2])->where('delete_time', null)->count();
-        $processing = Db::name('repair_order')->where('status', 3)->where('delete_time', null)->count();
-        $finished = Db::name('repair_order')->whereIn('status', [4, 5])->where('delete_time', null)->count();
+        $cid = $this->getCommunityId();
+        $total = Db::name('repair_order')->where('community_id', $cid)->where('delete_time', null)->count();
+        $pending = Db::name('repair_order')->where('community_id', $cid)->where('status', 1)->where('delete_time', null)->count();
+        $processing = Db::name('repair_order')->where('community_id', $cid)->whereIn('status', [2, 3])->where('delete_time', null)->count();
+        $finished = Db::name('repair_order')->where('community_id', $cid)->whereIn('status', [4, 5])->where('delete_time', null)->count();
         return $this->success(compact('total', 'pending', 'processing', 'finished'));
     }
 
     public function ownerStats()
     {
-        $total = Db::name('owner')->where('delete_time', null)->count();
-        $newThisMonth = Db::name('owner')
-            ->whereBetween('create_time', [date('Y-m-01 00:00:00'), date('Y-m-t 23:59:59')])
-            ->count();
-        return $this->success(compact('total', 'newThisMonth'));
-    }
-
-    public function communityRank()
-    {
-        $list = Db::name('community')->field('id,name')->where('delete_time', null)
-            ->select()->toArray();
-        foreach ($list as &$item) {
-            $item['room_count'] = Db::name('room')->where('community_id', $item['id'])->where('delete_time', null)->count();
-            $item['owner_count'] = Db::name('owner')->where('community_id', $item['id'])->where('delete_time', null)->count();
-            $item['income'] = Db::name('bill_payment')->where('community_id', $item['id'])
-                ->whereBetween('pay_time', [date('Y-m-01 00:00:00'), date('Y-m-t 23:59:59')])
-                ->sum('amount');
-        }
-        array_multisort(array_column($list, 'income'), SORT_DESC, $list);
-        return $this->success($list);
+        $cid = $this->getCommunityId();
+        $total = Db::name('owner')->where('community_id', $cid)->where('delete_time', null)->count();
+        $newThisMonth = Db::name('owner')->where('community_id', $cid)
+            ->whereBetween('create_time', [date('Y-m-01 00:00:00'), date('Y-m-t 23:59:59')])->count();
+        $wxBound = Db::name('owner')->where('community_id', $cid)->where('openid', '<>', '')->where('delete_time', null)->count();
+        return $this->success(compact('total', 'newThisMonth', 'wxBound'));
     }
 
     public function pendingTodo()
     {
-        $pendingRepairs = Db::name('repair_order')->where('status', 1)->where('delete_time', null)->count();
-        $pendingComplaints = Db::name('complaint')->whereIn('status', [1, 2])->where('delete_time', null)->count();
-        $unpaidBills = Db::name('bill')->where('status', 1)->where('delete_time', null)->count();
-        $expiringCards = Db::name('access_card')
-            ->whereBetween('expire_date', [date('Y-m-d'), date('Y-m-d', strtotime('+7 days'))])
-            ->count();
-        $maintainDue = Db::name('equipment')
-            ->where('next_maintain_date', '<=', date('Y-m-d', strtotime('+7 days')))
-            ->where('status', 1)->count();
-
+        $cid = $this->getCommunityId();
+        $pendingRepairs = Db::name('repair_order')->where('community_id', $cid)->where('status', 1)->where('delete_time', null)->count();
+        $pendingComplaints = Db::name('complaint')->where('community_id', $cid)->whereIn('status', [1, 2])->where('delete_time', null)->count();
+        $unpaidBills = Db::name('bill')->where('community_id', $cid)->where('status', 1)->where('delete_time', null)->count();
         return $this->success([
-            ['title' => '待派修工单', 'count' => $pendingRepairs, 'icon' => 'engine'],
-            ['title' => '待处理投诉', 'count' => $pendingComplaints, 'icon' => 'speaker'],
-            ['title' => '未缴账单', 'count' => $unpaidBills, 'icon' => 'rmb'],
-            ['title' => '门禁卡即将过期', 'count' => $expiringCards, 'icon' => 'card'],
-            ['title' => '即将维保设备', 'count' => $maintainDue, 'icon' => 'engine'],
+            ['title' => '待派修工单', 'count' => $pendingRepairs, 'icon' => '🔧'],
+            ['title' => '待处理投诉', 'count' => $pendingComplaints, 'icon' => '📢'],
+            ['title' => '未缴账单', 'count' => $unpaidBills, 'icon' => '💰'],
         ]);
     }
 
     public function chargeRate()
     {
-        $communities = Db::name('community')->where('delete_time', null)->field('id,name')->select()->toArray();
-        $data = [];
-        foreach ($communities as $c) {
-            $total = Db::name('bill')->where('community_id', $c['id'])->where('delete_time', null)->sum('total_amount');
-            $paid = Db::name('bill')->where('community_id', $c['id'])->where('delete_time', null)->sum('paid_amount');
-            $rate = $total > 0 ? round($paid / $total * 100, 2) : 0;
-            $data[] = ['community' => $c['name'], 'rate' => $rate];
-        }
-        return $this->success($data);
+        $cid = $this->getCommunityId();
+        $total = Db::name('bill')->where('community_id', $cid)->where('delete_time', null)->sum('total_amount');
+        $paid = Db::name('bill')->where('community_id', $cid)->where('delete_time', null)->sum('paid_amount');
+        $rate = $total > 0 ? round($paid / $total * 100, 2) : 0;
+        return $this->success(['rate' => $rate, 'total' => $total, 'paid' => $paid]);
+    }
+
+    // ===== 列表类 API =====
+
+    /** 业主列表 */
+    public function ownerList()
+    {
+        [$page, $limit] = $this->getPageParams();
+        $cid = $this->getCommunityId();
+        $keyword = $this->request->param('keyword', '');
+
+        $where = [['o.delete_time', '=', null], ['o.community_id', '=', $cid]];
+        if ($keyword) $where[] = ['o.realname|o.phone', 'like', "%{$keyword}%"];
+
+        $total = Db::name('owner')->alias('o')->where($where)->count();
+        $list = Db::name('owner')->alias('o')
+            ->leftJoin('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
+            ->leftJoin('room r', 'r.id = ocr.room_id')
+            ->field('o.id, o.realname, o.phone, o.gender, o.type, o.status, o.create_time, GROUP_CONCAT(r.room_number) as rooms')
+            ->where($where)->group('o.id')->page($page, $limit)->order('o.id', 'desc')->select();
+
+        return $this->table($list, $total);
+    }
+
+    /** 账单列表 */
+    public function billList()
+    {
+        [$page, $limit] = $this->getPageParams();
+        $cid = $this->getCommunityId();
+        $status = $this->request->param('status', 0);
+
+        $where = [['b.delete_time', '=', null], ['b.community_id', '=', $cid]];
+        if ($status) $where[] = ['b.status', '=', intval($status)];
+
+        $total = Db::name('bill')->alias('b')->where($where)->count();
+        $list = Db::name('bill')->alias('b')
+            ->leftJoin('owner o', 'o.id = b.owner_id')
+            ->leftJoin('room r', 'r.id = b.room_id')
+            ->field('b.*, o.realname as owner_name, r.room_number')
+            ->where($where)->page($page, $limit)->order('b.id', 'desc')->select();
+
+        return $this->table($list, $total);
+    }
+
+    /** 报修列表 */
+    public function repairList()
+    {
+        [$page, $limit] = $this->getPageParams();
+        $cid = $this->getCommunityId();
+        $status = $this->request->param('status', 0);
+
+        $where = [['ro.delete_time', '=', null], ['ro.community_id', '=', $cid]];
+        if ($status) $where[] = ['ro.status', '=', intval($status)];
+
+        $total = Db::name('repair_order')->alias('ro')->where($where)->count();
+        $list = Db::name('repair_order')->alias('ro')
+            ->leftJoin('owner o', 'o.id = ro.owner_id')
+            ->leftJoin('room r', 'r.id = ro.room_id')
+            ->field('ro.*, o.realname as owner_name, r.room_number')
+            ->where($where)->page($page, $limit)->order('ro.id', 'desc')->select();
+
+        return $this->table($list, $total);
+    }
+
+    /** 投诉列表 */
+    public function complaintList()
+    {
+        [$page, $limit] = $this->getPageParams();
+        $cid = $this->getCommunityId();
+        $status = $this->request->param('status', 0);
+
+        $where = [['c.delete_time', '=', null], ['c.community_id', '=', $cid]];
+        if ($status) $where[] = ['c.status', '=', intval($status)];
+
+        $total = Db::name('complaint')->alias('c')->where($where)->count();
+        $list = Db::name('complaint')->alias('c')
+            ->leftJoin('owner o', 'o.id = c.owner_id')
+            ->field('c.*, o.realname as owner_name')
+            ->where($where)->page($page, $limit)->order('c.id', 'desc')->select();
+
+        return $this->table($list, $total);
+    }
+
+    /** 小区信息 */
+    public function communityInfo()
+    {
+        $cid = $this->getCommunityId();
+        $community = Db::name('community')->where('id', $cid)->find();
+        if (!$community) return $this->error('小区不存在');
+        return $this->success($community);
+    }
+
+    // ---- helpers ----
+
+    private function getPageParams()
+    {
+        $page  = intval($this->request->param('page', 1));
+        $limit = intval($this->request->param('limit', 15));
+        return [$page, $limit];
     }
 }

@@ -18,6 +18,12 @@ class Family extends BaseAdmin
             ->leftJoin('room r', 'r.id = f.room_id')
             ->field('f.*, o.realname as owner_name, r.room_number')
             ->where($where)->page($page, $limit)->order('f.id', 'desc')->select();
+        foreach ($list as &$item) {
+            $item['wx_bound'] = !empty($item['openid']) ? 1 : 0;
+            if (!empty($item['openid'])) {
+                $item['openid_masked'] = substr($item['openid'], 0, 6) . '****' . substr($item['openid'], -4);
+            }
+        }
         return $this->table($list, $total);
     }
 
@@ -41,5 +47,22 @@ class Family extends BaseAdmin
         $id = $this->request->post('id', 0);
         Db::name('owner_family')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
+    }
+
+    /**
+     * 管理员解绑家庭成员微信
+     */
+    public function unbindWechat()
+    {
+        $id = intval($this->request->post('id', 0));
+        if ($id <= 0) return $this->error('参数错误');
+
+        $family = Db::name('owner_family')->where('id', $id)->find();
+        if (!$family) return $this->error('家庭成员不存在');
+
+        Db::name('owner_family')->where('id', $id)->update([
+            'openid' => '',
+        ]);
+        return $this->success([], '微信已解绑');
     }
 }

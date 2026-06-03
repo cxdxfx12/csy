@@ -9,7 +9,7 @@ class BaseApi extends BaseController
 {
     protected $ownerInfo = [];
     protected $ownerId = 0;
-    protected $noAuth = ['login', 'register', 'sendSms', 'resetPassword'];
+    protected $noAuth = ['login', 'register', 'sendSms', 'resetPassword', 'wechatNotify', 'alipayNotify'];
 
     protected function initialize()
     {

@@ -5,10 +5,11 @@ use app\admin\BaseAdmin;
 use Firebase\JWT\JWT;
 use think\facade\Db;
 use think\facade\Cache;
+use service\WechatService;
 
 class Login extends BaseAdmin
 {
-    protected $noAuth = ['login', 'captcha', 'logout'];
+    protected $noAuth = ['login', 'captcha', 'logout', 'wechatOAuth', 'wechatCallback', 'wechatLogin', 'wechatBind'];
 
     public function login()
     {
@@ -44,51 +45,7 @@ class Login extends BaseAdmin
             return $this->error('用户名或密码错误');
         }
 
-        // 生成JWT Token
-        $jwtConfig = config('jwt');
-        $now = time();
-        $payload = [
-            'iss' => $jwtConfig['iss'],
-            'aud' => $jwtConfig['aud'],
-            'iat' => $now,
-            'nbf' => $now,
-            'exp' => $now + $jwtConfig['exp'],
-            'sub' => $admin['id'],
-            'type' => 'admin',
-        ];
-        $token = JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
-
-        // 更新登录信息
-        Db::name('admin_user')->where('id', $admin['id'])->update([
-            'last_login_time' => date('Y-m-d H:i:s'),
-            'last_login_ip'   => $this->request->ip(),
-            'login_count'     => $admin['login_count'] + 1,
-        ]);
-
-        // 获取角色和权限
-        $role = Db::name('role')->where('id', $admin['role_id'])->find();
-        $menus = [];
-        if ($admin['role_id'] == 1) {
-            $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
-        } else {
-            $menuIds = Db::name('role_menu')->where('role_id', $admin['role_id'])->column('menu_id');
-            if (!empty($menuIds)) {
-                $menus = Db::name('menu')->whereIn('id', $menuIds)->where('status', 1)->order('sort', 'asc')->select();
-            }
-        }
-
-        return $this->success([
-            'token'    => $token,
-            'userInfo' => [
-                'id'       => $admin['id'],
-                'username' => $admin['username'],
-                'nickname' => $admin['nickname'],
-                'avatar'   => $admin['avatar'],
-                'role'     => $role['name'] ?? '',
-                'role_id'  => $admin['role_id'],
-            ],
-            'menus' => tree_list($menus),
-        ], '登录成功');
+        return $this->loginSuccess($admin, '登录成功');
     }
 
     public function logout()
@@ -185,5 +142,207 @@ class Login extends BaseAdmin
             'menus'       => tree_list($menus),
             'permissions' => $permissions,
         ]);
+    }
+
+    // ========== 微信 OAuth 跳转 ==========
+
+    public function wechatOAuth()
+    {
+        $communityId = intval($this->request->param('community_id', 0));
+        if ($communityId <= 0) {
+            $communityId = intval($this->request->param('cid', 0));
+        }
+        if ($communityId <= 0) {
+            return $this->error('请指定小区ID（?community_id=X）');
+        }
+
+        $wxConfig = WechatService::getCommunityWechatConfig($communityId);
+        if (!$wxConfig || empty($wxConfig['app_id'])) {
+            return $this->error('该小区未配置微信公众号');
+        }
+
+        $domain = $this->request->domain();
+        $callbackUrl = $domain . '/index.php/admin/wechatCallback';
+        $state = base64_encode(json_encode([
+            'community_id' => $communityId,
+            'redirect'     => '/admin/login.html',
+        ]));
+
+        $oauthUrl = WechatService::buildOAuthUrl($wxConfig['app_id'], $callbackUrl, 'snsapi_base', $state);
+        return redirect($oauthUrl);
+    }
+
+    // ========== 微信 OAuth 回调 ==========
+
+    public function wechatCallback()
+    {
+        $code = $this->request->param('code', '');
+        $stateRaw = $this->request->param('state', '');
+
+        if (empty($code)) return $this->error('微信授权失败：缺少code');
+
+        $state = [];
+        if ($stateRaw) {
+            $decoded = json_decode(base64_decode($stateRaw), true);
+            if ($decoded) $state = $decoded;
+        }
+        $communityId = intval($state['community_id'] ?? 0);
+        $redirectTo = $state['redirect'] ?? '/admin/login.html';
+
+        if ($communityId <= 0) return $this->error('参数错误：社区ID缺失');
+
+        $wxConfig = WechatService::getCommunityWechatConfig($communityId);
+        if (!$wxConfig) return $this->error('公众号配置不存在');
+
+        $result = WechatService::oauth2AccessToken($wxConfig['app_id'], $wxConfig['app_secret'], $code);
+        if (!empty($result['error'])) {
+            return $this->error('微信授权失败: ' . $result['msg']);
+        }
+        $openid = $result['openid'] ?? '';
+        if (empty($openid)) return $this->error('未能获取到 openid');
+
+        // 查找是否已有绑定该 openid 的管理员账号
+        $admin = Db::name('admin_user')
+            ->where('openid', $openid)
+            ->where('status', 1)
+            ->find();
+
+        $domain = $this->request->domain();
+
+        if ($admin) {
+            // 已有绑定账号，签发 token 并重定向
+            $token = $this->makeToken($admin);
+            $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
+            $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
+            return redirect($finalUrl);
+        } else {
+            // 没有绑定账号 → 跳转到绑定页，带上 openid
+            $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
+            $finalUrl = $domain . $redirectTo . $sep . 'wx_openid=' . urlencode($openid) . '&wx_cid=' . $communityId . '&action=wx_bind';
+            return redirect($finalUrl);
+        }
+    }
+
+    // ========== 微信登录 POST 接口（通用） ==========
+
+    public function wechatLogin()
+    {
+        $code = $this->request->post('code', '');
+        $communityId = intval($this->request->post('community_id', 0));
+
+        if (empty($code)) return $this->error('缺少微信授权码');
+        if ($communityId <= 0) return $this->error('请选择小区');
+
+        $wxConfig = WechatService::getCommunityWechatConfig($communityId);
+        if (!$wxConfig || empty($wxConfig['app_id'])) {
+            return $this->error('该小区未配置微信公众号');
+        }
+
+        $result = WechatService::oauth2AccessToken($wxConfig['app_id'], $wxConfig['app_secret'], $code);
+        if (!empty($result['error'])) {
+            return $this->error('微信授权失败: ' . $result['msg']);
+        }
+        $openid = $result['openid'] ?? '';
+        if (empty($openid)) return $this->error('未能获取到 openid');
+
+        $admin = Db::name('admin_user')->where('openid', $openid)->where('status', 1)->find();
+        if ($admin) {
+            return $this->loginSuccess($admin, '微信登录成功');
+        }
+
+        // 未绑定 → 返回 openid 让前端走绑定流程
+        return $this->success([
+            'openid'       => $openid,
+            'community_id' => $communityId,
+            'need_bind'    => true,
+        ], '请绑定管理员账号');
+    }
+
+    // ========== 微信绑定已有管理员账号 ==========
+
+    public function wechatBind()
+    {
+        $openid = $this->request->post('openid', '');
+        $username = $this->request->post('username', '');
+        $password = $this->request->post('password', '');
+
+        if (empty($openid)) return $this->error('缺少 openid');
+        if (empty($username) || empty($password)) return $this->error('请输入用户名和密码');
+
+        // 校验用户名密码
+        $admin = Db::name('admin_user')->where('username', $username)->find();
+        if (!$admin || $admin['password'] !== encrypt_password($password)) {
+            return $this->error('用户名或密码错误');
+        }
+        if ($admin['status'] != 1) {
+            return $this->error('账户已被禁用');
+        }
+
+        // 检查这个 openid 是否已被其他账号绑定
+        $existByOpenid = Db::name('admin_user')->where('openid', $openid)->where('id', '<>', $admin['id'])->find();
+        if ($existByOpenid) {
+            return $this->error('该微信已被其他账号绑定');
+        }
+
+        // 绑定 openid
+        Db::name('admin_user')->where('id', $admin['id'])->update([
+            'openid'      => $openid,
+            'update_time' => date('Y-m-d H:i:s'),
+        ]);
+
+        return $this->loginSuccess($admin, '微信绑定成功');
+    }
+
+    // ========== 私有辅助 ==========
+
+    private function makeToken(array $admin): string
+    {
+        $jwtConfig = config('jwt');
+        $now = time();
+        $payload = [
+            'iss'  => $jwtConfig['iss'],
+            'aud'  => $jwtConfig['aud'],
+            'iat'  => $now,
+            'nbf'  => $now,
+            'exp'  => $now + $jwtConfig['exp'],
+            'sub'  => $admin['id'],
+            'type' => 'admin',
+        ];
+        return JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
+    }
+
+    private function loginSuccess(array $admin, string $msg = '登录成功')
+    {
+        // 更新登录信息
+        Db::name('admin_user')->where('id', $admin['id'])->update([
+            'last_login_time' => date('Y-m-d H:i:s'),
+            'last_login_ip'   => $this->request->ip(),
+            'login_count'     => $admin['login_count'] + 1,
+        ]);
+
+        // 获取角色和权限
+        $role = Db::name('role')->where('id', $admin['role_id'])->find();
+        $menus = [];
+        if ($admin['role_id'] == 1) {
+            $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
+        } else {
+            $menuIds = Db::name('role_menu')->where('role_id', $admin['role_id'])->column('menu_id');
+            if (!empty($menuIds)) {
+                $menus = Db::name('menu')->whereIn('id', $menuIds)->where('status', 1)->order('sort', 'asc')->select();
+            }
+        }
+
+        return $this->success([
+            'token'    => $this->makeToken($admin),
+            'userInfo' => [
+                'id'       => $admin['id'],
+                'username' => $admin['username'],
+                'nickname' => $admin['nickname'],
+                'avatar'   => $admin['avatar'],
+                'role'     => $role['name'] ?? '',
+                'role_id'  => $admin['role_id'],
+            ],
+            'menus' => tree_list($menus),
+        ], $msg);
     }
 }

@@ -52,6 +52,7 @@ const iconMap: Record<string, string> = {
   staff: 'UserFilled', attendance: 'Calendar', schedule: 'Clock', salary: 'Money',
   supplier: 'Shop', purchase: 'ShoppingCart', contract: 'Document', evaluation: 'StarFilled',
   vote: 'TrendCharts', activity: 'Sunny', owner_notice: 'Bell', owner_complaint: 'Warning',
+  sms: 'Message',
 }
 
 function menuIcon(menu: MenuItem): string {

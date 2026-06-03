@@ -20,10 +20,13 @@ class Owner extends BaseAdmin
         if ($type)        $cntQuery->where('type', $type);
         $total = $cntQuery->count();
 
-        // list 查 + JOIN
+        // list 查 + JOIN（排除密码字段）
+        $ownerFields = ['o.id','o.community_id','o.realname','o.gender','o.phone','o.openid','o.wechat_unionid',
+            'o.id_card','o.birthday','o.email','o.avatar','o.type','o.status','o.remark',
+            'o.register_time','o.last_login_time','o.create_time','o.update_time'];
         $listQuery = Db::name('owner')->alias('o')
             ->leftJoin('community c', 'c.id = o.community_id')
-            ->field('o.*, c.name as community_name')
+            ->field(implode(',', $ownerFields) . ', c.name as community_name')
             ->whereNull('`o`.`delete_time`');
         if ($keyword)     $listQuery->where('o.realname|o.phone|o.id_card', 'like', "%{$keyword}%");
         if ($communityId) $listQuery->where('`o`.`community_id`', '=', intval($communityId));
@@ -56,6 +59,11 @@ class Owner extends BaseAdmin
             $item['rooms']      = $rooms;
             $item['room_count'] = count($rooms);
             $item['password']   = '';
+            $item['wx_bound']   = !empty($item['openid']) ? 1 : 0;
+            // 脱敏 openid
+            if (!empty($item['openid'])) {
+                $item['openid_masked'] = substr($item['openid'], 0, 6) . '****' . substr($item['openid'], -4);
+            }
         }
         return $this->table($list, $total);
     }
@@ -232,5 +240,23 @@ class Owner extends BaseAdmin
             ->field('r.*, ocr.relation, ocr.is_primary')
             ->select();
         return $this->success($rooms);
+    }
+
+    /**
+     * 管理员解绑业主微信
+     */
+    public function unbindWechat()
+    {
+        $id = intval($this->request->post('id', 0));
+        if ($id <= 0) return $this->error('参数错误');
+
+        $owner = Db::name('owner')->where('id', $id)->find();
+        if (!$owner) return $this->error('业主不存在');
+
+        Db::name('owner')->where('id', $id)->update([
+            'openid'         => '',
+            'wechat_unionid' => '',
+        ]);
+        return $this->success([], '微信已解绑');
     }
 }

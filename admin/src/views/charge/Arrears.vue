@@ -48,10 +48,19 @@
         <el-table-column prop="last_dunning_time" label="最近催单" width="160">
           <template #default="{ row }">{{ row.last_dunning_time || '未催单' }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
             <el-button size="small" type="warning" @click="doDunning(row)">📢 催单</el-button>
-            <el-button size="small" type="info" @click="showHistory(row)">记录</el-button>
+            <el-button size="small" @click="doSmsDunning(row)">📱 短信</el-button>
+            <el-button size="small" type="success" @click="doWechatDunning(row)">💬 公众号</el-button>
+            <el-dropdown trigger="click" style="margin-left:6px;">
+              <el-button size="small" type="info">更多<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="showHistory(row)">📋 催单记录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -121,6 +130,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ArrowDown } from '@element-plus/icons-vue'
 import { apiGet, apiPost } from '@/utils/request'
 
 const list = ref<any[]>([])
@@ -158,7 +168,8 @@ async function loadData() {
   finally { loading.value = false }
 }
 
-async function doDunning(row: any) {
+// ========== 手动催单 ==========
+function doDunning(row: any) {
   currentDunningRoomId.value = row.room_id
   dunningRemark.value = ''
   dunningDetail.value = null
@@ -182,6 +193,45 @@ async function confirmDunning() {
   }
 }
 
+// ========== 短信催缴 ==========
+async function doSmsDunning(row: any) {
+  if (!row.owner_phone) {
+    ElMessage.warning('该房间业主未登记手机号，无法发送短信')
+    return
+  }
+  try {
+    await ElMessageBox.confirm(
+      `确认向「${row.owner_name || '业主'}」(${row.owner_phone}) 发送短信催缴？\n\n欠费金额：¥${row.arrears_amount}   |   账单数：${row.bill_count}`,
+      '短信催缴',
+      { confirmButtonText: '发送短信', type: 'info' }
+    )
+  } catch { return }
+
+  try {
+    const r = await apiPost('/admin/charge/arrearsSmsDunning', { room_id: row.room_id })
+    ElMessage.success({ message: r.msg || '短信已发送', duration: 3000 })
+    loadData()
+  } catch {}
+}
+
+// ========== 公众号催缴 ==========
+async function doWechatDunning(row: any) {
+  try {
+    await ElMessageBox.confirm(
+      `确认向「${row.owner_name || '业主'}」推送公众号模板消息？\n\n欠费金额：¥${row.arrears_amount}   |   账单数：${row.bill_count}`,
+      '公众号催缴',
+      { confirmButtonText: '推送消息', type: 'info' }
+    )
+  } catch { return }
+
+  try {
+    const r = await apiPost('/admin/charge/arrearsWechatDunning', { room_id: row.room_id })
+    ElMessage.success({ message: r.msg || '模板消息已推送', duration: 3000 })
+    loadData()
+  } catch {}
+}
+
+// ========== 催单历史 ==========
 async function showHistory(row: any) {
   historyVisible.value = true
   historyList.value = []

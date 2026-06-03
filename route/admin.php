@@ -7,6 +7,12 @@ Route::post('admin/login', 'admin/Login/login');
 Route::get('admin/captcha', 'admin/Login/captcha');
 Route::post('admin/logout', 'admin/Login/logout');
 
+// 微信登录
+Route::get('admin/wechatOAuth', 'admin/Login/wechatOAuth');
+Route::get('admin/wechatCallback', 'admin/Login/wechatCallback');
+Route::post('admin/wechatLogin', 'admin/Login/wechatLogin');
+Route::post('admin/wechatBind', 'admin/Login/wechatBind');
+
 // 系统管理
 Route::group('admin', function () {
     // 管理员管理
@@ -69,12 +75,14 @@ Route::group('admin', function () {
     Route::post('admin/owner/delete', 'admin/Owner/delete');
     Route::get('admin/owner/detail', 'admin/Owner/detail');
     Route::get('admin/owner/rooms', 'admin/Owner/rooms');
+    Route::post('admin/owner/unbindWechat', 'admin/Owner/unbindWechat');
 
     // 家庭成员
     Route::get('admin/owner/familyList', 'admin/Family/lists');
     Route::post('admin/owner/familyAdd', 'admin/Family/add');
     Route::post('admin/owner/familyEdit', 'admin/Family/edit');
     Route::post('admin/owner/familyDelete', 'admin/Family/delete');
+    Route::post('admin/owner/familyUnbindWechat', 'admin/Family/unbindWechat');
 
     // 收费项目
     Route::get('admin/charge/itemList', 'admin/ChargeItem/lists');
@@ -111,6 +119,8 @@ Route::group('admin', function () {
     // 欠费管理
     Route::get('admin/charge/arrearsList', 'admin/Arrears/lists');
     Route::post('admin/charge/arrearsDunning', 'admin/Arrears/dunning');
+    Route::post('admin/charge/arrearsSmsDunning', 'admin/Arrears/smsDunning');
+    Route::post('admin/charge/arrearsWechatDunning', 'admin/Arrears/wechatDunning');
     Route::get('admin/charge/arrearsHistory', 'admin/Arrears/history');
 
     // 报修管理
@@ -299,4 +309,10 @@ Route::group('admin', function () {
     Route::get('admin/wechat/configDetail', 'admin/WechatConfig/detail');
     Route::post('admin/wechat/configSave', 'admin/WechatConfig/save');
     Route::get('admin/wechat/configTest', 'admin/WechatConfig/test');
+
+    // 短信配置
+    Route::get('admin/sms/list', 'admin/Sms/lists');
+    Route::get('admin/sms/detail', 'admin/Sms/detail');
+    Route::post('admin/sms/save', 'admin/Sms/save');
+    Route::get('admin/sms/test', 'admin/Sms/test');
 });

@@ -21,12 +21,14 @@
         <el-table-column prop="phone" label="手机" width="130" />
         <el-table-column prop="id_card" label="身份证" width="180" />
         <el-table-column prop="room_number" label="关联房间" width="120" />
+        <el-table-column label="微信" width="90"><template #default="{row}"><el-tag v-if="row.wx_bound" type="success" size="small">已绑定</el-tag><span v-else class="text-gray">未绑定</span></template></el-table-column>
         <el-table-column prop="remark" label="备注" min-width="120" show-overflow-tooltip />
         <el-table-column prop="create_time" label="创建时间" width="170" />
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="270" fixed="right">
           <template #default="{row}">
             <el-button size="small" @click="openForm(row)">编辑</el-button>
             <el-button size="small" type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-if="row.wx_bound" size="small" type="warning" @click="handleUnbindWechat(row)">解绑微信</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,6 +147,15 @@ async function handleDelete(row: any) {
   } catch {}
 }
 
+async function handleUnbindWechat(row: any) {
+  try {
+    await ElMessageBox.confirm(`确定解绑 "${row.realname}" 的微信吗？解绑后将无法通过微信接收通知。`, '确认解绑', { type: 'warning' })
+    await apiPost('/admin/owner/familyUnbindWechat', { id: row.id })
+    ElMessage.success('微信已解绑')
+    loadData()
+  } catch {}
+}
+
 onMounted(() => { loadOwners(); loadData() })
 </script>
 
@@ -154,4 +165,5 @@ onMounted(() => { loadOwners(); loadData() })
 .table-card { margin-bottom: 0; }
 .table-toolbar { margin-bottom: 12px; }
 .pagination { display: flex; justify-content: flex-end; margin-top: 12px; }
+.text-gray { color: #999; }
 </style>

@@ -192,6 +192,184 @@ class Arrears extends BaseAdmin
     }
 
     /**
+     * 短信催缴：校验配置 + 模拟发送 + 记录催单
+     */
+    public function smsDunning()
+    {
+        $roomId = intval($this->request->post('room_id', 0));
+        $remark = trim($this->request->post('remark', ''));
+
+        if (!$roomId) return $this->error('请选择房间');
+
+        $room = Db::name('room')->where('id', $roomId)->find();
+        if (!$room) return $this->error('房间不存在');
+
+        // 查小区短信配置
+        $community = Db::name('community')->where('id', $room['community_id'])->find();
+        if (empty($community['sms_key'])) {
+            return $this->error('该小区未配置短信接口KEY，请先在【短信配置】中设置');
+        }
+
+        // 查业主手机号
+        $ownerRow = $this->getPrimaryOwner($roomId);
+        if (empty($ownerRow['phone'])) {
+            return $this->error('该房间业主未登记手机号，无法发送短信');
+        }
+
+        // 查欠费账单
+        $bills = Db::name('bill')
+            ->where('room_id', $roomId)->where('delete_time', null)
+            ->whereIn('status', [1, 2])->select();
+        if (empty($bills)) return $this->error('该房间无欠费账单');
+
+        $amounts = $this->calcAmounts($bills);
+
+        // 模拟短信发送（TODO: 对接真实短信平台）
+        $smsContent = sprintf(
+            '【%s】尊敬的%s，您有%d笔欠费共¥%.2f，请尽快缴费。详询物业。',
+            $community['name'], $ownerRow['realname'] ?: '业主',
+            count($bills), $amounts['arrears']
+        );
+
+        // 记录催单
+        $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'sms');
+
+        return $this->success([
+            'channel'       => 'sms',
+            'phone'         => substr($ownerRow['phone'], 0, 3) . '****' . substr($ownerRow['phone'], -4),
+            'content'       => $smsContent,
+            'room_number'   => $room['room_number'],
+            'owner_name'    => $ownerRow['realname'] ?: '未知',
+            'bill_count'    => count($bills),
+            'arrears_amount'=> $amounts['arrears'],
+        ], '短信催缴已发送');
+    }
+
+    /**
+     * 公众号模板消息催缴：校验配置 + 模拟推送 + 记录催单
+     */
+    public function wechatDunning()
+    {
+        $roomId = intval($this->request->post('room_id', 0));
+        $remark = trim($this->request->post('remark', ''));
+
+        if (!$roomId) return $this->error('请选择房间');
+
+        $room = Db::name('room')->where('id', $roomId)->find();
+        if (!$room) return $this->error('房间不存在');
+
+        // 查公众号配置
+        $wxConfig = Db::name('community_wechat_config')
+            ->where('community_id', $room['community_id'])
+            ->where('status', 1)
+            ->find();
+        if (!$wxConfig || empty($wxConfig['app_id'])) {
+            return $this->error('该小区未配置公众号，请先在【公众号配置】中设置');
+        }
+        if (empty($wxConfig['template_arrears'])) {
+            return $this->error('该小区公众号未配置催缴通知模板ID，请先在【公众号配置】中设置');
+        }
+
+        // 查业主 openid
+        $ownerRow = $this->getPrimaryOwner($roomId);
+        if (empty($ownerRow['openid'])) {
+            return $this->error('该业主未绑定公众号，无法推送模板消息');
+        }
+
+        // 查欠费账单
+        $bills = Db::name('bill')
+            ->where('room_id', $roomId)->where('delete_time', null)
+            ->whereIn('status', [1, 2])->select();
+        if (empty($bills)) return $this->error('该房间无欠费账单');
+
+        $amounts = $this->calcAmounts($bills);
+
+        // 模拟模板消息推送（TODO: 对接微信API）
+        $templateData = [
+            'touser'      => $ownerRow['openid'],
+            'template_id' => $wxConfig['template_arrears'],
+            'data'        => [
+                'first'    => ['value' => "尊敬的{$ownerRow['realname']}，您有欠费待缴"],
+                'keyword1' => ['value' => "¥{$amounts['arrears']}"],
+                'keyword2' => ['value' => $bills[0]['bill_period'] ?? '--'],
+                'keyword3' => ['value' => count($bills) . '笔'],
+                'remark'   => ['value' => '请尽快缴费，如有疑问请联系物业。'],
+            ],
+        ];
+
+        // 记录催单
+        $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'wechat');
+
+        return $this->success([
+            'channel'       => 'wechat',
+            'template_id'   => $wxConfig['template_arrears'],
+            'openid'        => substr($ownerRow['openid'], 0, 6) . '****',
+            'room_number'   => $room['room_number'],
+            'owner_name'    => $ownerRow['realname'] ?: '未知',
+            'bill_count'    => count($bills),
+            'arrears_amount'=> $amounts['arrears'],
+        ], '公众号模板消息已推送');
+    }
+
+    /**
+     * 获取房间主产权人信息
+     */
+    private function getPrimaryOwner($roomId)
+    {
+        $or = Db::name('owner_room')
+            ->where('room_id', $roomId)->where('is_primary', 1)
+            ->where('delete_time', null)->find();
+        if ($or) {
+            return Db::name('owner')->where('id', $or['owner_id'])->find() ?: [];
+        }
+        return [];
+    }
+
+    /**
+     * 计算账单金额汇总
+     */
+    private function calcAmounts($bills)
+    {
+        $total = 0; $paid = 0;
+        foreach ($bills as $b) { $total += $b['total_amount']; $paid += $b['paid_amount']; }
+        return ['total' => $total, 'paid' => $paid, 'arrears' => round($total - $paid, 2)];
+    }
+
+    /**
+     * 记录催单到 ds_bill_dunning + 更新 ds_bill 催单计数
+     */
+    private function recordDunning($room, $ownerRow, $amounts, $bills, $remark, $channel)
+    {
+        $ownerId = $ownerRow['id'] ?? 0;
+        $pdo = $this->getPdo();
+        $pdo->beginTransaction();
+        try {
+            Db::name('bill_dunning')->insert([
+                'community_id'   => $room['community_id'],
+                'room_id'        => $room['id'],
+                'owner_id'       => $ownerId,
+                'total_amount'   => $amounts['total'],
+                'paid_amount'    => $amounts['paid'],
+                'arrears_amount' => $amounts['arrears'],
+                'bill_count'     => count($bills),
+                'remark'         => $remark,
+                'channel'        => $channel,
+                'admin_id'       => $this->adminId,
+                'create_time'    => date('Y-m-d H:i:s'),
+            ]);
+            $now = date('Y-m-d H:i:s');
+            foreach ($bills as $b) {
+                $stmt = $pdo->prepare("UPDATE ds_bill SET dunning_count = dunning_count + 1, dunning_time = ? WHERE id = ?");
+                $stmt->execute([$now, $b['id']]);
+            }
+            $pdo->commit();
+        } catch (\Exception $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * 催单历史
      */
     public function history()

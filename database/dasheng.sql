@@ -1186,3 +1186,80 @@ CREATE TABLE IF NOT EXISTS `ds_supplier_evaluation` (
   PRIMARY KEY (`id`),
   KEY `idx_supplier` (`supplier_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='供应商评价';
+
+-- ============================================
+-- 补充表：小区支付配置表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `ds_community_payment_config` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `community_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '小区ID',
+  `pay_channel` varchar(20) NOT NULL DEFAULT '' COMMENT '支付渠道 wechat/alipay/both',
+  `wechat_app_id` varchar(100) NOT NULL DEFAULT '' COMMENT '微信AppID',
+  `wechat_mch_id` varchar(50) NOT NULL DEFAULT '' COMMENT '微信商户号',
+  `wechat_serial_no` varchar(100) NOT NULL DEFAULT '' COMMENT '微信证书序列号',
+  `wechat_api_key` varchar(100) NOT NULL DEFAULT '' COMMENT '微信APIv2密钥',
+  `wechat_api_v3_key` varchar(100) NOT NULL DEFAULT '' COMMENT '微信APIv3密钥',
+  `alipay_app_id` varchar(100) NOT NULL DEFAULT '' COMMENT '支付宝AppID',
+  `alipay_merchant_id` varchar(50) NOT NULL DEFAULT '' COMMENT '支付宝商户PID',
+  `alipay_private_key` text COMMENT '支付宝应用私钥',
+  `alipay_public_key` text COMMENT '支付宝公钥',
+  `notify_url` varchar(500) NOT NULL DEFAULT '' COMMENT '回调地址',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0禁用 1启用',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_community_id` (`community_id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小区支付配置';
+
+-- ============================================
+-- 补充表：小区公众号配置表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `ds_community_wechat_config` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `community_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '小区ID',
+  `app_id` varchar(100) NOT NULL DEFAULT '' COMMENT '公众号AppID',
+  `app_secret` varchar(200) NOT NULL DEFAULT '' COMMENT '公众号AppSecret',
+  `original_id` varchar(100) NOT NULL DEFAULT '' COMMENT '原始ID',
+  `mch_id` varchar(50) NOT NULL DEFAULT '' COMMENT '微信支付商户号',
+  `token` varchar(100) NOT NULL DEFAULT '' COMMENT '消息校验Token',
+  `encoding_aes_key` varchar(100) NOT NULL DEFAULT '' COMMENT '消息加密密钥',
+  `template_pay_success` varchar(100) NOT NULL DEFAULT '' COMMENT '缴费成功模板消息ID',
+  `template_arrears` varchar(100) NOT NULL DEFAULT '' COMMENT '欠费催缴模板消息ID',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0禁用 1启用',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_community_id` (`community_id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='小区公众号配置';
+
+-- ============================================
+-- 补充表：催单记录表
+-- ============================================
+CREATE TABLE IF NOT EXISTS `ds_bill_dunning` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `community_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '小区ID',
+  `room_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '房间ID',
+  `owner_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '业主ID',
+  `total_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '应收总额',
+  `paid_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '已付总额',
+  `arrears_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '欠费总额',
+  `bill_count` int(11) NOT NULL DEFAULT '0' COMMENT '欠费账单数',
+  `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注',
+  `channel` varchar(20) NOT NULL DEFAULT 'manual' COMMENT '催缴渠道 manual/sms/wechat',
+  `admin_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作管理员ID',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_community_id` (`community_id`),
+  KEY `idx_room_id` (`room_id`),
+  KEY `idx_owner_id` (`owner_id`),
+  KEY `idx_channel` (`channel`),
+  KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='催单记录';
+
+-- ============================================
+-- 补充：账单表增加催缴字段
+-- ============================================
+-- ALTER TABLE `ds_bill` ADD COLUMN `dunning_count` int(11) NOT NULL DEFAULT '0' COMMENT '催缴次数' AFTER `remark`;
+-- ALTER TABLE `ds_bill` ADD COLUMN `dunning_time` datetime DEFAULT NULL COMMENT '最后催缴时间' AFTER `dunning_count`;

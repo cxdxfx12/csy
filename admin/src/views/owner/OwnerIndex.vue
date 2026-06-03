@@ -20,12 +20,21 @@
         <el-table-column prop="id_card" label="身份证" width="180" />
         <el-table-column prop="gender" label="性别" width="70"><template #default="{row}">{{ row.gender===1?'男':row.gender===2?'女':'-' }}</template></el-table-column>
         <el-table-column prop="community_name" label="小区" width="140" />
-        <el-table-column prop="room_count" label="房产数" width="80" />
+        <el-table-column prop="room_count" label="房产数" width="70" />
+        <el-table-column label="微信" width="90" align="center">
+          <template #default="{row}">
+            <el-tag v-if="row.wx_bound" type="success" size="small">已绑定</el-tag>
+            <span v-else style="color:#ccc;">未绑定</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="create_time" label="注册时间" width="170" />
-        <el-table-column label="操作" width="240" fixed="right">
+        <el-table-column label="操作" width="280" fixed="right">
           <template #default="{row}">
             <el-button size="small" @click="openForm(row)">编辑</el-button>
             <el-button size="small" type="primary" @click="showDetail(row)">详情</el-button>
+            <el-tooltip v-if="row.wx_bound" content="解绑微信">
+              <el-button size="small" type="warning" @click="unbindWechat(row)">解绑微信</el-button>
+            </el-tooltip>
             <el-button size="small" type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
@@ -61,6 +70,11 @@
         <el-descriptions-item label="性别">{{ detail.gender===1?'男':detail.gender===2?'女':'-' }}</el-descriptions-item>
         <el-descriptions-item label="注册时间">{{ detail.register_time }}</el-descriptions-item>
         <el-descriptions-item label="状态"><el-tag>{{ detail.status===1?'正常':'禁用' }}</el-tag></el-descriptions-item>
+        <el-descriptions-item label="微信绑定">
+          <el-tag v-if="detail.openid" type="success">已绑定</el-tag>
+          <span v-else>未绑定</span>
+        </el-descriptions-item>
+        <el-descriptions-item v-if="detail.openid" label="OpenID">{{ detail.openid_masked || detail.openid }}</el-descriptions-item>
       </el-descriptions>
       <h4 style="margin:16px 0 8px;">房产信息</h4>
       <el-table :data="detail?.rooms||[]" size="small" border>
@@ -161,6 +175,15 @@ async function handleDelete(row: any) {
     await ElMessageBox.confirm(`确定删除业主 "${row.realname}" 吗？`, '提示', { type: 'warning' })
     await apiPost('/admin/owner/delete', { id: row.id })
     ElMessage.success('删除成功')
+    loadData()
+  } catch {}
+}
+
+async function unbindWechat(row: any) {
+  try {
+    await ElMessageBox.confirm(`确定解除 "${row.realname}" 的微信绑定吗？解除后该用户将无法通过微信登录。`, '解绑微信', { type: 'warning' })
+    await apiPost('/admin/owner/unbindWechat', { id: row.id })
+    ElMessage.success('微信已解绑')
     loadData()
   } catch {}
 }
