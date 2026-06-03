@@ -18,6 +18,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="reading_date" label="抄表日期" width="110" />
         <el-table-column prop="room_number" label="房间号" width="100" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="building_name" label="楼栋" width="100" />
         <el-table-column prop="meter_no" label="表号" width="100" />
         <el-table-column prop="type" label="类型" width="80"><template #default="{row}">{{ typeMap[row.type]||row.type }}</template></el-table-column>

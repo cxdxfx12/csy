@@ -12,19 +12,23 @@ class Bill extends BaseApi
         $ownerId = $this->ownerId;
         [$page, $limit] = $this->getPage();
         $status = $this->request->param('status', '');
-        $where = [['owner_id', '=', $ownerId], ['delete_time', '=', null]];
+        $where = [['owner_id', '=', $ownerId]];
         if ($status !== '') $where[] = ['status', '=', $status];
-        $total = Db::name('bill')->where($where)->count();
-        $list = Db::name('bill')->where($where)->page($page, $limit)->order('id', 'desc')->select()->toArray();
+        $query = Db::name('bill')->where($where)->whereNull('delete_time');
+        $total = $query->count();
+        $list = $query->page($page, $limit)->order('id', 'desc')->select();
+        if (is_object($list)) $list = $list->toArray();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 
     public function unpaid()
     {
         $ownerId = $this->ownerId;
-        $where = [['owner_id', '=', $ownerId], ['status', 'in', [1, 2]], ['delete_time', '=', null]];
-        $list = Db::name('bill')->where($where)->select()->toArray();
-        $total = Db::name('bill')->where($where)->sum('total_amount - paid_amount');
+        $where = [['owner_id', '=', $ownerId], ['status', 'in', [1, 2]]];
+        $query = Db::name('bill')->where($where)->whereNull('delete_time');
+        $list = $query->select();
+        if (is_object($list)) $list = $list->toArray();
+        $total = $query->sum('total_amount - paid_amount');
         return $this->success(['list' => $list, 'total_unpaid' => $total]);
     }
 
@@ -98,6 +102,7 @@ class Bill extends BaseApi
                 'room_id'      => $bill['room_id'],
                 'amount'       => $amount,
                 'pay_method'   => $payMethod,
+                'trade_no'     => $paymentNo,
                 'pay_time'     => date('Y-m-d H:i:s'),
                 'operator_id'  => $this->ownerId,
                 'operator_type'=> 2,
@@ -105,16 +110,14 @@ class Bill extends BaseApi
                 'remark'       => '业主端线下支付确认',
             ];
 
-            Db::transaction(function () use ($paymentData, $bill, $billId, $amount, $communityId) {
-                Db::name('bill_payment')->insert($paymentData);
-                Db::name('bill')->where('id', $billId)->update([
-                    'paid_amount' => $bill['paid_amount'] + $amount,
-                    'status'      => 3,
-                    'pay_date'    => date('Y-m-d H:i:s'),
-                ]);
-                // 创建财务流水
-                $this->createFinanceFlow($communityId, $paymentData['payment_no'], $amount, $billId);
-            });
+            Db::name('bill_payment')->insert($paymentData);
+            Db::name('bill')->where('id', $billId)->update([
+                'paid_amount' => $bill['paid_amount'] + $amount,
+                'status'      => 3,
+                'pay_date'    => date('Y-m-d H:i:s'),
+            ]);
+            // 创建财务流水
+            $this->createFinanceFlow($communityId, $paymentData['payment_no'], $amount, $billId);
 
             return $this->success([
                 'payment_no'  => $paymentNo,
@@ -146,6 +149,7 @@ class Bill extends BaseApi
                 'room_id'      => $bill['room_id'],
                 'amount'       => $amount,
                 'pay_method'   => 2,
+                'trade_no'     => $paymentNo,
                 'pay_time'     => null, // 未支付
                 'operator_id'  => $this->ownerId,
                 'operator_type'=> 2,
@@ -179,7 +183,7 @@ class Bill extends BaseApi
                 ->find();
 
             if (!$payConfig || empty($payConfig['alipay_app_id'])) {
-                return $this->offlineFallback($billId, $bill, $amount, $paymentNo, $communityId);
+                return $this->offlineFallback($billId, $bill, $amount, $paymentNo, $communityId, 3);
             }
 
             $paymentData = [
@@ -190,6 +194,7 @@ class Bill extends BaseApi
                 'room_id'      => $bill['room_id'],
                 'amount'       => $amount,
                 'pay_method'   => 3,
+                'trade_no'     => $paymentNo,
                 'pay_time'     => null,
                 'operator_id'  => $this->ownerId,
                 'operator_type'=> 2,
@@ -210,7 +215,7 @@ class Bill extends BaseApi
                 ], '请完成支付宝支付');
             }
 
-            return $this->offlineFallback($billId, $bill, $amount, $paymentNo, $communityId);
+            return $this->offlineFallback($billId, $bill, $amount, $paymentNo, $communityId, 3);
         }
 
         return $this->error('不支持的支付方式');
@@ -219,8 +224,11 @@ class Bill extends BaseApi
     /**
      * 线下支付降级处理
      */
-    private function offlineFallback($billId, $bill, $amount, $paymentNo, $communityId)
+    private function offlineFallback($billId, $bill, $amount, $paymentNo, $communityId, $payMethod = 2)
     {
+        $now = date('Y-m-d H:i:s');
+        $methodNames = [2=>'微信支付', 3=>'支付宝'];
+        $methodName = $methodNames[$payMethod] ?? '线上支付';
         $paymentData = [
             'payment_no'   => $paymentNo,
             'bill_id'      => $billId,
@@ -228,27 +236,32 @@ class Bill extends BaseApi
             'owner_id'     => $bill['owner_id'],
             'room_id'      => $bill['room_id'],
             'amount'       => $amount,
-            'pay_method'   => 2,
-            'pay_time'     => date('Y-m-d H:i:s'),
+            'pay_method'   => $payMethod,
+            'trade_no'     => $paymentNo,
+            'pay_time'     => $now,
             'operator_id'  => $this->ownerId,
             'operator_type'=> 2,
-            'create_time'  => date('Y-m-d H:i:s'),
-            'remark'       => '业主端确认缴费（微信支付未配置，降级处理）',
+            'create_time'  => $now,
+            'remark'       => "业主端确认缴费（{$methodName}未配置，降级处理）",
         ];
 
-        Db::transaction(function () use ($paymentData, $bill, $billId, $amount, $communityId) {
+        // 检查是否已存在（如微信/支付宝下单失败后降级的场景）
+        $exists = Db::name('bill_payment')->where('payment_no', $paymentNo)->find();
+        if ($exists) {
+            Db::name('bill_payment')->where('payment_no', $paymentNo)->update($paymentData);
+        } else {
             Db::name('bill_payment')->insert($paymentData);
-            Db::name('bill')->where('id', $billId)->update([
-                'paid_amount' => $bill['paid_amount'] + $amount,
-                'status'      => 3,
-                'pay_date'    => date('Y-m-d H:i:s'),
-            ]);
-            $this->createFinanceFlow($communityId, $paymentData['payment_no'], $amount, $billId);
-        });
+        }
+        Db::name('bill')->where('id', $billId)->update([
+            'paid_amount' => $bill['paid_amount'] + $amount,
+            'status'      => 3,
+            'pay_date'    => date('Y-m-d H:i:s'),
+        ]);
+        $this->createFinanceFlow($communityId, $paymentNo, $amount, $billId);
 
         return $this->success([
             'payment_no'  => $paymentNo,
-            'pay_method'  => 2,
+            'pay_method'  => $payMethod,
             'status'      => 'paid',
             'need_wechat' => false,
         ], '缴费确认成功');
@@ -406,20 +419,18 @@ class Bill extends BaseApi
 
         $bill = Db::name('bill')->where('id', $payment['bill_id'])->find();
 
-        Db::transaction(function () use ($paymentNo, $tradeNo, $totalFee, $payment, $bill) {
-            Db::name('bill_payment')->where('payment_no', $paymentNo)->update([
-                'trade_no'   => $tradeNo,
-                'pay_time'   => date('Y-m-d H:i:s'),
-                'pay_account'=> '微信支付',
-            ]);
-            Db::name('bill')->where('id', $payment['bill_id'])->update([
-                'paid_amount' => ($bill['paid_amount'] ?? 0) + $totalFee,
-                'status'      => 3,
-                'pay_date'    => date('Y-m-d H:i:s'),
-            ]);
-            // 创建财务流水
-            $this->createFinanceFlow($payment['community_id'], $paymentNo, $totalFee, $payment['bill_id']);
-        });
+        Db::name('bill_payment')->where('payment_no', $paymentNo)->update([
+            'trade_no'   => $tradeNo,
+            'pay_time'   => date('Y-m-d H:i:s'),
+            'pay_account'=> '微信支付',
+        ]);
+        Db::name('bill')->where('id', $payment['bill_id'])->update([
+            'paid_amount' => ($bill['paid_amount'] ?? 0) + $totalFee,
+            'status'      => 3,
+            'pay_date'    => date('Y-m-d H:i:s'),
+        ]);
+        // 创建财务流水
+        $this->createFinanceFlow($payment['community_id'], $paymentNo, $totalFee, $payment['bill_id']);
 
         echo '<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>';
         exit;
@@ -450,19 +461,17 @@ class Bill extends BaseApi
 
         $bill = Db::name('bill')->where('id', $payment['bill_id'])->find();
 
-        Db::transaction(function () use ($paymentNo, $tradeNo, $totalAmount, $payment, $bill) {
-            Db::name('bill_payment')->where('payment_no', $paymentNo)->update([
-                'trade_no'    => $tradeNo,
-                'pay_time'    => date('Y-m-d H:i:s'),
-                'pay_account' => '支付宝',
-            ]);
-            Db::name('bill')->where('id', $payment['bill_id'])->update([
-                'paid_amount' => ($bill['paid_amount'] ?? 0) + $totalAmount,
-                'status'      => 3,
-                'pay_date'    => date('Y-m-d H:i:s'),
-            ]);
-            $this->createFinanceFlow($payment['community_id'], $paymentNo, $totalAmount, $payment['bill_id']);
-        });
+        Db::name('bill_payment')->where('payment_no', $paymentNo)->update([
+            'trade_no'    => $tradeNo,
+            'pay_time'    => date('Y-m-d H:i:s'),
+            'pay_account' => '支付宝',
+        ]);
+        Db::name('bill')->where('id', $payment['bill_id'])->update([
+            'paid_amount' => ($bill['paid_amount'] ?? 0) + $totalAmount,
+            'status'      => 3,
+            'pay_date'    => date('Y-m-d H:i:s'),
+        ]);
+        $this->createFinanceFlow($payment['community_id'], $paymentNo, $totalAmount, $payment['bill_id']);
 
         echo 'success';
         exit;

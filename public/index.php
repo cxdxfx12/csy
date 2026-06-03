@@ -5,16 +5,8 @@ define('APP_PATH', ROOT_PATH . 'app' . DS);
 define('RUNTIME_PATH', ROOT_PATH . 'runtime' . DS);
 define('CONFIG_PATH', ROOT_PATH . 'config' . DS);
 
-$_ENV['DATABASE.HOSTNAME'] = '127.0.0.1';
-$_ENV['DATABASE.DATABASE'] = 'dasheng';
-$_ENV['DATABASE.USERNAME'] = 'root';
-$_ENV['DATABASE.PASSWORD'] = 'cxdxfx12';
-$_ENV['DATABASE.HOSTPORT'] = '3306';
-$_ENV['DATABASE.PREFIX'] = 'ds_';
-$_ENV['JWT.KEY'] = 'ds_property_manager_jwt_key_2026';
-$_ENV['JWT.ISS'] = 'dasheng-pms';
-$_ENV['JWT.AUD'] = 'dasheng-pms-client';
-$_ENV['JWT.EXP'] = '86400';
+// 数据库和JWT配置从 .env 文件加载，此处不再硬编码
+// 如果 .env 不存在，loadEnv() 会使用 config/database.php 中的默认值
 
 require ROOT_PATH . 'vendor' . DS . 'autoload.php';
 require ROOT_PATH . 'app' . DS . 'common.php';
@@ -60,8 +52,16 @@ $path = trim($path, '/');
 if (strpos($path, 'api.php/') === 0) $path = substr($path, 8);
 if (strpos($path, 'index.php/') === 0) $path = substr($path, 10);
 if (strpos($path, 'index.php') === 0) $path = substr($path, 9);
-// 剥离 /api 前缀（admin 面板 API 调用使用 /api/... 格式）
-if (strpos($path, 'api/') === 0) $path = substr($path, 4);
+// admin Vue 端直接以 /api 作为 baseURL，路径如 /api/admin/login
+// 仅在第二段是 admin/staff/manager 时剥离 api/ 前缀
+// api 模块自身的路由（如 api/repair/list）保留
+$knownShowModules = ['admin', 'staff', 'manager'];
+if (strpos($path, 'api/') === 0) {
+    $segments = explode('/', $path);
+    if (count($segments) >= 2 && in_array($segments[1], $knownShowModules)) {
+        $path = substr($path, 4); // 剥离前缀 'api/'
+    }
+}
 $path = ltrim($path, '/');
 $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
@@ -87,12 +87,35 @@ function loadRoutes() {
     $routes = [];
     foreach ($routeFiles as $file) {
         $content = file_get_contents($file);
-        // 匹配 Route::get|post|put|delete|patch('url', 'module/Controller/action')
-        if (preg_match_all("/Route::(get|post|put|delete|patch)\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)/i", $content, $m, PREG_SET_ORDER)) {
-            foreach ($m as $r) {
-                $method = strtoupper($r[1]);
-                $url = $r[2];
-                $handler = explode('/', $r[3]);
+        // 逐行解析，处理 Route::group() 前缀
+        $lines = explode("\n", $content);
+        $groupStack = [];  // 栈: 每个元素是 'prefix/' 
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            // 检测 group 开始: Route::group('prefix', function () {
+            if (preg_match("/Route::group\s*\(\s*['\"]([^'\"]+)['\"]/i", $trimmed, $gm)) {
+                $groupStack[] = $gm[1] . '/';
+                continue;
+            }
+            // 检测 group 结束: }); 或 })->... 
+            if (preg_match("/^\}\);?\s*$/", $trimmed) || preg_match("/^\}\)->/i", $trimmed)) {
+                if (!empty($groupStack)) array_pop($groupStack);
+                continue;
+            }
+            // 匹配 Route::get|post|put|delete|patch('url', 'module/Controller/action')
+            if (preg_match("/Route::(get|post|put|delete|patch)\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)/i", $trimmed, $m)) {
+                $method = strtoupper($m[1]);
+                $url = $m[2];
+                // 如果 URL 不以当前 group 前缀开头，则添加前缀
+                // （兼容 admin.php 中已在 URL 中包含模块前缀的写法）
+                if (!empty($groupStack)) {
+                    $prefix = implode('', $groupStack);
+                    $prefixClean = rtrim($prefix, '/');
+                    if (strpos($url, $prefixClean . '/') !== 0) {
+                        $url = $prefix . $url;
+                    }
+                }
+                $handler = explode('/', $m[3]);
                 if (count($handler) >= 3) {
                     $urlKey = $method . ':' . $url;
                     $routes[$urlKey] = [

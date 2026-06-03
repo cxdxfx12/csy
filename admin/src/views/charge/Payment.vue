@@ -17,6 +17,7 @@
         <el-table-column prop="payment_no" label="流水号" width="160" />
         <el-table-column prop="owner_name" label="业主" width="100" />
         <el-table-column prop="room_number" label="房间" width="100" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="amount" label="金额" width="100"><template #default="{row}">¥{{ row.amount }}</template></el-table-column>
         <el-table-column prop="pay_method" label="方式" width="90"><template #default="{row}">{{ methodMap[row.pay_method]||row.pay_method }}</template></el-table-column>
         <el-table-column prop="pay_time" label="缴费时间" width="160" />

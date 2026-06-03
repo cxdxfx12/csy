@@ -9,7 +9,7 @@ class Community extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['name|code|address', 'like', "%{$keyword}%"];
         $total = Db::name('community')->where($where)->count();

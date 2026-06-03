@@ -28,14 +28,20 @@ export function formatDate(str, fmt = 'YYYY-MM-DD') {
     .replace('HH', h).replace('mm', min).replace('ss', s)
 }
 
-// 状态标签映射
-export const statusLabels = {
+// 状态标签映射（兼容数字和字符串键）
+const _statusMap = {
+  1: '待处理', 2: '已派单', 3: '处理中',
+  4: '已完成', 5: '已评价', 6: '已关闭',
   pending: '待处理', processing: '处理中', accepted: '已接单',
   finished: '已完成', cancelled: '已取消', closed: '已关闭',
   paid: '已缴费', unpaid: '未缴费', active: '正常'
 }
-export const statusColors = {
+const _colorMap = {
+  1: '#f59e0b', 2: '#8b5cf6', 3: '#3b82f6',
+  4: '#10b981', 5: '#10b981', 6: '#6b7280',
   pending: '#f59e0b', processing: '#3b82f6', accepted: '#8b5cf6',
   finished: '#10b981', cancelled: '#ef4444', closed: '#6b7280',
   paid: '#10b981', unpaid: '#ef4444', active: '#10b981'
 }
+export const statusLabels = _statusMap
+export const statusColors = _colorMap

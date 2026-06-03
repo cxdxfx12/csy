@@ -9,7 +9,7 @@ class ParkingRecord extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['pr.delete_time', '=', null]];
+        $where = [['pr.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['pr.community_id', '=', $communityId];
         $keyword = $this->request->param('keyword', '');
@@ -22,7 +22,8 @@ class ParkingRecord extends BaseAdmin
         $total = Db::name('parking_record')->alias('pr')->where($where)->count();
         $list = Db::name('parking_record')->alias('pr')
             ->leftJoin('parking_space ps', 'ps.id = pr.space_id')
-            ->field('pr.*, ps.space_no')
+            ->leftJoin('community com', 'com.id = pr.community_id')
+            ->field('pr.*, ps.space_no, com.name as community_name')
             ->where($where)->page($page, $limit)->order('pr.id', 'desc')->select();
         return $this->table($list, $total);
     }

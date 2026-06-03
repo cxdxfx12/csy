@@ -41,6 +41,7 @@
             <span :class="{ 'top-title': row.top_status == 1 }">{{ row.title }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column label="分类" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="noticeTypeTag(row.type)" size="small" effect="plain">

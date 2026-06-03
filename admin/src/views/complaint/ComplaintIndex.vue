@@ -17,6 +17,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="title" label="标题" width="180" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="owner_name" label="业主" width="100" />
         <el-table-column prop="room_number" label="房间" width="100" />
         <el-table-column prop="type" label="类型" width="80"><template #default="{row}"><el-tag :type="typeTag[row.type]||'info'">{{ typeMap[row.type]||'未知' }}</el-tag></template></el-table-column>

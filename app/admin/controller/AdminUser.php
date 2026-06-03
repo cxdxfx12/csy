@@ -9,7 +9,7 @@ class AdminUser extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         
         $keyword = $this->request->param('keyword', '');
         if (!empty($keyword)) {
@@ -22,12 +22,32 @@ class AdminUser extends BaseAdmin
 
         $total = Db::name('admin_user')->where($where)->count();
         $list = Db::name('admin_user')->where($where)
-            ->field('id,username,nickname,avatar,email,phone,role_id,status,last_login_time,last_login_ip,login_count,create_time')
+            ->field('id,username,nickname,avatar,email,phone,role_id,community_ids,status,last_login_time,last_login_ip,login_count,create_time')
             ->page($page, $limit)->order('id', 'asc')->select();
 
         $roleNames = array_to_keyval(Db::name('role')->select());
+        // 仅需要小区隔离的角色才查询小区名
+        $needCommunityRoles = [3, 4, 5, 6, 7]; // 项目经理、客服主管、财务专员、安保主管、工程主管
+        $needCommunity = !empty(array_intersect(array_column($list, 'role_id'), $needCommunityRoles));
+        $communityNames = [];
+        if ($needCommunity) {
+            $communityNames = array_to_keyval(Db::name('community')->whereNull('delete_time')->select());
+        }
         foreach ($list as &$item) {
             $item['role_name'] = $roleNames[$item['role_id']] ?? '';
+            $item['community_name'] = '';
+            // 仅非全局角色（3-7）才解析小区名
+            if (in_array($item['role_id'], $needCommunityRoles) && !empty($item['community_ids'])) {
+                $ids = explode(',', $item['community_ids']);
+                $names = [];
+                foreach ($ids as $cid) {
+                    $cid = trim($cid);
+                    if ($cid && isset($communityNames[$cid])) {
+                        $names[] = $communityNames[$cid];
+                    }
+                }
+                $item['community_name'] = implode('、', $names);
+            }
         }
 
         return $this->table($list, $total);

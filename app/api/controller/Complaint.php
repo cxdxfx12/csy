@@ -23,9 +23,9 @@ class Complaint extends BaseApi
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['owner_id', '=', $this->ownerId], ['delete_time', '=', null]];
+        $where = [['owner_id', '=', $this->ownerId], ['delete_time', 'null', '']];
         $total = Db::name('complaint')->where($where)->count();
-        $list = Db::name('complaint')->where($where)->page($page, $limit)->order('id', 'desc')->select()->toArray();
+        $list = Db::name('complaint')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 }

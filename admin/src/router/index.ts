@@ -58,7 +58,9 @@ const router = createRouter({
         { path: 'payment/config', name: 'PaymentConfig', component: () => import('@/views/payment/PaymentConfig.vue'), meta: { title: '支付配置' } },
         { path: 'payment/record', name: 'PaymentRecord', component: () => import('@/views/charge/Payment.vue'), meta: { title: '缴费记录' } },
         { path: 'wechat/config', name: 'WechatConfig', component: () => import('@/views/wechat/WechatConfig.vue'), meta: { title: '公众号配置' } },
+        { path: 'wechat/user', name: 'WechatUser', component: () => import('@/views/wechat/WechatUser.vue'), meta: { title: '微信用户' } },
         { path: 'sms/config', name: 'SmsConfig', component: () => import('@/views/sms/SmsConfig.vue'), meta: { title: '短信配置' } },
+        { path: 'sms/wechat/user', name: 'SmsWechatUser', component: () => import('@/views/wechat/WechatUser.vue'), meta: { title: '微信用户' } },
       ],
     },
 

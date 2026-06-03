@@ -310,6 +310,12 @@ Route::group('admin', function () {
     Route::post('admin/wechat/configSave', 'admin/WechatConfig/save');
     Route::get('admin/wechat/configTest', 'admin/WechatConfig/test');
 
+    // 微信用户
+    Route::get('admin/wechat/userStatistics', 'admin/WechatUser/statistics');
+    Route::get('admin/wechat/userList', 'admin/WechatUser/lists');
+    Route::get('admin/wechat/userDetail', 'admin/WechatUser/detail');
+    Route::get('admin/wechat/userExport', 'admin/WechatUser/export');
+
     // 短信配置
     Route::get('admin/sms/list', 'admin/Sms/lists');
     Route::get('admin/sms/detail', 'admin/Sms/detail');

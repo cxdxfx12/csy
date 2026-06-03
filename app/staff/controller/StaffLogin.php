@@ -15,7 +15,7 @@ class StaffLogin extends BaseStaff
         $password = $this->request->post('password', '');
 
         $staff = Db::name('admin_user')->where('username', $username)->find();
-        if (!$staff || $staff['password'] !== encrypt_password($password)) {
+        if (!$staff || !verify_password($password, $staff['password'])) {
             return $this->error('用户名或密码错误');
         }
         if ($staff['status'] != 1) return $this->error('账户已禁用');
@@ -52,7 +52,7 @@ class StaffLogin extends BaseStaff
         $oldPwd = $this->request->post('old_password', '');
         $newPwd = $this->request->post('new_password', '');
         $staff = Db::name('admin_user')->where('id', $this->staffId)->find();
-        if ($staff['password'] !== encrypt_password($oldPwd)) return $this->error('原密码错误');
+        if (!verify_password($oldPwd, $staff['password'])) return $this->error('原密码错误');
         Db::name('admin_user')->where('id', $this->staffId)->update(['password' => encrypt_password($newPwd)]);
         return $this->success([], '修改成功');
     }

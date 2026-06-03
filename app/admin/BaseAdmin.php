@@ -63,13 +63,71 @@ class BaseAdmin extends BaseController
     }
 
     /**
-     * 权限检查
+     * 权限检查：基于角色的控制器访问控制
      */
     protected function checkPermission()
     {
-        if ($this->adminInfo['role_id'] == 1) return; // 超管跳过
+        $roleId = $this->adminInfo['role_id'] ?? 0;
+        if ($roleId == 1) return; // 超管跳过所有检查
 
-        $route = $this->request->controller() . '/' . $this->request->action();
-        // 此处实现具体的权限校验逻辑
+        $controller = $this->request->controller();
+
+        // 通过角色 code 获取该角色的权限定义
+        $roleInfo = Db::name('role')->where('id', $roleId)->find();
+        if (empty($roleInfo)) $this->throwError('角色不存在');
+
+        // 角色对应的可访问控制器白名单
+        $allowed = $this->getRolePermissions($roleInfo['code']);
+
+        // 全控角色直接放行
+        if ($allowed === '*') return;
+
+        if (!in_array($controller, $allowed)) {
+            $this->throwError('无权限访问此模块');
+        }
+
+        // 对于小区级角色，自动注入 community_id 范围
+        if ($roleId >= 3 && !empty($this->adminInfo['community_ids'])) {
+            $this->request->boundCommunityIds = array_filter(array_map('intval', explode(',', $this->adminInfo['community_ids'])));
+        }
+    }
+
+    /**
+     * 获取角色可访问的控制器列表
+     */
+    private function getRolePermissions($code)
+    {
+        // 公共模块：所有角色通用
+        $common = ['Profile', 'Dashboard', 'Upload'];
+
+        $maps = [
+            'admin'     => '*',
+            'manager'   => array_merge($common, [
+                'Community', 'Building', 'Room',
+                'Owner', 'Family', 'Staff', 'Attendance', 'Schedule', 'Salary',
+                'ChargeItem', 'Bill', 'Payment', 'PaymentConfig', 'Meter', 'Arrears', 'Finance',
+                'Complaint', 'RepairOrder', 'RepairWorker',
+                'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace',
+                'Equipment', 'EquipmentMaintain', 'Purchase', 'Supplier', 'Contract',
+                'Notice', 'Activity', 'Vote', 'Evaluation', 'Print', 'Sms', 'Vehicle',
+            ]),
+            'service'   => array_merge($common, [
+                'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building',
+            ]),
+            'finance'   => array_merge($common, [
+                'Bill', 'Payment', 'PaymentConfig', 'ChargeItem', 'Meter', 'Arrears', 'Finance',
+                'Owner', 'Room', 'Building',
+            ]),
+            'security'  => array_merge($common, [
+                'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace', 'Vehicle',
+                'Owner', 'Room', 'Building',
+            ]),
+            'engineer'  => array_merge($common, [
+                'Equipment', 'EquipmentMaintain', 'Purchase', 'Supplier', 'Contract',
+                'Owner', 'Room', 'Building',
+            ]),
+        ];
+
+        return $maps[$code] ?? $common;
     }
 }

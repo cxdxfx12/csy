@@ -9,11 +9,14 @@ class RepairWorker extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['community_id', '=', $communityId];
         $total = Db::name('repair_worker')->where($where)->count();
-        $list = Db::name('repair_worker')->where($where)->page($page, $limit)->order('id', 'desc')->select();
+        $list = Db::name('repair_worker')->alias('rw')
+            ->leftJoin('community com', 'com.id = rw.community_id')
+            ->field('rw.*, com.name as community_name')
+            ->where($where)->page($page, $limit)->order('rw.id', 'desc')->select();
         foreach ($list as &$row) {
             $row['specialty'] = $row['type'] ?? '';
         }

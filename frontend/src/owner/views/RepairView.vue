@@ -28,7 +28,7 @@
         <div class="item-body">{{ item.content || item.description || '--' }}</div>
         <div class="item-ft">
           <span>{{ item.create_time }}</span>
-          <button v-if="item.status==='finished'" class="btn-eval" @click="startEval(item)">评价</button>
+          <button v-if="item.status===4" class="btn-eval" @click="startEval(item)">评价</button>
         </div>
       </div>
     </div>

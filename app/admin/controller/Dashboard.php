@@ -57,7 +57,7 @@ class Dashboard extends BaseAdmin
             $monthStr = sprintf('%s-%02d', $year, $i);
             $where = [
                 ['pay_time', 'like', $monthStr . '%'],
-                ['delete_time', '=', null],
+                ['delete_time', 'null', ''],
             ];
             if ($communityId) $where[] = ['community_id', '=', $communityId];
             $data[] = Db::name('bill_payment')->where($where)->sum('amount');

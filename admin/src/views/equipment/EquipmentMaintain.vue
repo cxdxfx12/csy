@@ -17,6 +17,7 @@
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="equipment_name" label="设备名称" width="150" />
         <el-table-column prop="equipment_code" label="设备编码" width="120" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="maintain_date" label="维保日期" width="110" />
         <el-table-column prop="type" label="维保类型" width="100"><template #default="{row}">{{ typeMap[row.type]||row.type }}</template></el-table-column>
         <el-table-column prop="cost" label="费用" width="100"><template #default="{row}">¥{{ row.cost||0 }}</template></el-table-column>

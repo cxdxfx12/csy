@@ -15,6 +15,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="plate_number" label="车牌号" width="120" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="space_no" label="车位" width="100" />
         <el-table-column prop="enter_time" label="入场时间" width="170" />
         <el-table-column prop="exit_time" label="出场时间" width="170"><template #default="{row}">{{ row.exit_time||'未出场' }}</template></el-table-column>

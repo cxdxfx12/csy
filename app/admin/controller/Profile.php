@@ -38,7 +38,7 @@ class Profile extends BaseAdmin
         $newPwd = $this->request->post('new_password', '');
 
         $admin = Db::name('admin_user')->where('id', get_admin_id())->find();
-        if ($admin['password'] !== encrypt_password($oldPwd)) {
+        if (!verify_password($oldPwd, $admin['password'])) {
             return $this->error('原密码错误');
         }
         if (strlen($newPwd) < 6) return $this->error('密码长度至少6位');

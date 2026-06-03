@@ -8,14 +8,26 @@ class Repair extends BaseApi
 {
     public function add()
     {
-        $data = $this->request->post();
+        $raw = $this->request->post();
         $owner = Db::name('owner')->where('id', $this->ownerId)->find();
-        $data['order_no'] = build_order_no('DSR');
-        $data['owner_id'] = $this->ownerId;
-        $data['community_id'] = $owner['community_id'] ?? 0;
-        $data['reporter'] = $owner['realname'] ?? '';
-        $data['reporter_phone'] = $owner['phone'] ?? '';
-        $data['create_time'] = date('Y-m-d H:i:s');
+        // 只保留数据库存在的字段
+        $data = [
+            'order_no'    => build_order_no('DSR'),
+            'title'       => $raw['title'] ?? '',
+            'content'     => $raw['content'] ?? '',
+            'owner_id'    => $this->ownerId,
+            'community_id'=> $owner['community_id'] ?? 0,
+            'reporter'    => $owner['realname'] ?? '',
+            'reporter_phone' => $owner['phone'] ?? '',
+            'source'      => 1,
+            'status'      => 1,
+            'create_time' => date('Y-m-d H:i:s'),
+        ];
+        // 处理房号 → room_id
+        if (!empty($raw['room_no'])) {
+            $room = Db::name('room')->where('room_number', $raw['room_no'])->where('community_id', $owner['community_id'] ?? 0)->find();
+            if ($room) $data['room_id'] = $room['id'];
+        }
         Db::name('repair_order')->insert($data);
         return $this->success([], '报修提交成功');
     }
@@ -23,9 +35,9 @@ class Repair extends BaseApi
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['owner_id', '=', $this->ownerId], ['delete_time', '=', null]];
+        $where = [['owner_id', '=', $this->ownerId], ['delete_time', 'null', '']];
         $total = Db::name('repair_order')->where($where)->count();
-        $list = Db::name('repair_order')->where($where)->page($page, $limit)->order('id', 'desc')->select()->toArray();
+        $list = Db::name('repair_order')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 

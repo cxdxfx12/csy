@@ -17,6 +17,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="title" label="标题" width="200" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="category" label="分类" width="100" />
         <el-table-column prop="top_status" label="置顶" width="80"><template #default="{row}"><el-tag v-if="row.top_status===1" type="danger">置顶</el-tag><span v-else>-</span></template></el-table-column>
         <el-table-column prop="status" label="状态" width="90"><template #default="{row}"><el-tag :type="statusType[row.status]||'info'">{{ statusMap[row.status]||'未知' }}</el-tag></template></el-table-column>

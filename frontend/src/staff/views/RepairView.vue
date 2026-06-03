@@ -2,9 +2,9 @@
   <div class="page">
     <header><button class="back" @click="$router.back()">←</button><h1>报修处理</h1></header>
     <div class="tabs">
-      <button :class="{active:tab==='pending'}" @click="tab='pending';loadList()">待接单</button>
-      <button :class="{active:tab==='accepted'}" @click="tab='accepted';loadList()">处理中</button>
-      <button :class="{active:tab==='finished'}" @click="tab='finished';loadList()">已完成</button>
+      <button :class="{active:tab===2}" @click="tab=2;loadList()">待接单</button>
+      <button :class="{active:tab===3}" @click="tab=3;loadList()">处理中</button>
+      <button :class="{active:tab===4}" @click="tab=4;loadList()">已完成</button>
     </div>
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="!list.length" class="empty">暂无工单</div>
@@ -21,8 +21,8 @@
           <span>👤 {{ item.contact || '--' }}</span>
         </div>
         <div class="item-actions">
-          <button v-if="tab==='pending'" class="btn-act btn-a" @click="acceptRepair(item.id)">接单</button>
-          <button v-if="tab==='accepted'" class="btn-act btn-b" @click="finishRepair(item.id)">完工</button>
+          <button v-if="tab===2" class="btn-act btn-a" @click="acceptRepair(item.id)">接单</button>
+          <button v-if="tab===3" class="btn-act btn-b" @click="finishRepair(item.id)">完工</button>
           <button class="btn-act btn-c" @click="showDetail(item)">详情</button>
         </div>
       </div>
@@ -51,7 +51,7 @@ import { ref, onMounted } from 'vue'
 import { createApi } from '@/shared/api.js'
 import { showToast, statusLabels, statusColors } from '@/shared/utils.js'
 const api = createApi('/api/staff', 'staff_token')
-const tab = ref('pending')
+const tab = ref(2)
 const list = ref([])
 const loading = ref(false)
 const detail = ref(null)
@@ -62,7 +62,7 @@ const stColor = s => statusColors[s] || '#999'
 onMounted(loadList)
 async function loadList() {
   loading.value = true
-  const res = await api('/repair/list?status=' + tab.value)
+  const res = await api('/repair/list?status=' + String(tab.value))
   if (res.code === 0) list.value = Array.isArray(res.data) ? res.data : (res.data?.list || [])
   loading.value = false
 }

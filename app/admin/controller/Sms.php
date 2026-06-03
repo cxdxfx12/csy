@@ -14,7 +14,7 @@ class Sms extends BaseAdmin
         [$page, $limit] = $this->getPage();
         $keyword = $this->request->param('keyword', '');
 
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         if ($keyword) $where[] = ['name|code|address', 'like', "%{$keyword}%"];
 
         $total = Db::name('community')->where($where)->count();

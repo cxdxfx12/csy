@@ -1,7 +1,7 @@
 <?php
 // 缓存配置
 return [
-    'default' => 'redis',
+    'default' => 'file',
     'stores'  => [
         'file' => [
             'type'      => 'file',

@@ -9,7 +9,7 @@ class RepairOrder extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['ro.delete_time', '=', null]];
+        $where = [['ro.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['ro.community_id', '=', $communityId];
         $status = $this->request->param('status', '');
@@ -21,7 +21,8 @@ class RepairOrder extends BaseAdmin
         $list = Db::name('repair_order')->alias('ro')
             ->leftJoin('room r', 'r.id = ro.room_id')
             ->leftJoin('repair_worker rw', 'rw.id = ro.assignee_id')
-            ->field('ro.*, r.room_number, r.building_name, rw.name as worker_name, rw.phone as worker_phone')
+            ->leftJoin('community com', 'com.id = ro.community_id')
+            ->field('ro.*, r.room_number, r.building_name, rw.name as worker_name, rw.phone as worker_phone, com.name as community_name')
             ->where($where)->page($page, $limit)->order('ro.id', 'desc')->select();
 
         $typeMap = [1=>'水',2=>'电',3=>'气',4=>'门窗',5=>'管道',6=>'家电',7=>'网络',8=>'其他'];

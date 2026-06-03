@@ -13,12 +13,12 @@ class Notice extends BaseApi
         $where = [
             ['community_id', 'in', [0, $owner['community_id'] ?? 0]],
             ['status', '=', 2],
-            ['delete_time', '=', null],
+            ['delete_time', 'null', ''],
         ];
         $total = Db::name('notice')->where($where)->count();
         $list = Db::name('notice')->where($where)
-            ->field('id,title,type,level,cover_image,published_by,publish_time,top_status,read_count')
-            ->page($page, $limit)->order('top_status desc, id desc')->select()->toArray();
+            ->field('id,title,type,level,cover_image,published_by,publish_time,top_status,read_count,content,create_time')
+            ->page($page, $limit)->order('top_status desc, id desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 

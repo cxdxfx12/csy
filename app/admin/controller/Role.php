@@ -9,7 +9,7 @@ class Role extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['name|code', 'like', "%{$keyword}%"];
 

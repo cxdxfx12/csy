@@ -9,7 +9,7 @@ class Complaint extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['c.delete_time', '=', null]];
+        $where = [['c.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['c.community_id', '=', $communityId];
         $status = $this->request->param('status', '');
@@ -24,7 +24,8 @@ class Complaint extends BaseAdmin
         $list = Db::name('complaint')->alias('c')
             ->leftJoin('owner o', 'o.id = c.owner_id')
             ->leftJoin('room r', 'r.id = c.room_id')
-            ->field('c.*, o.realname as owner_name, o.phone as owner_phone, r.room_number, r.building_name')
+            ->leftJoin('community com', 'com.id = c.community_id')
+            ->field('c.*, o.realname as owner_name, o.phone as owner_phone, r.room_number, r.building_name, com.name as community_name')
             ->where($where)->page($page, $limit)->order('c.id', 'desc')->select();
         return $this->table($list, $total);
     }

@@ -9,7 +9,7 @@ class ChargeItem extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['ci.delete_time', '=', null]];
+        $where = [['ci.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['ci.community_id', '=', $communityId];
         $total = Db::name('charge_item')->alias('ci')->where($where)->count();

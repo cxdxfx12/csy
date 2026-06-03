@@ -9,7 +9,7 @@ class PatrolRoute extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['pr.delete_time', '=', null]];
+        $where = [['pr.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['pr.community_id', '=', $communityId];
         $total = Db::name('patrol_route')->alias('pr')->where($where)->count();

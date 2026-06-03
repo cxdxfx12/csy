@@ -20,8 +20,10 @@ class Finance extends BaseAdmin
         if ($endDate) $where[] = ['create_time', '<=', $endDate . ' 23:59:59'];
 
         $total = Db::name('finance_flow')->where($where)->count();
-        $list = Db::name('finance_flow')->where($where)
-            ->page($page, $limit)->order('id', 'desc')->select();
+        $list = Db::name('finance_flow')->alias('f')
+            ->leftJoin('community com', 'com.id = f.community_id')
+            ->field('f.*, com.name as community_name')
+            ->where($where)->page($page, $limit)->order('f.id', 'desc')->select();
 
         $incomeTotal = Db::name('finance_flow')->where($where)->where('type', 1)->sum('amount');
         $expenseTotal = Db::name('finance_flow')->where($where)->where('type', 2)->sum('amount');

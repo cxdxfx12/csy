@@ -9,7 +9,7 @@ class Meter extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['m.delete_time', '=', null]];
+        $where = [['m.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['m.community_id', '=', $communityId];
         $type = $this->request->param('type', 0);
@@ -26,7 +26,8 @@ class Meter extends BaseAdmin
             ->where($where)->count();
         $list = Db::name('meter_reading')->alias('m')
             ->leftJoin('room r', 'r.id = m.room_id')
-            ->field('m.*, r.room_number, r.building_name, r.community_id as room_community_id')
+            ->leftJoin('community com', 'com.id = m.community_id')
+            ->field('m.*, r.room_number, r.building_name, r.community_id as room_community_id, com.name as community_name')
             ->where($where)->page($page, $limit)->order('m.id', 'desc')->select();
 
         return $this->table($list, $total);

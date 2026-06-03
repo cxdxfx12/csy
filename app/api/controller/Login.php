@@ -21,7 +21,7 @@ class Login extends BaseApi
         }
 
         $owner = Db::name('owner')->where('phone', $phone)->find();
-        if (!$owner || $owner['password'] !== encrypt_password($password)) {
+        if (!$owner || !verify_password($password, $owner['password'])) {
             return $this->error('手机号或密码错误');
         }
         if ($owner['status'] != 1) {

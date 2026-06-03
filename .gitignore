@@ -1,6 +1,7 @@
-# 运行时生成
+﻿# 运行时生成
 /runtime/
 /admin/node_modules/
+/frontend/node_modules/
 /public/admin/
 public/index.html
 

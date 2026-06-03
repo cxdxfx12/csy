@@ -9,7 +9,7 @@ class Visitor extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['v.delete_time', '=', null]];
+        $where = [['v.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['v.community_id', '=', $communityId];
         $status = $this->request->param('status', '');
@@ -18,7 +18,8 @@ class Visitor extends BaseAdmin
         $list = Db::name('visitor')->alias('v')
             ->leftJoin('owner o', 'o.id = v.owner_id')
             ->leftJoin('room r', 'r.id = v.room_id')
-            ->field('v.*, v.visit_reason as visit_purpose, o.realname as owner_name, r.room_number, r.building_name')
+            ->leftJoin('community com', 'com.id = v.community_id')
+            ->field('v.*, v.visit_reason as visit_purpose, o.realname as owner_name, r.room_number, r.building_name, com.name as community_name')
             ->where($where)->page($page, $limit)->order('v.id', 'desc')->select();
         return $this->table($list, $total);
     }

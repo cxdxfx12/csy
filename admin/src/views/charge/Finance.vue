@@ -20,6 +20,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="flow_no" label="流水号" width="160" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="type" label="类型" width="80"><template #default="{row}"><el-tag :type="row.type===1?'success':'danger'">{{ row.type===1?'收入':'支出' }}</el-tag></template></el-table-column>
         <el-table-column prop="category" label="分类" width="100" />
         <el-table-column prop="amount" label="金额" width="120"><template #default="{row}">¥{{ row.amount }}</template></el-table-column>

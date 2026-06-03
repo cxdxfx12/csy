@@ -40,19 +40,19 @@ const appStore = useAppStore()
 const menuList = computed(() => userStore.menus)
 
 const iconMap: Record<string, string> = {
-  dashboard: 'DataAnalysis', system: 'Setting', admin: 'User', role: 'Security', menu: 'Menu',
-  config: 'Tools', log: 'DocumentCopy', property: 'HomeFilled', community: 'HomeFilled',
-  building: 'OfficeBuilding', room: 'Door', owner: 'UserFilled', charge: 'Money',
+  dashboard: 'DataAnalysis', system: 'Setting', admin: 'User', role: 'Key', menu: 'Menu',
+  config: 'Tools', log: 'DocumentCopy',   property: 'HomeFilled', community: 'HomeFilled',
+  building: 'OfficeBuilding', room: 'House', owner: 'UserFilled', charge: 'Money',
   bill: 'List', payment: 'CreditCard', meter: 'DataBoard', finance: 'TrendCharts',
   item: 'PriceTag', repair: 'Tools', worker: 'User', order: 'Document',
-  security: 'Shield', visitor: 'User', patrol: 'Van', access_card: 'CreditCard',
-  parking: 'TakeawayBox', space: 'TakeawayBox', vehicle: 'Bus', record: 'List',
+  security: 'Lock', visitor: 'User', patrol: 'Van', access_card: 'CreditCard',
+  parking: 'TakeawayBox', space: 'TakeawayBox', vehicle: 'Van', record: 'List',
   notice: 'Bell', equipment: 'SetUp', maintain: 'Tools', complaint: 'Warning',
   print: 'Printer', receipt: 'List', arrears: 'Bell', index: 'DataAnalysis', profile: 'User',
   staff: 'UserFilled', attendance: 'Calendar', schedule: 'Clock', salary: 'Money',
   supplier: 'Shop', purchase: 'ShoppingCart', contract: 'Document', evaluation: 'StarFilled',
   vote: 'TrendCharts', activity: 'Sunny', owner_notice: 'Bell', owner_complaint: 'Warning',
-  sms: 'Message',
+  sms: 'Message', sms_wechat_user: 'ChatDotSquare', wechat: 'ChatDotSquare', wechat_user: 'User', user: 'User',
 }
 
 function menuIcon(menu: MenuItem): string {

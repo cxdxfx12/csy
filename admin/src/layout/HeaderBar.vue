@@ -14,6 +14,7 @@
       <span class="user-info">
         <el-avatar :size="32" :src="userStore.userInfo?.avatar || undefined" icon="UserFilled" />
         <span class="user-name">{{ userStore.userInfo?.nickname || '管理员' }}</span>
+        <el-tag v-if="userStore.userInfo?.community_name" size="small" type="warning" class="community-tag">{{ userStore.userInfo.community_name }}</el-tag>
       </span>
       <template #dropdown>
         <el-dropdown-menu>
@@ -50,5 +51,6 @@ function handleLogout() {
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
 .user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .user-name { font-size: 14px; color: #333; font-weight: 500; }
+.community-tag { margin-left: 4px; }
 .notice-badge { margin-right: 8px; }
 </style>

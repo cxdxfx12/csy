@@ -9,7 +9,7 @@ class Family extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['f.delete_time', '=', null]];
+        $where = [['f.delete_time', 'null', '']];
         $ownerId = $this->request->param('owner_id', 0);
         if ($ownerId) $where[] = ['f.owner_id', '=', $ownerId];
         $total = Db::name('owner_family')->alias('f')->where($where)->count();

@@ -9,7 +9,7 @@ class Payment extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['p.delete_time', '=', null]];
+        $where = [['p.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['p.payment_no|p.trade_no|o.realname|o.phone|r.room_number', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);
@@ -25,7 +25,8 @@ class Payment extends BaseAdmin
         $list = Db::name('bill_payment')->alias('p')
             ->leftJoin('owner o', 'o.id = p.owner_id')
             ->leftJoin('room r', 'r.id = p.room_id')
-            ->field('p.*, o.realname as owner_name, o.phone as owner_phone, r.room_number')
+            ->leftJoin('community com', 'com.id = p.community_id')
+            ->field('p.*, o.realname as owner_name, o.phone as owner_phone, r.room_number, com.name as community_name')
             ->where($where)->page($page, $limit)->order('p.id', 'desc')->select();
 
         return $this->table($list, $total);

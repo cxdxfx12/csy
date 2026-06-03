@@ -9,7 +9,7 @@ class ParkingSpace extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['ps.delete_time', '=', null]];
+        $where = [['ps.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['ps.community_id', '=', $communityId];
         $status = $this->request->param('status', '');

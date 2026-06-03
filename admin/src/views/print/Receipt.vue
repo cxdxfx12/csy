@@ -16,6 +16,7 @@
         <el-table-column prop="bill_no" label="账单号" width="160" />
         <el-table-column prop="owner_name" label="业主" width="100" />
         <el-table-column prop="room_number" label="房间" width="100" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="charge_item_name" label="收费项目" width="120" />
         <el-table-column prop="total_amount" label="金额" width="100"><template #default="{row}">¥{{ row.total_amount }}</template></el-table-column>
         <el-table-column prop="paid_amount" label="已缴" width="100"><template #default="{row}">¥{{ row.paid_amount }}</template></el-table-column>

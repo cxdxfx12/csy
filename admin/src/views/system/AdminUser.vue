@@ -15,6 +15,12 @@
         <el-table-column prop="username" label="用户名" width="120" />
         <el-table-column prop="nickname" label="昵称" width="140" />
         <el-table-column prop="role_name" label="角色" width="120" />
+        <el-table-column label="所属小区" width="150">
+          <template #default="{ row }">
+            <el-tag v-if="row.community_name && [3,4,5,6,7].includes(row.role_id)" type="warning" size="small">{{ row.community_name }}</el-tag>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="phone" label="手机号" width="130" />
         <el-table-column prop="status" label="状态" width="80">
           <template #default="{ row }"><el-tag :type="row.status===1?'success':'danger'">{{ row.status===1?'正常':'禁用' }}</el-tag></template>

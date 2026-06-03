@@ -48,6 +48,7 @@
       <el-table :data="list" v-loading="loading" stripe border>
         <el-table-column prop="id" label="ID" width="70" align="center" />
         <el-table-column prop="title" label="标题" min-width="180" show-overflow-tooltip />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column label="类型" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="complaintTypeTag(row.type)" size="small" effect="dark">

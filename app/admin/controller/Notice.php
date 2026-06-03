@@ -9,7 +9,7 @@ class Notice extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['n.delete_time', '=', null]];
+        $where = [['n.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['n.title|n.content', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);
@@ -18,7 +18,8 @@ class Notice extends BaseAdmin
         if ($status !== '') $where[] = ['n.status', '=', $status];
         $total = Db::name('notice')->alias('n')->where($where)->count();
         $list = Db::name('notice')->alias('n')
-            ->field('n.*')
+            ->leftJoin('community com', 'com.id = n.community_id')
+            ->field('n.*, com.name as community_name')
             ->where($where)->page($page, $limit)->order('n.top_status desc, n.id desc')->select();
         return $this->table($list, $total);
     }

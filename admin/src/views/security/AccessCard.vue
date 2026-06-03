@@ -17,6 +17,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="card_no" label="卡号" width="150" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="owner_name" label="持卡人" width="120" />
         <el-table-column prop="holder_type" label="类型" width="100"><template #default="{row}">{{ typeMap[row.holder_type]||row.holder_type }}</template></el-table-column>
         <el-table-column prop="status" label="状态" width="90"><template #default="{row}"><el-tag :type="statusType[row.status]||'info'">{{ statusMap[row.status]||'未知' }}</el-tag></template></el-table-column>

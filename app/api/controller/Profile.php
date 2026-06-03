@@ -26,7 +26,7 @@ class Profile extends BaseApi
         $newPwd = $this->request->post('new_password', '');
         $owner = Db::name('owner')->where('id', $this->ownerId)->find();
 
-        if ($owner['password'] !== encrypt_password($oldPwd)) {
+        if (!verify_password($oldPwd, $owner['password'])) {
             return $this->error('原密码错误');
         }
         Db::name('owner')->where('id', $this->ownerId)->update(['password' => encrypt_password($newPwd)]);

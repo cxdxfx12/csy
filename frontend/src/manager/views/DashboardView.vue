@@ -3,7 +3,7 @@
     <!-- Top Bar -->
     <header>
       <div class="header-left">
-        <h1>🏘️ {{ communityName || '小区经理工作台' }}</h1>
+        <h1>🏘️ {{ communityName }}<span v-if="communityName" class="title-divider">|</span><span class="title-sub">小区经理工作台</span></h1>
       </div>
       <div class="header-right">
         <span class="user-info">{{ managerName }}</span>
@@ -226,10 +226,10 @@ const page = ref(1)
 const limit = 15
 
 const apiMap = {
-  owner: '/manager/owner/list',
-  bill: '/manager/bill/list',
-  repair: '/manager/repair/list',
-  complaint: '/manager/complaint/list',
+  owner: '/owner/list',
+  bill: '/bill/list',
+  repair: '/repair/list',
+  complaint: '/complaint/list',
 }
 
 onMounted(loadAll)
@@ -291,7 +291,9 @@ function logout() {
 <style scoped>
 .dashboard{padding:20px;max-width:1200px;margin:0 auto}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
-header h1{font-size:22px;color:#f1f5f9}
+header h1{font-size:22px;color:#f1f5f9;display:flex;align-items:center;gap:8px}
+.title-divider{color:#64748b;font-weight:300}
+.title-sub{font-size:16px;color:#94a3b8;font-weight:400}
 .header-right{display:flex;align-items:center;gap:12px}
 .user-info{color:#94a3b8;font-size:13px}
 .btn-logout{background:rgba(255,255,255,.1);border:1px solid #334155;color:#94a3b8;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px}

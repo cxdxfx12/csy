@@ -17,6 +17,7 @@
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="name" label="姓名" width="120" />
         <el-table-column prop="phone" label="手机" width="130" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="specialty" label="专长" width="150" />
         <el-table-column prop="status" label="状态" width="80"><template #default="{row}"><el-tag :type="row.status===1?'success':'danger'">{{ row.status===1?'在职':'离职' }}</el-tag></template></el-table-column>
         <el-table-column prop="order_count" label="工单数" width="80" />

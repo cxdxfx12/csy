@@ -9,7 +9,7 @@ class Activity extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['a.delete_time', '=', null]];
+        $where = [['a.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['a.title', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);

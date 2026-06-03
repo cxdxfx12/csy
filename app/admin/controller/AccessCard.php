@@ -9,7 +9,7 @@ class AccessCard extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['c.delete_time', '=', null]];
+        $where = [['c.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['c.community_id', '=', $communityId];
         $status = $this->request->param('status', '');
@@ -17,7 +17,8 @@ class AccessCard extends BaseAdmin
         $total = Db::name('access_card')->alias('c')->where($where)->count();
         $list = Db::name('access_card')->alias('c')
             ->leftJoin('owner o', 'o.id = c.owner_id')
-            ->field('c.*, o.realname as owner_name')
+            ->leftJoin('community com', 'com.id = c.community_id')
+            ->field('c.*, o.realname as owner_name, com.name as community_name')
             ->where($where)->page($page, $limit)->order('c.id', 'desc')->select();
         return $this->table($list, $total);
     }

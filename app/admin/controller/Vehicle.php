@@ -9,7 +9,7 @@ class Vehicle extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['v.delete_time', '=', null]];
+        $where = [['v.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['v.community_id', '=', $communityId];
         $keyword = $this->request->param('keyword', '');
@@ -18,7 +18,8 @@ class Vehicle extends BaseAdmin
         $list = Db::name('vehicle')->alias('v')
             ->leftJoin('owner o', 'o.id = v.owner_id')
             ->leftJoin('parking_space ps', 'ps.id = v.parking_space_id')
-            ->field('v.*, o.realname as owner_name, o.phone as owner_phone, ps.space_no')
+            ->leftJoin('community com', 'com.id = v.community_id')
+            ->field('v.*, o.realname as owner_name, o.phone as owner_phone, ps.space_no, com.name as community_name')
             ->where($where)->page($page, $limit)->order('v.id', 'desc')->select();
         return $this->table($list, $total);
     }

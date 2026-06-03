@@ -17,7 +17,7 @@ class ManagerLogin extends BaseManager
         $username = $this->request->post('username', '');
         $password = $this->request->post('password', '');
         $staff = Db::name('admin_user')->where('username', $username)->find();
-        if (!$staff || $staff['password'] !== encrypt_password($password)) {
+        if (!$staff || !verify_password($password, $staff['password'])) {
             return $this->error('用户名或密码错误');
         }
         if ($staff['status'] != 1) {

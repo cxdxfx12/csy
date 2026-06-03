@@ -20,6 +20,8 @@ export interface UserInfo {
   avatar: string
   role: string
   role_id: number
+  community_ids?: string
+  community_name?: string
 }
 
 // 菜单

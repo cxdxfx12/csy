@@ -7,13 +7,18 @@ use think\facade\Db;
 class Arrears extends BaseAdmin
 {
     /**
-     * 获取PDO连接
+     * 获取PDO连接（使用框架数据库配置）
      */
     protected function getPdo()
     {
         static $pdo = null;
         if ($pdo === null) {
-            $pdo = new \PDO('mysql:host=127.0.0.1;port=3306;dbname=dasheng;charset=utf8mb4', 'root', 'cxdxfx12', [
+            $dbConfig = \think\facade\Db::getConfig();
+            $conn = $dbConfig['connections'][$dbConfig['default']] ?? $dbConfig['connections']['mysql'];
+            $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s',
+                $conn['hostname'], $conn['hostport'] ?? '3306',
+                $conn['database'], $conn['charset'] ?? 'utf8mb4');
+            $pdo = new \PDO($dsn, $conn['username'], $conn['password'], [
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             ]);

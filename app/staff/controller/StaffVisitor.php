@@ -20,11 +20,11 @@ class StaffVisitor extends BaseStaff
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', '=', null]];
+        $where = [['delete_time', 'null', '']];
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['status', '=', $status];
         $total = Db::name('visitor')->where($where)->count();
-        $list = Db::name('visitor')->where($where)->page($page, $limit)->order('id', 'desc')->select()->toArray();
+        $list = Db::name('visitor')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 }

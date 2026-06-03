@@ -17,6 +17,13 @@ class LogMiddleware
 
         try {
             $adminInfo = $request->adminInfo ?? [];
+            $params = $request->param();
+            // 脱敏：过滤密码、token 等敏感字段
+            $sensitiveFields = ['password', 'old_password', 'new_password', 'token', 'secret', 'api_key'];
+            foreach ($sensitiveFields as $field) {
+                if (isset($params[$field])) $params[$field] = '***';
+            }
+
             $data = [
                 'admin_id'   => $adminInfo['id'] ?? 0,
                 'admin_name' => $adminInfo['nickname'] ?? $adminInfo['username'] ?? '',
@@ -24,7 +31,7 @@ class LogMiddleware
                 'action'     => $request->controller() . '/' . $request->action(),
                 'url'        => $request->url(true),
                 'method'     => $request->method(),
-                'params'     => json_encode($request->param(), JSON_UNESCAPED_UNICODE),
+                'params'     => json_encode($params, JSON_UNESCAPED_UNICODE),
                 'result'     => $response->getContent(),
                 'ip'         => $request->ip(),
                 'user_agent' => $request->header('User-Agent', ''),

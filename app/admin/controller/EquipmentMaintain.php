@@ -9,7 +9,7 @@ class EquipmentMaintain extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['em.delete_time', '=', null]];
+        $where = [['em.delete_time', 'null', '']];
         $equipmentId = $this->request->param('equipment_id', 0);
         if ($equipmentId) $where[] = ['em.equipment_id', '=', $equipmentId];
         $startDate = $this->request->param('start_date', '');
@@ -24,7 +24,8 @@ class EquipmentMaintain extends BaseAdmin
             ->where($where)->count();
         $list = Db::name('equipment_maintain')->alias('em')
             ->leftJoin('equipment eq', 'eq.id = em.equipment_id')
-            ->field('em.*, eq.name as equipment_name, eq.code as equipment_code')
+            ->leftJoin('community com', 'com.id = eq.community_id')
+            ->field('em.*, eq.name as equipment_name, eq.code as equipment_code, com.name as community_name')
             ->where($where)->page($page, $limit)->order('em.id', 'desc')->select();
         return $this->table($list, $total);
     }

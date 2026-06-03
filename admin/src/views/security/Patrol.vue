@@ -15,6 +15,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="route_name" label="路线名称" width="150" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="point_name" label="检查点" width="150" />
         <el-table-column prop="staff_name" label="巡检人" width="120" />
         <el-table-column prop="check_time" label="巡检时间" width="170" />

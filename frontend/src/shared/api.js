@@ -15,9 +15,14 @@ export function createApi(baseURL, tokenKey) {
     if (token) headers['Authorization'] = 'Bearer ' + token
 
     const url = BASE_HOST + realBase + path
-    const res = await fetch(url, { ...options, headers })
-    const data = await res.json()
-    return data
+    try {
+      const res = await fetch(url, { ...options, headers })
+      const data = await res.json()
+      return data
+    } catch (e) {
+      console.error('API error:', url, e)
+      return { code: -1, msg: '网络请求失败', data: null }
+    }
   }
 }
 

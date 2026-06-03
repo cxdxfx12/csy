@@ -16,6 +16,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="order_no" label="工单号" width="150" />
         <el-table-column prop="reporter" label="报修人" width="100" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="room_number" label="房间" width="100" />
         <el-table-column prop="type_name" label="类型" width="100" />
         <el-table-column prop="status" label="状态" width="90"><template #default="{row}"><el-tag :type="statusType[row.status]||'info'">{{ statusMap[row.status]||'未知' }}</el-tag></template></el-table-column>

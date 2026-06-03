@@ -21,6 +21,7 @@
         <el-table-column prop="id_card" label="身份证" width="180" />
         <el-table-column prop="owner_name" label="受访业主" width="120" />
         <el-table-column prop="room_number" label="房间" width="100" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="visit_purpose" label="来访事由" width="120" />
         <el-table-column prop="status" label="状态" width="90"><template #default="{row}"><el-tag :type="statusType[row.status]||'info'">{{ statusMap[row.status]||'未知' }}</el-tag></template></el-table-column>
         <el-table-column prop="create_time" label="登记时间" width="170" />

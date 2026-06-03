@@ -9,7 +9,7 @@ class Vote extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['v.delete_time', '=', null]];
+        $where = [['v.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['v.title', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);

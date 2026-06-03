@@ -9,10 +9,10 @@ class StaffOrder extends BaseStaff
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['status', 'in', [1, 2, 3]], ['delete_time', '=', null]];
+        $where = [['status', 'in', [1, 2, 3]], ['delete_time', 'null', '']];
         $total = Db::name('repair_order')->where($where)->count();
         $list = Db::name('repair_order')->where($where)
-            ->page($page, $limit)->order('id', 'desc')->select()->toArray();
+            ->page($page, $limit)->order('id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 

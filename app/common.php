@@ -95,10 +95,31 @@ if (!function_exists('build_order_no')) {
 }
 
 if (!function_exists('encrypt_password')) {
-    function encrypt_password(string $password, string $salt = ''): string
+    /**
+     * 密码加密（bcrypt）
+     */
+    function encrypt_password(string $password): string
     {
-        if (empty($salt)) $salt = 'JUD6FCtZsqrmVXc2apev4TRn3O8gAhxbSlH9wfPN';
-        return md5(md5($password) . $salt);
+        return password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+    }
+}
+
+if (!function_exists('verify_password')) {
+    /**
+     * 密码验证（兼容旧版 md5 和 新版 bcrypt）
+     * @param string $password 明文密码
+     * @param string $hash 数据库中存储的哈希值
+     * @return bool
+     */
+    function verify_password(string $password, string $hash): bool
+    {
+        // bcrypt 哈希以 $2y$ / $2b$ / $2a$ 开头
+        if (strlen($hash) >= 4 && strpos($hash, '$2') === 0) {
+            return password_verify($password, $hash);
+        }
+        // 兼容旧版 md5(md5($pwd).$salt)
+        $salt = 'JUD6FCtZsqrmVXc2apev4TRn3O8gAhxbSlH9wfPN';
+        return $hash === md5(md5($password) . $salt);
     }
 }
 

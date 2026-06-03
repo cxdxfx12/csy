@@ -9,7 +9,7 @@ class Equipment extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['e.delete_time', '=', null]];
+        $where = [['e.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['e.community_id', '=', $communityId];
         $category = $this->request->param('category', 0);

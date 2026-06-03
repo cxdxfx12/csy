@@ -37,6 +37,9 @@ Route::group('staff', function () {
     Route::post('order/create', 'staff/StaffOrder/create');
     Route::post('order/close', 'staff/StaffOrder/close');
 
+    // 角标 & 消息提醒
+    Route::get('badge/counts', 'staff/StaffBadge/counts');
+
     // 个人中心
     Route::post('profile/edit', 'staff/StaffProfile/edit');
     Route::get('profile/info', 'staff/StaffProfile/info');

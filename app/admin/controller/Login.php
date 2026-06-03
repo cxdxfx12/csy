@@ -22,14 +22,15 @@ class Login extends BaseAdmin
             return $this->error('请输入用户名和密码');
         }
 
-        // 验证码校验
-        if (!empty($captchaKey)) {
-            $cached = Cache::get('captcha_' . $captchaKey);
-            if (empty($cached) || strtolower($cached) != strtolower($captcha)) {
-                return $this->error('验证码错误');
-            }
-            Cache::delete('captcha_' . $captchaKey);
+        // 验证码校验（必填）
+        if (empty($captchaKey) || empty($captcha)) {
+            return $this->error('请输入验证码');
         }
+        $cached = Cache::get('captcha_' . $captchaKey);
+        if (empty($cached) || strtolower($cached) != strtolower($captcha)) {
+            return $this->error('验证码错误或已过期');
+        }
+        Cache::delete('captcha_' . $captchaKey);
 
         $admin = Db::name('admin_user')->where('username', $username)->find();
         if (!$admin) {
@@ -40,8 +41,7 @@ class Login extends BaseAdmin
             return $this->error('账户已被禁用，请联系管理员');
         }
 
-        $pwdEncrypt = encrypt_password($password);
-        if ($admin['password'] !== $pwdEncrypt) {
+        if (!verify_password($password, $admin['password'])) {
             return $this->error('用户名或密码错误');
         }
 
@@ -130,14 +130,26 @@ class Login extends BaseAdmin
         $role = Db::name('role')->where('id', $roleId)->find();
         $permissions = Db::name('menu')->where('type', 'in', [2, 3])->column('permission');
 
+        // 补充小区信息（仅角色3-7需要）
+        $communityIds = $adminInfo['community_ids'] ?? '';
+        $communityName = '';
+        if (in_array($roleId, [3, 4, 5, 6, 7]) && !empty($communityIds)) {
+            $ids = array_filter(explode(',', $communityIds));
+            if (!empty($ids)) {
+                $communityName = Db::name('community')->where('id', intval($ids[0]))->value('name') ?? '';
+            }
+        }
+
         return $this->success([
             'userInfo' => [
-                'id'       => $adminInfo['id'],
-                'username' => $adminInfo['username'],
-                'nickname' => $adminInfo['nickname'],
-                'avatar'   => $adminInfo['avatar'],
-                'role'     => $role['name'] ?? '',
-                'role_id'  => $roleId,
+                'id'             => $adminInfo['id'],
+                'username'       => $adminInfo['username'],
+                'nickname'       => $adminInfo['nickname'],
+                'avatar'         => $adminInfo['avatar'],
+                'role'           => $role['name'] ?? '',
+                'role_id'        => $roleId,
+                'community_ids'  => $communityIds,
+                'community_name' => $communityName,
             ],
             'menus'       => tree_list($menus),
             'permissions' => $permissions,
@@ -271,7 +283,7 @@ class Login extends BaseAdmin
 
         // 校验用户名密码
         $admin = Db::name('admin_user')->where('username', $username)->find();
-        if (!$admin || $admin['password'] !== encrypt_password($password)) {
+        if (!$admin || !verify_password($password, $admin['password'])) {
             return $this->error('用户名或密码错误');
         }
         if ($admin['status'] != 1) {
@@ -332,15 +344,27 @@ class Login extends BaseAdmin
             }
         }
 
+        // 补充小区信息（仅角色3-7需要）
+        $communityIds = $admin['community_ids'] ?? '';
+        $communityName = '';
+        if (in_array($admin['role_id'], [3, 4, 5, 6, 7]) && !empty($communityIds)) {
+            $ids = array_filter(explode(',', $communityIds));
+            if (!empty($ids)) {
+                $communityName = Db::name('community')->where('id', intval($ids[0]))->value('name') ?? '';
+            }
+        }
+
         return $this->success([
             'token'    => $this->makeToken($admin),
             'userInfo' => [
-                'id'       => $admin['id'],
-                'username' => $admin['username'],
-                'nickname' => $admin['nickname'],
-                'avatar'   => $admin['avatar'],
-                'role'     => $role['name'] ?? '',
-                'role_id'  => $admin['role_id'],
+                'id'             => $admin['id'],
+                'username'       => $admin['username'],
+                'nickname'       => $admin['nickname'],
+                'avatar'         => $admin['avatar'],
+                'role'           => $role['name'] ?? '',
+                'role_id'        => $admin['role_id'],
+                'community_ids'  => $communityIds,
+                'community_name' => $communityName,
             ],
             'menus' => tree_list($menus),
         ], $msg);

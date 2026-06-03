@@ -9,7 +9,7 @@ class Bill extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['b.delete_time', '=', null]];
+        $where = [['b.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
         if ($communityId) $where[] = ['b.community_id', '=', $communityId];
         $ownerId = $this->request->param('owner_id', 0);
@@ -26,7 +26,8 @@ class Bill extends BaseAdmin
             ->leftJoin('owner o', 'o.id = b.owner_id')
             ->leftJoin('room r', 'r.id = b.room_id')
             ->leftJoin('charge_item ci', 'ci.id = b.charge_item_id')
-            ->field('b.*, o.realname as owner_name, o.phone as owner_phone, r.room_number, r.building_name, ci.name as charge_item_name')
+            ->leftJoin('community com', 'com.id = b.community_id')
+            ->field('b.*, o.realname as owner_name, o.phone as owner_phone, r.room_number, r.building_name, ci.name as charge_item_name, com.name as community_name')
             ->where($where)
             ->page($page, $limit)->order('b.id', 'desc')->select();
 

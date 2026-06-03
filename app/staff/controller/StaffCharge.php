@@ -11,7 +11,7 @@ class StaffCharge extends BaseStaff
         [$page, $limit] = $this->getPage();
         $communityId = $this->request->param('community_id', 0);
         $keyword = $this->request->param('keyword', '');
-        $where = [['b.status', '=', 1], ['b.delete_time', '=', null]];
+        $where = [['b.status', '=', 1], ['b.delete_time', 'null', '']];
         if ($communityId) $where[] = ['b.community_id', '=', $communityId];
         if ($keyword) $where[] = ['o.realname|o.phone|r.room_number', 'like', "%{$keyword}%"];
         $total = Db::name('bill')->alias('b')
@@ -22,7 +22,7 @@ class StaffCharge extends BaseStaff
             ->leftJoin('owner o', 'o.id = b.owner_id')
             ->leftJoin('room r', 'r.id = b.room_id')
             ->field('b.*, o.realname as owner_name, o.phone as owner_phone, r.room_number')
-            ->where($where)->page($page, $limit)->order('b.id', 'desc')->select()->toArray();
+            ->where($where)->page($page, $limit)->order('b.id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
 

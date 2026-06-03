@@ -20,8 +20,10 @@ class PatrolRecord extends BaseAdmin
         if ($endDate) $where[] = ['check_time', '<=', $endDate . ' 23:59:59'];
 
         $total = Db::name('patrol_record')->where($where)->count();
-        $list = Db::name('patrol_record')->where($where)
-            ->page($page, $limit)->order('id', 'desc')->select();
+        $list = Db::name('patrol_record')->alias('pr')
+            ->leftJoin('community com', 'com.id = pr.community_id')
+            ->field('pr.*, com.name as community_name')
+            ->where($where)->page($page, $limit)->order('pr.id', 'desc')->select();
         return $this->table($list, $total);
     }
 }

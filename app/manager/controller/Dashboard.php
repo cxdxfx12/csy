@@ -114,15 +114,16 @@ class Dashboard extends BaseManager
         $cid = $this->getCommunityId();
         $keyword = $this->request->param('keyword', '');
 
-        $where = [['o.delete_time', '=', null], ['o.community_id', '=', $cid]];
-        if ($keyword) $where[] = ['o.realname|o.phone', 'like', "%{$keyword}%"];
+        $query = Db::name('owner')->alias('o')
+            ->whereNull('o.delete_time')
+            ->where('o.community_id', $cid);
+        if ($keyword) $query->where('o.realname|o.phone', 'like', "%{$keyword}%");
 
-        $total = Db::name('owner')->alias('o')->where($where)->count();
-        $list = Db::name('owner')->alias('o')
-            ->leftJoin('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
+        $total = $query->count();
+        $list = $query->leftJoin('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
             ->leftJoin('room r', 'r.id = ocr.room_id')
             ->field('o.id, o.realname, o.phone, o.gender, o.type, o.status, o.create_time, GROUP_CONCAT(r.room_number) as rooms')
-            ->where($where)->group('o.id')->page($page, $limit)->order('o.id', 'desc')->select();
+            ->group('o.id')->page($page, $limit)->order('o.id', 'desc')->select();
 
         return $this->table($list, $total);
     }
@@ -134,15 +135,16 @@ class Dashboard extends BaseManager
         $cid = $this->getCommunityId();
         $status = $this->request->param('status', 0);
 
-        $where = [['b.delete_time', '=', null], ['b.community_id', '=', $cid]];
-        if ($status) $where[] = ['b.status', '=', intval($status)];
+        $query = Db::name('bill')->alias('b')
+            ->whereNull('b.delete_time')
+            ->where('b.community_id', $cid);
+        if ($status) $query->where('b.status', intval($status));
 
-        $total = Db::name('bill')->alias('b')->where($where)->count();
-        $list = Db::name('bill')->alias('b')
-            ->leftJoin('owner o', 'o.id = b.owner_id')
+        $total = $query->count();
+        $list = $query->leftJoin('owner o', 'o.id = b.owner_id')
             ->leftJoin('room r', 'r.id = b.room_id')
             ->field('b.*, o.realname as owner_name, r.room_number')
-            ->where($where)->page($page, $limit)->order('b.id', 'desc')->select();
+            ->page($page, $limit)->order('b.id', 'desc')->select();
 
         return $this->table($list, $total);
     }
@@ -154,15 +156,16 @@ class Dashboard extends BaseManager
         $cid = $this->getCommunityId();
         $status = $this->request->param('status', 0);
 
-        $where = [['ro.delete_time', '=', null], ['ro.community_id', '=', $cid]];
-        if ($status) $where[] = ['ro.status', '=', intval($status)];
+        $query = Db::name('repair_order')->alias('ro')
+            ->whereNull('ro.delete_time')
+            ->where('ro.community_id', $cid);
+        if ($status) $query->where('ro.status', intval($status));
 
-        $total = Db::name('repair_order')->alias('ro')->where($where)->count();
-        $list = Db::name('repair_order')->alias('ro')
-            ->leftJoin('owner o', 'o.id = ro.owner_id')
+        $total = $query->count();
+        $list = $query->leftJoin('owner o', 'o.id = ro.owner_id')
             ->leftJoin('room r', 'r.id = ro.room_id')
             ->field('ro.*, o.realname as owner_name, r.room_number')
-            ->where($where)->page($page, $limit)->order('ro.id', 'desc')->select();
+            ->page($page, $limit)->order('ro.id', 'desc')->select();
 
         return $this->table($list, $total);
     }
@@ -174,14 +177,15 @@ class Dashboard extends BaseManager
         $cid = $this->getCommunityId();
         $status = $this->request->param('status', 0);
 
-        $where = [['c.delete_time', '=', null], ['c.community_id', '=', $cid]];
-        if ($status) $where[] = ['c.status', '=', intval($status)];
+        $query = Db::name('complaint')->alias('c')
+            ->whereNull('c.delete_time')
+            ->where('c.community_id', $cid);
+        if ($status) $query->where('c.status', intval($status));
 
-        $total = Db::name('complaint')->alias('c')->where($where)->count();
-        $list = Db::name('complaint')->alias('c')
-            ->leftJoin('owner o', 'o.id = c.owner_id')
+        $total = $query->count();
+        $list = $query->leftJoin('owner o', 'o.id = c.owner_id')
             ->field('c.*, o.realname as owner_name')
-            ->where($where)->page($page, $limit)->order('c.id', 'desc')->select();
+            ->page($page, $limit)->order('c.id', 'desc')->select();
 
         return $this->table($list, $total);
     }

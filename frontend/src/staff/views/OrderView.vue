@@ -25,7 +25,7 @@
         <div class="item-body">{{ item.content }}</div>
         <div class="item-ft">
           <span>{{ item.create_time }}</span>
-          <button v-if="item.status!=='closed'" class="btn-close" @click="closeOrder(item.id)">关闭</button>
+          <button v-if="item.status!==6" class="btn-close" @click="closeOrder(item.id)">关闭</button>
         </div>
       </div>
     </div>

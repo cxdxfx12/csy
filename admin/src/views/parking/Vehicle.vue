@@ -16,6 +16,7 @@
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="plate_number" label="车牌号" width="120" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="owner_name" label="车主" width="100" />
         <el-table-column prop="brand" label="品牌" width="120" />
         <el-table-column prop="model" label="型号" width="120" />
