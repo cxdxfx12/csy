@@ -17,7 +17,9 @@ class RepairOrder extends BaseAdmin
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['ro.order_no|ro.reporter|ro.reporter_phone|r.room_number', 'like', "%{$keyword}%"];
 
-        $total = Db::name('repair_order')->alias('ro')->where($where)->count();
+        $total = Db::name('repair_order')->alias('ro')
+            ->leftJoin('room r', 'r.id = ro.room_id')
+            ->where($where)->count();
         $list = Db::name('repair_order')->alias('ro')
             ->leftJoin('room r', 'r.id = ro.room_id')
             ->leftJoin('repair_worker rw', 'rw.id = ro.assignee_id')

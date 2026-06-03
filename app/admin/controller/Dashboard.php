@@ -115,4 +115,198 @@ class Dashboard extends BaseAdmin
 
         return $this->success($data);
     }
+
+    /**
+     * 数字大屏全部数据（单次请求）
+     */
+    public function bigscreen()
+    {
+        $communityId = $this->request->param('community_id', 0);
+
+        // ---- 基础资产 ----
+        $communityCount = Db::name('community')->where('delete_time', null)->count();
+        $buildingCount  = Db::name('building')->where('delete_time', null)->count();
+        $roomCount      = Db::name('room')->where('delete_time', null)->count();
+        $ownerCount     = Db::name('owner')->where('delete_time', null)->count();
+        $staffCount     = Db::name('staff')->where('delete_time', null)->where('status', 1)->count();
+        $vehicleCount   = Db::name('vehicle')->where('delete_time', null)->count();
+
+        // 房间利用率
+        $occupiedRoomCount = Db::name('owner_room')->alias('ocr')
+            ->join('ds_room r', 'r.id = ocr.room_id')
+            ->where('ocr.delete_time', null)->where('r.delete_time', null)
+            ->group('ocr.room_id')->count();
+
+        // ---- 财务数据 ----
+        $monthStart = date('Y-m-01 00:00:00');
+        $monthEnd   = date('Y-m-t 23:59:59');
+        $yearStart  = date('Y-01-01 00:00:00');
+
+        $monthIncome = Db::name('bill_payment')
+            ->whereBetween('pay_time', [$monthStart, $monthEnd])
+            ->where('delete_time', null)
+            ->sum('amount');
+
+        $yearIncome = Db::name('bill_payment')
+            ->where('pay_time', '>=', $yearStart)
+            ->where('delete_time', null)
+            ->sum('amount');
+
+        $unpaidTotal = Db::name('bill')
+            ->where('status', 1)->where('delete_time', null)
+            ->sum('amount');
+
+        $totalBillAmount = Db::name('bill')
+            ->where('delete_time', null)
+            ->where('create_time', '>=', $yearStart)
+            ->sum('amount');
+
+        $collectionRate = $totalBillAmount > 0
+            ? round(($yearIncome / $totalBillAmount) * 100, 1)
+            : 0;
+
+        // ---- 运营数据 ----
+        $pendingRepairCount = Db::name('repair_order')
+            ->whereIn('status', [1, 2, 3])->where('delete_time', null)->count();
+        $doneRepairCount = Db::name('repair_order')
+            ->where('status', 4)->where('delete_time', null)->count();
+
+        $pendingComplaintCount = Db::name('complaint')
+            ->whereIn('status', [1, 2])->where('delete_time', null)->count();
+
+        $today = date('Y-m-d');
+        $todayVisitorCount = Db::name('visitor')
+            ->whereBetween('create_time', [$today . ' 00:00:00', $today . ' 23:59:59'])
+            ->where('delete_time', null)->count();
+
+        $todayRepairCount = Db::name('repair_order')
+            ->whereBetween('create_time', [$today . ' 00:00:00', $today . ' 23:59:59'])
+            ->where('delete_time', null)->count();
+
+        // ---- 年度收入趋势（12个月） ----
+        $year = date('Y');
+        $incomeMonths = [];
+        $incomeData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $incomeMonths[] = $i . '月';
+            $monthStr = sprintf('%s-%02d', $year, $i);
+            $incomeData[] = (float)Db::name('bill_payment')
+                ->where('pay_time', 'like', $monthStr . '%')
+                ->where('delete_time', null)
+                ->sum('amount');
+        }
+
+        // ---- 近30日报修趋势 ----
+        $repairDays = [];
+        $repairData = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $repairDays[] = date('m/d', strtotime($date));
+            $repairData[] = Db::name('repair_order')
+                ->whereBetween('create_time', [$date . ' 00:00:00', $date . ' 23:59:59'])
+                ->where('delete_time', null)
+                ->count();
+        }
+
+        // ---- 收费项目分布（饼图） ----
+        $chargeDistribution = Db::name('bill_payment')
+            ->alias('p')
+            ->join('ds_bill b', 'b.id = p.bill_id')
+            ->whereBetween('p.pay_time', [$monthStart, $monthEnd])
+            ->where('p.delete_time', null)
+            ->group('b.charge_item_name')
+            ->field('b.charge_item_name as name, SUM(p.amount) as value')
+            ->select();
+
+        $pieData = [];
+        foreach ($chargeDistribution as $item) {
+            $pieData[] = ['name' => $item['name'], 'value' => (float)$item['value']];
+        }
+
+        // ---- 报修状态分布 ----
+        $repairStatusData = [];
+        $statusMap = [1 => '待派修', 2 => '处理中', 3 => '待验收', 4 => '已完成'];
+        foreach ($statusMap as $s => $label) {
+            $cnt = Db::name('repair_order')->where('status', $s)->where('delete_time', null)->count();
+            if ($cnt > 0) $repairStatusData[] = ['name' => $label, 'value' => $cnt];
+        }
+
+        // ---- 最新缴费记录（5条） ----
+        $latestPayments = Db::name('bill_payment')->alias('p')
+            ->join('ds_bill b', 'b.id = p.bill_id')
+            ->join('ds_owner o', 'o.id = b.owner_id')
+            ->where('p.delete_time', null)
+            ->order('p.pay_time', 'desc')
+            ->limit(5)
+            ->field('o.realname as owner_name, b.charge_item_name, p.amount, p.pay_time')
+            ->select();
+
+        // ---- 最新报修（5条） ----
+        $latestRepairs = Db::name('repair_order')->alias('r')
+            ->join('ds_owner o', 'o.id = r.owner_id')
+            ->where('r.delete_time', null)
+            ->order('r.create_time', 'desc')
+            ->limit(5)
+            ->field('o.realname as owner_name, r.type, r.status, r.create_time')
+            ->select();
+
+        $repairTypeMap = [1 => '水', 2 => '电', 3 => '气', 4 => '门窗', 5 => '管道', 6 => '家电', 7 => '网络', 8 => '其他'];
+        foreach ($latestRepairs as &$item) {
+            $item['repair_type'] = $repairTypeMap[$item['type'] ?? 0] ?? '未知';
+            unset($item['type']);
+        }
+
+        // ---- 最新投诉（5条） ----
+        $latestComplaints = Db::name('complaint')->alias('c')
+            ->join('ds_owner o', 'o.id = c.owner_id')
+            ->where('c.delete_time', null)
+            ->order('c.create_time', 'desc')
+            ->limit(5)
+            ->field('o.realname as owner_name, c.type, c.status, c.create_time')
+            ->select();
+
+        $complaintTypeMap = [1 => '投诉', 2 => '建议', 3 => '表扬', 4 => '咨询'];
+        foreach ($latestComplaints as &$item) {
+            $item['complaint_type'] = $complaintTypeMap[$item['type'] ?? 0] ?? '未知';
+            unset($item['type']);
+        }
+
+        return $this->success([
+            'stats' => [
+                'community_count'   => $communityCount,
+                'building_count'    => $buildingCount,
+                'room_count'        => $roomCount,
+                'occupied_count'    => $occupiedRoomCount,
+                'owner_count'       => $ownerCount,
+                'staff_count'       => $staffCount,
+                'vehicle_count'     => $vehicleCount,
+            ],
+            'finance' => [
+                'month_income'     => round($monthIncome, 2),
+                'year_income'      => round($yearIncome, 2),
+                'unpaid_total'     => round($unpaidTotal, 2),
+                'collection_rate'  => $collectionRate,
+            ],
+            'operation' => [
+                'pending_repairs'    => $pendingRepairCount,
+                'done_repairs'       => $doneRepairCount,
+                'pending_complaints' => $pendingComplaintCount,
+                'today_visitors'     => $todayVisitorCount,
+                'today_repairs'      => $todayRepairCount,
+            ],
+            'income_trend' => [
+                'months' => $incomeMonths,
+                'data'   => $incomeData,
+            ],
+            'repair_trend' => [
+                'days' => $repairDays,
+                'data' => $repairData,
+            ],
+            'charge_pie'   => $pieData,
+            'repair_status_pie' => $repairStatusData,
+            'latest_payments'   => $latestPayments,
+            'latest_repairs'    => $latestRepairs,
+            'latest_complaints' => $latestComplaints,
+        ]);
+    }
 }

@@ -1,0 +1,47 @@
+<?php
+namespace app\admin\controller;
+
+use app\admin\BaseAdmin;
+use think\facade\Db;
+
+class PushDevice extends BaseAdmin
+{
+    public function lists()
+    {
+        [$page, $limit] = $this->getPage();
+        $where = [['delete_time', 'null', '']];
+        $keyword = $this->request->param('keyword', '');
+        if ($keyword) $where[] = ['device_token|user_type|user_id', 'like', "%{$keyword}%"];
+        $platform = $this->request->param('platform', '');
+        if ($platform) $where[] = ['platform', '=', $platform];
+        $status = $this->request->param('status', '');
+        if ($status !== '') $where[] = ['status', '=', intval($status)];
+        $communityId = $this->request->param('community_id', 0);
+        if ($communityId) $where[] = ['community_id', '=', $communityId];
+        $total = Db::name('push_device')->where($where)->count();
+        $list = Db::name('push_device')->where($where)->page($page, $limit)->order('id', 'desc')->select();
+        return $this->table($list, $total);
+    }
+
+    public function add()
+    {
+        $data = $this->request->post();
+        $data['create_time'] = date('Y-m-d H:i:s');
+        Db::name('push_device')->insert($data);
+        return $this->success([], '添加成功');
+    }
+
+    public function edit()
+    {
+        $data = $this->request->post();
+        Db::name('push_device')->where('id', $data['id'])->update($data);
+        return $this->success([], '修改成功');
+    }
+
+    public function delete()
+    {
+        $id = $this->request->post('id', 0);
+        Db::name('push_device')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
+        return $this->success([], '删除成功');
+    }
+}

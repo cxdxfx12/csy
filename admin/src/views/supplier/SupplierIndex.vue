@@ -30,7 +30,7 @@
           <el-popconfirm title="确定删除?" @confirm="handleDelete(row.id)"><template #reference><el-button size="small" type="danger" link>删除</el-button></template></el-popconfirm>
         </template></el-table-column>
       </el-table>
-      <div style="margin-top:16px;text-align:right;"><el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[10,15,30]" layout="total,sizes,prev,pager,next" @change="loadData" /></div>
+      <div style="margin-top:16px;text-align:right;"><el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[10,15,30]" layout="total,sizes,prev,pager,next" @current-change="loadData" @size-change="loadData" /></div>
     </el-card>
 
     <el-dialog v-model="dialogVisible" :title="formTitle" width="560px" destroy-on-close>
@@ -38,7 +38,7 @@
         <el-form-item label="供应商名称" prop="name"><el-input v-model="form.name" placeholder="供应商名称" /></el-form-item>
         <el-row :gutter="20">
           <el-col :span="12"><el-form-item label="类别" prop="category"><el-select v-model="form.category" style="width:100%;"><el-option label="工程维修" value="工程维修" /><el-option label="保洁服务" value="保洁服务" /><el-option label="绿化养护" value="绿化养护" /><el-option label="安保服务" value="安保服务" /><el-option label="设备供应商" value="设备供应商" /><el-option label="物资采购" value="物资采购" /><el-option label="其他" value="其他" /></el-select></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="状态"><el-radio-group v-model="form.status"><el-radio :label="1">正常</el-radio><el-radio :label="0">停用</el-radio></el-radio-group></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="状态"><el-radio-group v-model="form.status"><el-radio :value="1">正常</el-radio><el-radio :value="0">停用</el-radio></el-radio-group></el-form-item></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12"><el-form-item label="联系人"><el-input v-model="form.contact_person" placeholder="联系人" /></el-form-item></el-col>

@@ -29,7 +29,7 @@
         <el-table-column prop="create_time" label="时间" width="170" />
       </el-table>
       <div class="pagination">
-        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @change="loadData" />
+        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @current-change="loadData" @size-change="loadData" />
       </div>
     </el-card>
   </div>

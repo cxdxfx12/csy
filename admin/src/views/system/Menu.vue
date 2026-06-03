@@ -35,7 +35,7 @@
         <el-form-item label="图标"><el-input v-model="form.icon" placeholder="图标类名" /></el-form-item>
         <el-form-item label="排序"><el-input-number v-model="form.sort" :min="0" style="width:100%;" /></el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status"><el-radio :label="1">正常</el-radio><el-radio :label="0">禁用</el-radio></el-radio-group>
+          <el-radio-group v-model="form.status"><el-radio :value="1">正常</el-radio><el-radio :value="0">禁用</el-radio></el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>

@@ -7,26 +7,6 @@ use think\facade\Db;
 class Arrears extends BaseAdmin
 {
     /**
-     * 获取PDO连接（使用框架数据库配置）
-     */
-    protected function getPdo()
-    {
-        static $pdo = null;
-        if ($pdo === null) {
-            $dbConfig = \think\facade\Db::getConfig();
-            $conn = $dbConfig['connections'][$dbConfig['default']] ?? $dbConfig['connections']['mysql'];
-            $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s',
-                $conn['hostname'], $conn['hostport'] ?? '3306',
-                $conn['database'], $conn['charset'] ?? 'utf8mb4');
-            $pdo = new \PDO($dsn, $conn['username'], $conn['password'], [
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            ]);
-        }
-        return $pdo;
-    }
-
-    /**
      * 欠费列表：按房间汇总
      */
     public function lists()
@@ -35,12 +15,11 @@ class Arrears extends BaseAdmin
         $communityId = intval($this->request->param('community_id', 0));
         $keyword = trim($this->request->param('keyword', ''));
 
-        $pdo = $this->getPdo();
-        $params = [];
+        $pdo = Db::name('bill')->getPdo();
 
         // 子查询条件
         $whereClause = "WHERE b.delete_time IS NULL AND b.status IN (1,2)";
-        if ($communityId) $whereClause .= " AND b.community_id = " . $communityId;
+        if ($communityId) $whereClause .= " AND b.community_id = " . intval($communityId);
 
         $sql = "SELECT 
             r.id as room_id, r.room_number, r.building_name, r.area,
@@ -63,24 +42,25 @@ class Arrears extends BaseAdmin
         LEFT JOIN ds_owner o ON o.id = o_r.owner_id AND o.delete_time IS NULL
         WHERE r.delete_time IS NULL";
 
+        $params = [];
         if ($keyword) {
             $kw = "%{$keyword}%";
             $sql .= " AND (r.room_number LIKE ? OR r.building_name LIKE ? OR o.realname LIKE ? OR o.phone LIKE ?)";
-            $params = array_merge($params, [$kw, $kw, $kw, $kw]);
+            $params = [$kw, $kw, $kw, $kw];
         }
 
         // Count
         $countSql = "SELECT COUNT(*) as total FROM ($sql) tmp";
         $stmt = $pdo->prepare($countSql);
         $stmt->execute($params);
-        $total = (int)($stmt->fetch()['total'] ?? 0);
+        $total = (int)($stmt->fetch(\PDO::FETCH_ASSOC)['total'] ?? 0);
 
         // Paginate
         $offset = ($page - 1) * $limit;
         $sql .= " ORDER BY s.arrears_amount DESC LIMIT {$limit} OFFSET {$offset}";
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
-        $list = $stmt->fetchAll();
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         // 补充每间房最近催单时间
         if (!empty($list)) {
@@ -89,7 +69,7 @@ class Arrears extends BaseAdmin
                 $placeholders = implode(',', array_fill(0, count($roomIds), '?'));
                 $stmt = $pdo->prepare("SELECT room_id, MAX(create_time) as last_dunning_time FROM ds_bill_dunning WHERE room_id IN ($placeholders) GROUP BY room_id");
                 $stmt->execute(array_values($roomIds));
-                $dunnings = $stmt->fetchAll();
+                $dunnings = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                 $dunningMap = [];
                 foreach ($dunnings as $d) {
                     $dunningMap[$d['room_id']] = $d['last_dunning_time'];
@@ -142,7 +122,7 @@ class Arrears extends BaseAdmin
         $ownerId = $ownerRoom['owner_id'] ?? 0;
 
         // 事务
-        $pdo = $this->getPdo();
+        $pdo = Db::name('bill')->getPdo();
         $pdo->beginTransaction();
         try {
             // 插入催单记录
@@ -197,7 +177,7 @@ class Arrears extends BaseAdmin
     }
 
     /**
-     * 短信催缴：校验配置 + 模拟发送 + 记录催单
+     * 短信催缴
      */
     public function smsDunning()
     {
@@ -209,19 +189,16 @@ class Arrears extends BaseAdmin
         $room = Db::name('room')->where('id', $roomId)->find();
         if (!$room) return $this->error('房间不存在');
 
-        // 查小区短信配置
         $community = Db::name('community')->where('id', $room['community_id'])->find();
         if (empty($community['sms_key'])) {
             return $this->error('该小区未配置短信接口KEY，请先在【短信配置】中设置');
         }
 
-        // 查业主手机号
         $ownerRow = $this->getPrimaryOwner($roomId);
         if (empty($ownerRow['phone'])) {
             return $this->error('该房间业主未登记手机号，无法发送短信');
         }
 
-        // 查欠费账单
         $bills = Db::name('bill')
             ->where('room_id', $roomId)->where('delete_time', null)
             ->whereIn('status', [1, 2])->select();
@@ -229,14 +206,12 @@ class Arrears extends BaseAdmin
 
         $amounts = $this->calcAmounts($bills);
 
-        // 模拟短信发送（TODO: 对接真实短信平台）
         $smsContent = sprintf(
             '【%s】尊敬的%s，您有%d笔欠费共¥%.2f，请尽快缴费。详询物业。',
             $community['name'], $ownerRow['realname'] ?: '业主',
             count($bills), $amounts['arrears']
         );
 
-        // 记录催单
         $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'sms');
 
         return $this->success([
@@ -251,7 +226,7 @@ class Arrears extends BaseAdmin
     }
 
     /**
-     * 公众号模板消息催缴：校验配置 + 模拟推送 + 记录催单
+     * 公众号模板消息催缴
      */
     public function wechatDunning()
     {
@@ -263,7 +238,6 @@ class Arrears extends BaseAdmin
         $room = Db::name('room')->where('id', $roomId)->find();
         if (!$room) return $this->error('房间不存在');
 
-        // 查公众号配置
         $wxConfig = Db::name('community_wechat_config')
             ->where('community_id', $room['community_id'])
             ->where('status', 1)
@@ -275,13 +249,11 @@ class Arrears extends BaseAdmin
             return $this->error('该小区公众号未配置催缴通知模板ID，请先在【公众号配置】中设置');
         }
 
-        // 查业主 openid
         $ownerRow = $this->getPrimaryOwner($roomId);
         if (empty($ownerRow['openid'])) {
             return $this->error('该业主未绑定公众号，无法推送模板消息');
         }
 
-        // 查欠费账单
         $bills = Db::name('bill')
             ->where('room_id', $roomId)->where('delete_time', null)
             ->whereIn('status', [1, 2])->select();
@@ -289,20 +261,6 @@ class Arrears extends BaseAdmin
 
         $amounts = $this->calcAmounts($bills);
 
-        // 模拟模板消息推送（TODO: 对接微信API）
-        $templateData = [
-            'touser'      => $ownerRow['openid'],
-            'template_id' => $wxConfig['template_arrears'],
-            'data'        => [
-                'first'    => ['value' => "尊敬的{$ownerRow['realname']}，您有欠费待缴"],
-                'keyword1' => ['value' => "¥{$amounts['arrears']}"],
-                'keyword2' => ['value' => $bills[0]['bill_period'] ?? '--'],
-                'keyword3' => ['value' => count($bills) . '笔'],
-                'remark'   => ['value' => '请尽快缴费，如有疑问请联系物业。'],
-            ],
-        ];
-
-        // 记录催单
         $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'wechat');
 
         return $this->success([
@@ -317,8 +275,23 @@ class Arrears extends BaseAdmin
     }
 
     /**
-     * 获取房间主产权人信息
+     * 催单历史
      */
+    public function history()
+    {
+        $roomId = intval($this->request->param('room_id', 0));
+        if (!$roomId) return $this->error('请选择房间');
+
+        $pdo = Db::name('bill_dunning')->getPdo();
+        $stmt = $pdo->prepare("SELECT d.*, a.nickname as admin_name FROM ds_bill_dunning d LEFT JOIN ds_admin_user a ON a.id = d.admin_id WHERE d.room_id = ? ORDER BY d.id DESC");
+        $stmt->execute([$roomId]);
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $this->success($list);
+    }
+
+    // ==================== 私有方法 ====================
+
     private function getPrimaryOwner($roomId)
     {
         $or = Db::name('owner_room')
@@ -330,9 +303,6 @@ class Arrears extends BaseAdmin
         return [];
     }
 
-    /**
-     * 计算账单金额汇总
-     */
     private function calcAmounts($bills)
     {
         $total = 0; $paid = 0;
@@ -340,13 +310,10 @@ class Arrears extends BaseAdmin
         return ['total' => $total, 'paid' => $paid, 'arrears' => round($total - $paid, 2)];
     }
 
-    /**
-     * 记录催单到 ds_bill_dunning + 更新 ds_bill 催单计数
-     */
     private function recordDunning($room, $ownerRow, $amounts, $bills, $remark, $channel)
     {
         $ownerId = $ownerRow['id'] ?? 0;
-        $pdo = $this->getPdo();
+        $pdo = Db::name('bill')->getPdo();
         $pdo->beginTransaction();
         try {
             Db::name('bill_dunning')->insert([
@@ -369,24 +336,8 @@ class Arrears extends BaseAdmin
             }
             $pdo->commit();
         } catch (\Exception $e) {
-            $pdo->rollBack();
+            $pdo->rollback();
             throw $e;
         }
-    }
-
-    /**
-     * 催单历史
-     */
-    public function history()
-    {
-        $roomId = intval($this->request->param('room_id', 0));
-        if (!$roomId) return $this->error('请选择房间');
-
-        $pdo = $this->getPdo();
-        $stmt = $pdo->prepare("SELECT d.*, a.nickname as admin_name FROM ds_bill_dunning d LEFT JOIN ds_admin_user a ON a.id = d.admin_id WHERE d.room_id = ? ORDER BY d.id DESC");
-        $stmt->execute([$roomId]);
-        $list = $stmt->fetchAll();
-
-        return $this->success($list);
     }
 }

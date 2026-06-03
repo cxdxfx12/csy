@@ -52,7 +52,18 @@ const iconMap: Record<string, string> = {
   staff: 'UserFilled', attendance: 'Calendar', schedule: 'Clock', salary: 'Money',
   supplier: 'Shop', purchase: 'ShoppingCart', contract: 'Document', evaluation: 'StarFilled',
   vote: 'TrendCharts', activity: 'Sunny', owner_notice: 'Bell', owner_complaint: 'Warning',
-  sms: 'Message', sms_wechat_user: 'ChatDotSquare', wechat: 'ChatDotSquare', wechat_user: 'User', user: 'User',
+  sms: 'Message', wechat: 'ChatDotSquare', wechat_user: 'User', user: 'User',
+  // 新增模块图标
+  device: 'Cpu', device_event: 'Warning', elevator: 'Connection', elevator_fault: 'WarningFilled',
+  elevator_inspection: 'CircleCheck', lease: 'OfficeBuilding', lease_property: 'House', lease_tenant: 'UserFilled',
+  lease_contract: 'Document', lease_payment: 'Money', lease_termination: 'Close', deposit: 'Wallet',
+  invoice: 'Tickets', invoice_info: 'Postcard', parking_fee_rule: 'Discount', parking_payment: 'CreditCard',
+  print_template: 'Notebook', print_log: 'DocumentCopy', notification: 'Bell', push_device: 'Iphone',
+  sse_event: 'DataLine', service_vendor: 'Phone', sms_template: 'Tickets', sms_send: 'ChatLineSquare',
+
+  // 补全模块图标
+  dunning: 'WarningFilled', message: 'ChatLineSquare', sms_log: 'DocumentCopy',
+  signup: 'List',
 }
 
 function menuIcon(menu: MenuItem): string {
@@ -62,8 +73,9 @@ function menuIcon(menu: MenuItem): string {
 </script>
 
 <style scoped>
-.sidebar-logo { height: 48px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b6cb0, #3182ce); flex-shrink: 0; }
-.logo-text { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+.sidebar-logo { height: 52px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a5f, #2563eb, #4f46e5); flex-shrink: 0; position: relative; overflow: hidden; }
+.sidebar-logo::after { content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); }
+.logo-text { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; }
 .sidebar-menu-wrap { flex: 1; min-height: 0; }
 .sidebar-menu { border-right: none; }
 .el-menu { border-right: none; }

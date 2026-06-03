@@ -24,9 +24,18 @@ function handleTabClick(pane: { paneName: string | number }) {
 </script>
 
 <style scoped>
-.tabs-bar { margin-top: 60px; background: #fff; border-bottom: 1px solid #e2e8f0; padding: 0 8px; }
+.tabs-bar { margin-top: 60px; background: #fff; border-bottom: 1px solid #e8ecf1; padding: 0 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 .tabs-bar :deep(.el-tabs__header) { margin: 0; border: none; }
 .tabs-bar :deep(.el-tabs__nav) { border: none; }
-.tabs-bar :deep(.el-tabs__item) { height: 40px; line-height: 40px; border: none !important; font-size: 13px; }
-.tabs-bar :deep(.el-tabs__item.is-active) { color: #2b6cb0; border-bottom: 2px solid #2b6cb0 !important; font-weight: 600; }
+.tabs-bar :deep(.el-tabs__item) {
+  height: 40px; line-height: 40px; border: none !important;
+  font-size: 13px; border-radius: 8px 8px 0 0; margin-right: 2px;
+  padding: 0 16px !important; transition: all 0.2s;
+}
+.tabs-bar :deep(.el-tabs__item:hover) { background: #f1f5f9; color: #2563eb; }
+.tabs-bar :deep(.el-tabs__item.is-active) {
+  color: #2563eb; font-weight: 700;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06) 0%, transparent 100%);
+  border-bottom: 2px solid #2563eb !important;
+}
 </style>

@@ -9,10 +9,12 @@ class RepairWorker extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', 'null', '']];
+        $where = [['rw.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
-        $total = Db::name('repair_worker')->where($where)->count();
+        if ($communityId) $where[] = ['rw.community_id', '=', $communityId];
+        $keyword = $this->request->param('keyword', '');
+        if ($keyword) $where[] = ['rw.name|rw.phone', 'like', "%{$keyword}%"];
+        $total = Db::name('repair_worker')->alias('rw')->where($where)->count();
         $list = Db::name('repair_worker')->alias('rw')
             ->leftJoin('community com', 'com.id = rw.community_id')
             ->field('rw.*, com.name as community_name')

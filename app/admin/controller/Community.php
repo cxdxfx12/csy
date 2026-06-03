@@ -32,6 +32,12 @@ class Community extends BaseAdmin
         return $this->success([], '修改成功');
     }
 
+    public function listAll()
+    {
+        $list = Db::name('community')->where('delete_time', null)->field('id, name')->order('id', 'desc')->select();
+        return $this->success($list);
+    }
+
     public function delete()
     {
         $id = $this->request->post('id', 0);

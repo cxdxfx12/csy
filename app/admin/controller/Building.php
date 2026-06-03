@@ -131,6 +131,12 @@ class Building extends BaseAdmin
         return $this->success([], '删除成功');
     }
 
+    public function listAll()
+    {
+        $list = Db::name('building')->where('delete_time', null)->field('id, name, community_id')->order('sort', 'asc')->select();
+        return $this->success($list);
+    }
+
     public function select()
     {
         $communityId = $this->request->param('community_id', 0);

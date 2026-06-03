@@ -32,7 +32,7 @@
           <el-popconfirm title="确定删除?" @confirm="handleDelete(row.id)"><template #reference><el-button size="small" type="danger" link>删除</el-button></template></el-popconfirm>
         </template></el-table-column>
       </el-table>
-      <div style="margin-top:16px;text-align:right;"><el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[10,15,30]" layout="total,sizes,prev,pager,next" @change="loadData" /></div>
+      <div style="margin-top:16px;text-align:right;"><el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[10,15,30]" layout="total,sizes,prev,pager,next" @current-change="loadData" @size-change="loadData" /></div>
     </el-card>
 
     <el-dialog v-model="dialogVisible" :title="formTitle" width="620px" destroy-on-close>
@@ -42,7 +42,7 @@
           <el-col :span="12"><el-form-item label="姓名" prop="realname"><el-input v-model="form.realname" placeholder="姓名" /></el-form-item></el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12"><el-form-item label="性别"><el-radio-group v-model="form.gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio></el-radio-group></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="性别"><el-radio-group v-model="form.gender"><el-radio :value="1">男</el-radio><el-radio :value="2">女</el-radio></el-radio-group></el-form-item></el-col>
           <el-col :span="12"><el-form-item label="手机号"><el-input v-model="form.phone" placeholder="手机号" maxlength="11" /></el-form-item></el-col>
         </el-row>
         <el-row :gutter="20">
@@ -55,7 +55,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12"><el-form-item label="入职日期"><el-date-picker v-model="form.entry_date" type="date" style="width:100%;" value-format="YYYY-MM-DD" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="状态"><el-radio-group v-model="form.status"><el-radio :label="1">在职</el-radio><el-radio :label="0">离职</el-radio></el-radio-group></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="状态"><el-radio-group v-model="form.status"><el-radio :value="1">在职</el-radio><el-radio :value="0">离职</el-radio></el-radio-group></el-form-item></el-col>
         </el-row>
         <el-form-item label="身份证号"><el-input v-model="form.id_card" placeholder="身份证号" /></el-form-item>
         <el-form-item label="紧急联系人"><el-input v-model="form.emergency_contact" placeholder="姓名和电话" /></el-form-item>

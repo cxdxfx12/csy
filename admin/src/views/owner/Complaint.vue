@@ -91,7 +91,7 @@
       </el-table>
       <div class="pagination">
         <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :page-sizes="[10,15,20,50]"
-          layout="total,sizes,prev,pager,next,jumper" :total="total" @change="loadData" />
+          layout="total,sizes,prev,pager,next,jumper" :total="total" @current-change="loadData" @size-change="loadData" />
       </div>
     </el-card>
 

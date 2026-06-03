@@ -11,6 +11,7 @@ const router = createRouter({
       redirect: '/dashboard',
       children: [
         { path: 'dashboard', name: 'Dashboard', component: () => import('@/views/dashboard/DashboardView.vue'), meta: { title: '控制台', icon: 'DataAnalysis' } },
+        { path: 'bigscreen', name: 'BigScreen', component: () => import('@/views/dashboard/BigScreen.vue'), meta: { title: '数据大屏', hidden: true } },
         { path: 'profile', name: 'Profile', component: () => import('@/views/profile/ProfileView.vue'), meta: { title: '个人中心', hidden: true } },
         { path: 'system/admin', name: 'SystemAdmin', component: () => import('@/views/system/AdminUser.vue'), meta: { title: '用户管理' } },
         { path: 'system/role', name: 'SystemRole', component: () => import('@/views/system/Role.vue'), meta: { title: '角色管理' } },
@@ -56,11 +57,40 @@ const router = createRouter({
         { path: 'supplier/contract', name: 'SupplierContract', component: () => import('@/views/supplier/Contract.vue'), meta: { title: '合同管理' } },
         { path: 'supplier/evaluation', name: 'SupplierEvaluation', component: () => import('@/views/supplier/Evaluation.vue'), meta: { title: '服务评价' } },
         { path: 'payment/config', name: 'PaymentConfig', component: () => import('@/views/payment/PaymentConfig.vue'), meta: { title: '支付配置' } },
-        { path: 'payment/record', name: 'PaymentRecord', component: () => import('@/views/charge/Payment.vue'), meta: { title: '缴费记录' } },
         { path: 'wechat/config', name: 'WechatConfig', component: () => import('@/views/wechat/WechatConfig.vue'), meta: { title: '公众号配置' } },
         { path: 'wechat/user', name: 'WechatUser', component: () => import('@/views/wechat/WechatUser.vue'), meta: { title: '微信用户' } },
-        { path: 'sms/config', name: 'SmsConfig', component: () => import('@/views/sms/SmsConfig.vue'), meta: { title: '短信配置' } },
-        { path: 'sms/wechat/user', name: 'SmsWechatUser', component: () => import('@/views/wechat/WechatUser.vue'), meta: { title: '微信用户' } },
+        { path: 'sms/config', name: 'SmsConfig', component: () => import('@/views/sms/SmsConfig.vue'), meta: { title: '服务商配置' } },
+        // ====== 合并 dasheng_community 新模块 ======
+        { path: 'equipment/Device', name: 'DeviceIndex', component: () => import('@/views/equipment/Device.vue'), meta: { title: '硬件设备' } },
+        { path: 'equipment/DeviceEvent', name: 'DeviceEventIndex', component: () => import('@/views/equipment/DeviceEvent.vue'), meta: { title: '设备事件' } },
+        { path: 'equipment/Elevator', name: 'ElevatorIndex', component: () => import('@/views/equipment/Elevator.vue'), meta: { title: '电梯台账' } },
+        { path: 'equipment/ElevatorFault', name: 'ElevatorFaultIndex', component: () => import('@/views/equipment/ElevatorFault.vue'), meta: { title: '电梯故障' } },
+        { path: 'equipment/ElevatorInspection', name: 'ElevatorInspectionIndex', component: () => import('@/views/equipment/ElevatorInspection.vue'), meta: { title: '电梯巡检' } },
+        { path: 'lease/LeaseProperty', name: 'LeasePropertyIndex', component: () => import('@/views/lease/LeaseProperty.vue'), meta: { title: '可租赁房源' } },
+        { path: 'lease/LeaseTenant', name: 'LeaseTenantIndex', component: () => import('@/views/lease/LeaseTenant.vue'), meta: { title: '租客信息' } },
+        { path: 'lease/LeaseContract', name: 'LeaseContractIndex', component: () => import('@/views/lease/LeaseContract.vue'), meta: { title: '租赁合同' } },
+        { path: 'lease/LeasePayment', name: 'LeasePaymentIndex', component: () => import('@/views/lease/LeasePayment.vue'), meta: { title: '租金支付' } },
+        { path: 'lease/LeaseTermination', name: 'LeaseTerminationIndex', component: () => import('@/views/lease/LeaseTermination.vue'), meta: { title: '退租记录' } },
+        { path: 'charge/Deposit', name: 'DepositIndex', component: () => import('@/views/charge/Deposit.vue'), meta: { title: '押金管理' } },
+        { path: 'charge/Invoice', name: 'InvoiceIndex', component: () => import('@/views/charge/Invoice.vue'), meta: { title: '发票记录' } },
+        { path: 'charge/InvoiceInfo', name: 'InvoiceInfoIndex', component: () => import('@/views/charge/InvoiceInfo.vue'), meta: { title: '发票抬头' } },
+        { path: 'charge/UnifiedPayment', name: 'UnifiedPaymentIndex', component: () => import('@/views/charge/UnifiedPayment.vue'), meta: { title: '统一支付' } },
+        { path: 'parking/ParkingFeeRule', name: 'ParkingFeeRuleIndex', component: () => import('@/views/parking/ParkingFeeRule.vue'), meta: { title: '停车费率' } },
+        { path: 'parking/ParkingPayment', name: 'ParkingPaymentIndex', component: () => import('@/views/parking/ParkingPayment.vue'), meta: { title: '停车缴费' } },
+        { path: 'print/PrintTemplate', name: 'PrintTemplateIndex', component: () => import('@/views/print/PrintTemplate.vue'), meta: { title: '打印模板' } },
+        { path: 'print/PrintLog', name: 'PrintLogIndex', component: () => import('@/views/print/PrintLog.vue'), meta: { title: '打印日志' } },
+        { path: 'notice/Notification', name: 'NotificationIndex', component: () => import('@/views/notice/Notification.vue'), meta: { title: '消息推送' } },
+        { path: 'system/PushDevice', name: 'PushDeviceIndex', component: () => import('@/views/system/PushDevice.vue'), meta: { title: '推送设备' } },
+        { path: 'system/SseEvent', name: 'SseEventIndex', component: () => import('@/views/system/SseEvent.vue'), meta: { title: 'SSE事件' } },
+        { path: 'system/ServiceVendor', name: 'ServiceVendorIndex', component: () => import('@/views/system/ServiceVendor.vue'), meta: { title: '服务商联系' } },
+        { path: 'sms/template', name: 'SmsTemplateIndex', component: () => import('@/views/sms/SmsTemplate.vue'), meta: { title: '短信模板' } },
+        { path: 'sms/send', name: 'SmsSendIndex', component: () => import('@/views/sms/SmsSend.vue'), meta: { title: '短信发送' } },
+
+        // ====== 补全缺失模块 ======
+        { path: 'charge/dunning', name: 'BillDunningIndex', component: () => import('@/views/charge/BillDunning.vue'), meta: { title: '催缴记录' } },
+        { path: 'notice/message', name: 'MessageIndex', component: () => import('@/views/notice/Message.vue'), meta: { title: '消息记录' } },
+        { path: 'sms/log', name: 'SmsLogIndex', component: () => import('@/views/sms/SmsLog.vue'), meta: { title: '短信发送日志' } },
+        { path: 'owner/signup', name: 'ActivitySignupIndex', component: () => import('@/views/owner/ActivitySignup.vue'), meta: { title: '活动报名' } },
       ],
     },
 
@@ -99,7 +129,7 @@ router.beforeEach((to, _from, next) => {
 
 // 路由守卫 - 标签页管理：只保留当前页，自动关闭之前的
 router.afterEach((to) => {
-  if (to.meta.title && to.path !== '/login') {
+  if (to.meta.title && to.path !== '/login' && to.path !== '/bigscreen') {
     const title = (to.meta.title as string) || to.name as string || to.path
     useAppStore().addTab({
       title,

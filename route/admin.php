@@ -49,12 +49,14 @@ Route::group('admin', function () {
 
     // 小区管理
     Route::get('admin/community/list', 'admin/Community/lists');
+    Route::get('admin/community/listAll', 'admin/Community/listAll');
     Route::post('admin/community/add', 'admin/Community/add');
     Route::post('admin/community/edit', 'admin/Community/edit');
     Route::post('admin/community/delete', 'admin/Community/delete');
 
     // 楼栋管理
     Route::get('admin/building/list', 'admin/Building/lists');
+    Route::get('admin/building/listAll', 'admin/Building/listAll');
     Route::post('admin/building/add', 'admin/Building/add');
     Route::post('admin/building/edit', 'admin/Building/edit');
     Route::post('admin/building/delete', 'admin/Building/delete');
@@ -102,6 +104,7 @@ Route::group('admin', function () {
     // 缴费记录
     Route::get('admin/charge/paymentList', 'admin/Payment/lists');
     Route::post('admin/charge/paymentAdd', 'admin/Payment/add');
+    Route::post('admin/charge/paymentEdit', 'admin/Payment/edit');
     Route::post('admin/charge/paymentDelete', 'admin/Payment/delete');
     Route::get('admin/charge/paymentExport', 'admin/Payment/export');
 
@@ -122,6 +125,9 @@ Route::group('admin', function () {
     Route::post('admin/charge/arrearsSmsDunning', 'admin/Arrears/smsDunning');
     Route::post('admin/charge/arrearsWechatDunning', 'admin/Arrears/wechatDunning');
     Route::get('admin/charge/arrearsHistory', 'admin/Arrears/history');
+
+    // 催缴记录
+    Route::get('admin/charge/dunningList', 'admin/BillDunning/lists');
 
     // 报修管理
     Route::get('admin/repair/orderList', 'admin/RepairOrder/lists');
@@ -182,6 +188,11 @@ Route::group('admin', function () {
     Route::post('admin/notice/delete', 'admin/Notice/delete');
     Route::post('admin/notice/publish', 'admin/Notice/publish');
 
+    // 消息记录
+    Route::get('admin/notice/messageList', 'admin/Message/lists');
+    Route::post('admin/notice/messageAdd', 'admin/Message/add');
+    Route::post('admin/notice/messageDelete', 'admin/Message/delete');
+
     // 设备管理
     Route::get('admin/equipment/list', 'admin/Equipment/lists');
     Route::post('admin/equipment/add', 'admin/Equipment/add');
@@ -218,6 +229,7 @@ Route::group('admin', function () {
     Route::post('admin/activity/complete', 'admin/Activity/complete');
     Route::post('admin/activity/cancel', 'admin/Activity/cancel');
     Route::get('admin/activity/signups', 'admin/Activity/signups');
+    Route::get('admin/activity/signupList', 'admin/Activity/signupList');
     Route::post('admin/activity/cancelSignup', 'admin/Activity/cancelSignup');
 
     // 数据概览
@@ -225,6 +237,7 @@ Route::group('admin', function () {
     Route::get('admin/dashboard/incomeChart', 'admin/Dashboard/incomeChart');
     Route::get('admin/dashboard/repairChart', 'admin/Dashboard/repairChart');
     Route::get('admin/dashboard/pieChart', 'admin/Dashboard/pieChart');
+    Route::get('admin/dashboard/bigscreen', 'admin/Dashboard/bigscreen');
 
     // 公共接口
     Route::get('admin/upload/image', 'admin/Upload/image');
@@ -304,11 +317,17 @@ Route::group('admin', function () {
     Route::post('admin/payment/configSave', 'admin/PaymentConfig/save');
     Route::get('admin/payment/configTest', 'admin/PaymentConfig/test');
 
+
+
+
     // 公众号配置
     Route::get('admin/wechat/configList', 'admin/WechatConfig/lists');
     Route::get('admin/wechat/configDetail', 'admin/WechatConfig/detail');
     Route::post('admin/wechat/configSave', 'admin/WechatConfig/save');
     Route::get('admin/wechat/configTest', 'admin/WechatConfig/test');
+
+
+
 
     // 微信用户
     Route::get('admin/wechat/userStatistics', 'admin/WechatUser/statistics');
@@ -321,4 +340,147 @@ Route::group('admin', function () {
     Route::get('admin/sms/detail', 'admin/Sms/detail');
     Route::post('admin/sms/save', 'admin/Sms/save');
     Route::get('admin/sms/test', 'admin/Sms/test');
+
+    // 短信发送
+    Route::post('admin/sms/send', 'admin/SmsSend/send');
+    Route::post('admin/sms/resend', 'admin/SmsSend/resend');
+
+    // 短信发送日志
+    Route::get('admin/sms/smsLogList', 'admin/SmsLog/lists');
+    Route::get('admin/sms/smsLogStats', 'admin/SmsLog/stats');
+
+    // ========== 合并 dasheng_community 新增模块 ==========
+
+    // 硬件设备
+    Route::get('admin/equipment/deviceList', 'admin/Device/lists');
+    Route::get('admin/equipment/deviceListAll', 'admin/Device/listAll');
+    Route::post('admin/equipment/deviceAdd', 'admin/Device/add');
+    Route::post('admin/equipment/deviceEdit', 'admin/Device/edit');
+    Route::post('admin/equipment/deviceDelete', 'admin/Device/delete');
+
+    // 设备事件
+    Route::get('admin/equipment/deviceEventList', 'admin/DeviceEvent/lists');
+    Route::post('admin/equipment/deviceEventAdd', 'admin/DeviceEvent/add');
+    Route::post('admin/equipment/deviceEventEdit', 'admin/DeviceEvent/edit');
+    Route::post('admin/equipment/deviceEventDelete', 'admin/DeviceEvent/delete');
+
+    // 电梯台账
+    Route::get('admin/equipment/elevatorList', 'admin/Elevator/lists');
+    Route::get('admin/equipment/elevatorListAll', 'admin/Elevator/listAll');
+    Route::post('admin/equipment/elevatorAdd', 'admin/Elevator/add');
+    Route::post('admin/equipment/elevatorEdit', 'admin/Elevator/edit');
+    Route::post('admin/equipment/elevatorDelete', 'admin/Elevator/delete');
+
+    // 电梯故障
+    Route::get('admin/equipment/elevatorFaultList', 'admin/ElevatorFault/lists');
+    Route::post('admin/equipment/elevatorFaultAdd', 'admin/ElevatorFault/add');
+    Route::post('admin/equipment/elevatorFaultEdit', 'admin/ElevatorFault/edit');
+    Route::post('admin/equipment/elevatorFaultDelete', 'admin/ElevatorFault/delete');
+
+    // 电梯巡检
+    Route::get('admin/equipment/elevatorInspectionList', 'admin/ElevatorInspection/lists');
+    Route::post('admin/equipment/elevatorInspectionAdd', 'admin/ElevatorInspection/add');
+    Route::post('admin/equipment/elevatorInspectionEdit', 'admin/ElevatorInspection/edit');
+    Route::post('admin/equipment/elevatorInspectionDelete', 'admin/ElevatorInspection/delete');
+
+    // 可租赁房源
+    Route::get('admin/lease/leasePropertyList', 'admin/LeaseProperty/lists');
+    Route::post('admin/lease/leasePropertyAdd', 'admin/LeaseProperty/add');
+    Route::post('admin/lease/leasePropertyEdit', 'admin/LeaseProperty/edit');
+    Route::post('admin/lease/leasePropertyDelete', 'admin/LeaseProperty/delete');
+
+    // 租客信息
+    Route::get('admin/lease/leaseTenantList', 'admin/LeaseTenant/lists');
+    Route::post('admin/lease/leaseTenantAdd', 'admin/LeaseTenant/add');
+    Route::post('admin/lease/leaseTenantEdit', 'admin/LeaseTenant/edit');
+    Route::post('admin/lease/leaseTenantDelete', 'admin/LeaseTenant/delete');
+
+    // 租赁合同
+    Route::get('admin/lease/leaseContractList', 'admin/LeaseContract/lists');
+    Route::post('admin/lease/leaseContractAdd', 'admin/LeaseContract/add');
+    Route::post('admin/lease/leaseContractEdit', 'admin/LeaseContract/edit');
+    Route::post('admin/lease/leaseContractDelete', 'admin/LeaseContract/delete');
+
+    // 租金支付
+    Route::get('admin/lease/leasePaymentList', 'admin/LeasePayment/lists');
+
+    // 退租记录
+    Route::get('admin/lease/leaseTerminationList', 'admin/LeaseTermination/lists');
+    Route::post('admin/lease/leaseTerminationAdd', 'admin/LeaseTermination/add');
+    Route::post('admin/lease/leaseTerminationEdit', 'admin/LeaseTermination/edit');
+    Route::post('admin/lease/leaseTerminationDelete', 'admin/LeaseTermination/delete');
+
+    // 押金管理
+    Route::get('admin/charge/depositList', 'admin/Deposit/lists');
+    Route::post('admin/charge/depositAdd', 'admin/Deposit/add');
+    Route::post('admin/charge/depositEdit', 'admin/Deposit/edit');
+    Route::post('admin/charge/depositDelete', 'admin/Deposit/delete');
+
+    // 发票记录
+    Route::get('admin/charge/invoiceList', 'admin/Invoice/lists');
+    Route::post('admin/charge/invoiceAdd', 'admin/Invoice/add');
+    Route::post('admin/charge/invoiceEdit', 'admin/Invoice/edit');
+    Route::post('admin/charge/invoiceDelete', 'admin/Invoice/delete');
+
+    // 发票抬头
+    Route::get('admin/charge/invoiceInfoList', 'admin/InvoiceInfo/lists');
+    Route::post('admin/charge/invoiceInfoAdd', 'admin/InvoiceInfo/add');
+    Route::post('admin/charge/invoiceInfoEdit', 'admin/InvoiceInfo/edit');
+    Route::post('admin/charge/invoiceInfoDelete', 'admin/InvoiceInfo/delete');
+
+    // 统一支付
+    Route::get('admin/charge/unifiedPaymentList', 'admin/UnifiedPayment/lists');
+    Route::post('admin/charge/unifiedPaymentAdd', 'admin/UnifiedPayment/add');
+    Route::post('admin/charge/unifiedPaymentEdit', 'admin/UnifiedPayment/edit');
+    Route::post('admin/charge/unifiedPaymentDelete', 'admin/UnifiedPayment/delete');
+
+    // 停车费率
+    Route::get('admin/parking/parkingFeeRuleList', 'admin/ParkingFeeRule/lists');
+    Route::post('admin/parking/parkingFeeRuleAdd', 'admin/ParkingFeeRule/add');
+    Route::post('admin/parking/parkingFeeRuleEdit', 'admin/ParkingFeeRule/edit');
+    Route::post('admin/parking/parkingFeeRuleDelete', 'admin/ParkingFeeRule/delete');
+
+    // 停车缴费
+    Route::get('admin/parking/parkingPaymentList', 'admin/ParkingPayment/lists');
+    Route::post('admin/parking/parkingPaymentAdd', 'admin/ParkingPayment/add');
+    Route::post('admin/parking/parkingPaymentEdit', 'admin/ParkingPayment/edit');
+    Route::post('admin/parking/parkingPaymentDelete', 'admin/ParkingPayment/delete');
+
+    // 打印模板
+    Route::get('admin/print/printTemplateList', 'admin/PrintTemplate/lists');
+    Route::post('admin/print/printTemplateAdd', 'admin/PrintTemplate/add');
+    Route::post('admin/print/printTemplateEdit', 'admin/PrintTemplate/edit');
+    Route::post('admin/print/printTemplateDelete', 'admin/PrintTemplate/delete');
+
+    // 打印日志
+    Route::get('admin/print/printLogList', 'admin/PrintLog/lists');
+
+    // 消息推送
+    Route::get('admin/notice/notificationList', 'admin/Notification/lists');
+    Route::post('admin/notice/notificationAdd', 'admin/Notification/add');
+    Route::post('admin/notice/notificationEdit', 'admin/Notification/edit');
+    Route::post('admin/notice/notificationDelete', 'admin/Notification/delete');
+
+    // 推送设备
+    Route::get('admin/system/pushDeviceList', 'admin/PushDevice/lists');
+    Route::post('admin/system/pushDeviceAdd', 'admin/PushDevice/add');
+    Route::post('admin/system/pushDeviceEdit', 'admin/PushDevice/edit');
+    Route::post('admin/system/pushDeviceDelete', 'admin/PushDevice/delete');
+
+    // SSE事件
+    Route::get('admin/system/sseEventList', 'admin/SseEvent/lists');
+
+    // 短信模板
+    Route::get('admin/sms/smsTemplateList', 'admin/SmsTemplate/lists');
+    Route::post('admin/sms/smsTemplateAdd', 'admin/SmsTemplate/add');
+    Route::post('admin/sms/smsTemplateEdit', 'admin/SmsTemplate/edit');
+    Route::post('admin/sms/smsTemplateDelete', 'admin/SmsTemplate/delete');
+
+
+
+    // 服务商联系
+    Route::get('admin/system/serviceVendorList', 'admin/ServiceVendor/lists');
+    Route::post('admin/system/serviceVendorAdd', 'admin/ServiceVendor/add');
+    Route::post('admin/system/serviceVendorEdit', 'admin/ServiceVendor/edit');
+    Route::post('admin/system/serviceVendorDelete', 'admin/ServiceVendor/delete');
 });

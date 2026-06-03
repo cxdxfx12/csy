@@ -30,7 +30,7 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @change="loadData" />
+        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @current-change="loadData" @size-change="loadData" />
       </div>
     </el-card>
 
@@ -40,7 +40,7 @@
         <el-form-item label="手机号" prop="phone"><el-input v-model="form.phone" placeholder="手机号" maxlength="11" /></el-form-item>
         <el-form-item label="专长"><el-input v-model="form.specialty" placeholder="如：水电、门窗" /></el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status"><el-radio :label="1">在职</el-radio><el-radio :label="0">离职</el-radio></el-radio-group>
+          <el-radio-group v-model="form.status"><el-radio :value="1">在职</el-radio><el-radio :value="0">离职</el-radio></el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>

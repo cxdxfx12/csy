@@ -33,7 +33,7 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @change="loadData" />
+        <el-pagination v-model:current-page="query.page" v-model:page-size="query.limit" :total="total" :page-sizes="[15,30,50,100]" layout="total,sizes,prev,pager,next" @current-change="loadData" @size-change="loadData" />
       </div>
     </el-card>
 
@@ -45,7 +45,7 @@
         <el-form-item label="关联房间" prop="room_id"><el-select v-model="form.room_id" placeholder="选择房间" clearable filterable style="width:100%;"><el-option v-for="r in rooms" :key="r.id" :label="r.building_name + ' ' + r.room_number" :value="r.id" /></el-select></el-form-item>
         <el-form-item label="姓名" prop="realname"><el-input v-model="form.realname" placeholder="姓名" /></el-form-item>
         <el-form-item label="关系" prop="relation"><el-select v-model="form.relation" placeholder="选择关系" style="width:100%;"><el-option label="配偶" value="配偶" /><el-option label="子女" value="子女" /><el-option label="父母" value="父母" /><el-option label="兄弟姐妹" value="兄弟姐妹" /><el-option label="其他" value="其他" /></el-select></el-form-item>
-        <el-form-item label="性别"><el-radio-group v-model="form.gender"><el-radio :label="1">男</el-radio><el-radio :label="2">女</el-radio></el-radio-group></el-form-item>
+        <el-form-item label="性别"><el-radio-group v-model="form.gender"><el-radio :value="1">男</el-radio><el-radio :value="2">女</el-radio></el-radio-group></el-form-item>
         <el-form-item label="手机号"><el-input v-model="form.phone" placeholder="手机号" maxlength="11" /></el-form-item>
         <el-form-item label="身份证"><el-input v-model="form.id_card" placeholder="身份证号码" maxlength="18" /></el-form-item>
         <el-form-item label="备注"><el-input v-model="form.remark" placeholder="备注" type="textarea" /></el-form-item>

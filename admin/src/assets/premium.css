@@ -1,0 +1,265 @@
+/* ============================================================
+   大圣物业 - 全局高档样式升级
+   一次性美化所有页面，无需逐个修改页面文件
+   ============================================================ */
+
+/* ----- 页面容器动画 ----- */
+.page-container {
+  animation: pageSlideIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----- 搜索栏升级 ----- */
+.search-bar {
+  background: #fff !important;
+  border-radius: 12px !important;
+  padding: 18px 22px !important;
+  margin-bottom: 16px !important;
+  border: 1px solid #e8ecf1 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
+  transition: box-shadow 0.3s;
+}
+.search-bar:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+.search-bar .el-form-item { margin-bottom: 0 !important; }
+.search-bar .el-form-item__label {
+  font-weight: 600;
+  color: #475569;
+  font-size: 13px;
+}
+
+/* ----- 表格卡片升级 ----- */
+.table-card {
+  border-radius: 12px !important;
+  border: 1px solid #e8ecf1 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
+  transition: box-shadow 0.3s;
+}
+.table-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+}
+.table-card .el-card__body {
+  padding: 0 !important;
+}
+
+/* ----- 工具栏升级 ----- */
+.table-toolbar {
+  padding: 14px 20px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #fafbfc;
+  border-radius: 12px 12px 0 0;
+}
+
+/* ----- 表格美化 ----- */
+.el-table {
+  border-radius: 0 !important;
+}
+.el-table th.el-table__cell {
+  background: #f8fafc !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  padding: 14px 0 !important;
+}
+.el-table td.el-table__cell {
+  font-size: 13px !important;
+  padding: 12px 0 !important;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: #fafbfc !important;
+}
+.el-table__body tr:hover > td.el-table__cell {
+  background: #eff6ff !important;
+}
+.el-table .el-table__cell { transition: background 0.15s; }
+
+/* ----- 分页美化 ----- */
+.pagination {
+  padding: 14px 20px !important;
+  border-top: 1px solid #f1f5f9 !important;
+  display: flex;
+  justify-content: flex-end;
+  background: #fafbfc;
+  border-radius: 0 0 12px 12px;
+}
+.pagination .el-pagination { padding: 0; }
+
+/* ----- 按钮升级 ----- */
+.el-button--primary {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.3) !important;
+  transition: all 0.3s !important;
+  font-weight: 600 !important;
+}
+.el-button--primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #4338ca) !important;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.4) !important;
+  transform: translateY(-1px);
+}
+.el-button--primary:active {
+  transform: translateY(0) !important;
+}
+.el-button--success {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(5,150,105,0.3) !important;
+}
+.el-button--danger {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(220,38,38,0.3) !important;
+}
+.el-button--warning {
+  background: linear-gradient(135deg, #d97706, #f59e0b) !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(217,119,6,0.3) !important;
+}
+
+/* ----- 弹窗升级 ----- */
+.el-dialog {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
+}
+.el-dialog__header {
+  background: linear-gradient(135deg, #f8fafc, #fff);
+  border-bottom: 1px solid #e8ecf1;
+  padding: 18px 24px !important;
+  margin-right: 0 !important;
+}
+.el-dialog__title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+}
+.el-dialog__body {
+  padding: 24px !important;
+}
+.el-dialog__footer {
+  padding: 14px 24px !important;
+  border-top: 1px solid #f1f5f9;
+  background: #fafbfc;
+}
+
+/* ----- 表单升级 ----- */
+.el-form-item__label { font-weight: 600; color: #475569; font-size: 13px; }
+.el-input__wrapper {
+  border-radius: 8px !important;
+  transition: all 0.25s !important;
+  box-shadow: 0 0 0 1px #e2e8f0 inset !important;
+}
+.el-input__wrapper:hover { box-shadow: 0 0 0 1px #94a3b8 inset !important; }
+.el-input.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2) inset !important;
+}
+.el-select .el-input__wrapper { border-radius: 8px !important; }
+.el-date-editor .el-input__wrapper { border-radius: 8px !important; }
+.el-input-number .el-input__wrapper { border-radius: 8px !important; }
+
+/* ----- 标签(Tag)升级 ----- */
+.el-tag {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  padding: 0 10px !important;
+  border: none !important;
+}
+.el-tag--success { background: #ecfdf5 !important; color: #059669 !important; }
+.el-tag--danger { background: #fef2f2 !important; color: #dc2626 !important; }
+.el-tag--warning { background: #fffbeb !important; color: #d97706 !important; }
+.el-tag--info { background: #f1f5f9 !important; color: #64748b !important; }
+.el-tag--primary { background: #eff6ff !important; color: #2563eb !important; }
+
+/* ----- 分页组件升级 ----- */
+.el-pagination .el-pager li {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+}
+.el-pagination .el-pager li.is-active {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.3);
+}
+.el-pagination .el-pager li:hover { background: #eff6ff !important; color: #2563eb !important; }
+.el-pagination .el-pager li.is-active:hover { background: linear-gradient(135deg, #1d4ed8, #4338ca) !important; color: #fff !important; }
+
+/* ----- 选项卡升级 ----- */
+.el-tabs__item {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.el-tabs__item.is-active {
+  color: #2563eb !important;
+  font-weight: 700 !important;
+}
+.el-tabs__active-bar {
+  background: linear-gradient(90deg, #2563eb, #4f46e5) !important;
+  height: 3px !important;
+}
+
+/* ----- 开关升级 ----- */
+.el-switch.is-checked .el-switch__core {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  border-color: transparent !important;
+}
+
+/* ----- 复选框/单选框 ----- */
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  border-color: transparent !important;
+}
+.el-radio__input.is-checked .el-radio__inner {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  border-color: transparent !important;
+}
+
+/* ----- 抽屉升级 ----- */
+.el-drawer__header {
+  margin-bottom: 0 !important;
+  padding: 18px 24px !important;
+  border-bottom: 1px solid #e8ecf1;
+  background: linear-gradient(135deg, #f8fafc, #fff);
+}
+
+/* ----- 面包屑隐藏（横幅已包含） ----- */
+/* .el-breadcrumb { display: none; } */
+
+/* ----- 滚动条美化 ----- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ----- 消息提示升级 ----- */
+.el-message {
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+  font-weight: 500 !important;
+}
+
+/* ----- 下拉菜单升级 ----- */
+.el-dropdown-menu {
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  border: 1px solid #e8ecf1 !important;
+  padding: 6px !important;
+}
+.el-dropdown-menu__item {
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  transition: all 0.15s !important;
+}
+.el-dropdown-menu__item:hover { background: #eff6ff !important; color: #2563eb !important; }
+
+/* ----- 级联选择器 ----- */
+.el-cascader__dropdown { border-radius: 10px !important; }

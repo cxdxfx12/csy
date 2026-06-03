@@ -125,6 +125,27 @@ class Activity extends BaseAdmin
         return $this->table($list, $total);
     }
 
+    public function signupList()
+    {
+        [$page, $limit] = $this->getPage();
+        $where = [];
+        $keyword = $this->request->param('keyword', '');
+        if ($keyword) $where[] = ['s.name|s.phone|a.title', 'like', "%{$keyword}%"];
+        $activityId = $this->request->param('activity_id', 0);
+        if ($activityId) $where[] = ['s.activity_id', '=', $activityId];
+
+        $total = Db::name('activity_signup')->alias('s')
+            ->leftJoin('activity a', 'a.id = s.activity_id')
+            ->where($where)->count();
+
+        $list = Db::name('activity_signup')->alias('s')
+            ->leftJoin('activity a', 'a.id = s.activity_id')
+            ->field('s.*, a.title as activity_title')
+            ->where($where)->page($page, $limit)->order('s.id', 'desc')->select();
+
+        return $this->table($list, $total);
+    }
+
     public function cancelSignup()
     {
         $id = $this->request->post('id', 0);
