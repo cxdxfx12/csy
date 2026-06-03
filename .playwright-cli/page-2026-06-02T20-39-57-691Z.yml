@@ -1,0 +1,632 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]: 🏢 大圣物业
+      - menubar [ref=e10]:
+        - menuitem "数据概览" [expanded] [ref=e11]:
+          - generic [ref=e12] [cursor=pointer]:
+            - img [ref=e14]
+            - generic [ref=e16]: 数据概览
+            - img [ref=e18]
+          - menu [ref=e20]:
+            - menuitem "数据概览" [ref=e21] [cursor=pointer]:
+              - img [ref=e23]
+              - generic [ref=e25]: 数据概览
+        - menuitem "系统管理" [ref=e26]:
+          - generic [ref=e27] [cursor=pointer]:
+            - img [ref=e29]
+            - generic [ref=e31]: 系统管理
+            - img [ref=e33]
+        - menuitem "房产管理" [expanded] [ref=e35]:
+          - generic [ref=e36] [cursor=pointer]:
+            - img [ref=e38]
+            - generic [ref=e40]: 房产管理
+            - img [ref=e42]
+          - menu [ref=e239]:
+            - menuitem "小区管理" [ref=e240] [cursor=pointer]:
+              - img [ref=e242]
+              - generic [ref=e244]: 小区管理
+            - menuitem "楼栋管理" [ref=e245] [cursor=pointer]:
+              - img [ref=e247]
+              - generic [ref=e251]: 楼栋管理
+            - menuitem "房间管理" [ref=e252] [cursor=pointer]:
+              - generic [ref=e254]: 房间管理
+        - menuitem "业主管理" [ref=e44]:
+          - generic [ref=e45] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e49]: 业主管理
+            - img [ref=e51]
+        - menuitem "收费管理" [ref=e53]:
+          - generic [ref=e54] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e60]: 收费管理
+            - img [ref=e62]
+        - menuitem "报修管理" [ref=e64]:
+          - generic [ref=e65] [cursor=pointer]:
+            - img [ref=e67]
+            - generic [ref=e69]: 报修管理
+            - img [ref=e71]
+        - menuitem "安保管理" [ref=e73]:
+          - generic [ref=e74] [cursor=pointer]:
+            - generic [ref=e76]: 安保管理
+            - img [ref=e78]
+        - menuitem "停车管理" [ref=e80]:
+          - generic [ref=e81] [cursor=pointer]:
+            - img [ref=e83]
+            - generic [ref=e85]: 停车管理
+            - img [ref=e87]
+        - menuitem "公告通知" [ref=e89]:
+          - generic [ref=e90] [cursor=pointer]:
+            - img [ref=e92]
+            - generic [ref=e96]: 公告通知
+            - img [ref=e98]
+        - menuitem "设备管理" [ref=e100]:
+          - generic [ref=e101] [cursor=pointer]:
+            - img [ref=e103]
+            - generic [ref=e108]: 设备管理
+            - img [ref=e110]
+        - menuitem "投诉建议" [ref=e112]:
+          - generic [ref=e113] [cursor=pointer]:
+            - img [ref=e115]
+            - generic [ref=e117]: 投诉建议
+            - img [ref=e119]
+        - menuitem "打印中心" [ref=e121]:
+          - generic [ref=e122] [cursor=pointer]:
+            - img [ref=e124]
+            - generic [ref=e126]: 打印中心
+            - img [ref=e128]
+        - menuitem "物业人员" [ref=e130]:
+          - generic [ref=e131] [cursor=pointer]:
+            - img [ref=e133]
+            - generic [ref=e135]: 物业人员
+            - img [ref=e137]
+        - menuitem "外部供应商" [ref=e139]:
+          - generic [ref=e140] [cursor=pointer]:
+            - img [ref=e142]
+            - generic [ref=e144]: 外部供应商
+            - img [ref=e146]
+    - generic [ref=e148]:
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - button [ref=e151] [cursor=pointer]:
+            - img [ref=e153]
+          - navigation "el.breadcrumb.label" [ref=e155]:
+            - generic [ref=e156]:
+              - link "工作台" [ref=e157]
+              - text: /
+            - link "房间管理" [ref=e791]
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - button [ref=e162] [cursor=pointer]:
+              - img [ref=e164]
+            - superscript [ref=e168]
+          - button "超级管理员" [ref=e170] [cursor=pointer]:
+            - img [ref=e173]
+            - generic [ref=e175]: 超级管理员
+      - generic [ref=e177]:
+        - tablist [ref=e181]:
+          - tab "📊 控制台" [ref=e182]
+          - tab "房间管理" [selected] [ref=e792]:
+            - text: 房间管理
+            - img [ref=e794]
+        - generic [ref=e183]:
+          - tabpanel "房间管理"
+      - main [ref=e184]:
+        - generic [ref=e796]:
+          - generic [ref=e798]:
+            - textbox "房间号" [ref=e803]
+            - generic [ref=e808] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e810]
+                - generic [ref=e811]: 小区
+              - img [ref=e814]
+            - generic [ref=e819] [cursor=pointer]:
+              - generic:
+                - combobox [expanded] [active] [ref=e821]
+                - generic [ref=e822]: 楼栋
+              - img [ref=e825]
+            - generic [ref=e828]:
+              - button "搜索" [ref=e829] [cursor=pointer]:
+                - generic [ref=e830]: 搜索
+              - button "重置" [ref=e831] [cursor=pointer]:
+                - generic [ref=e832]: 重置
+              - button "批量生成" [ref=e833] [cursor=pointer]:
+                - generic [ref=e834]: 批量生成
+          - generic [ref=e836]:
+            - button "添加房间" [ref=e838] [cursor=pointer]:
+              - generic [ref=e839]: 添加房间
+            - generic [ref=e841]:
+              - table [ref=e843]:
+                - rowgroup [ref=e857]:
+                  - row "# ID 房间号 小区 楼栋 单元 楼层 面积 户型 状态 业主 操作" [ref=e858]:
+                    - columnheader "#" [ref=e859]:
+                      - generic [ref=e860]: "#"
+                    - columnheader "ID" [ref=e861]:
+                      - generic [ref=e862]: ID
+                    - columnheader "房间号" [ref=e863]:
+                      - generic [ref=e864]: 房间号
+                    - columnheader "小区" [ref=e865]:
+                      - generic [ref=e866]: 小区
+                    - columnheader "楼栋" [ref=e867]:
+                      - generic [ref=e868]: 楼栋
+                    - columnheader "单元" [ref=e869]:
+                      - generic [ref=e870]: 单元
+                    - columnheader "楼层" [ref=e871]:
+                      - generic [ref=e872]: 楼层
+                    - columnheader "面积" [ref=e873]:
+                      - generic [ref=e874]: 面积
+                    - columnheader "户型" [ref=e875]:
+                      - generic [ref=e876]: 户型
+                    - columnheader "状态" [ref=e877]:
+                      - generic [ref=e878]: 状态
+                    - columnheader "业主" [ref=e879]:
+                      - generic [ref=e880]: 业主
+                    - columnheader "操作" [ref=e881]:
+                      - generic [ref=e882]: 操作
+              - table [ref=e887]:
+                - rowgroup [ref=e901]:
+                  - row "1 713 101 阳光花园 1号楼 1 1 131.00 三室两厅 已售 王大伟 编辑 删除" [ref=e902]:
+                    - cell "1" [ref=e903]:
+                      - generic [ref=e905]: "1"
+                    - cell "713" [ref=e906]:
+                      - generic [ref=e907]: "713"
+                    - cell "101" [ref=e908]:
+                      - generic [ref=e909]: "101"
+                    - cell "阳光花园" [ref=e910]:
+                      - generic [ref=e911]: 阳光花园
+                    - cell "1号楼" [ref=e912]:
+                      - generic [ref=e913]: 1号楼
+                    - cell "1" [ref=e914]:
+                      - generic [ref=e915]: "1"
+                    - cell "1" [ref=e916]:
+                      - generic [ref=e917]: "1"
+                    - cell "131.00" [ref=e918]:
+                      - generic [ref=e919]: "131.00"
+                    - cell "三室两厅" [ref=e920]:
+                      - generic [ref=e921]: 三室两厅
+                    - cell "已售" [ref=e922]:
+                      - generic [ref=e925]: 已售
+                    - cell "王大伟" [ref=e926]:
+                      - generic [ref=e927]: 王大伟
+                    - cell "编辑 删除" [ref=e928]:
+                      - generic [ref=e929]:
+                        - button "编辑" [ref=e930] [cursor=pointer]:
+                          - generic [ref=e931]: 编辑
+                        - button "删除" [ref=e932] [cursor=pointer]:
+                          - generic [ref=e933]: 删除
+                  - row "2 714 102 阳光花园 1号楼 2 1 125.00 两室一厅 已售 李芳 编辑 删除" [ref=e934]:
+                    - cell "2" [ref=e935]:
+                      - generic [ref=e937]: "2"
+                    - cell "714" [ref=e938]:
+                      - generic [ref=e939]: "714"
+                    - cell "102" [ref=e940]:
+                      - generic [ref=e941]: "102"
+                    - cell "阳光花园" [ref=e942]:
+                      - generic [ref=e943]: 阳光花园
+                    - cell "1号楼" [ref=e944]:
+                      - generic [ref=e945]: 1号楼
+                    - cell "2" [ref=e946]:
+                      - generic [ref=e947]: "2"
+                    - cell "1" [ref=e948]:
+                      - generic [ref=e949]: "1"
+                    - cell "125.00" [ref=e950]:
+                      - generic [ref=e951]: "125.00"
+                    - cell "两室一厅" [ref=e952]:
+                      - generic [ref=e953]: 两室一厅
+                    - cell "已售" [ref=e954]:
+                      - generic [ref=e957]: 已售
+                    - cell "李芳" [ref=e958]:
+                      - generic [ref=e959]: 李芳
+                    - cell "编辑 删除" [ref=e960]:
+                      - generic [ref=e961]:
+                        - button "编辑" [ref=e962] [cursor=pointer]:
+                          - generic [ref=e963]: 编辑
+                        - button "删除" [ref=e964] [cursor=pointer]:
+                          - generic [ref=e965]: 删除
+                  - row "3 715 901 阳光花园 1号楼 1 9 148.00 三室两厅 已售 张建国 编辑 删除" [ref=e966]:
+                    - cell "3" [ref=e967]:
+                      - generic [ref=e969]: "3"
+                    - cell "715" [ref=e970]:
+                      - generic [ref=e971]: "715"
+                    - cell "901" [ref=e972]:
+                      - generic [ref=e973]: "901"
+                    - cell "阳光花园" [ref=e974]:
+                      - generic [ref=e975]: 阳光花园
+                    - cell "1号楼" [ref=e976]:
+                      - generic [ref=e977]: 1号楼
+                    - cell "1" [ref=e978]:
+                      - generic [ref=e979]: "1"
+                    - cell "9" [ref=e980]:
+                      - generic [ref=e981]: "9"
+                    - cell "148.00" [ref=e982]:
+                      - generic [ref=e983]: "148.00"
+                    - cell "三室两厅" [ref=e984]:
+                      - generic [ref=e985]: 三室两厅
+                    - cell "已售" [ref=e986]:
+                      - generic [ref=e989]: 已售
+                    - cell "张建国" [ref=e990]:
+                      - generic [ref=e991]: 张建国
+                    - cell "编辑 删除" [ref=e992]:
+                      - generic [ref=e993]:
+                        - button "编辑" [ref=e994] [cursor=pointer]:
+                          - generic [ref=e995]: 编辑
+                        - button "删除" [ref=e996] [cursor=pointer]:
+                          - generic [ref=e997]: 删除
+                  - row "4 716 902 阳光花园 1号楼 2 9 111.00 两室两厅 已售 刘美华 编辑 删除" [ref=e998]:
+                    - cell "4" [ref=e999]:
+                      - generic [ref=e1001]: "4"
+                    - cell "716" [ref=e1002]:
+                      - generic [ref=e1003]: "716"
+                    - cell "902" [ref=e1004]:
+                      - generic [ref=e1005]: "902"
+                    - cell "阳光花园" [ref=e1006]:
+                      - generic [ref=e1007]: 阳光花园
+                    - cell "1号楼" [ref=e1008]:
+                      - generic [ref=e1009]: 1号楼
+                    - cell "2" [ref=e1010]:
+                      - generic [ref=e1011]: "2"
+                    - cell "9" [ref=e1012]:
+                      - generic [ref=e1013]: "9"
+                    - cell "111.00" [ref=e1014]:
+                      - generic [ref=e1015]: "111.00"
+                    - cell "两室两厅" [ref=e1016]:
+                      - generic [ref=e1017]: 两室两厅
+                    - cell "已售" [ref=e1018]:
+                      - generic [ref=e1021]: 已售
+                    - cell "刘美华" [ref=e1022]:
+                      - generic [ref=e1023]: 刘美华
+                    - cell "编辑 删除" [ref=e1024]:
+                      - generic [ref=e1025]:
+                        - button "编辑" [ref=e1026] [cursor=pointer]:
+                          - generic [ref=e1027]: 编辑
+                        - button "删除" [ref=e1028] [cursor=pointer]:
+                          - generic [ref=e1029]: 删除
+                  - row "5 717 1801 阳光花园 1号楼 1 18 128.00 两室两厅 已售 陈志强 编辑 删除" [ref=e1030]:
+                    - cell "5" [ref=e1031]:
+                      - generic [ref=e1033]: "5"
+                    - cell "717" [ref=e1034]:
+                      - generic [ref=e1035]: "717"
+                    - cell "1801" [ref=e1036]:
+                      - generic [ref=e1037]: "1801"
+                    - cell "阳光花园" [ref=e1038]:
+                      - generic [ref=e1039]: 阳光花园
+                    - cell "1号楼" [ref=e1040]:
+                      - generic [ref=e1041]: 1号楼
+                    - cell "1" [ref=e1042]:
+                      - generic [ref=e1043]: "1"
+                    - cell "18" [ref=e1044]:
+                      - generic [ref=e1045]: "18"
+                    - cell "128.00" [ref=e1046]:
+                      - generic [ref=e1047]: "128.00"
+                    - cell "两室两厅" [ref=e1048]:
+                      - generic [ref=e1049]: 两室两厅
+                    - cell "已售" [ref=e1050]:
+                      - generic [ref=e1053]: 已售
+                    - cell "陈志强" [ref=e1054]:
+                      - generic [ref=e1055]: 陈志强
+                    - cell "编辑 删除" [ref=e1056]:
+                      - generic [ref=e1057]:
+                        - button "编辑" [ref=e1058] [cursor=pointer]:
+                          - generic [ref=e1059]: 编辑
+                        - button "删除" [ref=e1060] [cursor=pointer]:
+                          - generic [ref=e1061]: 删除
+                  - row "6 718 1802 阳光花园 1号楼 2 18 134.00 三室两厅 已售 杨丽萍 编辑 删除" [ref=e1062]:
+                    - cell "6" [ref=e1063]:
+                      - generic [ref=e1065]: "6"
+                    - cell "718" [ref=e1066]:
+                      - generic [ref=e1067]: "718"
+                    - cell "1802" [ref=e1068]:
+                      - generic [ref=e1069]: "1802"
+                    - cell "阳光花园" [ref=e1070]:
+                      - generic [ref=e1071]: 阳光花园
+                    - cell "1号楼" [ref=e1072]:
+                      - generic [ref=e1073]: 1号楼
+                    - cell "2" [ref=e1074]:
+                      - generic [ref=e1075]: "2"
+                    - cell "18" [ref=e1076]:
+                      - generic [ref=e1077]: "18"
+                    - cell "134.00" [ref=e1078]:
+                      - generic [ref=e1079]: "134.00"
+                    - cell "三室两厅" [ref=e1080]:
+                      - generic [ref=e1081]: 三室两厅
+                    - cell "已售" [ref=e1082]:
+                      - generic [ref=e1085]: 已售
+                    - cell "杨丽萍" [ref=e1086]:
+                      - generic [ref=e1087]: 杨丽萍
+                    - cell "编辑 删除" [ref=e1088]:
+                      - generic [ref=e1089]:
+                        - button "编辑" [ref=e1090] [cursor=pointer]:
+                          - generic [ref=e1091]: 编辑
+                        - button "删除" [ref=e1092] [cursor=pointer]:
+                          - generic [ref=e1093]: 删除
+                  - row "7 719 101 阳光花园 2号楼 1 1 151.00 四室两厅 已售 黄小刚 编辑 删除" [ref=e1094]:
+                    - cell "7" [ref=e1095]:
+                      - generic [ref=e1097]: "7"
+                    - cell "719" [ref=e1098]:
+                      - generic [ref=e1099]: "719"
+                    - cell "101" [ref=e1100]:
+                      - generic [ref=e1101]: "101"
+                    - cell "阳光花园" [ref=e1102]:
+                      - generic [ref=e1103]: 阳光花园
+                    - cell "2号楼" [ref=e1104]:
+                      - generic [ref=e1105]: 2号楼
+                    - cell "1" [ref=e1106]:
+                      - generic [ref=e1107]: "1"
+                    - cell "1" [ref=e1108]:
+                      - generic [ref=e1109]: "1"
+                    - cell "151.00" [ref=e1110]:
+                      - generic [ref=e1111]: "151.00"
+                    - cell "四室两厅" [ref=e1112]:
+                      - generic [ref=e1113]: 四室两厅
+                    - cell "已售" [ref=e1114]:
+                      - generic [ref=e1117]: 已售
+                    - cell "黄小刚" [ref=e1118]:
+                      - generic [ref=e1119]: 黄小刚
+                    - cell "编辑 删除" [ref=e1120]:
+                      - generic [ref=e1121]:
+                        - button "编辑" [ref=e1122] [cursor=pointer]:
+                          - generic [ref=e1123]: 编辑
+                        - button "删除" [ref=e1124] [cursor=pointer]:
+                          - generic [ref=e1125]: 删除
+                  - row "8 720 102 阳光花园 2号楼 2 1 156.00 三室两厅 已售 赵文博 编辑 删除" [ref=e1126]:
+                    - cell "8" [ref=e1127]:
+                      - generic [ref=e1129]: "8"
+                    - cell "720" [ref=e1130]:
+                      - generic [ref=e1131]: "720"
+                    - cell "102" [ref=e1132]:
+                      - generic [ref=e1133]: "102"
+                    - cell "阳光花园" [ref=e1134]:
+                      - generic [ref=e1135]: 阳光花园
+                    - cell "2号楼" [ref=e1136]:
+                      - generic [ref=e1137]: 2号楼
+                    - cell "2" [ref=e1138]:
+                      - generic [ref=e1139]: "2"
+                    - cell "1" [ref=e1140]:
+                      - generic [ref=e1141]: "1"
+                    - cell "156.00" [ref=e1142]:
+                      - generic [ref=e1143]: "156.00"
+                    - cell "三室两厅" [ref=e1144]:
+                      - generic [ref=e1145]: 三室两厅
+                    - cell "已售" [ref=e1146]:
+                      - generic [ref=e1149]: 已售
+                    - cell "赵文博" [ref=e1150]:
+                      - generic [ref=e1151]: 赵文博
+                    - cell "编辑 删除" [ref=e1152]:
+                      - generic [ref=e1153]:
+                        - button "编辑" [ref=e1154] [cursor=pointer]:
+                          - generic [ref=e1155]: 编辑
+                        - button "删除" [ref=e1156] [cursor=pointer]:
+                          - generic [ref=e1157]: 删除
+                  - row "9 721 901 阳光花园 2号楼 1 9 157.00 两室两厅 已售 周晓燕 编辑 删除" [ref=e1158]:
+                    - cell "9" [ref=e1159]:
+                      - generic [ref=e1161]: "9"
+                    - cell "721" [ref=e1162]:
+                      - generic [ref=e1163]: "721"
+                    - cell "901" [ref=e1164]:
+                      - generic [ref=e1165]: "901"
+                    - cell "阳光花园" [ref=e1166]:
+                      - generic [ref=e1167]: 阳光花园
+                    - cell "2号楼" [ref=e1168]:
+                      - generic [ref=e1169]: 2号楼
+                    - cell "1" [ref=e1170]:
+                      - generic [ref=e1171]: "1"
+                    - cell "9" [ref=e1172]:
+                      - generic [ref=e1173]: "9"
+                    - cell "157.00" [ref=e1174]:
+                      - generic [ref=e1175]: "157.00"
+                    - cell "两室两厅" [ref=e1176]:
+                      - generic [ref=e1177]: 两室两厅
+                    - cell "已售" [ref=e1178]:
+                      - generic [ref=e1181]: 已售
+                    - cell "周晓燕" [ref=e1182]:
+                      - generic [ref=e1183]: 周晓燕
+                    - cell "编辑 删除" [ref=e1184]:
+                      - generic [ref=e1185]:
+                        - button "编辑" [ref=e1186] [cursor=pointer]:
+                          - generic [ref=e1187]: 编辑
+                        - button "删除" [ref=e1188] [cursor=pointer]:
+                          - generic [ref=e1189]: 删除
+                  - row "10 722 902 阳光花园 2号楼 2 9 105.00 四室两厅 已售 吴建国 编辑 删除" [ref=e1190]:
+                    - cell "10" [ref=e1191]:
+                      - generic [ref=e1193]: "10"
+                    - cell "722" [ref=e1194]:
+                      - generic [ref=e1195]: "722"
+                    - cell "902" [ref=e1196]:
+                      - generic [ref=e1197]: "902"
+                    - cell "阳光花园" [ref=e1198]:
+                      - generic [ref=e1199]: 阳光花园
+                    - cell "2号楼" [ref=e1200]:
+                      - generic [ref=e1201]: 2号楼
+                    - cell "2" [ref=e1202]:
+                      - generic [ref=e1203]: "2"
+                    - cell "9" [ref=e1204]:
+                      - generic [ref=e1205]: "9"
+                    - cell "105.00" [ref=e1206]:
+                      - generic [ref=e1207]: "105.00"
+                    - cell "四室两厅" [ref=e1208]:
+                      - generic [ref=e1209]: 四室两厅
+                    - cell "已售" [ref=e1210]:
+                      - generic [ref=e1213]: 已售
+                    - cell "吴建国" [ref=e1214]:
+                      - generic [ref=e1215]: 吴建国
+                    - cell "编辑 删除" [ref=e1216]:
+                      - generic [ref=e1217]:
+                        - button "编辑" [ref=e1218] [cursor=pointer]:
+                          - generic [ref=e1219]: 编辑
+                        - button "删除" [ref=e1220] [cursor=pointer]:
+                          - generic [ref=e1221]: 删除
+                  - row "11 723 1801 阳光花园 2号楼 1 18 149.00 两室两厅 已售 徐春梅 编辑 删除" [ref=e1222]:
+                    - cell "11" [ref=e1223]:
+                      - generic [ref=e1225]: "11"
+                    - cell "723" [ref=e1226]:
+                      - generic [ref=e1227]: "723"
+                    - cell "1801" [ref=e1228]:
+                      - generic [ref=e1229]: "1801"
+                    - cell "阳光花园" [ref=e1230]:
+                      - generic [ref=e1231]: 阳光花园
+                    - cell "2号楼" [ref=e1232]:
+                      - generic [ref=e1233]: 2号楼
+                    - cell "1" [ref=e1234]:
+                      - generic [ref=e1235]: "1"
+                    - cell "18" [ref=e1236]:
+                      - generic [ref=e1237]: "18"
+                    - cell "149.00" [ref=e1238]:
+                      - generic [ref=e1239]: "149.00"
+                    - cell "两室两厅" [ref=e1240]:
+                      - generic [ref=e1241]: 两室两厅
+                    - cell "已售" [ref=e1242]:
+                      - generic [ref=e1245]: 已售
+                    - cell "徐春梅" [ref=e1246]:
+                      - generic [ref=e1247]: 徐春梅
+                    - cell "编辑 删除" [ref=e1248]:
+                      - generic [ref=e1249]:
+                        - button "编辑" [ref=e1250] [cursor=pointer]:
+                          - generic [ref=e1251]: 编辑
+                        - button "删除" [ref=e1252] [cursor=pointer]:
+                          - generic [ref=e1253]: 删除
+                  - row "12 724 1802 阳光花园 2号楼 2 18 115.00 两室一厅 已售 孙立华 编辑 删除" [ref=e1254]:
+                    - cell "12" [ref=e1255]:
+                      - generic [ref=e1257]: "12"
+                    - cell "724" [ref=e1258]:
+                      - generic [ref=e1259]: "724"
+                    - cell "1802" [ref=e1260]:
+                      - generic [ref=e1261]: "1802"
+                    - cell "阳光花园" [ref=e1262]:
+                      - generic [ref=e1263]: 阳光花园
+                    - cell "2号楼" [ref=e1264]:
+                      - generic [ref=e1265]: 2号楼
+                    - cell "2" [ref=e1266]:
+                      - generic [ref=e1267]: "2"
+                    - cell "18" [ref=e1268]:
+                      - generic [ref=e1269]: "18"
+                    - cell "115.00" [ref=e1270]:
+                      - generic [ref=e1271]: "115.00"
+                    - cell "两室一厅" [ref=e1272]:
+                      - generic [ref=e1273]: 两室一厅
+                    - cell "已售" [ref=e1274]:
+                      - generic [ref=e1277]: 已售
+                    - cell "孙立华" [ref=e1278]:
+                      - generic [ref=e1279]: 孙立华
+                    - cell "编辑 删除" [ref=e1280]:
+                      - generic [ref=e1281]:
+                        - button "编辑" [ref=e1282] [cursor=pointer]:
+                          - generic [ref=e1283]: 编辑
+                        - button "删除" [ref=e1284] [cursor=pointer]:
+                          - generic [ref=e1285]: 删除
+                  - row "13 725 101 阳光花园 3号楼 1 1 127.00 四室两厅 已售 马晓峰 编辑 删除" [ref=e1286]:
+                    - cell "13" [ref=e1287]:
+                      - generic [ref=e1289]: "13"
+                    - cell "725" [ref=e1290]:
+                      - generic [ref=e1291]: "725"
+                    - cell "101" [ref=e1292]:
+                      - generic [ref=e1293]: "101"
+                    - cell "阳光花园" [ref=e1294]:
+                      - generic [ref=e1295]: 阳光花园
+                    - cell "3号楼" [ref=e1296]:
+                      - generic [ref=e1297]: 3号楼
+                    - cell "1" [ref=e1298]:
+                      - generic [ref=e1299]: "1"
+                    - cell "1" [ref=e1300]:
+                      - generic [ref=e1301]: "1"
+                    - cell "127.00" [ref=e1302]:
+                      - generic [ref=e1303]: "127.00"
+                    - cell "四室两厅" [ref=e1304]:
+                      - generic [ref=e1305]: 四室两厅
+                    - cell "已售" [ref=e1306]:
+                      - generic [ref=e1309]: 已售
+                    - cell "马晓峰" [ref=e1310]:
+                      - generic [ref=e1311]: 马晓峰
+                    - cell "编辑 删除" [ref=e1312]:
+                      - generic [ref=e1313]:
+                        - button "编辑" [ref=e1314] [cursor=pointer]:
+                          - generic [ref=e1315]: 编辑
+                        - button "删除" [ref=e1316] [cursor=pointer]:
+                          - generic [ref=e1317]: 删除
+                  - row "14 726 102 阳光花园 3号楼 2 1 131.00 两室一厅 已售 朱莉 编辑 删除" [ref=e1318]:
+                    - cell "14" [ref=e1319]:
+                      - generic [ref=e1321]: "14"
+                    - cell "726" [ref=e1322]:
+                      - generic [ref=e1323]: "726"
+                    - cell "102" [ref=e1324]:
+                      - generic [ref=e1325]: "102"
+                    - cell "阳光花园" [ref=e1326]:
+                      - generic [ref=e1327]: 阳光花园
+                    - cell "3号楼" [ref=e1328]:
+                      - generic [ref=e1329]: 3号楼
+                    - cell "2" [ref=e1330]:
+                      - generic [ref=e1331]: "2"
+                    - cell "1" [ref=e1332]:
+                      - generic [ref=e1333]: "1"
+                    - cell "131.00" [ref=e1334]:
+                      - generic [ref=e1335]: "131.00"
+                    - cell "两室一厅" [ref=e1336]:
+                      - generic [ref=e1337]: 两室一厅
+                    - cell "已售" [ref=e1338]:
+                      - generic [ref=e1341]: 已售
+                    - cell "朱莉" [ref=e1342]:
+                      - generic [ref=e1343]: 朱莉
+                    - cell "编辑 删除" [ref=e1344]:
+                      - generic [ref=e1345]:
+                        - button "编辑" [ref=e1346] [cursor=pointer]:
+                          - generic [ref=e1347]: 编辑
+                        - button "删除" [ref=e1348] [cursor=pointer]:
+                          - generic [ref=e1349]: 删除
+                  - row "15 727 901 阳光花园 3号楼 1 9 115.00 三室两厅 已售 胡伟东 编辑 删除" [ref=e1350]:
+                    - cell "15" [ref=e1351]:
+                      - generic [ref=e1353]: "15"
+                    - cell "727" [ref=e1354]:
+                      - generic [ref=e1355]: "727"
+                    - cell "901" [ref=e1356]:
+                      - generic [ref=e1357]: "901"
+                    - cell "阳光花园" [ref=e1358]:
+                      - generic [ref=e1359]: 阳光花园
+                    - cell "3号楼" [ref=e1360]:
+                      - generic [ref=e1361]: 3号楼
+                    - cell "1" [ref=e1362]:
+                      - generic [ref=e1363]: "1"
+                    - cell "9" [ref=e1364]:
+                      - generic [ref=e1365]: "9"
+                    - cell "115.00" [ref=e1366]:
+                      - generic [ref=e1367]: "115.00"
+                    - cell "三室两厅" [ref=e1368]:
+                      - generic [ref=e1369]: 三室两厅
+                    - cell "已售" [ref=e1370]:
+                      - generic [ref=e1373]: 已售
+                    - cell "胡伟东" [ref=e1374]:
+                      - generic [ref=e1375]: 胡伟东
+                    - cell "编辑 删除" [ref=e1376]:
+                      - generic [ref=e1377]:
+                        - button "编辑" [ref=e1378] [cursor=pointer]:
+                          - generic [ref=e1379]: 编辑
+                        - button "删除" [ref=e1380] [cursor=pointer]:
+                          - generic [ref=e1381]: 删除
+            - generic [ref=e1384]:
+              - generic [ref=e1385]: 共 54 条
+              - generic [ref=e1388] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e1390]
+                  - generic [ref=e1391]: 15el.pagination.pagesize
+                - img [ref=e1394]
+              - button "上一页" [disabled] [ref=e1396]:
+                - generic:
+                  - img
+              - list [ref=e1397]:
+                - listitem "el.pagination.currentPage" [ref=e1398]: "1"
+                - listitem "el.pagination.currentPage" [ref=e1399] [cursor=pointer]: "2"
+                - listitem "el.pagination.currentPage" [ref=e1400] [cursor=pointer]: "3"
+                - listitem "el.pagination.currentPage" [ref=e1401] [cursor=pointer]: "4"
+              - button "下一页" [ref=e1402] [cursor=pointer]:
+                - generic:
+                  - img
+  - tooltip [ref=e1403]:
+    - listbox [ref=e1407]:
+      - option "测试楼" [ref=e1408] [cursor=pointer]
+      - option "1号楼" [ref=e1409] [cursor=pointer]
+      - option "A栋" [ref=e1410] [cursor=pointer]
+      - option "2号楼" [ref=e1411] [cursor=pointer]
+      - option "B栋" [ref=e1412] [cursor=pointer]
+      - option "3号楼" [ref=e1413] [cursor=pointer]
+      - option "C栋" [ref=e1414] [cursor=pointer]
+      - option "5号楼" [ref=e1415] [cursor=pointer]
+      - option "1幢" [ref=e1416] [cursor=pointer]
+      - option "8号楼" [ref=e1417] [cursor=pointer]

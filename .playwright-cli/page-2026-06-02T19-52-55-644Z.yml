@@ -1,0 +1,186 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e364]:
+      - menuitem "数据概览" [ref=e365]:
+        - generic [ref=e366] [cursor=pointer]:
+          - img [ref=e368]
+          - generic [ref=e370]: 数据概览
+          - img [ref=e372]
+      - menuitem "系统管理" [expanded] [ref=e374]:
+        - generic [ref=e375] [cursor=pointer]:
+          - img [ref=e377]
+          - generic [ref=e379]: 系统管理
+          - img [ref=e381]
+        - menu [ref=e383]:
+          - menuitem "用户管理" [ref=e384] [cursor=pointer]:
+            - img [ref=e386]
+            - generic [ref=e388]: 用户管理
+          - menuitem "角色管理" [ref=e389] [cursor=pointer]:
+            - generic [ref=e391]: 角色管理
+          - menuitem "菜单管理" [ref=e392] [cursor=pointer]:
+            - img [ref=e394]
+            - generic [ref=e396]: 菜单管理
+          - menuitem "系统配置" [ref=e397] [cursor=pointer]:
+            - img [ref=e399]
+            - generic [ref=e401]: 系统配置
+          - menuitem "操作日志" [ref=e402] [cursor=pointer]:
+            - img [ref=e404]
+            - generic [ref=e406]: 操作日志
+      - menuitem "房产管理" [ref=e407]:
+        - generic [ref=e408] [cursor=pointer]:
+          - img [ref=e410]
+          - generic [ref=e412]: 房产管理
+          - img [ref=e414]
+      - menuitem "业主管理" [ref=e416]:
+        - generic [ref=e417] [cursor=pointer]:
+          - img [ref=e419]
+          - generic [ref=e421]: 业主管理
+          - img [ref=e423]
+      - menuitem "收费管理" [ref=e425]:
+        - generic [ref=e426] [cursor=pointer]:
+          - img [ref=e428]
+          - generic [ref=e432]: 收费管理
+          - img [ref=e434]
+      - menuitem "报修管理" [ref=e436]:
+        - generic [ref=e437] [cursor=pointer]:
+          - img [ref=e439]
+          - generic [ref=e441]: 报修管理
+          - img [ref=e443]
+      - menuitem "安保管理" [ref=e445]:
+        - generic [ref=e446] [cursor=pointer]:
+          - generic [ref=e448]: 安保管理
+          - img [ref=e450]
+      - menuitem "停车管理" [ref=e452]:
+        - generic [ref=e453] [cursor=pointer]:
+          - img [ref=e455]
+          - generic [ref=e457]: 停车管理
+          - img [ref=e459]
+      - menuitem "公告通知" [ref=e461]:
+        - generic [ref=e462] [cursor=pointer]:
+          - img [ref=e464]
+          - generic [ref=e468]: 公告通知
+          - img [ref=e470]
+      - menuitem "设备管理" [ref=e472]:
+        - generic [ref=e473] [cursor=pointer]:
+          - img [ref=e475]
+          - generic [ref=e480]: 设备管理
+          - img [ref=e482]
+      - menuitem "投诉建议" [ref=e484]:
+        - generic [ref=e485] [cursor=pointer]:
+          - img [ref=e487]
+          - generic [ref=e489]: 投诉建议
+          - img [ref=e491]
+      - menuitem "打印中心" [ref=e493]:
+        - generic [ref=e494] [cursor=pointer]:
+          - img [ref=e496]
+          - generic [ref=e498]: 打印中心
+          - img [ref=e500]
+      - menuitem "物业人员" [ref=e502]:
+        - generic [ref=e503] [cursor=pointer]:
+          - img [ref=e505]
+          - generic [ref=e507]: 物业人员
+          - img [ref=e509]
+      - menuitem "外部供应商" [ref=e511]:
+        - generic [ref=e512] [cursor=pointer]:
+          - img [ref=e514]
+          - generic [ref=e516]: 外部供应商
+          - img [ref=e518]
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "操作日志" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "超级管理员" [ref=e520] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 超级管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "操作日志" [selected] [ref=e44]:
+          - text: 操作日志
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "操作日志"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "操作人/模块/操作" [ref=e57]: 收费
+          - generic [ref=e60]:
+            - button "搜索" [active] [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]: 搜索
+            - button "重置" [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: 重置
+        - generic [ref=e66]:
+          - generic [ref=e68]:
+            - table [ref=e70]:
+              - rowgroup [ref=e82]:
+                - row "# ID 操作人 模块 操作 URL 方法 IP 耗时(ms) 时间" [ref=e83]:
+                  - columnheader "#" [ref=e84]:
+                    - generic [ref=e85]: "#"
+                  - columnheader "ID" [ref=e86]:
+                    - generic [ref=e87]: ID
+                  - columnheader "操作人" [ref=e88]:
+                    - generic [ref=e89]: 操作人
+                  - columnheader "模块" [ref=e90]:
+                    - generic [ref=e91]: 模块
+                  - columnheader "操作" [ref=e92]:
+                    - generic [ref=e93]: 操作
+                  - columnheader "URL" [ref=e94]:
+                    - generic [ref=e95]: URL
+                  - columnheader "方法" [ref=e96]:
+                    - generic [ref=e97]: 方法
+                  - columnheader "IP" [ref=e98]:
+                    - generic [ref=e99]: IP
+                  - columnheader "耗时(ms)" [ref=e100]:
+                    - generic [ref=e101]: 耗时(ms)
+                  - columnheader "时间" [ref=e102]:
+                    - generic [ref=e103]: 时间
+            - table [ref=e108]:
+              - rowgroup [ref=e120]:
+                - row "1 4 超级管理员 收费管理 添加账单 /admin/bill/add POST 127.0.0.1 120 2026-06-02 19:48:05" [ref=e527]:
+                  - cell "1" [ref=e528]:
+                    - generic [ref=e530]: "1"
+                  - cell "4" [ref=e531]:
+                    - generic [ref=e532]: "4"
+                  - cell "超级管理员" [ref=e533]:
+                    - generic [ref=e534]: 超级管理员
+                  - cell "收费管理" [ref=e535]:
+                    - generic [ref=e536]: 收费管理
+                  - cell "添加账单" [ref=e537]:
+                    - generic [ref=e538]: 添加账单
+                  - cell "/admin/bill/add" [ref=e539]:
+                    - generic [ref=e540]: /admin/bill/add
+                  - cell "POST" [ref=e541]:
+                    - generic [ref=e542]: POST
+                  - cell "127.0.0.1" [ref=e543]:
+                    - generic [ref=e544]: 127.0.0.1
+                  - cell "120" [ref=e545]:
+                    - generic [ref=e546]: "120"
+                  - cell "2026-06-02 19:48:05" [ref=e547]:
+                    - generic [ref=e548]: 2026-06-02 19:48:05
+          - generic [ref=e347]:
+            - generic [ref=e348]: 共 1 条
+            - generic [ref=e351] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e353]
+                - generic [ref=e354]: 15el.pagination.pagesize
+              - img [ref=e357]
+            - button "上一页" [disabled] [ref=e359]:
+              - generic:
+                - img
+            - list [ref=e360]:
+              - listitem "el.pagination.currentPage" [ref=e361]: "1"
+            - button "下一页" [disabled] [ref=e362]:
+              - generic:
+                - img

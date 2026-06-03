@@ -1,0 +1,193 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [expanded] [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+        - menu:
+          - menuitem "收费项目" [ref=e58] [cursor=pointer]:
+            - img [ref=e60]
+            - generic [ref=e63]: 收费项目
+          - menuitem "账单管理" [ref=e64] [cursor=pointer]:
+            - img [ref=e66]
+            - generic [ref=e68]: 账单管理
+          - menuitem "缴费记录" [ref=e69] [cursor=pointer]:
+            - img [ref=e71]
+            - generic [ref=e74]: 缴费记录
+          - menuitem "抄表管理" [ref=e75] [cursor=pointer]:
+            - img [ref=e77]
+            - generic [ref=e81]: 抄表管理
+          - menuitem "财务流水" [ref=e82] [cursor=pointer]:
+            - img [ref=e84]
+            - generic [ref=e86]: 财务流水
+          - menuitem "欠费管理" [ref=e87] [cursor=pointer]:
+            - img [ref=e89]
+            - generic [ref=e93]: 欠费管理
+      - menuitem "报修管理" [ref=e94]:
+        - generic [ref=e95] [cursor=pointer]:
+          - img [ref=e97]
+          - generic [ref=e99]: 报修管理
+          - img [ref=e101]
+      - menuitem "安保管理" [ref=e103]:
+        - generic [ref=e104] [cursor=pointer]:
+          - generic [ref=e106]: 安保管理
+          - img [ref=e108]
+      - menuitem "停车管理" [ref=e110]:
+        - generic [ref=e111] [cursor=pointer]:
+          - img [ref=e113]
+          - generic [ref=e115]: 停车管理
+          - img [ref=e117]
+      - menuitem "公告通知" [ref=e119]:
+        - generic [ref=e120] [cursor=pointer]:
+          - img [ref=e122]
+          - generic [ref=e126]: 公告通知
+          - img [ref=e128]
+      - menuitem "设备管理" [ref=e130]:
+        - generic [ref=e131] [cursor=pointer]:
+          - img [ref=e133]
+          - generic [ref=e138]: 设备管理
+          - img [ref=e140]
+      - menuitem "投诉建议" [ref=e142]:
+        - generic [ref=e143] [cursor=pointer]:
+          - img [ref=e145]
+          - generic [ref=e147]: 投诉建议
+          - img [ref=e149]
+      - menuitem "打印中心" [ref=e151]:
+        - generic [ref=e152] [cursor=pointer]:
+          - img [ref=e154]
+          - generic [ref=e156]: 打印中心
+          - img [ref=e158]
+      - menuitem "物业人员" [ref=e160]:
+        - generic [ref=e161] [cursor=pointer]:
+          - img [ref=e163]
+          - generic [ref=e165]: 物业人员
+          - img [ref=e167]
+      - menuitem "外部供应商" [ref=e169]:
+        - generic [ref=e170] [cursor=pointer]:
+          - img [ref=e172]
+          - generic [ref=e174]: 外部供应商
+          - img [ref=e176]
+  - generic [ref=e178]:
+    - generic [ref=e179]:
+      - generic [ref=e180]:
+        - button [ref=e181] [cursor=pointer]:
+          - img [ref=e183]
+        - navigation "el.breadcrumb.label" [ref=e185]:
+          - generic [ref=e186]:
+            - link "工作台" [ref=e187]
+            - text: /
+          - link "欠费管理" [ref=e189]
+      - generic [ref=e190]:
+        - generic [ref=e191]:
+          - button [ref=e192] [cursor=pointer]:
+            - img [ref=e194]
+          - superscript [ref=e198]
+        - button "超级管理员" [ref=e200] [cursor=pointer]:
+          - img [ref=e203]
+          - generic [ref=e205]: 超级管理员
+    - generic [ref=e207]:
+      - tablist [ref=e211]:
+        - tab "📊 控制台" [ref=e212]
+        - tab "欠费管理" [selected] [ref=e213]:
+          - text: 欠费管理
+          - img [ref=e215]
+      - generic [ref=e217]:
+        - tabpanel "欠费管理"
+    - main [ref=e218]:
+      - generic [ref=e219]:
+        - generic [ref=e220]:
+          - generic [ref=e221]:
+            - textbox "房间号/楼栋/业主/电话" [ref=e226]
+            - generic [ref=e231] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e233]
+                - generic [ref=e234]: 选择小区
+              - img [ref=e237]
+            - generic [ref=e240]:
+              - button "搜索" [ref=e241] [cursor=pointer]:
+                - generic [ref=e242]: 搜索
+              - button "重置" [ref=e243] [cursor=pointer]:
+                - generic [ref=e244]: 重置
+          - generic [ref=e245]:
+            - generic [ref=e246]:
+              - generic [ref=e247]: 欠费房间
+              - generic [ref=e248]: "0"
+            - generic [ref=e249]:
+              - generic [ref=e250]: 欠费总额
+              - generic [ref=e251]: ¥0.00
+            - generic [ref=e252]:
+              - generic [ref=e253]: 欠费账单
+              - generic [ref=e254]: "0"
+        - generic [ref=e256]:
+          - generic [ref=e257]:
+            - generic [ref=e258]:
+              - table [ref=e260]:
+                - rowgroup [ref=e274]:
+                  - row "# 小区 楼栋 房间号 业主 电话 账单数 应收总额 已付 欠费金额 最近催单 操作" [ref=e275]:
+                    - columnheader "#" [ref=e276]:
+                      - generic [ref=e277]: "#"
+                    - columnheader "小区" [ref=e278]:
+                      - generic [ref=e279]: 小区
+                    - columnheader "楼栋" [ref=e280]:
+                      - generic [ref=e281]: 楼栋
+                    - columnheader "房间号" [ref=e282]:
+                      - generic [ref=e283]: 房间号
+                    - columnheader "业主" [ref=e284]:
+                      - generic [ref=e285]: 业主
+                    - columnheader "电话" [ref=e286]:
+                      - generic [ref=e287]: 电话
+                    - columnheader "账单数" [ref=e288]:
+                      - generic [ref=e289]: 账单数
+                    - columnheader "应收总额" [ref=e290]:
+                      - generic [ref=e291]: 应收总额
+                    - columnheader "已付" [ref=e292]:
+                      - generic [ref=e293]: 已付
+                    - columnheader "欠费金额" [ref=e294]:
+                      - generic [ref=e295]: 欠费金额
+                    - columnheader "最近催单" [ref=e296]:
+                      - generic [ref=e297]: 最近催单
+                    - columnheader "操作" [ref=e298]:
+                      - generic [ref=e299]: 操作
+              - generic [ref=e303]:
+                - table:
+                  - rowgroup
+                - generic [ref=e305]: el.table.emptyText
+            - img [ref=e309]
+          - generic [ref=e312]:
+            - generic [ref=e313]: 共 0 条
+            - generic [ref=e316] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e318]
+                - generic [ref=e319]: 15el.pagination.pagesize
+              - img [ref=e322]
+            - button "上一页" [disabled] [ref=e324]:
+              - generic:
+                - img
+            - list [ref=e325]:
+              - listitem "el.pagination.currentPage" [ref=e326]: "1"
+            - button "下一页" [disabled] [ref=e327]:
+              - generic:
+                - img

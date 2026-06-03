@@ -1,0 +1,111 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "社区活动" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "社区活动" [selected] [ref=e44]:
+          - text: 社区活动
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "社区活动"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 关键字
+            - textbox "关键字" [ref=e58]:
+              - /placeholder: 活动标题
+          - generic [ref=e60]:
+            - generic [ref=e61]: 小区
+            - generic [ref=e64] [cursor=pointer]:
+              - generic:
+                - combobox "小区" [ref=e66]
+                - generic [ref=e67]: 全部小区
+              - img [ref=e70]
+          - generic [ref=e72]:
+            - generic [ref=e73]: 状态
+            - generic [ref=e76] [cursor=pointer]:
+              - generic:
+                - combobox "状态" [ref=e78]
+                - generic [ref=e79]: 全部状态
+              - img [ref=e82]
+          - generic [ref=e85]:
+            - button "搜索" [ref=e86] [cursor=pointer]:
+              - generic [ref=e87]:
+                - img [ref=e89]
+                - text: 搜索
+            - button "重置" [ref=e91] [cursor=pointer]:
+              - generic [ref=e92]: 重置
+        - generic [ref=e94]:
+          - button "新建活动" [ref=e96] [cursor=pointer]:
+            - generic [ref=e97]:
+              - img [ref=e99]
+              - text: 新建活动
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - table [ref=e104]:
+                - rowgroup [ref=e115]:
+                  - row "ID 封面 活动标题 小区 活动地点 报名情况 状态 活动时间 操作" [ref=e116]:
+                    - columnheader "ID" [ref=e117]:
+                      - generic [ref=e118]: ID
+                    - columnheader "封面" [ref=e119]:
+                      - generic [ref=e120]: 封面
+                    - columnheader "活动标题" [ref=e121]:
+                      - generic [ref=e122]: 活动标题
+                    - columnheader "小区" [ref=e123]:
+                      - generic [ref=e124]: 小区
+                    - columnheader "活动地点" [ref=e125]:
+                      - generic [ref=e126]: 活动地点
+                    - columnheader "报名情况" [ref=e127]:
+                      - generic [ref=e128]: 报名情况
+                    - columnheader "状态" [ref=e129]:
+                      - generic [ref=e130]: 状态
+                    - columnheader "活动时间" [ref=e131]:
+                      - generic [ref=e132]: 活动时间
+                    - columnheader "操作" [ref=e133]:
+                      - generic [ref=e134]: 操作
+              - generic [ref=e138]:
+                - table:
+                  - rowgroup
+                - generic [ref=e140]: el.table.emptyText
+            - img [ref=e144]
+          - generic [ref=e147]:
+            - generic [ref=e148]: 共 0 条
+            - generic [ref=e151] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e153]
+                - generic [ref=e154]: 15el.pagination.pagesize
+              - img [ref=e157]
+            - button "上一页" [disabled] [ref=e159]:
+              - generic:
+                - img
+            - list [ref=e160]:
+              - listitem "el.pagination.currentPage" [ref=e161]: "1"
+            - button "下一页" [disabled] [ref=e162]:
+              - generic:
+                - img
+            - generic [ref=e163]:
+              - generic [ref=e164]: 跳至
+              - spinbutton "页" [ref=e167]: "1"

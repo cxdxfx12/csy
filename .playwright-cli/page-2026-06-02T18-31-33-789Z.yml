@@ -1,0 +1,103 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "排班管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "排班管理" [selected] [ref=e44]:
+          - text: 排班管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "排班管理"
+    - main [ref=e49]:
+      - generic [ref=e51]:
+        - generic [ref=e53]:
+          - text: 排班管理
+          - generic [ref=e54]:
+            - button "批量排班" [ref=e55] [cursor=pointer]:
+              - generic [ref=e56]: 批量排班
+            - button "新增排班" [ref=e57] [cursor=pointer]:
+              - generic [ref=e58]: 新增排班
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - textbox "姓名/工号" [ref=e65]
+            - generic [ref=e70]:
+              - img [ref=e73]
+              - combobox "开始日期" [ref=e75]
+            - generic [ref=e79]:
+              - img [ref=e82]
+              - combobox "结束日期" [ref=e84]
+            - generic [ref=e88] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e90]
+                - generic [ref=e91]: 班次
+              - img [ref=e94]
+            - generic [ref=e97]:
+              - button "查询" [ref=e98] [cursor=pointer]:
+                - generic [ref=e99]: 查询
+              - button "重置" [ref=e100] [cursor=pointer]:
+                - generic [ref=e101]: 重置
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - table [ref=e105]:
+                - rowgroup [ref=e116]:
+                  - row "工号 姓名 日期 班次 上班时间 下班时间 工作区域 备注 操作" [ref=e117]:
+                    - columnheader "工号" [ref=e118]:
+                      - generic [ref=e119]: 工号
+                    - columnheader "姓名" [ref=e120]:
+                      - generic [ref=e121]: 姓名
+                    - columnheader "日期" [ref=e122]:
+                      - generic [ref=e123]: 日期
+                    - columnheader "班次" [ref=e124]:
+                      - generic [ref=e125]: 班次
+                    - columnheader "上班时间" [ref=e126]:
+                      - generic [ref=e127]: 上班时间
+                    - columnheader "下班时间" [ref=e128]:
+                      - generic [ref=e129]: 下班时间
+                    - columnheader "工作区域" [ref=e130]:
+                      - generic [ref=e131]: 工作区域
+                    - columnheader "备注" [ref=e132]:
+                      - generic [ref=e133]: 备注
+                    - columnheader "操作" [ref=e134]:
+                      - generic [ref=e135]: 操作
+              - generic [ref=e139]:
+                - table:
+                  - rowgroup
+                - generic [ref=e141]: el.table.emptyText
+            - img [ref=e145]
+          - generic [ref=e148]:
+            - generic [ref=e149]: 共 0 条
+            - generic [ref=e152] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e154]
+                - generic [ref=e155]: 15el.pagination.pagesize
+              - img [ref=e158]
+            - button "上一页" [disabled] [ref=e160]:
+              - generic:
+                - img
+            - list [ref=e161]:
+              - listitem "el.pagination.currentPage" [ref=e162]: "1"
+            - button "下一页" [disabled] [ref=e163]:
+              - generic:
+                - img

@@ -1,0 +1,637 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e19]:
+    - complementary [ref=e20]:
+      - generic [ref=e22]: 🏢 大圣物业
+      - menubar [ref=e26]:
+        - menuitem "数据概览" [expanded] [ref=e27]:
+          - generic [ref=e28] [cursor=pointer]:
+            - img [ref=e30]
+            - generic [ref=e32]: 数据概览
+            - img [ref=e34]
+          - menu [ref=e36]:
+            - menuitem "数据概览" [ref=e37] [cursor=pointer]:
+              - img [ref=e39]
+              - generic [ref=e41]: 数据概览
+        - menuitem "系统管理" [ref=e42]:
+          - generic [ref=e43] [cursor=pointer]:
+            - img [ref=e45]
+            - generic [ref=e47]: 系统管理
+            - img [ref=e49]
+        - menuitem "房产管理" [ref=e51]:
+          - generic [ref=e52] [cursor=pointer]:
+            - img [ref=e54]
+            - generic [ref=e56]: 房产管理
+            - img [ref=e58]
+        - menuitem "业主管理" [expanded] [ref=e60]:
+          - generic [ref=e61] [cursor=pointer]:
+            - img [ref=e63]
+            - generic [ref=e65]: 业主管理
+            - img [ref=e67]
+          - menu [ref=e260]:
+            - menuitem "业主档案" [ref=e261] [cursor=pointer]:
+              - img [ref=e263]
+              - generic [ref=e265]: 业主档案
+            - menuitem "家庭成员" [ref=e266] [cursor=pointer]:
+              - img [ref=e268]
+              - generic [ref=e270]: 家庭成员
+            - menuitem "业主投票" [ref=e271] [cursor=pointer]:
+              - img [ref=e273]
+              - generic [ref=e275]: 业主投票
+            - menuitem "社区活动" [ref=e276] [cursor=pointer]:
+              - img [ref=e278]
+              - generic [ref=e280]: 社区活动
+        - menuitem "收费管理" [ref=e69]:
+          - generic [ref=e70] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e76]: 收费管理
+            - img [ref=e78]
+        - menuitem "报修管理" [ref=e80]:
+          - generic [ref=e81] [cursor=pointer]:
+            - img [ref=e83]
+            - generic [ref=e85]: 报修管理
+            - img [ref=e87]
+        - menuitem "安保管理" [ref=e89]:
+          - generic [ref=e90] [cursor=pointer]:
+            - generic [ref=e92]: 安保管理
+            - img [ref=e94]
+        - menuitem "停车管理" [ref=e96]:
+          - generic [ref=e97] [cursor=pointer]:
+            - img [ref=e99]
+            - generic [ref=e101]: 停车管理
+            - img [ref=e103]
+        - menuitem "公告通知" [ref=e105]:
+          - generic [ref=e106] [cursor=pointer]:
+            - img [ref=e108]
+            - generic [ref=e112]: 公告通知
+            - img [ref=e114]
+        - menuitem "设备管理" [ref=e116]:
+          - generic [ref=e117] [cursor=pointer]:
+            - img [ref=e119]
+            - generic [ref=e124]: 设备管理
+            - img [ref=e126]
+        - menuitem "投诉建议" [ref=e128]:
+          - generic [ref=e129] [cursor=pointer]:
+            - img [ref=e131]
+            - generic [ref=e133]: 投诉建议
+            - img [ref=e135]
+        - menuitem "打印中心" [ref=e137]:
+          - generic [ref=e138] [cursor=pointer]:
+            - img [ref=e140]
+            - generic [ref=e142]: 打印中心
+            - img [ref=e144]
+        - menuitem "物业人员" [ref=e146]:
+          - generic [ref=e147] [cursor=pointer]:
+            - img [ref=e149]
+            - generic [ref=e151]: 物业人员
+            - img [ref=e153]
+        - menuitem "外部供应商" [ref=e155]:
+          - generic [ref=e156] [cursor=pointer]:
+            - img [ref=e158]
+            - generic [ref=e160]: 外部供应商
+            - img [ref=e162]
+    - generic [ref=e164]:
+      - generic [ref=e165]:
+        - generic [ref=e166]:
+          - button [ref=e167] [cursor=pointer]:
+            - img [ref=e169]
+          - navigation "el.breadcrumb.label" [ref=e171]:
+            - generic [ref=e172]:
+              - link "工作台" [ref=e173]
+              - text: /
+            - link "业主管理" [ref=e283]
+        - generic [ref=e176]:
+          - generic [ref=e177]:
+            - button [ref=e178] [cursor=pointer]:
+              - img [ref=e180]
+            - superscript [ref=e184]
+          - button "超级管理员" [ref=e186] [cursor=pointer]:
+            - img [ref=e189]
+            - generic [ref=e191]: 超级管理员
+      - generic [ref=e193]:
+        - tablist [ref=e197]:
+          - tab "📊 控制台" [ref=e198]
+          - tab "业主管理" [selected] [ref=e284]:
+            - text: 业主管理
+            - img [ref=e286]
+        - generic [ref=e199]:
+          - tabpanel "业主管理"
+      - main [ref=e200]:
+        - generic [ref=e288]:
+          - generic [ref=e290]:
+            - textbox "姓名/手机/身份证" [ref=e295]
+            - generic [ref=e300] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e302]
+                - generic [ref=e303]: 小区
+              - img [ref=e306]
+            - generic [ref=e309]:
+              - button "搜索" [ref=e310] [cursor=pointer]:
+                - generic [ref=e311]: 搜索
+              - button "重置" [ref=e312] [cursor=pointer]:
+                - generic [ref=e313]: 重置
+          - generic [ref=e315]:
+            - button "添加业主" [ref=e317] [cursor=pointer]:
+              - generic [ref=e318]: 添加业主
+            - generic [ref=e320]:
+              - table [ref=e322]:
+                - rowgroup [ref=e334]:
+                  - row "# ID 姓名 手机 身份证 性别 小区 房产数 注册时间 操作" [ref=e335]:
+                    - columnheader "#" [ref=e336]:
+                      - generic [ref=e337]: "#"
+                    - columnheader "ID" [ref=e338]:
+                      - generic [ref=e339]: ID
+                    - columnheader "姓名" [ref=e340]:
+                      - generic [ref=e341]: 姓名
+                    - columnheader "手机" [ref=e342]:
+                      - generic [ref=e343]: 手机
+                    - columnheader "身份证" [ref=e344]:
+                      - generic [ref=e345]: 身份证
+                    - columnheader "性别" [ref=e346]:
+                      - generic [ref=e347]: 性别
+                    - columnheader "小区" [ref=e348]:
+                      - generic [ref=e349]: 小区
+                    - columnheader "房产数" [ref=e350]:
+                      - generic [ref=e351]: 房产数
+                    - columnheader "注册时间" [ref=e352]:
+                      - generic [ref=e353]: 注册时间
+                    - columnheader "操作" [ref=e354]:
+                      - generic [ref=e355]: 操作
+              - table [ref=e360]:
+                - rowgroup [ref=e372]:
+                  - row "1 35 王下 16666666666 422127198902137712 男 怡丰城 1 2026-06-02 21:33:37 编辑 详情 删除" [ref=e373]:
+                    - cell "1" [ref=e374]:
+                      - generic [ref=e376]: "1"
+                    - cell "35" [ref=e377]:
+                      - generic [ref=e378]: "35"
+                    - cell "王下" [ref=e379]:
+                      - generic [ref=e380]: 王下
+                    - cell "16666666666" [ref=e381]:
+                      - generic [ref=e382]: "16666666666"
+                    - cell "422127198902137712" [ref=e383]:
+                      - generic [ref=e384]: "422127198902137712"
+                    - cell "男" [ref=e385]:
+                      - generic [ref=e386]: 男
+                    - cell "怡丰城" [ref=e387]:
+                      - generic [ref=e388]: 怡丰城
+                    - cell "1" [ref=e389]:
+                      - generic [ref=e390]: "1"
+                    - cell "2026-06-02 21:33:37" [ref=e391]:
+                      - generic [ref=e392]: 2026-06-02 21:33:37
+                    - cell "编辑 详情 删除" [ref=e393]:
+                      - generic [ref=e394]:
+                        - button "编辑" [ref=e395] [cursor=pointer]:
+                          - generic [ref=e396]: 编辑
+                        - button "详情" [ref=e397] [cursor=pointer]:
+                          - generic [ref=e398]: 详情
+                        - button "删除" [ref=e399] [cursor=pointer]:
+                          - generic [ref=e400]: 删除
+                  - row "2 34 王三 19999999999 41112519990212132 男 怡丰城 1 2026-06-02 21:32:27 编辑 详情 删除" [ref=e401]:
+                    - cell "2" [ref=e402]:
+                      - generic [ref=e404]: "2"
+                    - cell "34" [ref=e405]:
+                      - generic [ref=e406]: "34"
+                    - cell "王三" [ref=e407]:
+                      - generic [ref=e408]: 王三
+                    - cell "19999999999" [ref=e409]:
+                      - generic [ref=e410]: "19999999999"
+                    - cell "41112519990212132" [ref=e411]:
+                      - generic [ref=e412]: "41112519990212132"
+                    - cell "男" [ref=e413]:
+                      - generic [ref=e414]: 男
+                    - cell "怡丰城" [ref=e415]:
+                      - generic [ref=e416]: 怡丰城
+                    - cell "1" [ref=e417]:
+                      - generic [ref=e418]: "1"
+                    - cell "2026-06-02 21:32:27" [ref=e419]:
+                      - generic [ref=e420]: 2026-06-02 21:32:27
+                    - cell "编辑 详情 删除" [ref=e421]:
+                      - generic [ref=e422]:
+                        - button "编辑" [ref=e423] [cursor=pointer]:
+                          - generic [ref=e424]: 编辑
+                        - button "详情" [ref=e425] [cursor=pointer]:
+                          - generic [ref=e426]: 详情
+                        - button "删除" [ref=e427] [cursor=pointer]:
+                          - generic [ref=e428]: 删除
+                  - row "3 33 王左 18888888888 422125199909123211 男 怡丰城 1 2026-06-02 21:31:41 编辑 详情 删除" [ref=e429]:
+                    - cell "3" [ref=e430]:
+                      - generic [ref=e432]: "3"
+                    - cell "33" [ref=e433]:
+                      - generic [ref=e434]: "33"
+                    - cell "王左" [ref=e435]:
+                      - generic [ref=e436]: 王左
+                    - cell "18888888888" [ref=e437]:
+                      - generic [ref=e438]: "18888888888"
+                    - cell "422125199909123211" [ref=e439]:
+                      - generic [ref=e440]: "422125199909123211"
+                    - cell "男" [ref=e441]:
+                      - generic [ref=e442]: 男
+                    - cell "怡丰城" [ref=e443]:
+                      - generic [ref=e444]: 怡丰城
+                    - cell "1" [ref=e445]:
+                      - generic [ref=e446]: "1"
+                    - cell "2026-06-02 21:31:41" [ref=e447]:
+                      - generic [ref=e448]: 2026-06-02 21:31:41
+                    - cell "编辑 详情 删除" [ref=e449]:
+                      - generic [ref=e450]:
+                        - button "编辑" [ref=e451] [cursor=pointer]:
+                          - generic [ref=e452]: 编辑
+                        - button "详情" [ref=e453] [cursor=pointer]:
+                          - generic [ref=e454]: 详情
+                        - button "删除" [ref=e455] [cursor=pointer]:
+                          - generic [ref=e456]: 删除
+                  - row "4 29 胡伟东 13900002008 330106198210250018 男 翠苑新城 2 2026-06-03 00:34:44 编辑 详情 删除" [ref=e457]:
+                    - cell "4" [ref=e458]:
+                      - generic [ref=e460]: "4"
+                    - cell "29" [ref=e461]:
+                      - generic [ref=e462]: "29"
+                    - cell "胡伟东" [ref=e463]:
+                      - generic [ref=e464]: 胡伟东
+                    - cell "13900002008" [ref=e465]:
+                      - generic [ref=e466]: "13900002008"
+                    - cell "330106198210250018" [ref=e467]:
+                      - generic [ref=e468]: "330106198210250018"
+                    - cell "男" [ref=e469]:
+                      - generic [ref=e470]: 男
+                    - cell "翠苑新城" [ref=e471]:
+                      - generic [ref=e472]: 翠苑新城
+                    - cell "2" [ref=e473]:
+                      - generic [ref=e474]: "2"
+                    - cell "2026-06-03 00:34:44" [ref=e475]:
+                      - generic [ref=e476]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e477]:
+                      - generic [ref=e478]:
+                        - button "编辑" [ref=e479] [cursor=pointer]:
+                          - generic [ref=e480]: 编辑
+                        - button "详情" [ref=e481] [cursor=pointer]:
+                          - generic [ref=e482]: 详情
+                        - button "删除" [ref=e483] [cursor=pointer]:
+                          - generic [ref=e484]: 删除
+                  - row "5 28 朱莉 13900002007 330106200101120025 女 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e485]:
+                    - cell "5" [ref=e486]:
+                      - generic [ref=e488]: "5"
+                    - cell "28" [ref=e489]:
+                      - generic [ref=e490]: "28"
+                    - cell "朱莉" [ref=e491]:
+                      - generic [ref=e492]: 朱莉
+                    - cell "13900002007" [ref=e493]:
+                      - generic [ref=e494]: "13900002007"
+                    - cell "330106200101120025" [ref=e495]:
+                      - generic [ref=e496]: "330106200101120025"
+                    - cell "女" [ref=e497]:
+                      - generic [ref=e498]: 女
+                    - cell "翠苑新城" [ref=e499]:
+                      - generic [ref=e500]: 翠苑新城
+                    - cell "1" [ref=e501]:
+                      - generic [ref=e502]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e503]:
+                      - generic [ref=e504]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e505]:
+                      - generic [ref=e506]:
+                        - button "编辑" [ref=e507] [cursor=pointer]:
+                          - generic [ref=e508]: 编辑
+                        - button "详情" [ref=e509] [cursor=pointer]:
+                          - generic [ref=e510]: 详情
+                        - button "删除" [ref=e511] [cursor=pointer]:
+                          - generic [ref=e512]: 删除
+                  - row "6 27 马晓峰 13900002006 330106199909100011 男 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e513]:
+                    - cell "6" [ref=e514]:
+                      - generic [ref=e516]: "6"
+                    - cell "27" [ref=e517]:
+                      - generic [ref=e518]: "27"
+                    - cell "马晓峰" [ref=e519]:
+                      - generic [ref=e520]: 马晓峰
+                    - cell "13900002006" [ref=e521]:
+                      - generic [ref=e522]: "13900002006"
+                    - cell "330106199909100011" [ref=e523]:
+                      - generic [ref=e524]: "330106199909100011"
+                    - cell "男" [ref=e525]:
+                      - generic [ref=e526]: 男
+                    - cell "翠苑新城" [ref=e527]:
+                      - generic [ref=e528]: 翠苑新城
+                    - cell "1" [ref=e529]:
+                      - generic [ref=e530]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e531]:
+                      - generic [ref=e532]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e533]:
+                      - generic [ref=e534]:
+                        - button "编辑" [ref=e535] [cursor=pointer]:
+                          - generic [ref=e536]: 编辑
+                        - button "详情" [ref=e537] [cursor=pointer]:
+                          - generic [ref=e538]: 详情
+                        - button "删除" [ref=e539] [cursor=pointer]:
+                          - generic [ref=e540]: 删除
+                  - row "7 26 孙立华 13900002005 330106196808160019 男 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e541]:
+                    - cell "7" [ref=e542]:
+                      - generic [ref=e544]: "7"
+                    - cell "26" [ref=e545]:
+                      - generic [ref=e546]: "26"
+                    - cell "孙立华" [ref=e547]:
+                      - generic [ref=e548]: 孙立华
+                    - cell "13900002005" [ref=e549]:
+                      - generic [ref=e550]: "13900002005"
+                    - cell "330106196808160019" [ref=e551]:
+                      - generic [ref=e552]: "330106196808160019"
+                    - cell "男" [ref=e553]:
+                      - generic [ref=e554]: 男
+                    - cell "翠苑新城" [ref=e555]:
+                      - generic [ref=e556]: 翠苑新城
+                    - cell "1" [ref=e557]:
+                      - generic [ref=e558]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e559]:
+                      - generic [ref=e560]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e561]:
+                      - generic [ref=e562]:
+                        - button "编辑" [ref=e563] [cursor=pointer]:
+                          - generic [ref=e564]: 编辑
+                        - button "详情" [ref=e565] [cursor=pointer]:
+                          - generic [ref=e566]: 详情
+                        - button "删除" [ref=e567] [cursor=pointer]:
+                          - generic [ref=e568]: 删除
+                  - row "8 25 徐春梅 13900002004 330106198611080024 女 翠苑新城 2 2026-06-03 00:34:44 编辑 详情 删除" [ref=e569]:
+                    - cell "8" [ref=e570]:
+                      - generic [ref=e572]: "8"
+                    - cell "25" [ref=e573]:
+                      - generic [ref=e574]: "25"
+                    - cell "徐春梅" [ref=e575]:
+                      - generic [ref=e576]: 徐春梅
+                    - cell "13900002004" [ref=e577]:
+                      - generic [ref=e578]: "13900002004"
+                    - cell "330106198611080024" [ref=e579]:
+                      - generic [ref=e580]: "330106198611080024"
+                    - cell "女" [ref=e581]:
+                      - generic [ref=e582]: 女
+                    - cell "翠苑新城" [ref=e583]:
+                      - generic [ref=e584]: 翠苑新城
+                    - cell "2" [ref=e585]:
+                      - generic [ref=e586]: "2"
+                    - cell "2026-06-03 00:34:44" [ref=e587]:
+                      - generic [ref=e588]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e589]:
+                      - generic [ref=e590]:
+                        - button "编辑" [ref=e591] [cursor=pointer]:
+                          - generic [ref=e592]: 编辑
+                        - button "详情" [ref=e593] [cursor=pointer]:
+                          - generic [ref=e594]: 详情
+                        - button "删除" [ref=e595] [cursor=pointer]:
+                          - generic [ref=e596]: 删除
+                  - row "9 24 吴建国 13900002003 330106197903220013 男 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e597]:
+                    - cell "9" [ref=e598]:
+                      - generic [ref=e600]: "9"
+                    - cell "24" [ref=e601]:
+                      - generic [ref=e602]: "24"
+                    - cell "吴建国" [ref=e603]:
+                      - generic [ref=e604]: 吴建国
+                    - cell "13900002003" [ref=e605]:
+                      - generic [ref=e606]: "13900002003"
+                    - cell "330106197903220013" [ref=e607]:
+                      - generic [ref=e608]: "330106197903220013"
+                    - cell "男" [ref=e609]:
+                      - generic [ref=e610]: 男
+                    - cell "翠苑新城" [ref=e611]:
+                      - generic [ref=e612]: 翠苑新城
+                    - cell "1" [ref=e613]:
+                      - generic [ref=e614]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e615]:
+                      - generic [ref=e616]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e617]:
+                      - generic [ref=e618]:
+                        - button "编辑" [ref=e619] [cursor=pointer]:
+                          - generic [ref=e620]: 编辑
+                        - button "详情" [ref=e621] [cursor=pointer]:
+                          - generic [ref=e622]: 详情
+                        - button "删除" [ref=e623] [cursor=pointer]:
+                          - generic [ref=e624]: 删除
+                  - row "10 23 周晓燕 13900002002 330106199207050029 女 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e625]:
+                    - cell "10" [ref=e626]:
+                      - generic [ref=e628]: "10"
+                    - cell "23" [ref=e629]:
+                      - generic [ref=e630]: "23"
+                    - cell "周晓燕" [ref=e631]:
+                      - generic [ref=e632]: 周晓燕
+                    - cell "13900002002" [ref=e633]:
+                      - generic [ref=e634]: "13900002002"
+                    - cell "330106199207050029" [ref=e635]:
+                      - generic [ref=e636]: "330106199207050029"
+                    - cell "女" [ref=e637]:
+                      - generic [ref=e638]: 女
+                    - cell "翠苑新城" [ref=e639]:
+                      - generic [ref=e640]: 翠苑新城
+                    - cell "1" [ref=e641]:
+                      - generic [ref=e642]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e643]:
+                      - generic [ref=e644]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e645]:
+                      - generic [ref=e646]:
+                        - button "编辑" [ref=e647] [cursor=pointer]:
+                          - generic [ref=e648]: 编辑
+                        - button "详情" [ref=e649] [cursor=pointer]:
+                          - generic [ref=e650]: 详情
+                        - button "删除" [ref=e651] [cursor=pointer]:
+                          - generic [ref=e652]: 删除
+                  - row "11 22 赵文博 13900002001 330106198804120016 男 翠苑新城 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e653]:
+                    - cell "11" [ref=e654]:
+                      - generic [ref=e656]: "11"
+                    - cell "22" [ref=e657]:
+                      - generic [ref=e658]: "22"
+                    - cell "赵文博" [ref=e659]:
+                      - generic [ref=e660]: 赵文博
+                    - cell "13900002001" [ref=e661]:
+                      - generic [ref=e662]: "13900002001"
+                    - cell "330106198804120016" [ref=e663]:
+                      - generic [ref=e664]: "330106198804120016"
+                    - cell "男" [ref=e665]:
+                      - generic [ref=e666]: 男
+                    - cell "翠苑新城" [ref=e667]:
+                      - generic [ref=e668]: 翠苑新城
+                    - cell "1" [ref=e669]:
+                      - generic [ref=e670]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e671]:
+                      - generic [ref=e672]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e673]:
+                      - generic [ref=e674]:
+                        - button "编辑" [ref=e675] [cursor=pointer]:
+                          - generic [ref=e676]: 编辑
+                        - button "详情" [ref=e677] [cursor=pointer]:
+                          - generic [ref=e678]: 详情
+                        - button "删除" [ref=e679] [cursor=pointer]:
+                          - generic [ref=e680]: 删除
+                  - row "12 21 黄小刚 13900001007 330106200008020015 男 阳光花园 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e681]:
+                    - cell "12" [ref=e682]:
+                      - generic [ref=e684]: "12"
+                    - cell "21" [ref=e685]:
+                      - generic [ref=e686]: "21"
+                    - cell "黄小刚" [ref=e687]:
+                      - generic [ref=e688]: 黄小刚
+                    - cell "13900001007" [ref=e689]:
+                      - generic [ref=e690]: "13900001007"
+                    - cell "330106200008020015" [ref=e691]:
+                      - generic [ref=e692]: "330106200008020015"
+                    - cell "男" [ref=e693]:
+                      - generic [ref=e694]: 男
+                    - cell "阳光花园" [ref=e695]:
+                      - generic [ref=e696]: 阳光花园
+                    - cell "1" [ref=e697]:
+                      - generic [ref=e698]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e699]:
+                      - generic [ref=e700]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e701]:
+                      - generic [ref=e702]:
+                        - button "编辑" [ref=e703] [cursor=pointer]:
+                          - generic [ref=e704]: 编辑
+                        - button "详情" [ref=e705] [cursor=pointer]:
+                          - generic [ref=e706]: 详情
+                        - button "删除" [ref=e707] [cursor=pointer]:
+                          - generic [ref=e708]: 删除
+                  - row "13 20 杨丽萍 13900001006 330106199512280026 女 阳光花园 0 2026-06-03 00:34:44 编辑 详情 删除" [ref=e709]:
+                    - cell "13" [ref=e710]:
+                      - generic [ref=e712]: "13"
+                    - cell "20" [ref=e713]:
+                      - generic [ref=e714]: "20"
+                    - cell "杨丽萍" [ref=e715]:
+                      - generic [ref=e716]: 杨丽萍
+                    - cell "13900001006" [ref=e717]:
+                      - generic [ref=e718]: "13900001006"
+                    - cell "330106199512280026" [ref=e719]:
+                      - generic [ref=e720]: "330106199512280026"
+                    - cell "女" [ref=e721]:
+                      - generic [ref=e722]: 女
+                    - cell "阳光花园" [ref=e723]:
+                      - generic [ref=e724]: 阳光花园
+                    - cell "0" [ref=e725]:
+                      - generic [ref=e726]: "0"
+                    - cell "2026-06-03 00:34:44" [ref=e727]:
+                      - generic [ref=e728]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e729]:
+                      - generic [ref=e730]:
+                        - button "编辑" [ref=e731] [cursor=pointer]:
+                          - generic [ref=e732]: 编辑
+                        - button "详情" [ref=e733] [cursor=pointer]:
+                          - generic [ref=e734]: 详情
+                        - button "删除" [ref=e735] [cursor=pointer]:
+                          - generic [ref=e736]: 删除
+                  - row "14 19 陈志强 13900001005 330106196506160011 男 阳光花园 2 2026-06-03 00:34:44 编辑 详情 删除" [ref=e737]:
+                    - cell "14" [ref=e738]:
+                      - generic [ref=e740]: "14"
+                    - cell "19" [ref=e741]:
+                      - generic [ref=e742]: "19"
+                    - cell "陈志强" [ref=e743]:
+                      - generic [ref=e744]: 陈志强
+                    - cell "13900001005" [ref=e745]:
+                      - generic [ref=e746]: "13900001005"
+                    - cell "330106196506160011" [ref=e747]:
+                      - generic [ref=e748]: "330106196506160011"
+                    - cell "男" [ref=e749]:
+                      - generic [ref=e750]: 男
+                    - cell "阳光花园" [ref=e751]:
+                      - generic [ref=e752]: 阳光花园
+                    - cell "2" [ref=e753]:
+                      - generic [ref=e754]: "2"
+                    - cell "2026-06-03 00:34:44" [ref=e755]:
+                      - generic [ref=e756]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e757]:
+                      - generic [ref=e758]:
+                        - button "编辑" [ref=e759] [cursor=pointer]:
+                          - generic [ref=e760]: 编辑
+                        - button "详情" [ref=e761] [cursor=pointer]:
+                          - generic [ref=e762]: 详情
+                        - button "删除" [ref=e763] [cursor=pointer]:
+                          - generic [ref=e764]: 删除
+                  - row "15 18 刘美华 13900001004 330106198208180028 女 阳光花园 1 2026-06-03 00:34:44 编辑 详情 删除" [ref=e765]:
+                    - cell "15" [ref=e766]:
+                      - generic [ref=e768]: "15"
+                    - cell "18" [ref=e769]:
+                      - generic [ref=e770]: "18"
+                    - cell "刘美华" [ref=e771]:
+                      - generic [ref=e772]: 刘美华
+                    - cell "13900001004" [ref=e773]:
+                      - generic [ref=e774]: "13900001004"
+                    - cell "330106198208180028" [ref=e775]:
+                      - generic [ref=e776]: "330106198208180028"
+                    - cell "女" [ref=e777]:
+                      - generic [ref=e778]: 女
+                    - cell "阳光花园" [ref=e779]:
+                      - generic [ref=e780]: 阳光花园
+                    - cell "1" [ref=e781]:
+                      - generic [ref=e782]: "1"
+                    - cell "2026-06-03 00:34:44" [ref=e783]:
+                      - generic [ref=e784]: 2026-06-03 00:34:44
+                    - cell "编辑 详情 删除" [ref=e785]:
+                      - generic [ref=e786]:
+                        - button "编辑" [ref=e787] [cursor=pointer]:
+                          - generic [ref=e788]: 编辑
+                        - button "详情" [ref=e789] [cursor=pointer]:
+                          - generic [ref=e790]: 详情
+                        - button "删除" [ref=e791] [cursor=pointer]:
+                          - generic [ref=e792]: 删除
+            - generic [ref=e795]:
+              - generic [ref=e796]: 共 18 条
+              - generic [ref=e799] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e801]
+                  - generic [ref=e802]: 15el.pagination.pagesize
+                - img [ref=e805]
+              - button "上一页" [disabled] [ref=e807]:
+                - generic:
+                  - img
+              - list [ref=e808]:
+                - listitem "el.pagination.currentPage" [ref=e809]: "1"
+                - listitem "el.pagination.currentPage" [ref=e810] [cursor=pointer]: "2"
+              - button "下一页" [ref=e811] [cursor=pointer]:
+                - generic:
+                  - img
+          - dialog "添加业主" [ref=e813]:
+            - generic [ref=e814]:
+              - generic [ref=e815]:
+                - heading "添加业主" [level=2] [ref=e816]
+                - button "el.dialog.close" [ref=e817] [cursor=pointer]:
+                  - img [ref=e819]
+              - generic [ref=e822]:
+                - generic [ref=e823]:
+                  - generic [ref=e824]: "* 所属小区"
+                  - generic [ref=e827] [cursor=pointer]:
+                    - generic:
+                      - combobox "* 所属小区" [ref=e829]
+                      - generic [ref=e830]: 怡丰城
+                    - img [ref=e833]
+                - generic [ref=e835]:
+                  - generic [ref=e836]: "* 姓名"
+                  - textbox "* 姓名" [ref=e840]:
+                    - /placeholder: 真实姓名
+                    - text: 测试新业主
+                - generic [ref=e841]:
+                  - generic [ref=e842]: "* 手机号"
+                  - textbox "* 手机号" [ref=e846]:
+                    - /placeholder: 手机号
+                    - text: "17700000001"
+                - generic [ref=e847]:
+                  - generic [ref=e848]: 身份证
+                  - textbox "身份证" [ref=e852]:
+                    - /placeholder: 身份证号码
+                - generic [ref=e853]:
+                  - generic [ref=e854]: 性别
+                  - radiogroup "性别" [ref=e856]:
+                    - generic [ref=e857] [cursor=pointer]:
+                      - radio "男" [checked] [ref=e859]
+                      - generic [ref=e861]: 男
+                    - generic [ref=e862] [cursor=pointer]:
+                      - radio "女" [ref=e864]
+                      - generic [ref=e866]: 女
+                - generic [ref=e867]:
+                  - generic [ref=e868]: 绑定房间
+                  - generic [ref=e871] [cursor=pointer]:
+                    - generic:
+                      - combobox "绑定房间" [ref=e873]
+                      - generic [ref=e874]: 1号楼 102
+                    - img [ref=e1587]
+                - generic [ref=e879]:
+                  - generic [ref=e880]: 密码
+                  - textbox "密码" [ref=e884]:
+                    - /placeholder: 默认手机后6位
+              - generic [ref=e885]:
+                - button "取消" [ref=e886] [cursor=pointer]:
+                  - generic [ref=e887]: 取消
+                - button "确定" [ref=e888] [cursor=pointer]:
+                  - generic [ref=e889]: 确定
+  - alert [ref=e1589]:
+    - img [ref=e1591]
+    - paragraph [ref=e1593]: 操作失败

@@ -1,0 +1,48 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: 🏢
+    - heading "大圣物业管理系统" [level=1] [ref=e6]
+    - paragraph [ref=e7]: 杭州喵喵至家网络有限公司 · 智慧社区物业管理平台
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: ✅
+        - text: 多小区统一管理
+      - generic [ref=e11]:
+        - generic [ref=e12]: 💰
+        - text: 智能收费与账单管理
+      - generic [ref=e13]:
+        - generic [ref=e14]: 🔧
+        - text: 工单报修全流程追踪
+      - generic [ref=e15]:
+        - generic [ref=e16]: 📊
+        - text: 数据驾驶舱实时洞察
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - heading "欢迎回来" [level=2] [ref=e19]
+      - paragraph [ref=e20]: 请登录您的管理账户
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]: 用户名
+        - generic [ref=e24]:
+          - generic [ref=e25]: 👤
+          - textbox "请输入管理员账号" [ref=e26]: admin
+      - generic [ref=e27]:
+        - generic [ref=e28]: 密码
+        - generic [ref=e29]:
+          - generic [ref=e30]: 🔒
+          - textbox "请输入登录密码" [ref=e31]
+      - generic [ref=e32]:
+        - generic [ref=e33]: 验证码 点击图片刷新
+        - generic [ref=e34]:
+          - generic [ref=e35]: 🛡️
+          - textbox "如不清楚可不填" [ref=e36]
+          - generic "点击刷新验证码" [ref=e37] [cursor=pointer]
+      - generic [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - generic [ref=e41]: 
+          - text: 记住登录状态
+        - link "忘记密码？" [ref=e42] [cursor=pointer]:
+          - /url: javascript:;
+      - button "🚀 登 录" [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🚀 登 录
+      - generic [ref=e45]: © 2026 杭州喵喵至家网络有限公司

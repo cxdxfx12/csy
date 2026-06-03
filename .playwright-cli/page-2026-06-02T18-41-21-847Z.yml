@@ -1,0 +1,102 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "投诉管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "投诉管理" [selected] [ref=e44]:
+          - text: 投诉管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "投诉管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "标题/内容" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e75]
+              - generic [ref=e76]: 状态
+            - img [ref=e79]
+          - generic [ref=e84] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e86]
+              - generic [ref=e87]: 类型
+            - img [ref=e90]
+          - generic [ref=e93]:
+            - button "搜索" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: 搜索
+            - button "重置" [ref=e96] [cursor=pointer]:
+              - generic [ref=e97]: 重置
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - table [ref=e103]:
+                - rowgroup [ref=e115]:
+                  - row "# ID 标题 业主 房间 类型 状态 处理人 提交时间 操作" [ref=e116]:
+                    - columnheader "#" [ref=e117]:
+                      - generic [ref=e118]: "#"
+                    - columnheader "ID" [ref=e119]:
+                      - generic [ref=e120]: ID
+                    - columnheader "标题" [ref=e121]:
+                      - generic [ref=e122]: 标题
+                    - columnheader "业主" [ref=e123]:
+                      - generic [ref=e124]: 业主
+                    - columnheader "房间" [ref=e125]:
+                      - generic [ref=e126]: 房间
+                    - columnheader "类型" [ref=e127]:
+                      - generic [ref=e128]: 类型
+                    - columnheader "状态" [ref=e129]:
+                      - generic [ref=e130]: 状态
+                    - columnheader "处理人" [ref=e131]:
+                      - generic [ref=e132]: 处理人
+                    - columnheader "提交时间" [ref=e133]:
+                      - generic [ref=e134]: 提交时间
+                    - columnheader "操作" [ref=e135]:
+                      - generic [ref=e136]: 操作
+              - generic [ref=e140]:
+                - table:
+                  - rowgroup
+                - generic [ref=e142]: el.table.emptyText
+            - img [ref=e146]
+          - generic [ref=e149]:
+            - generic [ref=e150]: 共 0 条
+            - generic [ref=e153] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e155]
+                - generic [ref=e156]: 15el.pagination.pagesize
+              - img [ref=e159]
+            - button "上一页" [disabled] [ref=e161]:
+              - generic:
+                - img
+            - list [ref=e162]:
+              - listitem "el.pagination.currentPage" [ref=e163]: "1"
+            - button "下一页" [disabled] [ref=e164]:
+              - generic:
+                - img

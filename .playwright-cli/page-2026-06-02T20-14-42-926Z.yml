@@ -1,0 +1,276 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [expanded] [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+        - menu [ref=e20]:
+          - menuitem "数据概览" [ref=e21] [cursor=pointer]:
+            - img [ref=e23]
+            - generic [ref=e25]: 数据概览
+      - menuitem "系统管理" [ref=e26]:
+        - generic [ref=e27] [cursor=pointer]:
+          - img [ref=e29]
+          - generic [ref=e31]: 系统管理
+          - img [ref=e33]
+      - menuitem "房产管理" [ref=e35]:
+        - generic [ref=e36] [cursor=pointer]:
+          - img [ref=e38]
+          - generic [ref=e40]: 房产管理
+          - img [ref=e42]
+      - menuitem "业主管理" [ref=e44]:
+        - generic [ref=e45] [cursor=pointer]:
+          - img [ref=e47]
+          - generic [ref=e49]: 业主管理
+          - img [ref=e51]
+      - menuitem "收费管理" [ref=e53]:
+        - generic [ref=e54] [cursor=pointer]:
+          - img [ref=e56]
+          - generic [ref=e60]: 收费管理
+          - img [ref=e62]
+      - menuitem "报修管理" [ref=e64]:
+        - generic [ref=e65] [cursor=pointer]:
+          - img [ref=e67]
+          - generic [ref=e69]: 报修管理
+          - img [ref=e71]
+      - menuitem "安保管理" [ref=e73]:
+        - generic [ref=e74] [cursor=pointer]:
+          - generic [ref=e76]: 安保管理
+          - img [ref=e78]
+      - menuitem "停车管理" [ref=e80]:
+        - generic [ref=e81] [cursor=pointer]:
+          - img [ref=e83]
+          - generic [ref=e85]: 停车管理
+          - img [ref=e87]
+      - menuitem "公告通知" [ref=e89]:
+        - generic [ref=e90] [cursor=pointer]:
+          - img [ref=e92]
+          - generic [ref=e96]: 公告通知
+          - img [ref=e98]
+      - menuitem "设备管理" [ref=e100]:
+        - generic [ref=e101] [cursor=pointer]:
+          - img [ref=e103]
+          - generic [ref=e108]: 设备管理
+          - img [ref=e110]
+      - menuitem "投诉建议" [ref=e112]:
+        - generic [ref=e113] [cursor=pointer]:
+          - img [ref=e115]
+          - generic [ref=e117]: 投诉建议
+          - img [ref=e119]
+      - menuitem "打印中心" [ref=e121]:
+        - generic [ref=e122] [cursor=pointer]:
+          - img [ref=e124]
+          - generic [ref=e126]: 打印中心
+          - img [ref=e128]
+      - menuitem "物业人员" [ref=e130]:
+        - generic [ref=e131] [cursor=pointer]:
+          - img [ref=e133]
+          - generic [ref=e135]: 物业人员
+          - img [ref=e137]
+      - menuitem "外部供应商" [expanded] [ref=e139]:
+        - generic [ref=e140] [cursor=pointer]:
+          - img [ref=e142]
+          - generic [ref=e144]: 外部供应商
+          - img [ref=e146]
+        - menu [ref=e239]:
+          - menuitem "供应商名录" [ref=e240] [cursor=pointer]:
+            - img [ref=e242]
+            - generic [ref=e244]: 供应商名录
+          - menuitem "采购订单" [active] [ref=e245] [cursor=pointer]:
+            - img [ref=e247]
+            - generic [ref=e249]: 采购订单
+          - menuitem "合同管理" [ref=e250] [cursor=pointer]:
+            - img [ref=e252]
+            - generic [ref=e254]: 合同管理
+          - menuitem "服务评价" [ref=e255] [cursor=pointer]:
+            - img [ref=e257]
+            - generic [ref=e259]: 服务评价
+  - generic [ref=e148]:
+    - generic [ref=e149]:
+      - generic [ref=e150]:
+        - button [ref=e151] [cursor=pointer]:
+          - img [ref=e153]
+        - navigation "el.breadcrumb.label" [ref=e155]:
+          - generic [ref=e156]:
+            - link "工作台" [ref=e157]
+            - text: /
+          - link "采购订单" [ref=e698]
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - button [ref=e162] [cursor=pointer]:
+            - img [ref=e164]
+          - superscript [ref=e168]
+        - button "超级管理员" [ref=e170] [cursor=pointer]:
+          - img [ref=e173]
+          - generic [ref=e175]: 超级管理员
+    - generic [ref=e177]:
+      - tablist [ref=e181]:
+        - tab "📊 控制台" [ref=e182]
+        - tab "采购订单" [selected] [ref=e699]:
+          - text: 采购订单
+          - img [ref=e701]
+      - generic [ref=e183]:
+        - tabpanel "采购订单"
+    - main [ref=e184]:
+      - generic [ref=e704]:
+        - generic [ref=e706]:
+          - text: 采购订单
+          - button "创建订单" [ref=e707] [cursor=pointer]:
+            - generic [ref=e708]: 创建订单
+        - generic [ref=e709]:
+          - generic [ref=e710]:
+            - textbox "订单号/标题" [ref=e715]
+            - generic [ref=e720]:
+              - generic:
+                - combobox [ref=e722]
+                - generic [ref=e723]: 供应商
+              - img [ref=e726] [cursor=pointer]
+            - generic [ref=e731] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e733]
+                - generic [ref=e734]: 状态
+              - img [ref=e737]
+            - generic [ref=e740]:
+              - button "查询" [ref=e741] [cursor=pointer]:
+                - generic [ref=e742]: 查询
+              - button "重置" [ref=e743] [cursor=pointer]:
+                - generic [ref=e744]: 重置
+          - generic [ref=e746]:
+            - table [ref=e748]:
+              - rowgroup [ref=e759]:
+                - row "订单编号 订单标题 供应商 金额 状态 下单日期 审批时间 备注 操作" [ref=e760]:
+                  - columnheader "订单编号" [ref=e761]:
+                    - generic [ref=e762]: 订单编号
+                  - columnheader "订单标题" [ref=e763]:
+                    - generic [ref=e764]: 订单标题
+                  - columnheader "供应商" [ref=e765]:
+                    - generic [ref=e766]: 供应商
+                  - columnheader "金额" [ref=e767]:
+                    - generic [ref=e768]: 金额
+                  - columnheader "状态" [ref=e769]:
+                    - generic [ref=e770]: 状态
+                  - columnheader "下单日期" [ref=e771]:
+                    - generic [ref=e772]: 下单日期
+                  - columnheader "审批时间" [ref=e773]:
+                    - generic [ref=e774]: 审批时间
+                  - columnheader "备注" [ref=e775]:
+                    - generic [ref=e776]: 备注
+                  - columnheader "操作" [ref=e777]:
+                    - generic [ref=e778]: 操作
+            - table [ref=e783]:
+              - rowgroup [ref=e794]:
+                - row "CG20260603002 保安制服定制 安盾安保服务公司 ¥12000.00 已审批 2026-06-03 2026-06-02 20:13:50 统一换装 编辑 完结 删除" [ref=e795]:
+                  - cell "CG20260603002" [ref=e796]:
+                    - generic [ref=e797]: CG20260603002
+                  - cell "保安制服定制" [ref=e798]:
+                    - generic [ref=e799]: 保安制服定制
+                  - cell "安盾安保服务公司" [ref=e800]:
+                    - generic [ref=e801]: 安盾安保服务公司
+                  - cell "¥12000.00" [ref=e802]:
+                    - generic [ref=e803]: ¥12000.00
+                  - cell "已审批" [ref=e804]:
+                    - generic [ref=e807]: 已审批
+                  - cell "2026-06-03" [ref=e808]:
+                    - generic [ref=e809]: 2026-06-03
+                  - cell "2026-06-02 20:13:50" [ref=e810]:
+                    - generic [ref=e811]: 2026-06-02 20:13:50
+                  - cell "统一换装" [ref=e812]:
+                    - generic [ref=e813]: 统一换装
+                  - cell "编辑 完结 删除" [ref=e814]:
+                    - generic [ref=e815]:
+                      - button "编辑" [ref=e816] [cursor=pointer]:
+                        - generic [ref=e817]: 编辑
+                      - button "完结" [ref=e818] [cursor=pointer]:
+                        - generic [ref=e819]: 完结
+                      - button "删除" [ref=e820] [cursor=pointer]:
+                        - generic [ref=e821]: 删除
+                - row "CG20260603001 绿化苗采购 绿源绿化养护中心 ¥3500.00 待审批 2026-06-03 春季绿化补种 编辑 审批 删除" [ref=e822]:
+                  - cell "CG20260603001" [ref=e823]:
+                    - generic [ref=e824]: CG20260603001
+                  - cell "绿化苗采购" [ref=e825]:
+                    - generic [ref=e826]: 绿化苗采购
+                  - cell "绿源绿化养护中心" [ref=e827]:
+                    - generic [ref=e828]: 绿源绿化养护中心
+                  - cell "¥3500.00" [ref=e829]:
+                    - generic [ref=e830]: ¥3500.00
+                  - cell "待审批" [ref=e831]:
+                    - generic [ref=e834]: 待审批
+                  - cell "2026-06-03" [ref=e835]:
+                    - generic [ref=e836]: 2026-06-03
+                  - cell [ref=e837]
+                  - cell "春季绿化补种" [ref=e838]:
+                    - generic [ref=e839]: 春季绿化补种
+                  - cell "编辑 审批 删除" [ref=e840]:
+                    - generic [ref=e841]:
+                      - button "编辑" [ref=e842] [cursor=pointer]:
+                        - generic [ref=e843]: 编辑
+                      - button "审批" [ref=e844] [cursor=pointer]:
+                        - generic [ref=e845]: 审批
+                      - button "删除" [ref=e846] [cursor=pointer]:
+                        - generic [ref=e847]: 删除
+                - row "CG20260601002 电梯年检维护 恒通工程维修公司 ¥8000.00 已审批 2026-06-01 2026-06-02 20:13:50 例行年度维护 编辑 完结 删除" [ref=e848]:
+                  - cell "CG20260601002" [ref=e849]:
+                    - generic [ref=e850]: CG20260601002
+                  - cell "电梯年检维护" [ref=e851]:
+                    - generic [ref=e852]: 电梯年检维护
+                  - cell "恒通工程维修公司" [ref=e853]:
+                    - generic [ref=e854]: 恒通工程维修公司
+                  - cell "¥8000.00" [ref=e855]:
+                    - generic [ref=e856]: ¥8000.00
+                  - cell "已审批" [ref=e857]:
+                    - generic [ref=e860]: 已审批
+                  - cell "2026-06-01" [ref=e861]:
+                    - generic [ref=e862]: 2026-06-01
+                  - cell "2026-06-02 20:13:50" [ref=e863]:
+                    - generic [ref=e864]: 2026-06-02 20:13:50
+                  - cell "例行年度维护" [ref=e865]:
+                    - generic [ref=e866]: 例行年度维护
+                  - cell "编辑 完结 删除" [ref=e867]:
+                    - generic [ref=e868]:
+                      - button "编辑" [ref=e869] [cursor=pointer]:
+                        - generic [ref=e870]: 编辑
+                      - button "完结" [ref=e871] [cursor=pointer]:
+                        - generic [ref=e872]: 完结
+                      - button "删除" [ref=e873] [cursor=pointer]:
+                        - generic [ref=e874]: 删除
+                - row "CG20260601001 小区公共区域保洁服务 蓝天保洁服务有限公司 ¥15000.00 已完成 2026-06-01 2026-06-02 20:13:50 首次合作，服务质量良好 编辑 删除" [ref=e875]:
+                  - cell "CG20260601001" [ref=e876]:
+                    - generic [ref=e877]: CG20260601001
+                  - cell "小区公共区域保洁服务" [ref=e878]:
+                    - generic [ref=e879]: 小区公共区域保洁服务
+                  - cell "蓝天保洁服务有限公司" [ref=e880]:
+                    - generic [ref=e881]: 蓝天保洁服务有限公司
+                  - cell "¥15000.00" [ref=e882]:
+                    - generic [ref=e883]: ¥15000.00
+                  - cell "已完成" [ref=e884]:
+                    - generic [ref=e887]: 已完成
+                  - cell "2026-06-01" [ref=e888]:
+                    - generic [ref=e889]: 2026-06-01
+                  - cell "2026-06-02 20:13:50" [ref=e890]:
+                    - generic [ref=e891]: 2026-06-02 20:13:50
+                  - cell "首次合作，服务质量良好" [ref=e892]:
+                    - generic [ref=e893]: 首次合作，服务质量良好
+                  - cell "编辑 删除" [ref=e894]:
+                    - generic [ref=e895]:
+                      - button "编辑" [ref=e896] [cursor=pointer]:
+                        - generic [ref=e897]: 编辑
+                      - button "删除" [ref=e898] [cursor=pointer]:
+                        - generic [ref=e899]: 删除
+          - generic [ref=e902]:
+            - generic [ref=e903]: 共 4 条
+            - generic [ref=e906] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e908]
+                - generic [ref=e909]: 15el.pagination.pagesize
+              - img [ref=e912]
+            - button "上一页" [disabled] [ref=e914]:
+              - generic:
+                - img
+            - list [ref=e915]:
+              - listitem "el.pagination.currentPage" [ref=e916]: "1"
+            - button "下一页" [disabled] [ref=e917]:
+              - generic:
+                - img

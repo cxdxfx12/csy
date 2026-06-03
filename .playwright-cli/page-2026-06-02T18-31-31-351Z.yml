@@ -1,0 +1,584 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+      - menuitem "报修管理" [ref=e58]:
+        - generic [ref=e59] [cursor=pointer]:
+          - img [ref=e61]
+          - generic [ref=e63]: 报修管理
+          - img [ref=e65]
+      - menuitem "安保管理" [ref=e67]:
+        - generic [ref=e68] [cursor=pointer]:
+          - generic [ref=e70]: 安保管理
+          - img [ref=e72]
+      - menuitem "停车管理" [ref=e74]:
+        - generic [ref=e75] [cursor=pointer]:
+          - img [ref=e77]
+          - generic [ref=e79]: 停车管理
+          - img [ref=e81]
+      - menuitem "公告通知" [ref=e83]:
+        - generic [ref=e84] [cursor=pointer]:
+          - img [ref=e86]
+          - generic [ref=e90]: 公告通知
+          - img [ref=e92]
+      - menuitem "设备管理" [ref=e94]:
+        - generic [ref=e95] [cursor=pointer]:
+          - img [ref=e97]
+          - generic [ref=e102]: 设备管理
+          - img [ref=e104]
+      - menuitem "投诉建议" [ref=e106]:
+        - generic [ref=e107] [cursor=pointer]:
+          - img [ref=e109]
+          - generic [ref=e111]: 投诉建议
+          - img [ref=e113]
+      - menuitem "打印中心" [ref=e115]:
+        - generic [ref=e116] [cursor=pointer]:
+          - img [ref=e118]
+          - generic [ref=e120]: 打印中心
+          - img [ref=e122]
+      - menuitem "物业人员" [expanded] [ref=e124]:
+        - generic [ref=e125] [cursor=pointer]:
+          - img [ref=e127]
+          - generic [ref=e129]: 物业人员
+          - img [ref=e131]
+        - menu:
+          - menuitem "员工档案" [ref=e133] [cursor=pointer]:
+            - img [ref=e135]
+            - generic [ref=e137]: 员工档案
+          - menuitem "考勤管理" [ref=e138] [cursor=pointer]:
+            - img [ref=e140]
+            - generic [ref=e142]: 考勤管理
+          - menuitem "排班管理" [ref=e143] [cursor=pointer]:
+            - img [ref=e145]
+            - generic [ref=e149]: 排班管理
+          - menuitem "工资管理" [ref=e150] [cursor=pointer]:
+            - img [ref=e152]
+            - generic [ref=e156]: 工资管理
+      - menuitem "外部供应商" [ref=e157]:
+        - generic [ref=e158] [cursor=pointer]:
+          - img [ref=e160]
+          - generic [ref=e162]: 外部供应商
+          - img [ref=e164]
+  - generic [ref=e166]:
+    - generic [ref=e167]:
+      - generic [ref=e168]:
+        - button [ref=e169] [cursor=pointer]:
+          - img [ref=e171]
+        - navigation "el.breadcrumb.label" [ref=e173]:
+          - generic [ref=e174]:
+            - link "工作台" [ref=e175]
+            - text: /
+          - link "员工档案" [ref=e177]
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - button [ref=e180] [cursor=pointer]:
+            - img [ref=e182]
+          - superscript [ref=e186]
+        - button "超级管理员" [ref=e188] [cursor=pointer]:
+          - img [ref=e191]
+          - generic [ref=e193]: 超级管理员
+    - generic [ref=e195]:
+      - tablist [ref=e199]:
+        - tab "📊 控制台" [ref=e200]
+        - tab "员工档案" [selected] [ref=e201]:
+          - text: 员工档案
+          - img [ref=e203]
+      - generic [ref=e205]:
+        - tabpanel "员工档案"
+    - main [ref=e206]:
+      - generic [ref=e208]:
+        - generic [ref=e210]:
+          - text: 员工档案
+          - button "添加员工" [ref=e211] [cursor=pointer]:
+            - generic [ref=e212]: 添加员工
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - textbox "姓名/工号/手机" [ref=e219]
+            - generic [ref=e224] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e226]
+                - generic [ref=e227]: 所属小区
+              - img [ref=e230]
+            - generic [ref=e235] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e237]
+                - generic [ref=e238]: 状态
+              - img [ref=e241]
+            - generic [ref=e244]:
+              - button "查询" [ref=e245] [cursor=pointer]:
+                - generic [ref=e246]: 查询
+              - button "重置" [ref=e247] [cursor=pointer]:
+                - generic [ref=e248]: 重置
+          - generic [ref=e249]:
+            - generic [ref=e250]:
+              - table [ref=e252]:
+                - rowgroup [ref=e265]:
+                  - row "工号 姓名 性别 部门 岗位 手机号 所属小区 基本工资 入职日期 状态 操作" [ref=e266]:
+                    - columnheader "工号" [ref=e267]:
+                      - generic [ref=e268]: 工号
+                    - columnheader "姓名" [ref=e269]:
+                      - generic [ref=e270]: 姓名
+                    - columnheader "性别" [ref=e271]:
+                      - generic [ref=e272]: 性别
+                    - columnheader "部门" [ref=e273]:
+                      - generic [ref=e274]: 部门
+                    - columnheader "岗位" [ref=e275]:
+                      - generic [ref=e276]: 岗位
+                    - columnheader "手机号" [ref=e277]:
+                      - generic [ref=e278]: 手机号
+                    - columnheader "所属小区" [ref=e279]:
+                      - generic [ref=e280]: 所属小区
+                    - columnheader "基本工资" [ref=e281]:
+                      - generic [ref=e282]: 基本工资
+                    - columnheader "入职日期" [ref=e283]:
+                      - generic [ref=e284]: 入职日期
+                    - columnheader "状态" [ref=e285]:
+                      - generic [ref=e286]: 状态
+                    - columnheader "操作" [ref=e287]:
+                      - generic [ref=e288]: 操作
+              - table [ref=e293]:
+                - rowgroup [ref=e306]:
+                  - row "SG007 蒋建国 男 安保部 安保员 13800001013 阳光花园 ¥4500.00 2023-01-01 离职 编辑 详情 删除" [ref=e307]:
+                    - cell "SG007" [ref=e308]:
+                      - generic [ref=e309]: SG007
+                    - cell "蒋建国" [ref=e310]:
+                      - generic [ref=e311]: 蒋建国
+                    - cell "男" [ref=e312]:
+                      - generic [ref=e313]: 男
+                    - cell "安保部" [ref=e314]:
+                      - generic [ref=e315]: 安保部
+                    - cell "安保员" [ref=e316]:
+                      - generic [ref=e317]: 安保员
+                    - cell "13800001013" [ref=e318]:
+                      - generic [ref=e319]: "13800001013"
+                    - cell "阳光花园" [ref=e320]:
+                      - generic [ref=e321]: 阳光花园
+                    - cell "¥4500.00" [ref=e322]:
+                      - generic [ref=e323]: ¥4500.00
+                    - cell "2023-01-01" [ref=e324]:
+                      - generic [ref=e325]: 2023-01-01
+                    - cell "离职" [ref=e326]:
+                      - generic [ref=e327]:
+                        - generic:
+                          - generic: 离职
+                    - cell "编辑 详情 删除" [ref=e328]:
+                      - generic [ref=e329]:
+                        - button "编辑" [ref=e330] [cursor=pointer]:
+                          - generic [ref=e331]: 编辑
+                        - button "详情" [ref=e332] [cursor=pointer]:
+                          - generic [ref=e333]: 详情
+                        - button "删除" [ref=e334] [cursor=pointer]:
+                          - generic [ref=e335]: 删除
+                  - row "CX006 卫小雨 女 财务部 出纳 13900001011 翠苑新城 ¥5200.00 2025-03-01 在职 编辑 详情 删除" [ref=e336]:
+                    - cell "CX006" [ref=e337]:
+                      - generic [ref=e338]: CX006
+                    - cell "卫小雨" [ref=e339]:
+                      - generic [ref=e340]: 卫小雨
+                    - cell "女" [ref=e341]:
+                      - generic [ref=e342]: 女
+                    - cell "财务部" [ref=e343]:
+                      - generic [ref=e344]: 财务部
+                    - cell "出纳" [ref=e345]:
+                      - generic [ref=e346]: 出纳
+                    - cell "13900001011" [ref=e347]:
+                      - generic [ref=e348]: "13900001011"
+                    - cell "翠苑新城" [ref=e349]:
+                      - generic [ref=e350]: 翠苑新城
+                    - cell "¥5200.00" [ref=e351]:
+                      - generic [ref=e352]: ¥5200.00
+                    - cell "2025-03-01" [ref=e353]:
+                      - generic [ref=e354]: 2025-03-01
+                    - cell "在职" [ref=e355]:
+                      - generic [ref=e356]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e357]:
+                      - generic [ref=e358]:
+                        - button "编辑" [ref=e359] [cursor=pointer]:
+                          - generic [ref=e360]: 编辑
+                        - button "详情" [ref=e361] [cursor=pointer]:
+                          - generic [ref=e362]: 详情
+                        - button "删除" [ref=e363] [cursor=pointer]:
+                          - generic [ref=e364]: 删除
+                  - row "CX005 褚强生 男 行政部 行政专员 13900001009 翠苑新城 ¥4800.00 2024-06-01 在职 编辑 详情 删除" [ref=e365]:
+                    - cell "CX005" [ref=e366]:
+                      - generic [ref=e367]: CX005
+                    - cell "褚强生" [ref=e368]:
+                      - generic [ref=e369]: 褚强生
+                    - cell "男" [ref=e370]:
+                      - generic [ref=e371]: 男
+                    - cell "行政部" [ref=e372]:
+                      - generic [ref=e373]: 行政部
+                    - cell "行政专员" [ref=e374]:
+                      - generic [ref=e375]: 行政专员
+                    - cell "13900001009" [ref=e376]:
+                      - generic [ref=e377]: "13900001009"
+                    - cell "翠苑新城" [ref=e378]:
+                      - generic [ref=e379]: 翠苑新城
+                    - cell "¥4800.00" [ref=e380]:
+                      - generic [ref=e381]: ¥4800.00
+                    - cell "2024-06-01" [ref=e382]:
+                      - generic [ref=e383]: 2024-06-01
+                    - cell "在职" [ref=e384]:
+                      - generic [ref=e385]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e386]:
+                      - generic [ref=e387]:
+                        - button "编辑" [ref=e388] [cursor=pointer]:
+                          - generic [ref=e389]: 编辑
+                        - button "详情" [ref=e390] [cursor=pointer]:
+                          - generic [ref=e391]: 详情
+                        - button "删除" [ref=e392] [cursor=pointer]:
+                          - generic [ref=e393]: 删除
+                  - row "CX004 陈美玲 女 保洁部 保洁员 13900001007 翠苑新城 ¥3800.00 2024-09-01 在职 编辑 详情 删除" [ref=e394]:
+                    - cell "CX004" [ref=e395]:
+                      - generic [ref=e396]: CX004
+                    - cell "陈美玲" [ref=e397]:
+                      - generic [ref=e398]: 陈美玲
+                    - cell "女" [ref=e399]:
+                      - generic [ref=e400]: 女
+                    - cell "保洁部" [ref=e401]:
+                      - generic [ref=e402]: 保洁部
+                    - cell "保洁员" [ref=e403]:
+                      - generic [ref=e404]: 保洁员
+                    - cell "13900001007" [ref=e405]:
+                      - generic [ref=e406]: "13900001007"
+                    - cell "翠苑新城" [ref=e407]:
+                      - generic [ref=e408]: 翠苑新城
+                    - cell "¥3800.00" [ref=e409]:
+                      - generic [ref=e410]: ¥3800.00
+                    - cell "2024-09-01" [ref=e411]:
+                      - generic [ref=e412]: 2024-09-01
+                    - cell "在职" [ref=e413]:
+                      - generic [ref=e414]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e415]:
+                      - generic [ref=e416]:
+                        - button "编辑" [ref=e417] [cursor=pointer]:
+                          - generic [ref=e418]: 编辑
+                        - button "详情" [ref=e419] [cursor=pointer]:
+                          - generic [ref=e420]: 详情
+                        - button "删除" [ref=e421] [cursor=pointer]:
+                          - generic [ref=e422]: 删除
+                  - row "CX003 冯大力 男 工程部 维修工 13900001005 翠苑新城 ¥5500.00 2024-02-15 在职 编辑 详情 删除" [ref=e423]:
+                    - cell "CX003" [ref=e424]:
+                      - generic [ref=e425]: CX003
+                    - cell "冯大力" [ref=e426]:
+                      - generic [ref=e427]: 冯大力
+                    - cell "男" [ref=e428]:
+                      - generic [ref=e429]: 男
+                    - cell "工程部" [ref=e430]:
+                      - generic [ref=e431]: 工程部
+                    - cell "维修工" [ref=e432]:
+                      - generic [ref=e433]: 维修工
+                    - cell "13900001005" [ref=e434]:
+                      - generic [ref=e435]: "13900001005"
+                    - cell "翠苑新城" [ref=e436]:
+                      - generic [ref=e437]: 翠苑新城
+                    - cell "¥5500.00" [ref=e438]:
+                      - generic [ref=e439]: ¥5500.00
+                    - cell "2024-02-15" [ref=e440]:
+                      - generic [ref=e441]: 2024-02-15
+                    - cell "在职" [ref=e442]:
+                      - generic [ref=e443]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e444]:
+                      - generic [ref=e445]:
+                        - button "编辑" [ref=e446] [cursor=pointer]:
+                          - generic [ref=e447]: 编辑
+                        - button "详情" [ref=e448] [cursor=pointer]:
+                          - generic [ref=e449]: 详情
+                        - button "删除" [ref=e450] [cursor=pointer]:
+                          - generic [ref=e451]: 删除
+                  - row "CX002 王丽华 女 客服部 客服主管 13900001003 翠苑新城 ¥5500.00 2023-07-01 在职 编辑 详情 删除" [ref=e452]:
+                    - cell "CX002" [ref=e453]:
+                      - generic [ref=e454]: CX002
+                    - cell "王丽华" [ref=e455]:
+                      - generic [ref=e456]: 王丽华
+                    - cell "女" [ref=e457]:
+                      - generic [ref=e458]: 女
+                    - cell "客服部" [ref=e459]:
+                      - generic [ref=e460]: 客服部
+                    - cell "客服主管" [ref=e461]:
+                      - generic [ref=e462]: 客服主管
+                    - cell "13900001003" [ref=e463]:
+                      - generic [ref=e464]: "13900001003"
+                    - cell "翠苑新城" [ref=e465]:
+                      - generic [ref=e466]: 翠苑新城
+                    - cell "¥5500.00" [ref=e467]:
+                      - generic [ref=e468]: ¥5500.00
+                    - cell "2023-07-01" [ref=e469]:
+                      - generic [ref=e470]: 2023-07-01
+                    - cell "在职" [ref=e471]:
+                      - generic [ref=e472]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e473]:
+                      - generic [ref=e474]:
+                        - button "编辑" [ref=e475] [cursor=pointer]:
+                          - generic [ref=e476]: 编辑
+                        - button "详情" [ref=e477] [cursor=pointer]:
+                          - generic [ref=e478]: 详情
+                        - button "删除" [ref=e479] [cursor=pointer]:
+                          - generic [ref=e480]: 删除
+                  - row "CX001 郑文斌 男 安保部 安保主管 13900001001 翠苑新城 ¥6500.00 2023-05-10 在职 编辑 详情 删除" [ref=e481]:
+                    - cell "CX001" [ref=e482]:
+                      - generic [ref=e483]: CX001
+                    - cell "郑文斌" [ref=e484]:
+                      - generic [ref=e485]: 郑文斌
+                    - cell "男" [ref=e486]:
+                      - generic [ref=e487]: 男
+                    - cell "安保部" [ref=e488]:
+                      - generic [ref=e489]: 安保部
+                    - cell "安保主管" [ref=e490]:
+                      - generic [ref=e491]: 安保主管
+                    - cell "13900001001" [ref=e492]:
+                      - generic [ref=e493]: "13900001001"
+                    - cell "翠苑新城" [ref=e494]:
+                      - generic [ref=e495]: 翠苑新城
+                    - cell "¥6500.00" [ref=e496]:
+                      - generic [ref=e497]: ¥6500.00
+                    - cell "2023-05-10" [ref=e498]:
+                      - generic [ref=e499]: 2023-05-10
+                    - cell "在职" [ref=e500]:
+                      - generic [ref=e501]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e502]:
+                      - generic [ref=e503]:
+                        - button "编辑" [ref=e504] [cursor=pointer]:
+                          - generic [ref=e505]: 编辑
+                        - button "详情" [ref=e506] [cursor=pointer]:
+                          - generic [ref=e507]: 详情
+                        - button "删除" [ref=e508] [cursor=pointer]:
+                          - generic [ref=e509]: 删除
+                  - row "SG006 吴志远 男 客服部 客服专员 13800001011 阳光花园 ¥4200.00 2024-08-15 在职 编辑 详情 删除" [ref=e510]:
+                    - cell "SG006" [ref=e511]:
+                      - generic [ref=e512]: SG006
+                    - cell "吴志远" [ref=e513]:
+                      - generic [ref=e514]: 吴志远
+                    - cell "男" [ref=e515]:
+                      - generic [ref=e516]: 男
+                    - cell "客服部" [ref=e517]:
+                      - generic [ref=e518]: 客服部
+                    - cell "客服专员" [ref=e519]:
+                      - generic [ref=e520]: 客服专员
+                    - cell "13800001011" [ref=e521]:
+                      - generic [ref=e522]: "13800001011"
+                    - cell "阳光花园" [ref=e523]:
+                      - generic [ref=e524]: 阳光花园
+                    - cell "¥4200.00" [ref=e525]:
+                      - generic [ref=e526]: ¥4200.00
+                    - cell "2024-08-15" [ref=e527]:
+                      - generic [ref=e528]: 2024-08-15
+                    - cell "在职" [ref=e529]:
+                      - generic [ref=e530]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e531]:
+                      - generic [ref=e532]:
+                        - button "编辑" [ref=e533] [cursor=pointer]:
+                          - generic [ref=e534]: 编辑
+                        - button "详情" [ref=e535] [cursor=pointer]:
+                          - generic [ref=e536]: 详情
+                        - button "删除" [ref=e537] [cursor=pointer]:
+                          - generic [ref=e538]: 删除
+                  - row "SG005 周翠花 女 绿化部 绿化员 13800001009 阳光花园 ¥3500.00 2025-01-05 在职 编辑 详情 删除" [ref=e539]:
+                    - cell "SG005" [ref=e540]:
+                      - generic [ref=e541]: SG005
+                    - cell "周翠花" [ref=e542]:
+                      - generic [ref=e543]: 周翠花
+                    - cell "女" [ref=e544]:
+                      - generic [ref=e545]: 女
+                    - cell "绿化部" [ref=e546]:
+                      - generic [ref=e547]: 绿化部
+                    - cell "绿化员" [ref=e548]:
+                      - generic [ref=e549]: 绿化员
+                    - cell "13800001009" [ref=e550]:
+                      - generic [ref=e551]: "13800001009"
+                    - cell "阳光花园" [ref=e552]:
+                      - generic [ref=e553]: 阳光花园
+                    - cell "¥3500.00" [ref=e554]:
+                      - generic [ref=e555]: ¥3500.00
+                    - cell "2025-01-05" [ref=e556]:
+                      - generic [ref=e557]: 2025-01-05
+                    - cell "在职" [ref=e558]:
+                      - generic [ref=e559]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e560]:
+                      - generic [ref=e561]:
+                        - button "编辑" [ref=e562] [cursor=pointer]:
+                          - generic [ref=e563]: 编辑
+                        - button "详情" [ref=e564] [cursor=pointer]:
+                          - generic [ref=e565]: 详情
+                        - button "删除" [ref=e566] [cursor=pointer]:
+                          - generic [ref=e567]: 删除
+                  - row "SG004 李大明 男 工程部 维修工 13800001007 阳光花园 ¥5500.00 2024-03-20 在职 编辑 详情 删除" [ref=e568]:
+                    - cell "SG004" [ref=e569]:
+                      - generic [ref=e570]: SG004
+                    - cell "李大明" [ref=e571]:
+                      - generic [ref=e572]: 李大明
+                    - cell "男" [ref=e573]:
+                      - generic [ref=e574]: 男
+                    - cell "工程部" [ref=e575]:
+                      - generic [ref=e576]: 工程部
+                    - cell "维修工" [ref=e577]:
+                      - generic [ref=e578]: 维修工
+                    - cell "13800001007" [ref=e579]:
+                      - generic [ref=e580]: "13800001007"
+                    - cell "阳光花园" [ref=e581]:
+                      - generic [ref=e582]: 阳光花园
+                    - cell "¥5500.00" [ref=e583]:
+                      - generic [ref=e584]: ¥5500.00
+                    - cell "2024-03-20" [ref=e585]:
+                      - generic [ref=e586]: 2024-03-20
+                    - cell "在职" [ref=e587]:
+                      - generic [ref=e588]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e589]:
+                      - generic [ref=e590]:
+                        - button "编辑" [ref=e591] [cursor=pointer]:
+                          - generic [ref=e592]: 编辑
+                        - button "详情" [ref=e593] [cursor=pointer]:
+                          - generic [ref=e594]: 详情
+                        - button "删除" [ref=e595] [cursor=pointer]:
+                          - generic [ref=e596]: 删除
+                  - row "SG003 孙小梅 女 保洁部 保洁员 13800001005 阳光花园 ¥3800.00 2023-06-01 在职 编辑 详情 删除" [ref=e597]:
+                    - cell "SG003" [ref=e598]:
+                      - generic [ref=e599]: SG003
+                    - cell "孙小梅" [ref=e600]:
+                      - generic [ref=e601]: 孙小梅
+                    - cell "女" [ref=e602]:
+                      - generic [ref=e603]: 女
+                    - cell "保洁部" [ref=e604]:
+                      - generic [ref=e605]: 保洁部
+                    - cell "保洁员" [ref=e606]:
+                      - generic [ref=e607]: 保洁员
+                    - cell "13800001005" [ref=e608]:
+                      - generic [ref=e609]: "13800001005"
+                    - cell "阳光花园" [ref=e610]:
+                      - generic [ref=e611]: 阳光花园
+                    - cell "¥3800.00" [ref=e612]:
+                      - generic [ref=e613]: ¥3800.00
+                    - cell "2023-06-01" [ref=e614]:
+                      - generic [ref=e615]: 2023-06-01
+                    - cell "在职" [ref=e616]:
+                      - generic [ref=e617]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e618]:
+                      - generic [ref=e619]:
+                        - button "编辑" [ref=e620] [cursor=pointer]:
+                          - generic [ref=e621]: 编辑
+                        - button "详情" [ref=e622] [cursor=pointer]:
+                          - generic [ref=e623]: 详情
+                        - button "删除" [ref=e624] [cursor=pointer]:
+                          - generic [ref=e625]: 删除
+                  - row "SG002 钱海洋 男 安保部 安保员 13800001003 阳光花园 ¥4500.00 2024-01-10 在职 编辑 详情 删除" [ref=e626]:
+                    - cell "SG002" [ref=e627]:
+                      - generic [ref=e628]: SG002
+                    - cell "钱海洋" [ref=e629]:
+                      - generic [ref=e630]: 钱海洋
+                    - cell "男" [ref=e631]:
+                      - generic [ref=e632]: 男
+                    - cell "安保部" [ref=e633]:
+                      - generic [ref=e634]: 安保部
+                    - cell "安保员" [ref=e635]:
+                      - generic [ref=e636]: 安保员
+                    - cell "13800001003" [ref=e637]:
+                      - generic [ref=e638]: "13800001003"
+                    - cell "阳光花园" [ref=e639]:
+                      - generic [ref=e640]: 阳光花园
+                    - cell "¥4500.00" [ref=e641]:
+                      - generic [ref=e642]: ¥4500.00
+                    - cell "2024-01-10" [ref=e643]:
+                      - generic [ref=e644]: 2024-01-10
+                    - cell "在职" [ref=e645]:
+                      - generic [ref=e646]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e647]:
+                      - generic [ref=e648]:
+                        - button "编辑" [ref=e649] [cursor=pointer]:
+                          - generic [ref=e650]: 编辑
+                        - button "详情" [ref=e651] [cursor=pointer]:
+                          - generic [ref=e652]: 详情
+                        - button "删除" [ref=e653] [cursor=pointer]:
+                          - generic [ref=e654]: 删除
+                  - row "SG001 赵建国 男 安保部 安保主管 13800001001 阳光花园 ¥6500.00 2023-03-15 在职 编辑 详情 删除" [ref=e655]:
+                    - cell "SG001" [ref=e656]:
+                      - generic [ref=e657]: SG001
+                    - cell "赵建国" [ref=e658]:
+                      - generic [ref=e659]: 赵建国
+                    - cell "男" [ref=e660]:
+                      - generic [ref=e661]: 男
+                    - cell "安保部" [ref=e662]:
+                      - generic [ref=e663]: 安保部
+                    - cell "安保主管" [ref=e664]:
+                      - generic [ref=e665]: 安保主管
+                    - cell "13800001001" [ref=e666]:
+                      - generic [ref=e667]: "13800001001"
+                    - cell "阳光花园" [ref=e668]:
+                      - generic [ref=e669]: 阳光花园
+                    - cell "¥6500.00" [ref=e670]:
+                      - generic [ref=e671]: ¥6500.00
+                    - cell "2023-03-15" [ref=e672]:
+                      - generic [ref=e673]: 2023-03-15
+                    - cell "在职" [ref=e674]:
+                      - generic [ref=e675]:
+                        - generic:
+                          - generic: 在职
+                    - cell "编辑 详情 删除" [ref=e676]:
+                      - generic [ref=e677]:
+                        - button "编辑" [ref=e678] [cursor=pointer]:
+                          - generic [ref=e679]: 编辑
+                        - button "详情" [ref=e680] [cursor=pointer]:
+                          - generic [ref=e681]: 详情
+                        - button "删除" [ref=e682] [cursor=pointer]:
+                          - generic [ref=e683]: 删除
+            - img [ref=e687]
+          - generic [ref=e690]:
+            - generic [ref=e691]: 共 13 条
+            - generic [ref=e694] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e696]
+                - generic [ref=e697]: 15el.pagination.pagesize
+              - img [ref=e700]
+            - button "上一页" [disabled] [ref=e702]:
+              - generic:
+                - img
+            - list [ref=e703]:
+              - listitem "el.pagination.currentPage" [ref=e704]: "1"
+            - button "下一页" [disabled] [ref=e705]:
+              - generic:
+                - img

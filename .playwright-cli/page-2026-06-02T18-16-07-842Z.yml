@@ -1,0 +1,97 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "门禁卡" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "门禁卡" [selected] [ref=e44]:
+          - text: 门禁卡
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "门禁卡"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "卡号/姓名" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e75]
+              - generic [ref=e76]: 状态
+            - img [ref=e79]
+          - generic [ref=e82]:
+            - button "搜索" [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: 搜索
+            - button "重置" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]: 重置
+        - generic [ref=e88]:
+          - button "添加门禁卡" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]: 添加门禁卡
+          - generic [ref=e93]:
+            - table [ref=e95]:
+              - rowgroup [ref=e107]:
+                - row "# ID 卡号 持卡人 类型 状态 发卡日期 有效期至 创建时间 操作" [ref=e108]:
+                  - columnheader "#" [ref=e109]:
+                    - generic [ref=e110]: "#"
+                  - columnheader "ID" [ref=e111]:
+                    - generic [ref=e112]: ID
+                  - columnheader "卡号" [ref=e113]:
+                    - generic [ref=e114]: 卡号
+                  - columnheader "持卡人" [ref=e115]:
+                    - generic [ref=e116]: 持卡人
+                  - columnheader "类型" [ref=e117]:
+                    - generic [ref=e118]: 类型
+                  - columnheader "状态" [ref=e119]:
+                    - generic [ref=e120]: 状态
+                  - columnheader "发卡日期" [ref=e121]:
+                    - generic [ref=e122]: 发卡日期
+                  - columnheader "有效期至" [ref=e123]:
+                    - generic [ref=e124]: 有效期至
+                  - columnheader "创建时间" [ref=e125]:
+                    - generic [ref=e126]: 创建时间
+                  - columnheader "操作" [ref=e127]:
+                    - generic [ref=e128]: 操作
+            - generic [ref=e132]:
+              - table:
+                - rowgroup
+              - generic [ref=e134]: el.table.emptyText
+          - generic [ref=e137]:
+            - generic [ref=e138]: 共 0 条
+            - generic [ref=e141] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e143]
+                - generic [ref=e144]: 15el.pagination.pagesize
+              - img [ref=e147]
+            - button "上一页" [disabled] [ref=e149]:
+              - generic:
+                - img
+            - list [ref=e150]:
+              - listitem "el.pagination.currentPage" [ref=e151]: "1"
+            - button "下一页" [disabled] [ref=e152]:
+              - generic:
+                - img

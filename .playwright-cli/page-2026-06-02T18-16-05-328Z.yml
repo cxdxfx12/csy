@@ -1,0 +1,170 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+      - menuitem "报修管理" [ref=e58]:
+        - generic [ref=e59] [cursor=pointer]:
+          - img [ref=e61]
+          - generic [ref=e63]: 报修管理
+          - img [ref=e65]
+      - menuitem "安保管理" [expanded] [ref=e67]:
+        - generic [ref=e68] [cursor=pointer]:
+          - generic [ref=e70]: 安保管理
+          - img [ref=e72]
+        - menu:
+          - menuitem "访客登记" [ref=e74] [cursor=pointer]:
+            - img [ref=e76]
+            - generic [ref=e78]: 访客登记
+          - menuitem "巡更记录" [ref=e79] [cursor=pointer]:
+            - img [ref=e81]
+            - generic [ref=e83]: 巡更记录
+          - menuitem "巡更路线" [ref=e84] [cursor=pointer]:
+            - img [ref=e86]
+            - generic [ref=e88]: 巡更路线
+          - menuitem "门禁卡管理" [ref=e89] [cursor=pointer]:
+            - img [ref=e91]
+            - generic [ref=e94]: 门禁卡管理
+      - menuitem "停车管理" [ref=e95]:
+        - generic [ref=e96] [cursor=pointer]:
+          - img [ref=e98]
+          - generic [ref=e100]: 停车管理
+          - img [ref=e102]
+      - menuitem "公告通知" [ref=e104]:
+        - generic [ref=e105] [cursor=pointer]:
+          - img [ref=e107]
+          - generic [ref=e111]: 公告通知
+          - img [ref=e113]
+      - menuitem "设备管理" [ref=e115]:
+        - generic [ref=e116] [cursor=pointer]:
+          - img [ref=e118]
+          - generic [ref=e123]: 设备管理
+          - img [ref=e125]
+      - menuitem "投诉建议" [ref=e127]:
+        - generic [ref=e128] [cursor=pointer]:
+          - img [ref=e130]
+          - generic [ref=e132]: 投诉建议
+          - img [ref=e134]
+      - menuitem "打印中心" [ref=e136]:
+        - generic [ref=e137] [cursor=pointer]:
+          - img [ref=e139]
+          - generic [ref=e141]: 打印中心
+          - img [ref=e143]
+      - menuitem "物业人员" [ref=e145]:
+        - generic [ref=e146] [cursor=pointer]:
+          - img [ref=e148]
+          - generic [ref=e150]: 物业人员
+          - img [ref=e152]
+      - menuitem "外部供应商" [ref=e154]:
+        - generic [ref=e155] [cursor=pointer]:
+          - img [ref=e157]
+          - generic [ref=e159]: 外部供应商
+          - img [ref=e161]
+  - generic [ref=e163]:
+    - generic [ref=e164]:
+      - generic [ref=e165]:
+        - button [ref=e166] [cursor=pointer]:
+          - img [ref=e168]
+        - navigation "el.breadcrumb.label" [ref=e170]:
+          - generic [ref=e171]:
+            - link "工作台" [ref=e172]
+            - text: /
+          - link "巡更记录" [ref=e174]
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - button [ref=e177] [cursor=pointer]:
+            - img [ref=e179]
+          - superscript [ref=e183]
+        - button "超级管理员" [ref=e185] [cursor=pointer]:
+          - img [ref=e188]
+          - generic [ref=e190]: 超级管理员
+    - generic [ref=e192]:
+      - tablist [ref=e196]:
+        - tab "📊 控制台" [ref=e197]
+        - tab "巡更记录" [selected] [ref=e198]:
+          - text: 巡更记录
+          - img [ref=e200]
+      - generic [ref=e202]:
+        - tabpanel "巡更记录"
+    - main [ref=e203]:
+      - generic [ref=e204]:
+        - generic [ref=e206]:
+          - generic [ref=e210] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e212]
+              - generic [ref=e213]: 小区
+            - img [ref=e216]
+          - generic [ref=e221] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e223]
+              - generic [ref=e224]: 巡更路线
+            - img [ref=e227]
+          - generic [ref=e230]:
+            - button "搜索" [ref=e231] [cursor=pointer]:
+              - generic [ref=e232]: 搜索
+            - button "重置" [ref=e233] [cursor=pointer]:
+              - generic [ref=e234]: 重置
+        - generic [ref=e236]:
+          - generic [ref=e238]:
+            - table [ref=e240]:
+              - rowgroup [ref=e250]:
+                - row "# ID 路线名称 检查点 巡检人 巡检时间 结果 备注" [ref=e251]:
+                  - columnheader "#" [ref=e252]:
+                    - generic [ref=e253]: "#"
+                  - columnheader "ID" [ref=e254]:
+                    - generic [ref=e255]: ID
+                  - columnheader "路线名称" [ref=e256]:
+                    - generic [ref=e257]: 路线名称
+                  - columnheader "检查点" [ref=e258]:
+                    - generic [ref=e259]: 检查点
+                  - columnheader "巡检人" [ref=e260]:
+                    - generic [ref=e261]: 巡检人
+                  - columnheader "巡检时间" [ref=e262]:
+                    - generic [ref=e263]: 巡检时间
+                  - columnheader "结果" [ref=e264]:
+                    - generic [ref=e265]: 结果
+                  - columnheader "备注" [ref=e266]:
+                    - generic [ref=e267]: 备注
+            - generic [ref=e271]:
+              - table:
+                - rowgroup
+              - generic [ref=e273]: el.table.emptyText
+          - generic [ref=e276]:
+            - generic [ref=e277]: 共 0 条
+            - generic [ref=e280] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e282]
+                - generic [ref=e283]: 15el.pagination.pagesize
+              - img [ref=e286]
+            - button "上一页" [disabled] [ref=e288]:
+              - generic:
+                - img
+            - list [ref=e289]:
+              - listitem "el.pagination.currentPage" [ref=e290]: "1"
+            - button "下一页" [disabled] [ref=e291]:
+              - generic:
+                - img

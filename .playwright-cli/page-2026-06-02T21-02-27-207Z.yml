@@ -1,0 +1,480 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e144]:
+      - menuitem "数据概览" [ref=e145]:
+        - generic [ref=e146] [cursor=pointer]:
+          - img [ref=e148]
+          - generic [ref=e150]: 数据概览
+          - img [ref=e152]
+      - menuitem "系统管理" [ref=e154]:
+        - generic [ref=e155] [cursor=pointer]:
+          - img [ref=e157]
+          - generic [ref=e159]: 系统管理
+          - img [ref=e161]
+      - menuitem "房产管理" [expanded] [ref=e163]:
+        - generic [ref=e164] [cursor=pointer]:
+          - img [ref=e166]
+          - generic [ref=e168]: 房产管理
+          - img [ref=e170]
+        - menu [ref=e172]:
+          - menuitem "小区管理" [ref=e173] [cursor=pointer]:
+            - img [ref=e175]
+            - generic [ref=e177]: 小区管理
+          - menuitem "楼栋管理" [ref=e178] [cursor=pointer]:
+            - img [ref=e180]
+            - generic [ref=e184]: 楼栋管理
+          - menuitem "房间管理" [ref=e185] [cursor=pointer]:
+            - generic [ref=e187]: 房间管理
+      - menuitem "业主管理" [ref=e188]:
+        - generic [ref=e189] [cursor=pointer]:
+          - img [ref=e191]
+          - generic [ref=e193]: 业主管理
+          - img [ref=e195]
+      - menuitem "收费管理" [ref=e197]:
+        - generic [ref=e198] [cursor=pointer]:
+          - img [ref=e200]
+          - generic [ref=e204]: 收费管理
+          - img [ref=e206]
+      - menuitem "报修管理" [ref=e208]:
+        - generic [ref=e209] [cursor=pointer]:
+          - img [ref=e211]
+          - generic [ref=e213]: 报修管理
+          - img [ref=e215]
+      - menuitem "安保管理" [ref=e217]:
+        - generic [ref=e218] [cursor=pointer]:
+          - generic [ref=e220]: 安保管理
+          - img [ref=e222]
+      - menuitem "停车管理" [ref=e224]:
+        - generic [ref=e225] [cursor=pointer]:
+          - img [ref=e227]
+          - generic [ref=e229]: 停车管理
+          - img [ref=e231]
+      - menuitem "公告通知" [ref=e233]:
+        - generic [ref=e234] [cursor=pointer]:
+          - img [ref=e236]
+          - generic [ref=e240]: 公告通知
+          - img [ref=e242]
+      - menuitem "设备管理" [ref=e244]:
+        - generic [ref=e245] [cursor=pointer]:
+          - img [ref=e247]
+          - generic [ref=e252]: 设备管理
+          - img [ref=e254]
+      - menuitem "投诉建议" [ref=e256]:
+        - generic [ref=e257] [cursor=pointer]:
+          - img [ref=e259]
+          - generic [ref=e261]: 投诉建议
+          - img [ref=e263]
+      - menuitem "打印中心" [ref=e265]:
+        - generic [ref=e266] [cursor=pointer]:
+          - img [ref=e268]
+          - generic [ref=e270]: 打印中心
+          - img [ref=e272]
+      - menuitem "物业人员" [ref=e274]:
+        - generic [ref=e275] [cursor=pointer]:
+          - img [ref=e277]
+          - generic [ref=e279]: 物业人员
+          - img [ref=e281]
+      - menuitem "外部供应商" [ref=e283]:
+        - generic [ref=e284] [cursor=pointer]:
+          - img [ref=e286]
+          - generic [ref=e288]: 外部供应商
+          - img [ref=e290]
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "楼栋管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "超级管理员" [ref=e292] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 超级管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "楼栋管理" [selected] [ref=e44]:
+          - text: 楼栋管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "楼栋管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "名称/编码" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 选择小区
+            - img [ref=e68]
+          - generic [ref=e71]:
+            - button "搜索" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: 搜索
+            - button "重置" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75]: 重置
+        - generic [ref=e77]:
+          - button "添加楼栋" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]: 添加楼栋
+          - generic [ref=e82]:
+            - table [ref=e84]:
+              - rowgroup [ref=e95]:
+                - row "# ID 名称 所属小区 层数 单元数 房间数 排序 操作" [ref=e96]:
+                  - columnheader "#" [ref=e97]:
+                    - generic [ref=e98]: "#"
+                  - columnheader "ID" [ref=e99]:
+                    - generic [ref=e100]: ID
+                  - columnheader "名称" [ref=e101]:
+                    - generic [ref=e102]: 名称
+                  - columnheader "所属小区" [ref=e103]:
+                    - generic [ref=e104]: 所属小区
+                  - columnheader "层数" [ref=e105]:
+                    - generic [ref=e106]: 层数
+                  - columnheader "单元数" [ref=e107]:
+                    - generic [ref=e108]: 单元数
+                  - columnheader "房间数" [ref=e109]:
+                    - generic [ref=e110]: 房间数
+                  - columnheader "排序" [ref=e111]:
+                    - generic [ref=e112]: 排序
+                  - columnheader "操作" [ref=e113]:
+                    - generic [ref=e114]: 操作
+            - table [ref=e293]:
+              - rowgroup [ref=e304]:
+                - row "1 23 2幢 怡丰城 13 4 416 0 编辑 删除" [ref=e305]:
+                  - cell "1" [ref=e306]:
+                    - generic [ref=e308]: "1"
+                  - cell "23" [ref=e309]:
+                    - generic [ref=e310]: "23"
+                  - cell "2幢" [ref=e311]:
+                    - generic [ref=e312]: 2幢
+                  - cell "怡丰城" [ref=e313]:
+                    - generic [ref=e314]: 怡丰城
+                  - cell "13" [ref=e315]:
+                    - generic [ref=e316]: "13"
+                  - cell "4" [ref=e317]:
+                    - generic [ref=e318]: "4"
+                  - cell "416" [ref=e319]:
+                    - generic [ref=e320]: "416"
+                  - cell "0" [ref=e321]:
+                    - generic [ref=e322]: "0"
+                  - cell "编辑 删除" [ref=e323]:
+                    - generic [ref=e324]:
+                      - button "编辑" [ref=e325] [cursor=pointer]:
+                        - generic [ref=e326]: 编辑
+                      - button "删除" [ref=e327] [cursor=pointer]:
+                        - generic [ref=e328]: 删除
+                - row "2 13 1号楼 阳光花园 18 2 144 1 编辑 删除" [ref=e329]:
+                  - cell "2" [ref=e330]:
+                    - generic [ref=e332]: "2"
+                  - cell "13" [ref=e333]:
+                    - generic [ref=e334]: "13"
+                  - cell "1号楼" [ref=e335]:
+                    - generic [ref=e336]: 1号楼
+                  - cell "阳光花园" [ref=e337]:
+                    - generic [ref=e338]: 阳光花园
+                  - cell "18" [ref=e339]:
+                    - generic [ref=e340]: "18"
+                  - cell "2" [ref=e341]:
+                    - generic [ref=e342]: "2"
+                  - cell "144" [ref=e343]:
+                    - generic [ref=e344]: "144"
+                  - cell "1" [ref=e345]:
+                    - generic [ref=e346]: "1"
+                  - cell "编辑 删除" [ref=e347]:
+                    - generic [ref=e348]:
+                      - button "编辑" [ref=e349] [cursor=pointer]:
+                        - generic [ref=e350]: 编辑
+                      - button "删除" [ref=e351] [cursor=pointer]:
+                        - generic [ref=e352]: 删除
+                - row "3 17 A栋 翠苑新城 20 3 240 1 编辑 删除" [ref=e353]:
+                  - cell "3" [ref=e354]:
+                    - generic [ref=e356]: "3"
+                  - cell "17" [ref=e357]:
+                    - generic [ref=e358]: "17"
+                  - cell "A栋" [ref=e359]:
+                    - generic [ref=e360]: A栋
+                  - cell "翠苑新城" [ref=e361]:
+                    - generic [ref=e362]: 翠苑新城
+                  - cell "20" [ref=e363]:
+                    - generic [ref=e364]: "20"
+                  - cell "3" [ref=e365]:
+                    - generic [ref=e366]: "3"
+                  - cell "240" [ref=e367]:
+                    - generic [ref=e368]: "240"
+                  - cell "1" [ref=e369]:
+                    - generic [ref=e370]: "1"
+                  - cell "编辑 删除" [ref=e371]:
+                    - generic [ref=e372]:
+                      - button "编辑" [ref=e373] [cursor=pointer]:
+                        - generic [ref=e374]: 编辑
+                      - button "删除" [ref=e375] [cursor=pointer]:
+                        - generic [ref=e376]: 删除
+                - row "4 14 2号楼 阳光花园 18 2 144 2 编辑 删除" [ref=e377]:
+                  - cell "4" [ref=e378]:
+                    - generic [ref=e380]: "4"
+                  - cell "14" [ref=e381]:
+                    - generic [ref=e382]: "14"
+                  - cell "2号楼" [ref=e383]:
+                    - generic [ref=e384]: 2号楼
+                  - cell "阳光花园" [ref=e385]:
+                    - generic [ref=e386]: 阳光花园
+                  - cell "18" [ref=e387]:
+                    - generic [ref=e388]: "18"
+                  - cell "2" [ref=e389]:
+                    - generic [ref=e390]: "2"
+                  - cell "144" [ref=e391]:
+                    - generic [ref=e392]: "144"
+                  - cell "2" [ref=e393]:
+                    - generic [ref=e394]: "2"
+                  - cell "编辑 删除" [ref=e395]:
+                    - generic [ref=e396]:
+                      - button "编辑" [ref=e397] [cursor=pointer]:
+                        - generic [ref=e398]: 编辑
+                      - button "删除" [ref=e399] [cursor=pointer]:
+                        - generic [ref=e400]: 删除
+                - row "5 18 B栋 翠苑新城 18 2 108 2 编辑 删除" [ref=e401]:
+                  - cell "5" [ref=e402]:
+                    - generic [ref=e404]: "5"
+                  - cell "18" [ref=e405]:
+                    - generic [ref=e406]: "18"
+                  - cell "B栋" [ref=e407]:
+                    - generic [ref=e408]: B栋
+                  - cell "翠苑新城" [ref=e409]:
+                    - generic [ref=e410]: 翠苑新城
+                  - cell "18" [ref=e411]:
+                    - generic [ref=e412]: "18"
+                  - cell "2" [ref=e413]:
+                    - generic [ref=e414]: "2"
+                  - cell "108" [ref=e415]:
+                    - generic [ref=e416]: "108"
+                  - cell "2" [ref=e417]:
+                    - generic [ref=e418]: "2"
+                  - cell "编辑 删除" [ref=e419]:
+                    - generic [ref=e420]:
+                      - button "编辑" [ref=e421] [cursor=pointer]:
+                        - generic [ref=e422]: 编辑
+                      - button "删除" [ref=e423] [cursor=pointer]:
+                        - generic [ref=e424]: 删除
+                - row "6 15 3号楼 阳光花园 26 1 156 3 编辑 删除" [ref=e425]:
+                  - cell "6" [ref=e426]:
+                    - generic [ref=e428]: "6"
+                  - cell "15" [ref=e429]:
+                    - generic [ref=e430]: "15"
+                  - cell "3号楼" [ref=e431]:
+                    - generic [ref=e432]: 3号楼
+                  - cell "阳光花园" [ref=e433]:
+                    - generic [ref=e434]: 阳光花园
+                  - cell "26" [ref=e435]:
+                    - generic [ref=e436]: "26"
+                  - cell "1" [ref=e437]:
+                    - generic [ref=e438]: "1"
+                  - cell "156" [ref=e439]:
+                    - generic [ref=e440]: "156"
+                  - cell "3" [ref=e441]:
+                    - generic [ref=e442]: "3"
+                  - cell "编辑 删除" [ref=e443]:
+                    - generic [ref=e444]:
+                      - button "编辑" [ref=e445] [cursor=pointer]:
+                        - generic [ref=e446]: 编辑
+                      - button "删除" [ref=e447] [cursor=pointer]:
+                        - generic [ref=e448]: 删除
+                - row "7 19 C栋 翠苑新城 32 1 160 3 编辑 删除" [ref=e449]:
+                  - cell "7" [ref=e450]:
+                    - generic [ref=e452]: "7"
+                  - cell "19" [ref=e453]:
+                    - generic [ref=e454]: "19"
+                  - cell "C栋" [ref=e455]:
+                    - generic [ref=e456]: C栋
+                  - cell "翠苑新城" [ref=e457]:
+                    - generic [ref=e458]: 翠苑新城
+                  - cell "32" [ref=e459]:
+                    - generic [ref=e460]: "32"
+                  - cell "1" [ref=e461]:
+                    - generic [ref=e462]: "1"
+                  - cell "160" [ref=e463]:
+                    - generic [ref=e464]: "160"
+                  - cell "3" [ref=e465]:
+                    - generic [ref=e466]: "3"
+                  - cell "编辑 删除" [ref=e467]:
+                    - generic [ref=e468]:
+                      - button "编辑" [ref=e469] [cursor=pointer]:
+                        - generic [ref=e470]: 编辑
+                      - button "删除" [ref=e471] [cursor=pointer]:
+                        - generic [ref=e472]: 删除
+                - row "8 16 5号楼 阳光花园 11 1 44 4 编辑 删除" [ref=e473]:
+                  - cell "8" [ref=e474]:
+                    - generic [ref=e476]: "8"
+                  - cell "16" [ref=e477]:
+                    - generic [ref=e478]: "16"
+                  - cell "5号楼" [ref=e479]:
+                    - generic [ref=e480]: 5号楼
+                  - cell "阳光花园" [ref=e481]:
+                    - generic [ref=e482]: 阳光花园
+                  - cell "11" [ref=e483]:
+                    - generic [ref=e484]: "11"
+                  - cell "1" [ref=e485]:
+                    - generic [ref=e486]: "1"
+                  - cell "44" [ref=e487]:
+                    - generic [ref=e488]: "44"
+                  - cell "4" [ref=e489]:
+                    - generic [ref=e490]: "4"
+                  - cell "编辑 删除" [ref=e491]:
+                    - generic [ref=e492]:
+                      - button "编辑" [ref=e493] [cursor=pointer]:
+                        - generic [ref=e494]: 编辑
+                      - button "删除" [ref=e495] [cursor=pointer]:
+                        - generic [ref=e496]: 删除
+                - row "9 21 1幢 怡丰城 13 4 0 9 编辑 删除" [ref=e497]:
+                  - cell "9" [ref=e498]:
+                    - generic [ref=e500]: "9"
+                  - cell "21" [ref=e501]:
+                    - generic [ref=e502]: "21"
+                  - cell "1幢" [ref=e503]:
+                    - generic [ref=e504]: 1幢
+                  - cell "怡丰城" [ref=e505]:
+                    - generic [ref=e506]: 怡丰城
+                  - cell "13" [ref=e507]:
+                    - generic [ref=e508]: "13"
+                  - cell "4" [ref=e509]:
+                    - generic [ref=e510]: "4"
+                  - cell "0" [ref=e511]:
+                    - generic [ref=e512]: "0"
+                  - cell "9" [ref=e513]:
+                    - generic [ref=e514]: "9"
+                  - cell "编辑 删除" [ref=e515]:
+                    - generic [ref=e516]:
+                      - button "编辑" [ref=e517] [cursor=pointer]:
+                        - generic [ref=e518]: 编辑
+                      - button "删除" [ref=e519] [cursor=pointer]:
+                        - generic [ref=e520]: 删除
+                - row "10 20 8号楼 阳光花园 25 3 0 99 编辑 删除" [ref=e521]:
+                  - cell "10" [ref=e522]:
+                    - generic [ref=e524]: "10"
+                  - cell "20" [ref=e525]:
+                    - generic [ref=e526]: "20"
+                  - cell "8号楼" [ref=e527]:
+                    - generic [ref=e528]: 8号楼
+                  - cell "阳光花园" [ref=e529]:
+                    - generic [ref=e530]: 阳光花园
+                  - cell "25" [ref=e531]:
+                    - generic [ref=e532]: "25"
+                  - cell "3" [ref=e533]:
+                    - generic [ref=e534]: "3"
+                  - cell "0" [ref=e535]:
+                    - generic [ref=e536]: "0"
+                  - cell "99" [ref=e537]:
+                    - generic [ref=e538]: "99"
+                  - cell "编辑 删除" [ref=e539]:
+                    - generic [ref=e540]:
+                      - button "编辑" [ref=e541] [cursor=pointer]:
+                        - generic [ref=e542]: 编辑
+                      - button "删除" [ref=e543] [cursor=pointer]:
+                        - generic [ref=e544]: 删除
+          - generic [ref=e127]:
+            - generic [ref=e128]: 共 10 条
+            - generic [ref=e131] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e133]
+                - generic [ref=e134]: 15el.pagination.pagesize
+              - img [ref=e137]
+            - button "上一页" [disabled] [ref=e139]:
+              - generic:
+                - img
+            - list [ref=e140]:
+              - listitem "el.pagination.currentPage" [ref=e141]: "1"
+            - button "下一页" [disabled] [ref=e142]:
+              - generic:
+                - img
+        - dialog "添加楼栋" [ref=e546]:
+          - generic [ref=e547]:
+            - generic [ref=e548]:
+              - heading "添加楼栋" [level=2] [ref=e549]
+              - button "el.dialog.close" [ref=e550] [cursor=pointer]:
+                - img [ref=e552]
+            - generic [ref=e555]:
+              - generic [ref=e556]:
+                - generic [ref=e557]: "* 所属小区"
+                - generic [ref=e560] [cursor=pointer]:
+                  - generic:
+                    - combobox "* 所属小区" [active] [ref=e562]
+                    - generic [ref=e563]: 阳光花园
+                  - img [ref=e566]
+              - generic [ref=e568]:
+                - generic [ref=e569]: "* 名称"
+                - textbox "* 名称" [ref=e573]:
+                  - /placeholder: 楼栋名称
+              - generic [ref=e574]:
+                - generic [ref=e576]:
+                  - generic [ref=e577]: 层数
+                  - generic [ref=e579]:
+                    - button "el.inputNumber.decrease" [ref=e580]:
+                      - img [ref=e582]
+                    - button "el.inputNumber.increase" [ref=e584] [cursor=pointer]:
+                      - img [ref=e586]
+                    - spinbutton "层数" [ref=e590]: "1"
+                - generic [ref=e592]:
+                  - generic [ref=e593]: 单元数
+                  - generic [ref=e595]:
+                    - button "el.inputNumber.decrease" [ref=e596]:
+                      - img [ref=e598]
+                    - button "el.inputNumber.increase" [ref=e600] [cursor=pointer]:
+                      - img [ref=e602]
+                    - spinbutton "单元数" [ref=e606]: "1"
+                - generic [ref=e608]:
+                  - generic [ref=e609]: 排序
+                  - generic [ref=e611]:
+                    - button "el.inputNumber.decrease" [ref=e612]:
+                      - img [ref=e614]
+                    - button "el.inputNumber.increase" [ref=e616] [cursor=pointer]:
+                      - img [ref=e618]
+                    - spinbutton "排序" [ref=e622]: "0"
+              - separator [ref=e623]:
+                - generic [ref=e624]: 单元户型配置
+              - alert [ref=e625]:
+                - paragraph [ref=e627]: 每个单元内各楼层户型相同，配置后将自动生成所有房间并填入面积。
+              - generic [ref=e628]:
+                - strong [ref=e630]: 单元 1
+                - generic [ref=e631]:
+                  - generic [ref=e632]:
+                    - generic [ref=e633]: 每层户数
+                    - generic [ref=e634]:
+                      - button "el.inputNumber.decrease" [ref=e635] [cursor=pointer]:
+                        - img [ref=e637]
+                      - button "el.inputNumber.increase" [ref=e639] [cursor=pointer]:
+                        - img [ref=e641]
+                      - spinbutton [ref=e645]: "2"
+                  - generic [ref=e646]:
+                    - generic [ref=e647]: 户型面积
+                    - generic [ref=e648]:
+                      - generic [ref=e649]: 户1
+                      - generic [ref=e650]:
+                        - button "el.inputNumber.decrease" [ref=e651]:
+                          - img [ref=e653]
+                        - button "el.inputNumber.increase" [ref=e655] [cursor=pointer]:
+                          - img [ref=e657]
+                        - spinbutton [ref=e661]: "0.00"
+                      - generic [ref=e662]: ㎡
+                      - generic [ref=e663]: 户2
+                      - generic [ref=e664]:
+                        - button "el.inputNumber.decrease" [ref=e665]:
+                          - img [ref=e667]
+                        - button "el.inputNumber.increase" [ref=e669] [cursor=pointer]:
+                          - img [ref=e671]
+                        - spinbutton [ref=e675]: "0.00"
+                      - generic [ref=e676]: ㎡
+                      - button "+ 添加户型" [ref=e677] [cursor=pointer]:
+                        - generic [ref=e678]: + 添加户型
+                  - generic [ref=e679]: → 1 层 × 2 户 = 2 个房间
+              - generic [ref=e682]: 共计 2 个房间将被自动生成
+            - generic [ref=e683]:
+              - button "取消" [ref=e684] [cursor=pointer]:
+                - generic [ref=e685]: 取消
+              - button "确定" [ref=e686] [cursor=pointer]:
+                - generic [ref=e687]: 确定

@@ -1,0 +1,97 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "个人中心" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "个人中心" [selected] [ref=e44]:
+          - text: 个人中心
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "个人中心"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - heading "👤 个人中心" [level=2] [ref=e51]
+        - generic [ref=e52]:
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e58]: 管
+              - heading "管理员" [level=3] [ref=e59]
+              - generic:
+                - generic: 超级管理员
+            - separator [ref=e60]
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - img [ref=e64]
+                - generic [ref=e66]: 用户名
+              - generic [ref=e67]:
+                - img [ref=e69]
+                - generic [ref=e73]: 最后登录
+                - generic [ref=e74]: "-"
+              - generic [ref=e75]:
+                - img [ref=e77]
+                - generic [ref=e79]: 登录IP
+                - generic [ref=e80]: "-"
+              - generic [ref=e81]:
+                - img [ref=e83]
+                - generic [ref=e85]: 登录次数
+                - generic [ref=e86]: 0 次
+              - generic [ref=e87]:
+                - img [ref=e89]
+                - generic [ref=e91]: 注册时间
+                - generic [ref=e92]: "-"
+          - generic [ref=e96]:
+            - tablist [ref=e100]:
+              - tab "修改资料" [selected] [ref=e102]
+              - tab "修改密码" [ref=e103]
+            - generic [ref=e104]:
+              - tabpanel "修改资料" [ref=e105]:
+                - generic [ref=e106]:
+                  - generic [ref=e107]:
+                    - generic [ref=e108]: 头像
+                    - generic [ref=e110]:
+                      - generic [ref=e112]: 管
+                      - textbox "头像" [ref=e115]:
+                        - /placeholder: 输入头像URL
+                  - generic [ref=e117]:
+                    - generic [ref=e119]:
+                      - generic [ref=e120]: "*昵称"
+                      - generic [ref=e123]:
+                        - textbox "*昵称" [ref=e124]:
+                          - /placeholder: 请输入昵称
+                        - generic [ref=e127]: 0 / 20
+                    - generic [ref=e129]:
+                      - generic [ref=e130]: 手机号
+                      - textbox "手机号" [ref=e134]:
+                        - /placeholder: 请输入手机号
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: 邮箱
+                    - textbox "邮箱" [ref=e140]:
+                      - /placeholder: 请输入邮箱
+                  - generic [ref=e142]:
+                    - button "保存修改" [ref=e143] [cursor=pointer]:
+                      - generic [ref=e144]: 保存修改
+                    - button "重置" [ref=e145] [cursor=pointer]:
+                      - generic [ref=e146]: 重置
+              - text: "* * *"

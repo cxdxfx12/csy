@@ -1,0 +1,102 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "财务流水" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "财务流水" [selected] [ref=e44]:
+          - text: 财务流水
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "财务流水"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - generic [ref=e56] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e58]
+              - generic [ref=e59]: 收支类型
+            - img [ref=e62]
+          - generic [ref=e67] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e69]
+              - generic [ref=e70]: 小区
+            - img [ref=e73]
+          - generic [ref=e76]:
+            - button "搜索" [ref=e77] [cursor=pointer]:
+              - generic [ref=e78]: 搜索
+            - button "重置" [ref=e79] [cursor=pointer]:
+              - generic [ref=e80]: 重置
+        - generic [ref=e81]:
+          - generic [ref=e84]:
+            - generic [ref=e85]: 收入总额
+            - generic [ref=e86]: ¥0
+          - generic [ref=e89]:
+            - generic [ref=e90]: 支出总额
+            - generic [ref=e91]: ¥0
+          - generic [ref=e94]:
+            - generic [ref=e95]: 结余
+            - generic [ref=e96]: ¥0
+        - generic [ref=e98]:
+          - generic [ref=e100]:
+            - table [ref=e102]:
+              - rowgroup [ref=e113]:
+                - row "# ID 流水号 类型 分类 金额 摘要 操作人 时间" [ref=e114]:
+                  - columnheader "#" [ref=e115]:
+                    - generic [ref=e116]: "#"
+                  - columnheader "ID" [ref=e117]:
+                    - generic [ref=e118]: ID
+                  - columnheader "流水号" [ref=e119]:
+                    - generic [ref=e120]: 流水号
+                  - columnheader "类型" [ref=e121]:
+                    - generic [ref=e122]: 类型
+                  - columnheader "分类" [ref=e123]:
+                    - generic [ref=e124]: 分类
+                  - columnheader "金额" [ref=e125]:
+                    - generic [ref=e126]: 金额
+                  - columnheader "摘要" [ref=e127]:
+                    - generic [ref=e128]: 摘要
+                  - columnheader "操作人" [ref=e129]:
+                    - generic [ref=e130]: 操作人
+                  - columnheader "时间" [ref=e131]:
+                    - generic [ref=e132]: 时间
+            - generic [ref=e136]:
+              - table:
+                - rowgroup
+              - generic [ref=e138]: el.table.emptyText
+          - generic [ref=e141]:
+            - generic [ref=e142]: 共 0 条
+            - generic [ref=e145] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e147]
+                - generic [ref=e148]: 15el.pagination.pagesize
+              - img [ref=e151]
+            - button "上一页" [disabled] [ref=e153]:
+              - generic:
+                - img
+            - list [ref=e154]:
+              - listitem "el.pagination.currentPage" [ref=e155]: "1"
+            - button "下一页" [disabled] [ref=e156]:
+              - generic:
+                - img

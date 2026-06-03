@@ -1,0 +1,163 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]: 🏢 大圣物业
+      - menubar [ref=e120]:
+        - menuitem "数据概览" [ref=e121]:
+          - generic [ref=e122] [cursor=pointer]:
+            - img [ref=e124]
+            - generic [ref=e126]: 数据概览
+            - img [ref=e128]
+        - menuitem "系统管理" [expanded] [ref=e130]:
+          - generic [ref=e131] [cursor=pointer]:
+            - img [ref=e133]
+            - generic [ref=e135]: 系统管理
+            - img [ref=e137]
+          - menu [ref=e139]:
+            - menuitem "用户管理" [ref=e140] [cursor=pointer]:
+              - img [ref=e142]
+              - generic [ref=e144]: 用户管理
+            - menuitem "角色管理" [ref=e145] [cursor=pointer]:
+              - generic [ref=e147]: 角色管理
+            - menuitem "菜单管理" [ref=e148] [cursor=pointer]:
+              - img [ref=e150]
+              - generic [ref=e152]: 菜单管理
+            - menuitem "系统配置" [ref=e153] [cursor=pointer]:
+              - img [ref=e155]
+              - generic [ref=e157]: 系统配置
+            - menuitem "操作日志" [ref=e158] [cursor=pointer]:
+              - img [ref=e160]
+              - generic [ref=e162]: 操作日志
+        - menuitem "房产管理" [ref=e163]:
+          - generic [ref=e164] [cursor=pointer]:
+            - img [ref=e166]
+            - generic [ref=e168]: 房产管理
+            - img [ref=e170]
+        - menuitem "业主管理" [ref=e172]:
+          - generic [ref=e173] [cursor=pointer]:
+            - img [ref=e175]
+            - generic [ref=e177]: 业主管理
+            - img [ref=e179]
+        - menuitem "收费管理" [ref=e181]:
+          - generic [ref=e182] [cursor=pointer]:
+            - img [ref=e184]
+            - generic [ref=e188]: 收费管理
+            - img [ref=e190]
+        - menuitem "报修管理" [ref=e192]:
+          - generic [ref=e193] [cursor=pointer]:
+            - img [ref=e195]
+            - generic [ref=e197]: 报修管理
+            - img [ref=e199]
+        - menuitem "安保管理" [ref=e201]:
+          - generic [ref=e202] [cursor=pointer]:
+            - generic [ref=e204]: 安保管理
+            - img [ref=e206]
+        - menuitem "停车管理" [ref=e208]:
+          - generic [ref=e209] [cursor=pointer]:
+            - img [ref=e211]
+            - generic [ref=e213]: 停车管理
+            - img [ref=e215]
+        - menuitem "公告通知" [ref=e217]:
+          - generic [ref=e218] [cursor=pointer]:
+            - img [ref=e220]
+            - generic [ref=e224]: 公告通知
+            - img [ref=e226]
+        - menuitem "设备管理" [ref=e228]:
+          - generic [ref=e229] [cursor=pointer]:
+            - img [ref=e231]
+            - generic [ref=e236]: 设备管理
+            - img [ref=e238]
+        - menuitem "投诉建议" [ref=e240]:
+          - generic [ref=e241] [cursor=pointer]:
+            - img [ref=e243]
+            - generic [ref=e245]: 投诉建议
+            - img [ref=e247]
+        - menuitem "打印中心" [ref=e249]:
+          - generic [ref=e250] [cursor=pointer]:
+            - img [ref=e252]
+            - generic [ref=e254]: 打印中心
+            - img [ref=e256]
+        - menuitem "物业人员" [ref=e258]:
+          - generic [ref=e259] [cursor=pointer]:
+            - img [ref=e261]
+            - generic [ref=e263]: 物业人员
+            - img [ref=e265]
+        - menuitem "外部供应商" [ref=e267]:
+          - generic [ref=e268] [cursor=pointer]:
+            - img [ref=e270]
+            - generic [ref=e272]: 外部供应商
+            - img [ref=e274]
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - button [ref=e12] [cursor=pointer]:
+            - img [ref=e14]
+          - navigation "el.breadcrumb.label" [ref=e16]:
+            - generic [ref=e17]:
+              - link "工作台" [ref=e18]
+              - text: /
+            - link "系统配置" [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - button [ref=e23] [cursor=pointer]:
+              - img [ref=e25]
+            - superscript [ref=e29]
+          - button "超级管理员" [ref=e276] [cursor=pointer]:
+            - img [ref=e34]
+            - generic [ref=e36]: 超级管理员
+      - generic [ref=e38]:
+        - tablist [ref=e42]:
+          - tab "📊 控制台" [ref=e43]
+          - tab "系统配置" [selected] [ref=e44]:
+            - text: 系统配置
+            - img [ref=e46]
+        - generic [ref=e48]:
+          - tabpanel "系统配置"
+      - main [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e56] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e58]
+              - generic: 系统配置
+            - img [ref=e61]
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e67]: 系统名称
+              - generic [ref=e68]:
+                - textbox "系统名称" [ref=e71]: 大圣物业管理系统
+                - generic [ref=e72]: 系统显示名称
+            - generic [ref=e73]:
+              - generic [ref=e74]: 系统LOGO
+              - generic [ref=e75]:
+                - textbox "系统LOGO" [ref=e78]
+                - generic [ref=e79]: 系统LOGO图片
+            - generic [ref=e80]:
+              - generic [ref=e81]: 系统版本
+              - generic [ref=e82]:
+                - textbox "系统版本" [ref=e85]: 1.0.0
+                - generic [ref=e86]: 系统版本号
+            - generic [ref=e87]:
+              - generic [ref=e88]: 备案号
+              - generic [ref=e89]:
+                - textbox "备案号" [ref=e92]
+                - generic [ref=e93]: ICP备案号
+            - generic [ref=e94]:
+              - generic [ref=e95]: 公司名称
+              - generic [ref=e96]:
+                - textbox "公司名称" [ref=e99]: "\"UI测试_杭州公司\""
+                - generic [ref=e100]: 物业公司名称
+            - generic [ref=e101]:
+              - generic [ref=e102]: 客服电话
+              - generic [ref=e103]:
+                - textbox "客服电话" [ref=e106]: 400-xxx-xxxx
+                - generic [ref=e107]: 客服热线
+            - generic [ref=e108]:
+              - generic [ref=e109]: 公司地址
+              - generic [ref=e110]:
+                - textbox "公司地址" [ref=e113]: 浙江省杭州市余杭区
+                - generic [ref=e114]: 公司地址
+            - button "保存配置" [ref=e117] [cursor=pointer]:
+              - generic [ref=e118]: 保存配置
+  - alert [ref=e277]:
+    - img [ref=e279]
+    - paragraph [ref=e281]: 保存成功

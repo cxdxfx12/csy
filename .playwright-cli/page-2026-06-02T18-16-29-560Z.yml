@@ -1,0 +1,88 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "巡更路线" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "巡更路线" [selected] [ref=e44]:
+          - text: 巡更路线
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "巡更路线"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "路线名称" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e71]:
+            - button "搜索" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: 搜索
+            - button "重置" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75]: 重置
+        - generic [ref=e77]:
+          - button "添加巡更路线" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]: 添加巡更路线
+          - generic [ref=e82]:
+            - table [ref=e84]:
+              - rowgroup [ref=e94]:
+                - row "# ID 路线名称 所属小区 检查点 间隔(小时) 创建时间 操作" [ref=e95]:
+                  - columnheader "#" [ref=e96]:
+                    - generic [ref=e97]: "#"
+                  - columnheader "ID" [ref=e98]:
+                    - generic [ref=e99]: ID
+                  - columnheader "路线名称" [ref=e100]:
+                    - generic [ref=e101]: 路线名称
+                  - columnheader "所属小区" [ref=e102]:
+                    - generic [ref=e103]: 所属小区
+                  - columnheader "检查点" [ref=e104]:
+                    - generic [ref=e105]: 检查点
+                  - columnheader "间隔(小时)" [ref=e106]:
+                    - generic [ref=e107]: 间隔(小时)
+                  - columnheader "创建时间" [ref=e108]:
+                    - generic [ref=e109]: 创建时间
+                  - columnheader "操作" [ref=e110]:
+                    - generic [ref=e111]: 操作
+            - generic [ref=e115]:
+              - table:
+                - rowgroup
+              - generic [ref=e117]: el.table.emptyText
+          - generic [ref=e120]:
+            - generic [ref=e121]: 共 0 条
+            - generic [ref=e124] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e126]
+                - generic [ref=e127]: 15el.pagination.pagesize
+              - img [ref=e130]
+            - button "上一页" [disabled] [ref=e132]:
+              - generic:
+                - img
+            - list [ref=e133]:
+              - listitem "el.pagination.currentPage" [ref=e134]: "1"
+            - button "下一页" [disabled] [ref=e135]:
+              - generic:
+                - img

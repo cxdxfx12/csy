@@ -1,0 +1,375 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [expanded] [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+        - menu [ref=e20]:
+          - menuitem "数据概览" [ref=e21] [cursor=pointer]:
+            - img [ref=e23]
+            - generic [ref=e25]: 数据概览
+      - menuitem "系统管理" [ref=e26]:
+        - generic [ref=e27] [cursor=pointer]:
+          - img [ref=e29]
+          - generic [ref=e31]: 系统管理
+          - img [ref=e33]
+      - menuitem "房产管理" [ref=e35]:
+        - generic [ref=e36] [cursor=pointer]:
+          - img [ref=e38]
+          - generic [ref=e40]: 房产管理
+          - img [ref=e42]
+      - menuitem "业主管理" [ref=e44]:
+        - generic [ref=e45] [cursor=pointer]:
+          - img [ref=e47]
+          - generic [ref=e49]: 业主管理
+          - img [ref=e51]
+      - menuitem "收费管理" [ref=e53]:
+        - generic [ref=e54] [cursor=pointer]:
+          - img [ref=e56]
+          - generic [ref=e60]: 收费管理
+          - img [ref=e62]
+      - menuitem "报修管理" [ref=e64]:
+        - generic [ref=e65] [cursor=pointer]:
+          - img [ref=e67]
+          - generic [ref=e69]: 报修管理
+          - img [ref=e71]
+      - menuitem "安保管理" [ref=e73]:
+        - generic [ref=e74] [cursor=pointer]:
+          - generic [ref=e76]: 安保管理
+          - img [ref=e78]
+      - menuitem "停车管理" [ref=e80]:
+        - generic [ref=e81] [cursor=pointer]:
+          - img [ref=e83]
+          - generic [ref=e85]: 停车管理
+          - img [ref=e87]
+      - menuitem "公告通知" [ref=e89]:
+        - generic [ref=e90] [cursor=pointer]:
+          - img [ref=e92]
+          - generic [ref=e96]: 公告通知
+          - img [ref=e98]
+      - menuitem "设备管理" [ref=e100]:
+        - generic [ref=e101] [cursor=pointer]:
+          - img [ref=e103]
+          - generic [ref=e108]: 设备管理
+          - img [ref=e110]
+      - menuitem "投诉建议" [ref=e112]:
+        - generic [ref=e113] [cursor=pointer]:
+          - img [ref=e115]
+          - generic [ref=e117]: 投诉建议
+          - img [ref=e119]
+      - menuitem "打印中心" [ref=e121]:
+        - generic [ref=e122] [cursor=pointer]:
+          - img [ref=e124]
+          - generic [ref=e126]: 打印中心
+          - img [ref=e128]
+      - menuitem "物业人员" [ref=e130]:
+        - generic [ref=e131] [cursor=pointer]:
+          - img [ref=e133]
+          - generic [ref=e135]: 物业人员
+          - img [ref=e137]
+      - menuitem "外部供应商" [expanded] [ref=e139]:
+        - generic [ref=e140] [cursor=pointer]:
+          - img [ref=e142]
+          - generic [ref=e144]: 外部供应商
+          - img [ref=e146]
+        - menu [ref=e239]:
+          - menuitem "供应商名录" [active] [ref=e240] [cursor=pointer]:
+            - img [ref=e242]
+            - generic [ref=e244]: 供应商名录
+          - menuitem "采购订单" [ref=e245] [cursor=pointer]:
+            - img [ref=e247]
+            - generic [ref=e249]: 采购订单
+          - menuitem "合同管理" [ref=e250] [cursor=pointer]:
+            - img [ref=e252]
+            - generic [ref=e254]: 合同管理
+          - menuitem "服务评价" [ref=e255] [cursor=pointer]:
+            - img [ref=e257]
+            - generic [ref=e259]: 服务评价
+  - generic [ref=e148]:
+    - generic [ref=e149]:
+      - generic [ref=e150]:
+        - button [ref=e151] [cursor=pointer]:
+          - img [ref=e153]
+        - navigation "el.breadcrumb.label" [ref=e155]:
+          - generic [ref=e156]:
+            - link "工作台" [ref=e157]
+            - text: /
+          - link "供应商名录" [ref=e262]
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - button [ref=e162] [cursor=pointer]:
+            - img [ref=e164]
+          - superscript [ref=e168]
+        - button "超级管理员" [ref=e170] [cursor=pointer]:
+          - img [ref=e173]
+          - generic [ref=e175]: 超级管理员
+    - generic [ref=e177]:
+      - tablist [ref=e181]:
+        - tab "📊 控制台" [ref=e182]
+        - tab "供应商名录" [selected] [ref=e263]:
+          - text: 供应商名录
+          - img [ref=e265]
+      - generic [ref=e183]:
+        - tabpanel "供应商名录"
+    - main [ref=e184]:
+      - generic [ref=e268]:
+        - generic [ref=e270]:
+          - text: 供应商名录
+          - button "添加供应商" [ref=e271] [cursor=pointer]:
+            - generic [ref=e272]: 添加供应商
+        - generic [ref=e273]:
+          - generic [ref=e274]:
+            - textbox "名称/联系人/电话" [ref=e279]
+            - generic [ref=e284] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e286]
+                - generic [ref=e287]: 类别
+              - img [ref=e290]
+            - generic [ref=e295] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e297]
+                - generic [ref=e298]: 状态
+              - img [ref=e301]
+            - generic [ref=e304]:
+              - button "查询" [ref=e305] [cursor=pointer]:
+                - generic [ref=e306]: 查询
+              - button "重置" [ref=e307] [cursor=pointer]:
+                - generic [ref=e308]: 重置
+          - generic [ref=e310]:
+            - table [ref=e312]:
+              - rowgroup [ref=e323]:
+                - row "供应商名称 类别 联系人 联系电话 邮箱 评分 状态 登记时间 操作" [ref=e324]:
+                  - columnheader "供应商名称" [ref=e325]:
+                    - generic [ref=e326]: 供应商名称
+                  - columnheader "类别" [ref=e327]:
+                    - generic [ref=e328]: 类别
+                  - columnheader "联系人" [ref=e329]:
+                    - generic [ref=e330]: 联系人
+                  - columnheader "联系电话" [ref=e331]:
+                    - generic [ref=e332]: 联系电话
+                  - columnheader "邮箱" [ref=e333]:
+                    - generic [ref=e334]: 邮箱
+                  - columnheader "评分" [ref=e335]:
+                    - generic [ref=e336]: 评分
+                  - columnheader "状态" [ref=e337]:
+                    - generic [ref=e338]: 状态
+                  - columnheader "登记时间" [ref=e339]:
+                    - generic [ref=e340]: 登记时间
+                  - columnheader "操作" [ref=e341]:
+                    - generic [ref=e342]: 操作
+            - table [ref=e347]:
+              - rowgroup [ref=e358]:
+                - row "瑞景设备科技有限公司 设备供应商 刘经理 13800001006 liu@ruijing.com 3.9 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e359]:
+                  - cell "瑞景设备科技有限公司" [ref=e360]:
+                    - generic [ref=e361]: 瑞景设备科技有限公司
+                  - cell "设备供应商" [ref=e362]:
+                    - generic [ref=e365]: 设备供应商
+                  - cell "刘经理" [ref=e366]:
+                    - generic [ref=e367]: 刘经理
+                  - cell "13800001006" [ref=e368]:
+                    - generic [ref=e369]: "13800001006"
+                  - cell "liu@ruijing.com" [ref=e370]:
+                    - generic [ref=e371]: liu@ruijing.com
+                  - cell "3.9" [ref=e372]:
+                    - slider "rating" [disabled] [ref=e374]:
+                      - img [ref=e377]
+                      - img [ref=e381]
+                      - img [ref=e385]
+                      - generic [ref=e388]:
+                        - img [ref=e389]
+                        - img [ref=e392]
+                      - img [ref=e396]
+                      - generic [ref=e398]: "3.9"
+                  - cell "正常" [ref=e399]:
+                    - generic [ref=e402]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e403]:
+                    - generic [ref=e404]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e405]:
+                    - generic [ref=e406]:
+                      - button "编辑" [ref=e407] [cursor=pointer]:
+                        - generic [ref=e408]: 编辑
+                      - button "详情" [ref=e409] [cursor=pointer]:
+                        - generic [ref=e410]: 详情
+                      - button "删除" [ref=e411] [cursor=pointer]:
+                        - generic [ref=e412]: 删除
+                - row "星辰物资供应有限公司 物资采购 陈总 13800001005 chen@xingchen.com 4.6 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e413]:
+                  - cell "星辰物资供应有限公司" [ref=e414]:
+                    - generic [ref=e415]: 星辰物资供应有限公司
+                  - cell "物资采购" [ref=e416]:
+                    - generic [ref=e419]: 物资采购
+                  - cell "陈总" [ref=e420]:
+                    - generic [ref=e421]: 陈总
+                  - cell "13800001005" [ref=e422]:
+                    - generic [ref=e423]: "13800001005"
+                  - cell "chen@xingchen.com" [ref=e424]:
+                    - generic [ref=e425]: chen@xingchen.com
+                  - cell "4.6" [ref=e426]:
+                    - slider "rating" [disabled] [ref=e428]:
+                      - img [ref=e431]
+                      - img [ref=e435]
+                      - img [ref=e439]
+                      - img [ref=e443]
+                      - generic [ref=e446]:
+                        - img [ref=e447]
+                        - img [ref=e450]
+                      - generic [ref=e452]: "4.6"
+                  - cell "正常" [ref=e453]:
+                    - generic [ref=e456]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e457]:
+                    - generic [ref=e458]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e459]:
+                    - generic [ref=e460]:
+                      - button "编辑" [ref=e461] [cursor=pointer]:
+                        - generic [ref=e462]: 编辑
+                      - button "详情" [ref=e463] [cursor=pointer]:
+                        - generic [ref=e464]: 详情
+                      - button "删除" [ref=e465] [cursor=pointer]:
+                        - generic [ref=e466]: 删除
+                - row "安盾安保服务公司 安保服务 赵队长 13800001004 zhao@andun.com 4.0 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e467]:
+                  - cell "安盾安保服务公司" [ref=e468]:
+                    - generic [ref=e469]: 安盾安保服务公司
+                  - cell "安保服务" [ref=e470]:
+                    - generic [ref=e473]: 安保服务
+                  - cell "赵队长" [ref=e474]:
+                    - generic [ref=e475]: 赵队长
+                  - cell "13800001004" [ref=e476]:
+                    - generic [ref=e477]: "13800001004"
+                  - cell "zhao@andun.com" [ref=e478]:
+                    - generic [ref=e479]: zhao@andun.com
+                  - cell "4.0" [ref=e480]:
+                    - slider "rating" [disabled] [ref=e482]:
+                      - img [ref=e485]
+                      - img [ref=e489]
+                      - img [ref=e493]
+                      - img [ref=e497]
+                      - img [ref=e501]
+                      - generic [ref=e503]: "4.0"
+                  - cell "正常" [ref=e504]:
+                    - generic [ref=e507]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e508]:
+                    - generic [ref=e509]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e510]:
+                    - generic [ref=e511]:
+                      - button "编辑" [ref=e512] [cursor=pointer]:
+                        - generic [ref=e513]: 编辑
+                      - button "详情" [ref=e514] [cursor=pointer]:
+                        - generic [ref=e515]: 详情
+                      - button "删除" [ref=e516] [cursor=pointer]:
+                        - generic [ref=e517]: 删除
+                - row "绿源绿化养护中心 绿化养护 王主管 13800001003 wang@lvyuan.com 4.8 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e518]:
+                  - cell "绿源绿化养护中心" [ref=e519]:
+                    - generic [ref=e520]: 绿源绿化养护中心
+                  - cell "绿化养护" [ref=e521]:
+                    - generic [ref=e524]: 绿化养护
+                  - cell "王主管" [ref=e525]:
+                    - generic [ref=e526]: 王主管
+                  - cell "13800001003" [ref=e527]:
+                    - generic [ref=e528]: "13800001003"
+                  - cell "wang@lvyuan.com" [ref=e529]:
+                    - generic [ref=e530]: wang@lvyuan.com
+                  - cell "4.8" [ref=e531]:
+                    - slider "rating" [disabled] [ref=e533]:
+                      - img [ref=e536]
+                      - img [ref=e540]
+                      - img [ref=e544]
+                      - img [ref=e548]
+                      - generic [ref=e551]:
+                        - img [ref=e552]
+                        - img [ref=e555]
+                      - generic [ref=e557]: "4.8"
+                  - cell "正常" [ref=e558]:
+                    - generic [ref=e561]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e562]:
+                    - generic [ref=e563]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e564]:
+                    - generic [ref=e565]:
+                      - button "编辑" [ref=e566] [cursor=pointer]:
+                        - generic [ref=e567]: 编辑
+                      - button "详情" [ref=e568] [cursor=pointer]:
+                        - generic [ref=e569]: 详情
+                      - button "删除" [ref=e570] [cursor=pointer]:
+                        - generic [ref=e571]: 删除
+                - row "恒通工程维修公司 工程维修 李工 13800001002 li@hengtong.com 4.2 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e572]:
+                  - cell "恒通工程维修公司" [ref=e573]:
+                    - generic [ref=e574]: 恒通工程维修公司
+                  - cell "工程维修" [ref=e575]:
+                    - generic [ref=e578]: 工程维修
+                  - cell "李工" [ref=e579]:
+                    - generic [ref=e580]: 李工
+                  - cell "13800001002" [ref=e581]:
+                    - generic [ref=e582]: "13800001002"
+                  - cell "li@hengtong.com" [ref=e583]:
+                    - generic [ref=e584]: li@hengtong.com
+                  - cell "4.2" [ref=e585]:
+                    - slider "rating" [disabled] [ref=e587]:
+                      - img [ref=e590]
+                      - img [ref=e594]
+                      - img [ref=e598]
+                      - img [ref=e602]
+                      - generic [ref=e605]:
+                        - img [ref=e606]
+                        - img [ref=e609]
+                      - generic [ref=e611]: "4.2"
+                  - cell "正常" [ref=e612]:
+                    - generic [ref=e615]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e616]:
+                    - generic [ref=e617]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e618]:
+                    - generic [ref=e619]:
+                      - button "编辑" [ref=e620] [cursor=pointer]:
+                        - generic [ref=e621]: 编辑
+                      - button "详情" [ref=e622] [cursor=pointer]:
+                        - generic [ref=e623]: 详情
+                      - button "删除" [ref=e624] [cursor=pointer]:
+                        - generic [ref=e625]: 删除
+                - row "蓝天保洁服务有限公司 保洁服务 张经理 13800001001 zhang@lantian.com 4.5 正常 2026-06-02 20:13:50 编辑 详情 删除" [ref=e626]:
+                  - cell "蓝天保洁服务有限公司" [ref=e627]:
+                    - generic [ref=e628]: 蓝天保洁服务有限公司
+                  - cell "保洁服务" [ref=e629]:
+                    - generic [ref=e632]: 保洁服务
+                  - cell "张经理" [ref=e633]:
+                    - generic [ref=e634]: 张经理
+                  - cell "13800001001" [ref=e635]:
+                    - generic [ref=e636]: "13800001001"
+                  - cell "zhang@lantian.com" [ref=e637]:
+                    - generic [ref=e638]: zhang@lantian.com
+                  - cell "4.5" [ref=e639]:
+                    - slider "rating" [disabled] [ref=e641]:
+                      - img [ref=e644]
+                      - img [ref=e648]
+                      - img [ref=e652]
+                      - img [ref=e656]
+                      - generic [ref=e659]:
+                        - img [ref=e660]
+                        - img [ref=e663]
+                      - generic [ref=e665]: "4.5"
+                  - cell "正常" [ref=e666]:
+                    - generic [ref=e669]: 正常
+                  - cell "2026-06-02 20:13:50" [ref=e670]:
+                    - generic [ref=e671]: 2026-06-02 20:13:50
+                  - cell "编辑 详情 删除" [ref=e672]:
+                    - generic [ref=e673]:
+                      - button "编辑" [ref=e674] [cursor=pointer]:
+                        - generic [ref=e675]: 编辑
+                      - button "详情" [ref=e676] [cursor=pointer]:
+                        - generic [ref=e677]: 详情
+                      - button "删除" [ref=e678] [cursor=pointer]:
+                        - generic [ref=e679]: 删除
+          - generic [ref=e682]:
+            - generic [ref=e683]: 共 6 条
+            - generic [ref=e686] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e688]
+                - generic [ref=e689]: 15el.pagination.pagesize
+              - img [ref=e692]
+            - button "上一页" [disabled] [ref=e694]:
+              - generic:
+                - img
+            - list [ref=e695]:
+              - listitem "el.pagination.currentPage" [ref=e696]: "1"
+            - button "下一页" [disabled] [ref=e697]:
+              - generic:
+                - img

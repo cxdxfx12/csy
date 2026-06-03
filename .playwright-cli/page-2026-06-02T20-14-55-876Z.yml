@@ -1,0 +1,357 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [expanded] [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+        - menu [ref=e20]:
+          - menuitem "数据概览" [ref=e21] [cursor=pointer]:
+            - img [ref=e23]
+            - generic [ref=e25]: 数据概览
+      - menuitem "系统管理" [ref=e26]:
+        - generic [ref=e27] [cursor=pointer]:
+          - img [ref=e29]
+          - generic [ref=e31]: 系统管理
+          - img [ref=e33]
+      - menuitem "房产管理" [ref=e35]:
+        - generic [ref=e36] [cursor=pointer]:
+          - img [ref=e38]
+          - generic [ref=e40]: 房产管理
+          - img [ref=e42]
+      - menuitem "业主管理" [ref=e44]:
+        - generic [ref=e45] [cursor=pointer]:
+          - img [ref=e47]
+          - generic [ref=e49]: 业主管理
+          - img [ref=e51]
+      - menuitem "收费管理" [ref=e53]:
+        - generic [ref=e54] [cursor=pointer]:
+          - img [ref=e56]
+          - generic [ref=e60]: 收费管理
+          - img [ref=e62]
+      - menuitem "报修管理" [ref=e64]:
+        - generic [ref=e65] [cursor=pointer]:
+          - img [ref=e67]
+          - generic [ref=e69]: 报修管理
+          - img [ref=e71]
+      - menuitem "安保管理" [ref=e73]:
+        - generic [ref=e74] [cursor=pointer]:
+          - generic [ref=e76]: 安保管理
+          - img [ref=e78]
+      - menuitem "停车管理" [ref=e80]:
+        - generic [ref=e81] [cursor=pointer]:
+          - img [ref=e83]
+          - generic [ref=e85]: 停车管理
+          - img [ref=e87]
+      - menuitem "公告通知" [ref=e89]:
+        - generic [ref=e90] [cursor=pointer]:
+          - img [ref=e92]
+          - generic [ref=e96]: 公告通知
+          - img [ref=e98]
+      - menuitem "设备管理" [ref=e100]:
+        - generic [ref=e101] [cursor=pointer]:
+          - img [ref=e103]
+          - generic [ref=e108]: 设备管理
+          - img [ref=e110]
+      - menuitem "投诉建议" [ref=e112]:
+        - generic [ref=e113] [cursor=pointer]:
+          - img [ref=e115]
+          - generic [ref=e117]: 投诉建议
+          - img [ref=e119]
+      - menuitem "打印中心" [ref=e121]:
+        - generic [ref=e122] [cursor=pointer]:
+          - img [ref=e124]
+          - generic [ref=e126]: 打印中心
+          - img [ref=e128]
+      - menuitem "物业人员" [ref=e130]:
+        - generic [ref=e131] [cursor=pointer]:
+          - img [ref=e133]
+          - generic [ref=e135]: 物业人员
+          - img [ref=e137]
+      - menuitem "外部供应商" [expanded] [ref=e139]:
+        - generic [ref=e140] [cursor=pointer]:
+          - img [ref=e142]
+          - generic [ref=e144]: 外部供应商
+          - img [ref=e146]
+        - menu [ref=e239]:
+          - menuitem "供应商名录" [ref=e240] [cursor=pointer]:
+            - img [ref=e242]
+            - generic [ref=e244]: 供应商名录
+          - menuitem "采购订单" [ref=e245] [cursor=pointer]:
+            - img [ref=e247]
+            - generic [ref=e249]: 采购订单
+          - menuitem "合同管理" [ref=e250] [cursor=pointer]:
+            - img [ref=e252]
+            - generic [ref=e254]: 合同管理
+          - menuitem "服务评价" [active] [ref=e255] [cursor=pointer]:
+            - img [ref=e257]
+            - generic [ref=e259]: 服务评价
+  - generic [ref=e148]:
+    - generic [ref=e149]:
+      - generic [ref=e150]:
+        - button [ref=e151] [cursor=pointer]:
+          - img [ref=e153]
+        - navigation "el.breadcrumb.label" [ref=e155]:
+          - generic [ref=e156]:
+            - link "工作台" [ref=e157]
+            - text: /
+          - link "服务评价" [ref=e1111]
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - button [ref=e162] [cursor=pointer]:
+            - img [ref=e164]
+          - superscript [ref=e168]
+        - button "超级管理员" [ref=e170] [cursor=pointer]:
+          - img [ref=e173]
+          - generic [ref=e175]: 超级管理员
+    - generic [ref=e177]:
+      - tablist [ref=e181]:
+        - tab "📊 控制台" [ref=e182]
+        - tab "服务评价" [selected] [ref=e1112]:
+          - text: 服务评价
+          - img [ref=e1114]
+      - generic [ref=e183]:
+        - tabpanel "服务评价"
+    - main [ref=e184]:
+      - generic [ref=e1117]:
+        - generic [ref=e1119]:
+          - text: 服务评价
+          - button "新增评价" [ref=e1120] [cursor=pointer]:
+            - generic [ref=e1121]: 新增评价
+        - generic [ref=e1122]:
+          - generic [ref=e1123]:
+            - textbox "供应商/评价人" [ref=e1128]
+            - generic [ref=e1133]:
+              - generic:
+                - combobox [ref=e1135]
+                - generic [ref=e1136]: 供应商
+              - img [ref=e1139] [cursor=pointer]
+            - generic [ref=e1144] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e1146]
+                - generic [ref=e1147]: 评分
+              - img [ref=e1150]
+            - generic [ref=e1153]:
+              - button "查询" [ref=e1154] [cursor=pointer]:
+                - generic [ref=e1155]: 查询
+              - button "重置" [ref=e1156] [cursor=pointer]:
+                - generic [ref=e1157]: 重置
+          - generic [ref=e1159]:
+            - table [ref=e1161]:
+              - rowgroup [ref=e1169]:
+                - row "供应商 评分 评价人 评价内容 评价时间 操作" [ref=e1170]:
+                  - columnheader "供应商" [ref=e1171]:
+                    - generic [ref=e1172]: 供应商
+                  - columnheader "评分" [ref=e1173]:
+                    - generic [ref=e1174]: 评分
+                  - columnheader "评价人" [ref=e1175]:
+                    - generic [ref=e1176]: 评价人
+                  - columnheader "评价内容" [ref=e1177]:
+                    - generic [ref=e1178]: 评价内容
+                  - columnheader "评价时间" [ref=e1179]:
+                    - generic [ref=e1180]: 评价时间
+                  - columnheader "操作" [ref=e1181]:
+                    - generic [ref=e1182]: 操作
+            - table [ref=e1187]:
+              - rowgroup [ref=e1195]:
+                - row "星辰物资供应有限公司 5 采购部 星辰物资供应及时，产品齐全，价格合理。 2026-06-02 20:13:50 编辑 删除" [ref=e1196]:
+                  - cell "星辰物资供应有限公司" [ref=e1197]:
+                    - generic [ref=e1198]: 星辰物资供应有限公司
+                  - cell "5" [ref=e1199]:
+                    - slider "rating" [disabled] [ref=e1201]:
+                      - img [ref=e1204]
+                      - img [ref=e1208]
+                      - img [ref=e1212]
+                      - img [ref=e1216]
+                      - img [ref=e1220]
+                      - generic [ref=e1222]: "5"
+                  - cell "采购部" [ref=e1223]:
+                    - generic [ref=e1224]: 采购部
+                  - cell "星辰物资供应及时，产品齐全，价格合理。" [ref=e1225]:
+                    - generic [ref=e1226]: 星辰物资供应及时，产品齐全，价格合理。
+                  - cell "2026-06-02 20:13:50" [ref=e1227]:
+                    - generic [ref=e1228]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1229]:
+                    - generic [ref=e1230]:
+                      - button "编辑" [ref=e1231] [cursor=pointer]:
+                        - generic [ref=e1232]: 编辑
+                      - button "删除" [ref=e1233] [cursor=pointer]:
+                        - generic [ref=e1234]: 删除
+                - row "安盾安保服务公司 3 业主委员会 夜班巡逻力度还需加强。 2026-06-02 20:13:50 编辑 删除" [ref=e1235]:
+                  - cell "安盾安保服务公司" [ref=e1236]:
+                    - generic [ref=e1237]: 安盾安保服务公司
+                  - cell "3" [ref=e1238]:
+                    - slider "rating" [disabled] [ref=e1240]:
+                      - img [ref=e1243]
+                      - img [ref=e1247]
+                      - img [ref=e1251]
+                      - img [ref=e1255]
+                      - img [ref=e1259]
+                      - generic [ref=e1261]: "3"
+                  - cell "业主委员会" [ref=e1262]:
+                    - generic [ref=e1263]: 业主委员会
+                  - cell "夜班巡逻力度还需加强。" [ref=e1264]:
+                    - generic [ref=e1265]: 夜班巡逻力度还需加强。
+                  - cell "2026-06-02 20:13:50" [ref=e1266]:
+                    - generic [ref=e1267]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1268]:
+                    - generic [ref=e1269]:
+                      - button "编辑" [ref=e1270] [cursor=pointer]:
+                        - generic [ref=e1271]: 编辑
+                      - button "删除" [ref=e1272] [cursor=pointer]:
+                        - generic [ref=e1273]: 删除
+                - row "安盾安保服务公司 4 安保队长 安盾的保安人员纪律性强，但换岗交接偶尔有延迟。 2026-06-02 20:13:50 编辑 删除" [ref=e1274]:
+                  - cell "安盾安保服务公司" [ref=e1275]:
+                    - generic [ref=e1276]: 安盾安保服务公司
+                  - cell "4" [ref=e1277]:
+                    - slider "rating" [disabled] [ref=e1279]:
+                      - img [ref=e1282]
+                      - img [ref=e1286]
+                      - img [ref=e1290]
+                      - img [ref=e1294]
+                      - img [ref=e1298]
+                      - generic [ref=e1300]: "4"
+                  - cell "安保队长" [ref=e1301]:
+                    - generic [ref=e1302]: 安保队长
+                  - cell "安盾的保安人员纪律性强，但换岗交接偶尔有延迟。" [ref=e1303]:
+                    - generic [ref=e1304]: 安盾的保安人员纪律性强，但换岗交接偶尔有延迟。
+                  - cell "2026-06-02 20:13:50" [ref=e1305]:
+                    - generic [ref=e1306]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1307]:
+                    - generic [ref=e1308]:
+                      - button "编辑" [ref=e1309] [cursor=pointer]:
+                        - generic [ref=e1310]: 编辑
+                      - button "删除" [ref=e1311] [cursor=pointer]:
+                        - generic [ref=e1312]: 删除
+                - row "绿源绿化养护中心 5 环境主管 绿源绿化效果很好，花草养护到位，小区环境明显提升。 2026-06-02 20:13:50 编辑 删除" [ref=e1313]:
+                  - cell "绿源绿化养护中心" [ref=e1314]:
+                    - generic [ref=e1315]: 绿源绿化养护中心
+                  - cell "5" [ref=e1316]:
+                    - slider "rating" [disabled] [ref=e1318]:
+                      - img [ref=e1321]
+                      - img [ref=e1325]
+                      - img [ref=e1329]
+                      - img [ref=e1333]
+                      - img [ref=e1337]
+                      - generic [ref=e1339]: "5"
+                  - cell "环境主管" [ref=e1340]:
+                    - generic [ref=e1341]: 环境主管
+                  - cell "绿源绿化效果很好，花草养护到位，小区环境明显提升。" [ref=e1342]:
+                    - generic [ref=e1343]: 绿源绿化效果很好，花草养护到位，小区环境明显提升。
+                  - cell "2026-06-02 20:13:50" [ref=e1344]:
+                    - generic [ref=e1345]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1346]:
+                    - generic [ref=e1347]:
+                      - button "编辑" [ref=e1348] [cursor=pointer]:
+                        - generic [ref=e1349]: 编辑
+                      - button "删除" [ref=e1350] [cursor=pointer]:
+                        - generic [ref=e1351]: 删除
+                - row "恒通工程维修公司 5 物业管理员 最近一次水管抢修非常迅速，很满意。 2026-06-02 20:13:50 编辑 删除" [ref=e1352]:
+                  - cell "恒通工程维修公司" [ref=e1353]:
+                    - generic [ref=e1354]: 恒通工程维修公司
+                  - cell "5" [ref=e1355]:
+                    - slider "rating" [disabled] [ref=e1357]:
+                      - img [ref=e1360]
+                      - img [ref=e1364]
+                      - img [ref=e1368]
+                      - img [ref=e1372]
+                      - img [ref=e1376]
+                      - generic [ref=e1378]: "5"
+                  - cell "物业管理员" [ref=e1379]:
+                    - generic [ref=e1380]: 物业管理员
+                  - cell "最近一次水管抢修非常迅速，很满意。" [ref=e1381]:
+                    - generic [ref=e1382]: 最近一次水管抢修非常迅速，很满意。
+                  - cell "2026-06-02 20:13:50" [ref=e1383]:
+                    - generic [ref=e1384]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1385]:
+                    - generic [ref=e1386]:
+                      - button "编辑" [ref=e1387] [cursor=pointer]:
+                        - generic [ref=e1388]: 编辑
+                      - button "删除" [ref=e1389] [cursor=pointer]:
+                        - generic [ref=e1390]: 删除
+                - row "恒通工程维修公司 4 工程部主管 恒通工程响应及时，维修质量可以，价格合理。 2026-06-02 20:13:50 编辑 删除" [ref=e1391]:
+                  - cell "恒通工程维修公司" [ref=e1392]:
+                    - generic [ref=e1393]: 恒通工程维修公司
+                  - cell "4" [ref=e1394]:
+                    - slider "rating" [disabled] [ref=e1396]:
+                      - img [ref=e1399]
+                      - img [ref=e1403]
+                      - img [ref=e1407]
+                      - img [ref=e1411]
+                      - img [ref=e1415]
+                      - generic [ref=e1417]: "4"
+                  - cell "工程部主管" [ref=e1418]:
+                    - generic [ref=e1419]: 工程部主管
+                  - cell "恒通工程响应及时，维修质量可以，价格合理。" [ref=e1420]:
+                    - generic [ref=e1421]: 恒通工程响应及时，维修质量可以，价格合理。
+                  - cell "2026-06-02 20:13:50" [ref=e1422]:
+                    - generic [ref=e1423]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1424]:
+                    - generic [ref=e1425]:
+                      - button "编辑" [ref=e1426] [cursor=pointer]:
+                        - generic [ref=e1427]: 编辑
+                      - button "删除" [ref=e1428] [cursor=pointer]:
+                        - generic [ref=e1429]: 删除
+                - row "蓝天保洁服务有限公司 4 业主代表 整体不错，偶尔有些角落清理不够细致。 2026-06-02 20:13:50 编辑 删除" [ref=e1430]:
+                  - cell "蓝天保洁服务有限公司" [ref=e1431]:
+                    - generic [ref=e1432]: 蓝天保洁服务有限公司
+                  - cell "4" [ref=e1433]:
+                    - slider "rating" [disabled] [ref=e1435]:
+                      - img [ref=e1438]
+                      - img [ref=e1442]
+                      - img [ref=e1446]
+                      - img [ref=e1450]
+                      - img [ref=e1454]
+                      - generic [ref=e1456]: "4"
+                  - cell "业主代表" [ref=e1457]:
+                    - generic [ref=e1458]: 业主代表
+                  - cell "整体不错，偶尔有些角落清理不够细致。" [ref=e1459]:
+                    - generic [ref=e1460]: 整体不错，偶尔有些角落清理不够细致。
+                  - cell "2026-06-02 20:13:50" [ref=e1461]:
+                    - generic [ref=e1462]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1463]:
+                    - generic [ref=e1464]:
+                      - button "编辑" [ref=e1465] [cursor=pointer]:
+                        - generic [ref=e1466]: 编辑
+                      - button "删除" [ref=e1467] [cursor=pointer]:
+                        - generic [ref=e1468]: 删除
+                - row "蓝天保洁服务有限公司 5 物业管理员 蓝天保洁服务非常专业，清洁质量高，员工态度好，业主反馈满意度高。 2026-06-02 20:13:50 编辑 删除" [ref=e1469]:
+                  - cell "蓝天保洁服务有限公司" [ref=e1470]:
+                    - generic [ref=e1471]: 蓝天保洁服务有限公司
+                  - cell "5" [ref=e1472]:
+                    - slider "rating" [disabled] [ref=e1474]:
+                      - img [ref=e1477]
+                      - img [ref=e1481]
+                      - img [ref=e1485]
+                      - img [ref=e1489]
+                      - img [ref=e1493]
+                      - generic [ref=e1495]: "5"
+                  - cell "物业管理员" [ref=e1496]:
+                    - generic [ref=e1497]: 物业管理员
+                  - cell "蓝天保洁服务非常专业，清洁质量高，员工态度好，业主反馈满意度高。" [ref=e1498]:
+                    - generic [ref=e1499]: 蓝天保洁服务非常专业，清洁质量高，员工态度好，业主反馈满意度高。
+                  - cell "2026-06-02 20:13:50" [ref=e1500]:
+                    - generic [ref=e1501]: 2026-06-02 20:13:50
+                  - cell "编辑 删除" [ref=e1502]:
+                    - generic [ref=e1503]:
+                      - button "编辑" [ref=e1504] [cursor=pointer]:
+                        - generic [ref=e1505]: 编辑
+                      - button "删除" [ref=e1506] [cursor=pointer]:
+                        - generic [ref=e1507]: 删除
+          - generic [ref=e1510]:
+            - generic [ref=e1511]: 共 8 条
+            - generic [ref=e1514] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e1516]
+                - generic [ref=e1517]: 15el.pagination.pagesize
+              - img [ref=e1520]
+            - button "上一页" [disabled] [ref=e1522]:
+              - generic:
+                - img
+            - list [ref=e1523]:
+              - listitem "el.pagination.currentPage" [ref=e1524]: "1"
+            - button "下一页" [disabled] [ref=e1525]:
+              - generic:
+                - img

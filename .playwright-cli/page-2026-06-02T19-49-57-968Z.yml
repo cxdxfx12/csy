@@ -1,0 +1,87 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "操作日志" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "操作日志" [selected] [ref=e44]:
+          - text: 操作日志
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "操作日志"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "操作人/模块/操作" [ref=e57]
+          - generic [ref=e60]:
+            - button "搜索" [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]: 搜索
+            - button "重置" [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: 重置
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - table [ref=e70]:
+                - rowgroup [ref=e82]:
+                  - row "# ID 操作人 模块 操作 URL 方法 IP 耗时(ms) 时间" [ref=e83]:
+                    - columnheader "#" [ref=e84]:
+                      - generic [ref=e85]: "#"
+                    - columnheader "ID" [ref=e86]:
+                      - generic [ref=e87]: ID
+                    - columnheader "操作人" [ref=e88]:
+                      - generic [ref=e89]: 操作人
+                    - columnheader "模块" [ref=e90]:
+                      - generic [ref=e91]: 模块
+                    - columnheader "操作" [ref=e92]:
+                      - generic [ref=e93]: 操作
+                    - columnheader "URL" [ref=e94]:
+                      - generic [ref=e95]: URL
+                    - columnheader "方法" [ref=e96]:
+                      - generic [ref=e97]: 方法
+                    - columnheader "IP" [ref=e98]:
+                      - generic [ref=e99]: IP
+                    - columnheader "耗时(ms)" [ref=e100]:
+                      - generic [ref=e101]: 耗时(ms)
+                    - columnheader "时间" [ref=e102]:
+                      - generic [ref=e103]: 时间
+              - generic [ref=e107]:
+                - table:
+                  - rowgroup
+                - generic [ref=e109]: el.table.emptyText
+            - img [ref=e113]
+          - generic [ref=e116]:
+            - generic [ref=e117]: 共 0 条
+            - generic [ref=e120] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e122]
+                - generic [ref=e123]: 15el.pagination.pagesize
+              - img [ref=e126]
+            - button "上一页" [disabled] [ref=e128]:
+              - generic:
+                - img
+            - list [ref=e129]:
+              - listitem "el.pagination.currentPage" [ref=e130]: "1"
+            - button "下一页" [disabled] [ref=e131]:
+              - generic:
+                - img

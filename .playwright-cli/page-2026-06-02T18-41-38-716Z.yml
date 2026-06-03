@@ -1,0 +1,582 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e166]:
+      - menuitem "数据概览" [ref=e167]:
+        - generic [ref=e168] [cursor=pointer]:
+          - img [ref=e170]
+          - generic [ref=e172]: 数据概览
+          - img [ref=e174]
+      - menuitem "系统管理" [ref=e176]:
+        - generic [ref=e177] [cursor=pointer]:
+          - img [ref=e179]
+          - generic [ref=e181]: 系统管理
+          - img [ref=e183]
+      - menuitem "房产管理" [ref=e185]:
+        - generic [ref=e186] [cursor=pointer]:
+          - img [ref=e188]
+          - generic [ref=e190]: 房产管理
+          - img [ref=e192]
+      - menuitem "业主管理" [ref=e194]:
+        - generic [ref=e195] [cursor=pointer]:
+          - img [ref=e197]
+          - generic [ref=e199]: 业主管理
+          - img [ref=e201]
+      - menuitem "收费管理" [ref=e203]:
+        - generic [ref=e204] [cursor=pointer]:
+          - img [ref=e206]
+          - generic [ref=e210]: 收费管理
+          - img [ref=e212]
+      - menuitem "报修管理" [ref=e214]:
+        - generic [ref=e215] [cursor=pointer]:
+          - img [ref=e217]
+          - generic [ref=e219]: 报修管理
+          - img [ref=e221]
+      - menuitem "安保管理" [ref=e223]:
+        - generic [ref=e224] [cursor=pointer]:
+          - generic [ref=e226]: 安保管理
+          - img [ref=e228]
+      - menuitem "停车管理" [ref=e230]:
+        - generic [ref=e231] [cursor=pointer]:
+          - img [ref=e233]
+          - generic [ref=e235]: 停车管理
+          - img [ref=e237]
+      - menuitem "公告通知" [ref=e239]:
+        - generic [ref=e240] [cursor=pointer]:
+          - img [ref=e242]
+          - generic [ref=e246]: 公告通知
+          - img [ref=e248]
+      - menuitem "设备管理" [ref=e250]:
+        - generic [ref=e251] [cursor=pointer]:
+          - img [ref=e253]
+          - generic [ref=e258]: 设备管理
+          - img [ref=e260]
+      - menuitem "投诉建议" [expanded] [ref=e262]:
+        - generic [ref=e263] [cursor=pointer]:
+          - img [ref=e265]
+          - generic [ref=e267]: 投诉建议
+          - img [ref=e269]
+        - menu [ref=e271]:
+          - menuitem "投诉管理" [ref=e272] [cursor=pointer]:
+            - img [ref=e274]
+            - generic [ref=e276]: 投诉管理
+      - menuitem "打印中心" [ref=e277]:
+        - generic [ref=e278] [cursor=pointer]:
+          - img [ref=e280]
+          - generic [ref=e282]: 打印中心
+          - img [ref=e284]
+      - menuitem "物业人员" [ref=e286]:
+        - generic [ref=e287] [cursor=pointer]:
+          - img [ref=e289]
+          - generic [ref=e291]: 物业人员
+          - img [ref=e293]
+      - menuitem "外部供应商" [ref=e295]:
+        - generic [ref=e296] [cursor=pointer]:
+          - img [ref=e298]
+          - generic [ref=e300]: 外部供应商
+          - img [ref=e302]
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "投诉管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "超级管理员" [ref=e304] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 超级管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "投诉管理" [selected] [ref=e44]:
+          - text: 投诉管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "投诉管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "标题/内容" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e75]
+              - generic [ref=e76]: 状态
+            - img [ref=e79]
+          - generic [ref=e84] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e86]
+              - generic [ref=e87]: 类型
+            - img [ref=e90]
+          - generic [ref=e93]:
+            - button "搜索" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: 搜索
+            - button "重置" [ref=e96] [cursor=pointer]:
+              - generic [ref=e97]: 重置
+        - generic [ref=e99]:
+          - generic [ref=e101]:
+            - table [ref=e103]:
+              - rowgroup [ref=e115]:
+                - row "# ID 标题 业主 房间 类型 状态 处理人 提交时间 操作" [ref=e116]:
+                  - columnheader "#" [ref=e117]:
+                    - generic [ref=e118]: "#"
+                  - columnheader "ID" [ref=e119]:
+                    - generic [ref=e120]: ID
+                  - columnheader "标题" [ref=e121]:
+                    - generic [ref=e122]: 标题
+                  - columnheader "业主" [ref=e123]:
+                    - generic [ref=e124]: 业主
+                  - columnheader "房间" [ref=e125]:
+                    - generic [ref=e126]: 房间
+                  - columnheader "类型" [ref=e127]:
+                    - generic [ref=e128]: 类型
+                  - columnheader "状态" [ref=e129]:
+                    - generic [ref=e130]: 状态
+                  - columnheader "处理人" [ref=e131]:
+                    - generic [ref=e132]: 处理人
+                  - columnheader "提交时间" [ref=e133]:
+                    - generic [ref=e134]: 提交时间
+                  - columnheader "操作" [ref=e135]:
+                    - generic [ref=e136]: 操作
+            - table [ref=e305]:
+              - rowgroup [ref=e317]:
+                - row "1 25 下水道反水问题 徐春梅 1802 投诉 未知 admin 2026-05-08 18:00:00 详情 处理 删除" [ref=e318]:
+                  - cell "1" [ref=e319]:
+                    - generic [ref=e321]: "1"
+                  - cell "25" [ref=e322]:
+                    - generic [ref=e323]: "25"
+                  - cell "下水道反水问题" [ref=e324]:
+                    - generic [ref=e325]: 下水道反水问题
+                  - cell "徐春梅" [ref=e326]:
+                    - generic [ref=e327]: 徐春梅
+                  - cell "1802" [ref=e328]:
+                    - generic [ref=e329]: "1802"
+                  - cell "投诉" [ref=e330]:
+                    - generic [ref=e333]: 投诉
+                  - cell "未知" [ref=e334]:
+                    - generic [ref=e337]: 未知
+                  - cell "admin" [ref=e338]:
+                    - generic [ref=e339]: admin
+                  - cell "2026-05-08 18:00:00" [ref=e340]:
+                    - generic [ref=e341]: 2026-05-08 18:00:00
+                  - cell "详情 处理 删除" [ref=e342]:
+                    - generic [ref=e343]:
+                      - button "详情" [ref=e344] [cursor=pointer]:
+                        - generic [ref=e345]: 详情
+                      - button "处理" [ref=e346] [cursor=pointer]:
+                        - generic [ref=e347]: 处理
+                      - button "删除" [ref=e348] [cursor=pointer]:
+                        - generic [ref=e349]: 删除
+                - row "2 24 楼道杂物堆积 周晓燕 901 投诉 未知 admin 2026-05-16 09:00:00 详情 处理 删除" [ref=e350]:
+                  - cell "2" [ref=e351]:
+                    - generic [ref=e353]: "2"
+                  - cell "24" [ref=e354]:
+                    - generic [ref=e355]: "24"
+                  - cell "楼道杂物堆积" [ref=e356]:
+                    - generic [ref=e357]: 楼道杂物堆积
+                  - cell "周晓燕" [ref=e358]:
+                    - generic [ref=e359]: 周晓燕
+                  - cell "901" [ref=e360]:
+                    - generic [ref=e361]: "901"
+                  - cell "投诉" [ref=e362]:
+                    - generic [ref=e365]: 投诉
+                  - cell "未知" [ref=e366]:
+                    - generic [ref=e369]: 未知
+                  - cell "admin" [ref=e370]:
+                    - generic [ref=e371]: admin
+                  - cell "2026-05-16 09:00:00" [ref=e372]:
+                    - generic [ref=e373]: 2026-05-16 09:00:00
+                  - cell "详情 处理 删除" [ref=e374]:
+                    - generic [ref=e375]:
+                      - button "详情" [ref=e376] [cursor=pointer]:
+                        - generic [ref=e377]: 详情
+                      - button "处理" [ref=e378] [cursor=pointer]:
+                        - generic [ref=e379]: 处理
+                      - button "删除" [ref=e380] [cursor=pointer]:
+                        - generic [ref=e381]: 删除
+                - row "3 23 提议增设社区图书馆 赵文博 102 建议 已处理 admin 2026-05-20 09:00:00 详情 删除" [ref=e382]:
+                  - cell "3" [ref=e383]:
+                    - generic [ref=e385]: "3"
+                  - cell "23" [ref=e386]:
+                    - generic [ref=e387]: "23"
+                  - cell "提议增设社区图书馆" [ref=e388]:
+                    - generic [ref=e389]: 提议增设社区图书馆
+                  - cell "赵文博" [ref=e390]:
+                    - generic [ref=e391]: 赵文博
+                  - cell "102" [ref=e392]:
+                    - generic [ref=e393]: "102"
+                  - cell "建议" [ref=e394]:
+                    - generic [ref=e397]: 建议
+                  - cell "已处理" [ref=e398]:
+                    - generic [ref=e401]: 已处理
+                  - cell "admin" [ref=e402]:
+                    - generic [ref=e403]: admin
+                  - cell "2026-05-20 09:00:00" [ref=e404]:
+                    - generic [ref=e405]: 2026-05-20 09:00:00
+                  - cell "详情 删除" [ref=e406]:
+                    - generic [ref=e407]:
+                      - button "详情" [ref=e408] [cursor=pointer]:
+                        - generic [ref=e409]: 详情
+                      - button "删除" [ref=e410] [cursor=pointer]:
+                        - generic [ref=e411]: 删除
+                - row "4 22 门卫态度差投诉 吴建国 1801 投诉 已处理 admin 2026-05-23 14:00:00 详情 删除" [ref=e412]:
+                  - cell "4" [ref=e413]:
+                    - generic [ref=e415]: "4"
+                  - cell "22" [ref=e416]:
+                    - generic [ref=e417]: "22"
+                  - cell "门卫态度差投诉" [ref=e418]:
+                    - generic [ref=e419]: 门卫态度差投诉
+                  - cell "吴建国" [ref=e420]:
+                    - generic [ref=e421]: 吴建国
+                  - cell "1801" [ref=e422]:
+                    - generic [ref=e423]: "1801"
+                  - cell "投诉" [ref=e424]:
+                    - generic [ref=e427]: 投诉
+                  - cell "已处理" [ref=e428]:
+                    - generic [ref=e431]: 已处理
+                  - cell "admin" [ref=e432]:
+                    - generic [ref=e433]: admin
+                  - cell "2026-05-23 14:00:00" [ref=e434]:
+                    - generic [ref=e435]: 2026-05-23 14:00:00
+                  - cell "详情 删除" [ref=e436]:
+                    - generic [ref=e437]:
+                      - button "详情" [ref=e438] [cursor=pointer]:
+                        - generic [ref=e439]: 详情
+                      - button "删除" [ref=e440] [cursor=pointer]:
+                        - generic [ref=e441]: 删除
+                - row "5 21 建议小区引入共享药箱 徐春梅 1802 建议 处理中 admin 2026-05-27 10:30:00 详情 处理 删除" [ref=e442]:
+                  - cell "5" [ref=e443]:
+                    - generic [ref=e445]: "5"
+                  - cell "21" [ref=e446]:
+                    - generic [ref=e447]: "21"
+                  - cell "建议小区引入共享药箱" [ref=e448]:
+                    - generic [ref=e449]: 建议小区引入共享药箱
+                  - cell "徐春梅" [ref=e450]:
+                    - generic [ref=e451]: 徐春梅
+                  - cell "1802" [ref=e452]:
+                    - generic [ref=e453]: "1802"
+                  - cell "建议" [ref=e454]:
+                    - generic [ref=e457]: 建议
+                  - cell "处理中" [ref=e458]:
+                    - generic [ref=e461]: 处理中
+                  - cell "admin" [ref=e462]:
+                    - generic [ref=e463]: admin
+                  - cell "2026-05-27 10:30:00" [ref=e464]:
+                    - generic [ref=e465]: 2026-05-27 10:30:00
+                  - cell "详情 处理 删除" [ref=e466]:
+                    - generic [ref=e467]:
+                      - button "详情" [ref=e468] [cursor=pointer]:
+                        - generic [ref=e469]: 详情
+                      - button "处理" [ref=e470] [cursor=pointer]:
+                        - generic [ref=e471]: 处理
+                      - button "删除" [ref=e472] [cursor=pointer]:
+                        - generic [ref=e473]: 删除
+                - row "6 20 地库入口坡道太陡 周晓燕 901 投诉 处理中 admin 2026-05-29 16:00:00 详情 处理 删除" [ref=e474]:
+                  - cell "6" [ref=e475]:
+                    - generic [ref=e477]: "6"
+                  - cell "20" [ref=e478]:
+                    - generic [ref=e479]: "20"
+                  - cell "地库入口坡道太陡" [ref=e480]:
+                    - generic [ref=e481]: 地库入口坡道太陡
+                  - cell "周晓燕" [ref=e482]:
+                    - generic [ref=e483]: 周晓燕
+                  - cell "901" [ref=e484]:
+                    - generic [ref=e485]: "901"
+                  - cell "投诉" [ref=e486]:
+                    - generic [ref=e489]: 投诉
+                  - cell "处理中" [ref=e490]:
+                    - generic [ref=e493]: 处理中
+                  - cell "admin" [ref=e494]:
+                    - generic [ref=e495]: admin
+                  - cell "2026-05-29 16:00:00" [ref=e496]:
+                    - generic [ref=e497]: 2026-05-29 16:00:00
+                  - cell "详情 处理 删除" [ref=e498]:
+                    - generic [ref=e499]:
+                      - button "详情" [ref=e500] [cursor=pointer]:
+                        - generic [ref=e501]: 详情
+                      - button "处理" [ref=e502] [cursor=pointer]:
+                        - generic [ref=e503]: 处理
+                      - button "删除" [ref=e504] [cursor=pointer]:
+                        - generic [ref=e505]: 删除
+                - row "7 19 小区绿化浇水时间不合理 赵文博 102 建议 待处理 - 2026-06-02 07:00:00 详情 处理 删除" [ref=e506]:
+                  - cell "7" [ref=e507]:
+                    - generic [ref=e509]: "7"
+                  - cell "19" [ref=e510]:
+                    - generic [ref=e511]: "19"
+                  - cell "小区绿化浇水时间不合理" [ref=e512]:
+                    - generic [ref=e513]: 小区绿化浇水时间不合理
+                  - cell "赵文博" [ref=e514]:
+                    - generic [ref=e515]: 赵文博
+                  - cell "102" [ref=e516]:
+                    - generic [ref=e517]: "102"
+                  - cell "建议" [ref=e518]:
+                    - generic [ref=e521]: 建议
+                  - cell "待处理" [ref=e522]:
+                    - generic [ref=e525]: 待处理
+                  - cell "-" [ref=e526]:
+                    - generic [ref=e527]: "-"
+                  - cell "2026-06-02 07:00:00" [ref=e528]:
+                    - generic [ref=e529]: 2026-06-02 07:00:00
+                  - cell "详情 处理 删除" [ref=e530]:
+                    - generic [ref=e531]:
+                      - button "详情" [ref=e532] [cursor=pointer]:
+                        - generic [ref=e533]: 详情
+                      - button "处理" [ref=e534] [cursor=pointer]:
+                        - generic [ref=e535]: 处理
+                      - button "删除" [ref=e536] [cursor=pointer]:
+                        - generic [ref=e537]: 删除
+                - row "8 18 表扬维修师傅王工 吴建国 1801 建议 待处理 - 2026-06-03 10:00:00 详情 处理 删除" [ref=e538]:
+                  - cell "8" [ref=e539]:
+                    - generic [ref=e541]: "8"
+                  - cell "18" [ref=e542]:
+                    - generic [ref=e543]: "18"
+                  - cell "表扬维修师傅王工" [ref=e544]:
+                    - generic [ref=e545]: 表扬维修师傅王工
+                  - cell "吴建国" [ref=e546]:
+                    - generic [ref=e547]: 吴建国
+                  - cell "1801" [ref=e548]:
+                    - generic [ref=e549]: "1801"
+                  - cell "建议" [ref=e550]:
+                    - generic [ref=e553]: 建议
+                  - cell "待处理" [ref=e554]:
+                    - generic [ref=e557]: 待处理
+                  - cell "-" [ref=e558]:
+                    - generic [ref=e559]: "-"
+                  - cell "2026-06-03 10:00:00" [ref=e560]:
+                    - generic [ref=e561]: 2026-06-03 10:00:00
+                  - cell "详情 处理 删除" [ref=e562]:
+                    - generic [ref=e563]:
+                      - button "详情" [ref=e564] [cursor=pointer]:
+                        - generic [ref=e565]: 详情
+                      - button "处理" [ref=e566] [cursor=pointer]:
+                        - generic [ref=e567]: 处理
+                      - button "删除" [ref=e568] [cursor=pointer]:
+                        - generic [ref=e569]: 删除
+                - row "9 17 咨询物业费调整事宜 徐春梅 1802 建议 待处理 - 2026-06-01 11:30:00 详情 处理 删除" [ref=e570]:
+                  - cell "9" [ref=e571]:
+                    - generic [ref=e573]: "9"
+                  - cell "17" [ref=e574]:
+                    - generic [ref=e575]: "17"
+                  - cell "咨询物业费调整事宜" [ref=e576]:
+                    - generic [ref=e577]: 咨询物业费调整事宜
+                  - cell "徐春梅" [ref=e578]:
+                    - generic [ref=e579]: 徐春梅
+                  - cell "1802" [ref=e580]:
+                    - generic [ref=e581]: "1802"
+                  - cell "建议" [ref=e582]:
+                    - generic [ref=e585]: 建议
+                  - cell "待处理" [ref=e586]:
+                    - generic [ref=e589]: 待处理
+                  - cell "-" [ref=e590]:
+                    - generic [ref=e591]: "-"
+                  - cell "2026-06-01 11:30:00" [ref=e592]:
+                    - generic [ref=e593]: 2026-06-01 11:30:00
+                  - cell "详情 处理 删除" [ref=e594]:
+                    - generic [ref=e595]:
+                      - button "详情" [ref=e596] [cursor=pointer]:
+                        - generic [ref=e597]: 详情
+                      - button "处理" [ref=e598] [cursor=pointer]:
+                        - generic [ref=e599]: 处理
+                      - button "删除" [ref=e600] [cursor=pointer]:
+                        - generic [ref=e601]: 删除
+                - row "10 16 建议设置儿童游乐区 周晓燕 901 建议 待处理 - 2026-06-02 15:00:00 详情 处理 删除" [ref=e602]:
+                  - cell "10" [ref=e603]:
+                    - generic [ref=e605]: "10"
+                  - cell "16" [ref=e606]:
+                    - generic [ref=e607]: "16"
+                  - cell "建议设置儿童游乐区" [ref=e608]:
+                    - generic [ref=e609]: 建议设置儿童游乐区
+                  - cell "周晓燕" [ref=e610]:
+                    - generic [ref=e611]: 周晓燕
+                  - cell "901" [ref=e612]:
+                    - generic [ref=e613]: "901"
+                  - cell "建议" [ref=e614]:
+                    - generic [ref=e617]: 建议
+                  - cell "待处理" [ref=e618]:
+                    - generic [ref=e621]: 待处理
+                  - cell "-" [ref=e622]:
+                    - generic [ref=e623]: "-"
+                  - cell "2026-06-02 15:00:00" [ref=e624]:
+                    - generic [ref=e625]: 2026-06-02 15:00:00
+                  - cell "详情 处理 删除" [ref=e626]:
+                    - generic [ref=e627]:
+                      - button "详情" [ref=e628] [cursor=pointer]:
+                        - generic [ref=e629]: 详情
+                      - button "处理" [ref=e630] [cursor=pointer]:
+                        - generic [ref=e631]: 处理
+                      - button "删除" [ref=e632] [cursor=pointer]:
+                        - generic [ref=e633]: 删除
+                - row "11 15 A栋外墙脱落 赵文博 102 投诉 待处理 - 2026-06-02 08:00:00 详情 处理 删除" [ref=e634]:
+                  - cell "11" [ref=e635]:
+                    - generic [ref=e637]: "11"
+                  - cell "15" [ref=e638]:
+                    - generic [ref=e639]: "15"
+                  - cell "A栋外墙脱落" [ref=e640]:
+                    - generic [ref=e641]: A栋外墙脱落
+                  - cell "赵文博" [ref=e642]:
+                    - generic [ref=e643]: 赵文博
+                  - cell "102" [ref=e644]:
+                    - generic [ref=e645]: "102"
+                  - cell "投诉" [ref=e646]:
+                    - generic [ref=e649]: 投诉
+                  - cell "待处理" [ref=e650]:
+                    - generic [ref=e653]: 待处理
+                  - cell "-" [ref=e654]:
+                    - generic [ref=e655]: "-"
+                  - cell "2026-06-02 08:00:00" [ref=e656]:
+                    - generic [ref=e657]: 2026-06-02 08:00:00
+                  - cell "详情 处理 删除" [ref=e658]:
+                    - generic [ref=e659]:
+                      - button "详情" [ref=e660] [cursor=pointer]:
+                        - generic [ref=e661]: 详情
+                      - button "处理" [ref=e662] [cursor=pointer]:
+                        - generic [ref=e663]: 处理
+                      - button "删除" [ref=e664] [cursor=pointer]:
+                        - generic [ref=e665]: 删除
+                - row "12 14 小区门禁系统故障 杨丽萍 1802 投诉 未知 admin 2026-05-12 08:00:00 详情 处理 删除" [ref=e666]:
+                  - cell "12" [ref=e667]:
+                    - generic [ref=e669]: "12"
+                  - cell "14" [ref=e670]:
+                    - generic [ref=e671]: "14"
+                  - cell "小区门禁系统故障" [ref=e672]:
+                    - generic [ref=e673]: 小区门禁系统故障
+                  - cell "杨丽萍" [ref=e674]:
+                    - generic [ref=e675]: 杨丽萍
+                  - cell "1802" [ref=e676]:
+                    - generic [ref=e677]: "1802"
+                  - cell "投诉" [ref=e678]:
+                    - generic [ref=e681]: 投诉
+                  - cell "未知" [ref=e682]:
+                    - generic [ref=e685]: 未知
+                  - cell "admin" [ref=e686]:
+                    - generic [ref=e687]: admin
+                  - cell "2026-05-12 08:00:00" [ref=e688]:
+                    - generic [ref=e689]: 2026-05-12 08:00:00
+                  - cell "详情 处理 删除" [ref=e690]:
+                    - generic [ref=e691]:
+                      - button "详情" [ref=e692] [cursor=pointer]:
+                        - generic [ref=e693]: 详情
+                      - button "处理" [ref=e694] [cursor=pointer]:
+                        - generic [ref=e695]: 处理
+                      - button "删除" [ref=e696] [cursor=pointer]:
+                        - generic [ref=e697]: 删除
+                - row "13 13 投诉邻里噪音问题 陈志强 1801 投诉 未知 admin 2026-05-18 22:30:00 详情 处理 删除" [ref=e698]:
+                  - cell "13" [ref=e699]:
+                    - generic [ref=e701]: "13"
+                  - cell "13" [ref=e702]:
+                    - generic [ref=e703]: "13"
+                  - cell "投诉邻里噪音问题" [ref=e704]:
+                    - generic [ref=e705]: 投诉邻里噪音问题
+                  - cell "陈志强" [ref=e706]:
+                    - generic [ref=e707]: 陈志强
+                  - cell "1801" [ref=e708]:
+                    - generic [ref=e709]: "1801"
+                  - cell "投诉" [ref=e710]:
+                    - generic [ref=e713]: 投诉
+                  - cell "未知" [ref=e714]:
+                    - generic [ref=e717]: 未知
+                  - cell "admin" [ref=e718]:
+                    - generic [ref=e719]: admin
+                  - cell "2026-05-18 22:30:00" [ref=e720]:
+                    - generic [ref=e721]: 2026-05-18 22:30:00
+                  - cell "详情 处理 删除" [ref=e722]:
+                    - generic [ref=e723]:
+                      - button "详情" [ref=e724] [cursor=pointer]:
+                        - generic [ref=e725]: 详情
+                      - button "处理" [ref=e726] [cursor=pointer]:
+                        - generic [ref=e727]: 处理
+                      - button "删除" [ref=e728] [cursor=pointer]:
+                        - generic [ref=e729]: 删除
+                - row "14 12 建议增加电动车充电桩 张建国 901 建议 已处理 admin 2026-05-22 14:00:00 详情 删除" [ref=e730]:
+                  - cell "14" [ref=e731]:
+                    - generic [ref=e733]: "14"
+                  - cell "12" [ref=e734]:
+                    - generic [ref=e735]: "12"
+                  - cell "建议增加电动车充电桩" [ref=e736]:
+                    - generic [ref=e737]: 建议增加电动车充电桩
+                  - cell "张建国" [ref=e738]:
+                    - generic [ref=e739]: 张建国
+                  - cell "901" [ref=e740]:
+                    - generic [ref=e741]: "901"
+                  - cell "建议" [ref=e742]:
+                    - generic [ref=e745]: 建议
+                  - cell "已处理" [ref=e746]:
+                    - generic [ref=e749]: 已处理
+                  - cell "admin" [ref=e750]:
+                    - generic [ref=e751]: admin
+                  - cell "2026-05-22 14:00:00" [ref=e752]:
+                    - generic [ref=e753]: 2026-05-22 14:00:00
+                  - cell "详情 删除" [ref=e754]:
+                    - generic [ref=e755]:
+                      - button "详情" [ref=e756] [cursor=pointer]:
+                        - generic [ref=e757]: 详情
+                      - button "删除" [ref=e758] [cursor=pointer]:
+                        - generic [ref=e759]: 删除
+                - row "15 11 表扬保洁员张阿姨工作认真 李芳 102 建议 已处理 admin 2026-05-25 08:30:00 详情 删除" [ref=e760]:
+                  - cell "15" [ref=e761]:
+                    - generic [ref=e763]: "15"
+                  - cell "11" [ref=e764]:
+                    - generic [ref=e765]: "11"
+                  - cell "表扬保洁员张阿姨工作认真" [ref=e766]:
+                    - generic [ref=e767]: 表扬保洁员张阿姨工作认真
+                  - cell "李芳" [ref=e768]:
+                    - generic [ref=e769]: 李芳
+                  - cell "102" [ref=e770]:
+                    - generic [ref=e771]: "102"
+                  - cell "建议" [ref=e772]:
+                    - generic [ref=e775]: 建议
+                  - cell "已处理" [ref=e776]:
+                    - generic [ref=e779]: 已处理
+                  - cell "admin" [ref=e780]:
+                    - generic [ref=e781]: admin
+                  - cell "2026-05-25 08:30:00" [ref=e782]:
+                    - generic [ref=e783]: 2026-05-25 08:30:00
+                  - cell "详情 删除" [ref=e784]:
+                    - generic [ref=e785]:
+                      - button "详情" [ref=e786] [cursor=pointer]:
+                        - generic [ref=e787]: 详情
+                      - button "删除" [ref=e788] [cursor=pointer]:
+                        - generic [ref=e789]: 删除
+          - generic [ref=e149]:
+            - generic [ref=e150]: 共 25 条
+            - generic [ref=e153] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e155]
+                - generic [ref=e156]: 15el.pagination.pagesize
+              - img [ref=e159]
+            - button "上一页" [disabled] [ref=e161]:
+              - generic:
+                - img
+            - list [ref=e162]:
+              - listitem "el.pagination.currentPage" [ref=e163]: "1"
+              - listitem "el.pagination.currentPage" [ref=e790] [cursor=pointer]: "2"
+            - button "下一页" [ref=e164] [cursor=pointer]:
+              - generic:
+                - img
+        - dialog "处理投诉建议" [ref=e792]:
+          - generic [active] [ref=e793]:
+            - generic [ref=e794]:
+              - heading "处理投诉建议" [level=2] [ref=e795]
+              - button "el.dialog.close" [ref=e796] [cursor=pointer]:
+                - img [ref=e798]
+            - generic [ref=e802]:
+              - generic [ref=e803]: 处理结果
+              - textbox "处理结果" [ref=e806]:
+                - /placeholder: 请输入处理结果
+            - generic [ref=e807]:
+              - button "取消" [ref=e808] [cursor=pointer]:
+                - generic [ref=e809]: 取消
+              - button "确定" [ref=e810] [cursor=pointer]:
+                - generic [ref=e811]: 确定

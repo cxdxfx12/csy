@@ -1,0 +1,92 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "楼栋管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "楼栋管理" [selected] [ref=e44]:
+          - text: 楼栋管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "楼栋管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "名称/编码" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 选择小区
+            - img [ref=e68]
+          - generic [ref=e71]:
+            - button "搜索" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: 搜索
+            - button "重置" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75]: 重置
+        - generic [ref=e77]:
+          - button "添加楼栋" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]: 添加楼栋
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - table [ref=e84]:
+                - rowgroup [ref=e95]:
+                  - row "# ID 名称 所属小区 层数 单元数 房间数 排序 操作" [ref=e96]:
+                    - columnheader "#" [ref=e97]:
+                      - generic [ref=e98]: "#"
+                    - columnheader "ID" [ref=e99]:
+                      - generic [ref=e100]: ID
+                    - columnheader "名称" [ref=e101]:
+                      - generic [ref=e102]: 名称
+                    - columnheader "所属小区" [ref=e103]:
+                      - generic [ref=e104]: 所属小区
+                    - columnheader "层数" [ref=e105]:
+                      - generic [ref=e106]: 层数
+                    - columnheader "单元数" [ref=e107]:
+                      - generic [ref=e108]: 单元数
+                    - columnheader "房间数" [ref=e109]:
+                      - generic [ref=e110]: 房间数
+                    - columnheader "排序" [ref=e111]:
+                      - generic [ref=e112]: 排序
+                    - columnheader "操作" [ref=e113]:
+                      - generic [ref=e114]: 操作
+              - generic [ref=e118]:
+                - table:
+                  - rowgroup
+                - generic [ref=e120]: el.table.emptyText
+            - img [ref=e124]
+          - generic [ref=e127]:
+            - generic [ref=e128]: 共 0 条
+            - generic [ref=e131] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e133]
+                - generic [ref=e134]: 15el.pagination.pagesize
+              - img [ref=e137]
+            - button "上一页" [disabled] [ref=e139]:
+              - generic:
+                - img
+            - list [ref=e140]:
+              - listitem "el.pagination.currentPage" [ref=e141]: "1"
+            - button "下一页" [disabled] [ref=e142]:
+              - generic:
+                - img

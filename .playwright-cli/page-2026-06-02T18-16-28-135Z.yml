@@ -1,0 +1,99 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "访客登记" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "访客登记" [selected] [ref=e44]:
+          - text: 访客登记
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "访客登记"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "姓名/手机" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e75]
+              - generic [ref=e76]: 状态
+            - img [ref=e79]
+          - generic [ref=e82]:
+            - button "搜索" [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: 搜索
+            - button "重置" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]: 重置
+        - generic [ref=e88]:
+          - button "访客登记" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]: 访客登记
+          - generic [ref=e93]:
+            - table [ref=e95]:
+              - rowgroup [ref=e108]:
+                - row "# ID 访客姓名 手机 身份证 受访业主 房间 来访事由 状态 登记时间 操作" [ref=e109]:
+                  - columnheader "#" [ref=e110]:
+                    - generic [ref=e111]: "#"
+                  - columnheader "ID" [ref=e112]:
+                    - generic [ref=e113]: ID
+                  - columnheader "访客姓名" [ref=e114]:
+                    - generic [ref=e115]: 访客姓名
+                  - columnheader "手机" [ref=e116]:
+                    - generic [ref=e117]: 手机
+                  - columnheader "身份证" [ref=e118]:
+                    - generic [ref=e119]: 身份证
+                  - columnheader "受访业主" [ref=e120]:
+                    - generic [ref=e121]: 受访业主
+                  - columnheader "房间" [ref=e122]:
+                    - generic [ref=e123]: 房间
+                  - columnheader "来访事由" [ref=e124]:
+                    - generic [ref=e125]: 来访事由
+                  - columnheader "状态" [ref=e126]:
+                    - generic [ref=e127]: 状态
+                  - columnheader "登记时间" [ref=e128]:
+                    - generic [ref=e129]: 登记时间
+                  - columnheader "操作" [ref=e130]:
+                    - generic [ref=e131]: 操作
+            - generic [ref=e135]:
+              - table:
+                - rowgroup
+              - generic [ref=e137]: el.table.emptyText
+          - generic [ref=e140]:
+            - generic [ref=e141]: 共 0 条
+            - generic [ref=e144] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e146]
+                - generic [ref=e147]: 15el.pagination.pagesize
+              - img [ref=e150]
+            - button "上一页" [disabled] [ref=e152]:
+              - generic:
+                - img
+            - list [ref=e153]:
+              - listitem "el.pagination.currentPage" [ref=e154]: "1"
+            - button "下一页" [disabled] [ref=e155]:
+              - generic:
+                - img

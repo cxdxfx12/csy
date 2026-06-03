@@ -1,0 +1,109 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "业主投票" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "业主投票" [selected] [ref=e44]:
+          - text: 业主投票
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "业主投票"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 关键字
+            - textbox "关键字" [ref=e58]:
+              - /placeholder: 投票标题
+          - generic [ref=e60]:
+            - generic [ref=e61]: 小区
+            - generic [ref=e64] [cursor=pointer]:
+              - generic:
+                - combobox "小区" [ref=e66]
+                - generic [ref=e67]: 全部小区
+              - img [ref=e70]
+          - generic [ref=e72]:
+            - generic [ref=e73]: 状态
+            - generic [ref=e76] [cursor=pointer]:
+              - generic:
+                - combobox "状态" [ref=e78]
+                - generic [ref=e79]: 全部状态
+              - img [ref=e82]
+          - generic [ref=e85]:
+            - button "搜索" [ref=e86] [cursor=pointer]:
+              - generic [ref=e87]:
+                - img [ref=e89]
+                - text: 搜索
+            - button "重置" [ref=e91] [cursor=pointer]:
+              - generic [ref=e92]: 重置
+        - generic [ref=e94]:
+          - button "新建投票" [ref=e96] [cursor=pointer]:
+            - generic [ref=e97]:
+              - img [ref=e99]
+              - text: 新建投票
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - table [ref=e104]:
+                - rowgroup [ref=e114]:
+                  - row "ID 投票标题 所属小区 类型 状态 投票人数 有效期 操作" [ref=e115]:
+                    - columnheader "ID" [ref=e116]:
+                      - generic [ref=e117]: ID
+                    - columnheader "投票标题" [ref=e118]:
+                      - generic [ref=e119]: 投票标题
+                    - columnheader "所属小区" [ref=e120]:
+                      - generic [ref=e121]: 所属小区
+                    - columnheader "类型" [ref=e122]:
+                      - generic [ref=e123]: 类型
+                    - columnheader "状态" [ref=e124]:
+                      - generic [ref=e125]: 状态
+                    - columnheader "投票人数" [ref=e126]:
+                      - generic [ref=e127]: 投票人数
+                    - columnheader "有效期" [ref=e128]:
+                      - generic [ref=e129]: 有效期
+                    - columnheader "操作" [ref=e130]:
+                      - generic [ref=e131]: 操作
+              - generic [ref=e135]:
+                - table:
+                  - rowgroup
+                - generic [ref=e137]: el.table.emptyText
+            - img [ref=e141]
+          - generic [ref=e144]:
+            - generic [ref=e145]: 共 0 条
+            - generic [ref=e148] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e150]
+                - generic [ref=e151]: 15el.pagination.pagesize
+              - img [ref=e154]
+            - button "上一页" [disabled] [ref=e156]:
+              - generic:
+                - img
+            - list [ref=e157]:
+              - listitem "el.pagination.currentPage" [ref=e158]: "1"
+            - button "下一页" [disabled] [ref=e159]:
+              - generic:
+                - img
+            - generic [ref=e160]:
+              - generic [ref=e161]: 跳至
+              - spinbutton "页" [ref=e164]: "1"

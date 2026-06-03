@@ -1,0 +1,92 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "车辆管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "车辆管理" [selected] [ref=e44]:
+          - text: 车辆管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "车辆管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "车牌/品牌/型号" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e71]:
+            - button "搜索" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: 搜索
+            - button "重置" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75]: 重置
+        - generic [ref=e77]:
+          - button "添加车辆" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]: 添加车辆
+          - generic [ref=e82]:
+            - table [ref=e84]:
+              - rowgroup [ref=e96]:
+                - row "# ID 车牌号 车主 品牌 型号 颜色 绑定车位 登记时间 操作" [ref=e97]:
+                  - columnheader "#" [ref=e98]:
+                    - generic [ref=e99]: "#"
+                  - columnheader "ID" [ref=e100]:
+                    - generic [ref=e101]: ID
+                  - columnheader "车牌号" [ref=e102]:
+                    - generic [ref=e103]: 车牌号
+                  - columnheader "车主" [ref=e104]:
+                    - generic [ref=e105]: 车主
+                  - columnheader "品牌" [ref=e106]:
+                    - generic [ref=e107]: 品牌
+                  - columnheader "型号" [ref=e108]:
+                    - generic [ref=e109]: 型号
+                  - columnheader "颜色" [ref=e110]:
+                    - generic [ref=e111]: 颜色
+                  - columnheader "绑定车位" [ref=e112]:
+                    - generic [ref=e113]: 绑定车位
+                  - columnheader "登记时间" [ref=e114]:
+                    - generic [ref=e115]: 登记时间
+                  - columnheader "操作" [ref=e116]:
+                    - generic [ref=e117]: 操作
+            - generic [ref=e121]:
+              - table:
+                - rowgroup
+              - generic [ref=e123]: el.table.emptyText
+          - generic [ref=e126]:
+            - generic [ref=e127]: 共 0 条
+            - generic [ref=e130] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e132]
+                - generic [ref=e133]: 15el.pagination.pagesize
+              - img [ref=e136]
+            - button "上一页" [disabled] [ref=e138]:
+              - generic:
+                - img
+            - list [ref=e139]:
+              - listitem "el.pagination.currentPage" [ref=e140]: "1"
+            - button "下一页" [disabled] [ref=e141]:
+              - generic:
+                - img

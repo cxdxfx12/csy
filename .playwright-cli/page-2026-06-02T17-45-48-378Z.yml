@@ -1,0 +1,99 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "抄表管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "抄表管理" [selected] [ref=e44]:
+          - text: 抄表管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "抄表管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - textbox "房间号" [ref=e57]
+          - generic [ref=e62] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e64]
+              - generic [ref=e65]: 小区
+            - img [ref=e68]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e75]
+              - generic [ref=e76]: 表类型
+            - img [ref=e79]
+          - generic [ref=e82]:
+            - button "搜索" [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: 搜索
+            - button "重置" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]: 重置
+        - generic [ref=e88]:
+          - button "添加抄表" [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]: 添加抄表
+          - generic [ref=e93]:
+            - table [ref=e95]:
+              - rowgroup [ref=e108]:
+                - row "# ID 房间号 楼栋 类型 上期读数 本期读数 用量 月份 录入时间 操作" [ref=e109]:
+                  - columnheader "#" [ref=e110]:
+                    - generic [ref=e111]: "#"
+                  - columnheader "ID" [ref=e112]:
+                    - generic [ref=e113]: ID
+                  - columnheader "房间号" [ref=e114]:
+                    - generic [ref=e115]: 房间号
+                  - columnheader "楼栋" [ref=e116]:
+                    - generic [ref=e117]: 楼栋
+                  - columnheader "类型" [ref=e118]:
+                    - generic [ref=e119]: 类型
+                  - columnheader "上期读数" [ref=e120]:
+                    - generic [ref=e121]: 上期读数
+                  - columnheader "本期读数" [ref=e122]:
+                    - generic [ref=e123]: 本期读数
+                  - columnheader "用量" [ref=e124]:
+                    - generic [ref=e125]: 用量
+                  - columnheader "月份" [ref=e126]:
+                    - generic [ref=e127]: 月份
+                  - columnheader "录入时间" [ref=e128]:
+                    - generic [ref=e129]: 录入时间
+                  - columnheader "操作" [ref=e130]:
+                    - generic [ref=e131]: 操作
+            - generic [ref=e135]:
+              - table:
+                - rowgroup
+              - generic [ref=e137]: el.table.emptyText
+          - generic [ref=e140]:
+            - generic [ref=e141]: 共 0 条
+            - generic [ref=e144] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e146]
+                - generic [ref=e147]: 15el.pagination.pagesize
+              - img [ref=e150]
+            - button "上一页" [disabled] [ref=e152]:
+              - generic:
+                - img
+            - list [ref=e153]:
+              - listitem "el.pagination.currentPage" [ref=e154]: "1"
+            - button "下一页" [disabled] [ref=e155]:
+              - generic:
+                - img

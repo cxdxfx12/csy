@@ -1,0 +1,182 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [expanded] [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+        - menu:
+          - menuitem "收费项目" [ref=e58] [cursor=pointer]:
+            - img [ref=e60]
+            - generic [ref=e63]: 收费项目
+          - menuitem "账单管理" [ref=e64] [cursor=pointer]:
+            - img [ref=e66]
+            - generic [ref=e68]: 账单管理
+          - menuitem "缴费记录" [ref=e69] [cursor=pointer]:
+            - img [ref=e71]
+            - generic [ref=e74]: 缴费记录
+          - menuitem "抄表管理" [ref=e75] [cursor=pointer]:
+            - img [ref=e77]
+            - generic [ref=e81]: 抄表管理
+          - menuitem "财务流水" [ref=e82] [cursor=pointer]:
+            - img [ref=e84]
+            - generic [ref=e86]: 财务流水
+      - menuitem "报修管理" [ref=e87]:
+        - generic [ref=e88] [cursor=pointer]:
+          - img [ref=e90]
+          - generic [ref=e92]: 报修管理
+          - img [ref=e94]
+      - menuitem "安保管理" [ref=e96]:
+        - generic [ref=e97] [cursor=pointer]:
+          - generic [ref=e99]: 安保管理
+          - img [ref=e101]
+      - menuitem "停车管理" [ref=e103]:
+        - generic [ref=e104] [cursor=pointer]:
+          - img [ref=e106]
+          - generic [ref=e108]: 停车管理
+          - img [ref=e110]
+      - menuitem "公告通知" [ref=e112]:
+        - generic [ref=e113] [cursor=pointer]:
+          - img [ref=e115]
+          - generic [ref=e119]: 公告通知
+          - img [ref=e121]
+      - menuitem "设备管理" [ref=e123]:
+        - generic [ref=e124] [cursor=pointer]:
+          - img [ref=e126]
+          - generic [ref=e131]: 设备管理
+          - img [ref=e133]
+      - menuitem "投诉建议" [ref=e135]:
+        - generic [ref=e136] [cursor=pointer]:
+          - img [ref=e138]
+          - generic [ref=e140]: 投诉建议
+          - img [ref=e142]
+      - menuitem "打印中心" [ref=e144]:
+        - generic [ref=e145] [cursor=pointer]:
+          - img [ref=e147]
+          - generic [ref=e149]: 打印中心
+          - img [ref=e151]
+      - menuitem "物业人员" [ref=e153]:
+        - generic [ref=e154] [cursor=pointer]:
+          - img [ref=e156]
+          - generic [ref=e158]: 物业人员
+          - img [ref=e160]
+      - menuitem "外部供应商" [ref=e162]:
+        - generic [ref=e163] [cursor=pointer]:
+          - img [ref=e165]
+          - generic [ref=e167]: 外部供应商
+          - img [ref=e169]
+  - generic [ref=e171]:
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - button [ref=e174] [cursor=pointer]:
+          - img [ref=e176]
+        - navigation "el.breadcrumb.label" [ref=e178]:
+          - generic [ref=e179]:
+            - link "工作台" [ref=e180]
+            - text: /
+          - link "账单管理" [ref=e182]
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - button [ref=e185] [cursor=pointer]:
+            - img [ref=e187]
+          - superscript [ref=e191]
+        - button "超级管理员" [ref=e193] [cursor=pointer]:
+          - img [ref=e196]
+          - generic [ref=e198]: 超级管理员
+    - generic [ref=e200]:
+      - tablist [ref=e204]:
+        - tab "📊 控制台" [ref=e205]
+        - tab "账单管理" [selected] [ref=e206]:
+          - text: 账单管理
+          - img [ref=e208]
+      - generic [ref=e210]:
+        - tabpanel "账单管理"
+    - main [ref=e211]:
+      - generic [ref=e212]:
+        - generic [ref=e214]:
+          - textbox "账单号/房间/姓名" [ref=e219]
+          - generic [ref=e224] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e226]
+              - generic [ref=e227]: 小区
+            - img [ref=e230]
+          - generic [ref=e235] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e237]
+              - generic [ref=e238]: 状态
+            - img [ref=e241]
+          - generic [ref=e244]:
+            - button "搜索" [ref=e245] [cursor=pointer]:
+              - generic [ref=e246]: 搜索
+            - button "重置" [ref=e247] [cursor=pointer]:
+              - generic [ref=e248]: 重置
+            - button "生成账单" [ref=e249] [cursor=pointer]:
+              - generic [ref=e250]: 生成账单
+        - generic [ref=e252]:
+          - generic [ref=e254]:
+            - table [ref=e256]:
+              - rowgroup [ref=e269]:
+                - row "# 账单号 业主 房间 收费项目 账期 金额 已缴 状态 到期日 操作" [ref=e270]:
+                  - columnheader "#" [ref=e271]:
+                    - generic [ref=e272]: "#"
+                  - columnheader "账单号" [ref=e273]:
+                    - generic [ref=e274]: 账单号
+                  - columnheader "业主" [ref=e275]:
+                    - generic [ref=e276]: 业主
+                  - columnheader "房间" [ref=e277]:
+                    - generic [ref=e278]: 房间
+                  - columnheader "收费项目" [ref=e279]:
+                    - generic [ref=e280]: 收费项目
+                  - columnheader "账期" [ref=e281]:
+                    - generic [ref=e282]: 账期
+                  - columnheader "金额" [ref=e283]:
+                    - generic [ref=e284]: 金额
+                  - columnheader "已缴" [ref=e285]:
+                    - generic [ref=e286]: 已缴
+                  - columnheader "状态" [ref=e287]:
+                    - generic [ref=e288]: 状态
+                  - columnheader "到期日" [ref=e289]:
+                    - generic [ref=e290]: 到期日
+                  - columnheader "操作" [ref=e291]:
+                    - generic [ref=e292]: 操作
+            - generic [ref=e296]:
+              - table:
+                - rowgroup
+              - generic [ref=e298]: el.table.emptyText
+          - generic [ref=e301]:
+            - generic [ref=e302]: 共 0 条
+            - generic [ref=e305] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e307]
+                - generic [ref=e308]: 15el.pagination.pagesize
+              - img [ref=e311]
+            - button "上一页" [disabled] [ref=e313]:
+              - generic:
+                - img
+            - list [ref=e314]:
+              - listitem "el.pagination.currentPage" [ref=e315]: "1"
+            - button "下一页" [disabled] [ref=e316]:
+              - generic:
+                - img

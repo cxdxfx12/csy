@@ -1,0 +1,106 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "工资管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "工资管理" [selected] [ref=e44]:
+          - text: 工资管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "工资管理"
+    - main [ref=e49]:
+      - generic [ref=e51]:
+        - generic [ref=e53]:
+          - text: 工资管理
+          - generic [ref=e54]:
+            - button "批量生成" [ref=e55] [cursor=pointer]:
+              - generic [ref=e56]: 批量生成
+            - button "添加工资" [ref=e57] [cursor=pointer]:
+              - generic [ref=e58]: 添加工资
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - textbox "姓名/工号" [ref=e65]
+            - textbox "月份(如2025-06)" [ref=e71]
+            - generic [ref=e76] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e78]
+                - generic [ref=e79]: 发放状态
+              - img [ref=e82]
+            - generic [ref=e85]:
+              - button "查询" [ref=e86] [cursor=pointer]:
+                - generic [ref=e87]: 查询
+              - button "重置" [ref=e88] [cursor=pointer]:
+                - generic [ref=e89]: 重置
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - table [ref=e93]:
+                - rowgroup [ref=e108]:
+                  - row "工号 姓名 月份 基本工资 奖金 加班费 补贴 扣款 社保 实发 状态 发放时间 操作" [ref=e109]:
+                    - columnheader "工号" [ref=e110]:
+                      - generic [ref=e111]: 工号
+                    - columnheader "姓名" [ref=e112]:
+                      - generic [ref=e113]: 姓名
+                    - columnheader "月份" [ref=e114]:
+                      - generic [ref=e115]: 月份
+                    - columnheader "基本工资" [ref=e116]:
+                      - generic [ref=e117]: 基本工资
+                    - columnheader "奖金" [ref=e118]:
+                      - generic [ref=e119]: 奖金
+                    - columnheader "加班费" [ref=e120]:
+                      - generic [ref=e121]: 加班费
+                    - columnheader "补贴" [ref=e122]:
+                      - generic [ref=e123]: 补贴
+                    - columnheader "扣款" [ref=e124]:
+                      - generic [ref=e125]: 扣款
+                    - columnheader "社保" [ref=e126]:
+                      - generic [ref=e127]: 社保
+                    - columnheader "实发" [ref=e128]:
+                      - generic [ref=e129]: 实发
+                    - columnheader "状态" [ref=e130]:
+                      - generic [ref=e131]: 状态
+                    - columnheader "发放时间" [ref=e132]:
+                      - generic [ref=e133]: 发放时间
+                    - columnheader "操作" [ref=e134]:
+                      - generic [ref=e135]: 操作
+              - generic [ref=e139]:
+                - table:
+                  - rowgroup
+                - generic [ref=e141]: el.table.emptyText
+            - img [ref=e145]
+          - generic [ref=e148]:
+            - generic [ref=e149]: 共 0 条
+            - generic [ref=e152] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e154]
+                - generic [ref=e155]: 15el.pagination.pagesize
+              - img [ref=e158]
+            - button "上一页" [disabled] [ref=e160]:
+              - generic:
+                - img
+            - list [ref=e161]:
+              - listitem "el.pagination.currentPage" [ref=e162]: "1"
+            - button "下一页" [disabled] [ref=e163]:
+              - generic:
+                - img

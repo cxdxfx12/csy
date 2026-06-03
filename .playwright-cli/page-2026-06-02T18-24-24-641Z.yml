@@ -1,0 +1,519 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+      - menuitem "报修管理" [ref=e58]:
+        - generic [ref=e59] [cursor=pointer]:
+          - img [ref=e61]
+          - generic [ref=e63]: 报修管理
+          - img [ref=e65]
+      - menuitem "安保管理" [ref=e67]:
+        - generic [ref=e68] [cursor=pointer]:
+          - generic [ref=e70]: 安保管理
+          - img [ref=e72]
+      - menuitem "停车管理" [expanded] [ref=e74]:
+        - generic [ref=e75] [cursor=pointer]:
+          - img [ref=e77]
+          - generic [ref=e79]: 停车管理
+          - img [ref=e81]
+        - menu:
+          - menuitem "车位管理" [ref=e83] [cursor=pointer]:
+            - img [ref=e85]
+            - generic [ref=e87]: 车位管理
+          - menuitem "车辆管理" [ref=e88] [cursor=pointer]:
+            - generic [ref=e90]: 车辆管理
+          - menuitem "停车记录" [ref=e91] [cursor=pointer]:
+            - img [ref=e93]
+            - generic [ref=e95]: 停车记录
+      - menuitem "公告通知" [ref=e96]:
+        - generic [ref=e97] [cursor=pointer]:
+          - img [ref=e99]
+          - generic [ref=e103]: 公告通知
+          - img [ref=e105]
+      - menuitem "设备管理" [ref=e107]:
+        - generic [ref=e108] [cursor=pointer]:
+          - img [ref=e110]
+          - generic [ref=e115]: 设备管理
+          - img [ref=e117]
+      - menuitem "投诉建议" [ref=e119]:
+        - generic [ref=e120] [cursor=pointer]:
+          - img [ref=e122]
+          - generic [ref=e124]: 投诉建议
+          - img [ref=e126]
+      - menuitem "打印中心" [ref=e128]:
+        - generic [ref=e129] [cursor=pointer]:
+          - img [ref=e131]
+          - generic [ref=e133]: 打印中心
+          - img [ref=e135]
+      - menuitem "物业人员" [ref=e137]:
+        - generic [ref=e138] [cursor=pointer]:
+          - img [ref=e140]
+          - generic [ref=e142]: 物业人员
+          - img [ref=e144]
+      - menuitem "外部供应商" [ref=e146]:
+        - generic [ref=e147] [cursor=pointer]:
+          - img [ref=e149]
+          - generic [ref=e151]: 外部供应商
+          - img [ref=e153]
+  - generic [ref=e155]:
+    - generic [ref=e156]:
+      - generic [ref=e157]:
+        - button [ref=e158] [cursor=pointer]:
+          - img [ref=e160]
+        - navigation "el.breadcrumb.label" [ref=e162]:
+          - generic [ref=e163]:
+            - link "工作台" [ref=e164]
+            - text: /
+          - link "车位管理" [ref=e166]
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - button [ref=e169] [cursor=pointer]:
+            - img [ref=e171]
+          - superscript [ref=e175]
+        - button "超级管理员" [ref=e177] [cursor=pointer]:
+          - img [ref=e180]
+          - generic [ref=e182]: 超级管理员
+    - generic [ref=e184]:
+      - tablist [ref=e188]:
+        - tab "📊 控制台" [ref=e189]
+        - tab "车位管理" [selected] [ref=e190]:
+          - text: 车位管理
+          - img [ref=e192]
+      - generic [ref=e194]:
+        - tabpanel "车位管理"
+    - main [ref=e195]:
+      - generic [ref=e196]:
+        - generic [ref=e198]:
+          - textbox "车位号" [ref=e203]
+          - generic [ref=e208] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e210]
+              - generic [ref=e211]: 小区
+            - img [ref=e214]
+          - generic [ref=e219] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e221]
+              - generic [ref=e222]: 状态
+            - img [ref=e225]
+          - generic [ref=e228]:
+            - button "搜索" [ref=e229] [cursor=pointer]:
+              - generic [ref=e230]: 搜索
+            - button "重置" [ref=e231] [cursor=pointer]:
+              - generic [ref=e232]: 重置
+        - generic [ref=e234]:
+          - button "添加车位" [ref=e236] [cursor=pointer]:
+            - generic [ref=e237]: 添加车位
+          - generic [ref=e238]:
+            - generic [ref=e239]:
+              - table [ref=e241]:
+                - rowgroup [ref=e254]:
+                  - row "# ID 车位号 小区 面积 类型 状态 业主 价格 创建时间 操作" [ref=e255]:
+                    - columnheader "#" [ref=e256]:
+                      - generic [ref=e257]: "#"
+                    - columnheader "ID" [ref=e258]:
+                      - generic [ref=e259]: ID
+                    - columnheader "车位号" [ref=e260]:
+                      - generic [ref=e261]: 车位号
+                    - columnheader "小区" [ref=e262]:
+                      - generic [ref=e263]: 小区
+                    - columnheader "面积" [ref=e264]:
+                      - generic [ref=e265]: 面积
+                    - columnheader "类型" [ref=e266]:
+                      - generic [ref=e267]: 类型
+                    - columnheader "状态" [ref=e268]:
+                      - generic [ref=e269]: 状态
+                    - columnheader "业主" [ref=e270]:
+                      - generic [ref=e271]: 业主
+                    - columnheader "价格" [ref=e272]:
+                      - generic [ref=e273]: 价格
+                    - columnheader "创建时间" [ref=e274]:
+                      - generic [ref=e275]: 创建时间
+                    - columnheader "操作" [ref=e276]:
+                      - generic [ref=e277]: 操作
+              - table [ref=e282]:
+                - rowgroup [ref=e295]:
+                  - row "1 25 E002 翠苑新城 12.80 租赁车位 空闲 ¥280.00 2026-06-02 18:24:00 编辑 删除" [ref=e296]:
+                    - cell "1" [ref=e297]:
+                      - generic [ref=e299]: "1"
+                    - cell "25" [ref=e300]:
+                      - generic [ref=e301]: "25"
+                    - cell "E002" [ref=e302]:
+                      - generic [ref=e303]: E002
+                    - cell "翠苑新城" [ref=e304]:
+                      - generic [ref=e305]: 翠苑新城
+                    - cell "12.80" [ref=e306]:
+                      - generic [ref=e307]: "12.80"
+                    - cell "租赁车位" [ref=e308]:
+                      - generic [ref=e309]: 租赁车位
+                    - cell "空闲" [ref=e310]:
+                      - generic [ref=e311]:
+                        - generic:
+                          - generic: 空闲
+                    - cell [ref=e312]
+                    - cell "¥280.00" [ref=e313]:
+                      - generic [ref=e314]: ¥280.00
+                    - cell "2026-06-02 18:24:00" [ref=e315]:
+                      - generic [ref=e316]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e317]:
+                      - generic [ref=e318]:
+                        - button "编辑" [ref=e319] [cursor=pointer]:
+                          - generic [ref=e320]: 编辑
+                        - button "删除" [ref=e321] [cursor=pointer]:
+                          - generic [ref=e322]: 删除
+                  - row "2 24 E001 翠苑新城 13.00 租赁车位 空闲 ¥280.00 2026-06-02 18:24:00 编辑 删除" [ref=e323]:
+                    - cell "2" [ref=e324]:
+                      - generic [ref=e326]: "2"
+                    - cell "24" [ref=e327]:
+                      - generic [ref=e328]: "24"
+                    - cell "E001" [ref=e329]:
+                      - generic [ref=e330]: E001
+                    - cell "翠苑新城" [ref=e331]:
+                      - generic [ref=e332]: 翠苑新城
+                    - cell "13.00" [ref=e333]:
+                      - generic [ref=e334]: "13.00"
+                    - cell "租赁车位" [ref=e335]:
+                      - generic [ref=e336]: 租赁车位
+                    - cell "空闲" [ref=e337]:
+                      - generic [ref=e338]:
+                        - generic:
+                          - generic: 空闲
+                    - cell [ref=e339]
+                    - cell "¥280.00" [ref=e340]:
+                      - generic [ref=e341]: ¥280.00
+                    - cell "2026-06-02 18:24:00" [ref=e342]:
+                      - generic [ref=e343]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e344]:
+                      - generic [ref=e345]:
+                        - button "编辑" [ref=e346] [cursor=pointer]:
+                          - generic [ref=e347]: 编辑
+                        - button "删除" [ref=e348] [cursor=pointer]:
+                          - generic [ref=e349]: 删除
+                  - row "3 23 D003 翠苑新城 14.50 产权车位 已售 吴建国 ¥350.00 2026-06-02 18:24:00 编辑 删除" [ref=e350]:
+                    - cell "3" [ref=e351]:
+                      - generic [ref=e353]: "3"
+                    - cell "23" [ref=e354]:
+                      - generic [ref=e355]: "23"
+                    - cell "D003" [ref=e356]:
+                      - generic [ref=e357]: D003
+                    - cell "翠苑新城" [ref=e358]:
+                      - generic [ref=e359]: 翠苑新城
+                    - cell "14.50" [ref=e360]:
+                      - generic [ref=e361]: "14.50"
+                    - cell "产权车位" [ref=e362]:
+                      - generic [ref=e363]: 产权车位
+                    - cell "已售" [ref=e364]:
+                      - generic [ref=e365]:
+                        - generic:
+                          - generic: 已售
+                    - cell "吴建国" [ref=e366]:
+                      - generic [ref=e367]: 吴建国
+                    - cell "¥350.00" [ref=e368]:
+                      - generic [ref=e369]: ¥350.00
+                    - cell "2026-06-02 18:24:00" [ref=e370]:
+                      - generic [ref=e371]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e372]:
+                      - generic [ref=e373]:
+                        - button "编辑" [ref=e374] [cursor=pointer]:
+                          - generic [ref=e375]: 编辑
+                        - button "删除" [ref=e376] [cursor=pointer]:
+                          - generic [ref=e377]: 删除
+                  - row "4 22 D002 翠苑新城 15.00 产权车位 已售 周晓燕 ¥350.00 2026-06-02 18:24:00 编辑 删除" [ref=e378]:
+                    - cell "4" [ref=e379]:
+                      - generic [ref=e381]: "4"
+                    - cell "22" [ref=e382]:
+                      - generic [ref=e383]: "22"
+                    - cell "D002" [ref=e384]:
+                      - generic [ref=e385]: D002
+                    - cell "翠苑新城" [ref=e386]:
+                      - generic [ref=e387]: 翠苑新城
+                    - cell "15.00" [ref=e388]:
+                      - generic [ref=e389]: "15.00"
+                    - cell "产权车位" [ref=e390]:
+                      - generic [ref=e391]: 产权车位
+                    - cell "已售" [ref=e392]:
+                      - generic [ref=e393]:
+                        - generic:
+                          - generic: 已售
+                    - cell "周晓燕" [ref=e394]:
+                      - generic [ref=e395]: 周晓燕
+                    - cell "¥350.00" [ref=e396]:
+                      - generic [ref=e397]: ¥350.00
+                    - cell "2026-06-02 18:24:00" [ref=e398]:
+                      - generic [ref=e399]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e400]:
+                      - generic [ref=e401]:
+                        - button "编辑" [ref=e402] [cursor=pointer]:
+                          - generic [ref=e403]: 编辑
+                        - button "删除" [ref=e404] [cursor=pointer]:
+                          - generic [ref=e405]: 删除
+                  - row "5 21 D001 翠苑新城 18.20 产权车位 已售 赵文博 ¥350.00 2026-06-02 18:24:00 编辑 删除" [ref=e406]:
+                    - cell "5" [ref=e407]:
+                      - generic [ref=e409]: "5"
+                    - cell "21" [ref=e410]:
+                      - generic [ref=e411]: "21"
+                    - cell "D001" [ref=e412]:
+                      - generic [ref=e413]: D001
+                    - cell "翠苑新城" [ref=e414]:
+                      - generic [ref=e415]: 翠苑新城
+                    - cell "18.20" [ref=e416]:
+                      - generic [ref=e417]: "18.20"
+                    - cell "产权车位" [ref=e418]:
+                      - generic [ref=e419]: 产权车位
+                    - cell "已售" [ref=e420]:
+                      - generic [ref=e421]:
+                        - generic:
+                          - generic: 已售
+                    - cell "赵文博" [ref=e422]:
+                      - generic [ref=e423]: 赵文博
+                    - cell "¥350.00" [ref=e424]:
+                      - generic [ref=e425]: ¥350.00
+                    - cell "2026-06-02 18:24:00" [ref=e426]:
+                      - generic [ref=e427]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e428]:
+                      - generic [ref=e429]:
+                        - button "编辑" [ref=e430] [cursor=pointer]:
+                          - generic [ref=e431]: 编辑
+                        - button "删除" [ref=e432] [cursor=pointer]:
+                          - generic [ref=e433]: 删除
+                  - row "6 20 C002 阳光花园 0.00 临时车位 空闲 ¥0.00 2026-06-02 18:24:00 编辑 删除" [ref=e434]:
+                    - cell "6" [ref=e435]:
+                      - generic [ref=e437]: "6"
+                    - cell "20" [ref=e438]:
+                      - generic [ref=e439]: "20"
+                    - cell "C002" [ref=e440]:
+                      - generic [ref=e441]: C002
+                    - cell "阳光花园" [ref=e442]:
+                      - generic [ref=e443]: 阳光花园
+                    - cell "0.00" [ref=e444]:
+                      - generic [ref=e445]: "0.00"
+                    - cell "临时车位" [ref=e446]:
+                      - generic [ref=e447]: 临时车位
+                    - cell "空闲" [ref=e448]:
+                      - generic [ref=e449]:
+                        - generic:
+                          - generic: 空闲
+                    - cell [ref=e450]
+                    - cell "¥0.00" [ref=e451]:
+                      - generic [ref=e452]: ¥0.00
+                    - cell "2026-06-02 18:24:00" [ref=e453]:
+                      - generic [ref=e454]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e455]:
+                      - generic [ref=e456]:
+                        - button "编辑" [ref=e457] [cursor=pointer]:
+                          - generic [ref=e458]: 编辑
+                        - button "删除" [ref=e459] [cursor=pointer]:
+                          - generic [ref=e460]: 删除
+                  - row "7 19 C001 阳光花园 0.00 临时车位 空闲 ¥0.00 2026-06-02 18:24:00 编辑 删除" [ref=e461]:
+                    - cell "7" [ref=e462]:
+                      - generic [ref=e464]: "7"
+                    - cell "19" [ref=e465]:
+                      - generic [ref=e466]: "19"
+                    - cell "C001" [ref=e467]:
+                      - generic [ref=e468]: C001
+                    - cell "阳光花园" [ref=e469]:
+                      - generic [ref=e470]: 阳光花园
+                    - cell "0.00" [ref=e471]:
+                      - generic [ref=e472]: "0.00"
+                    - cell "临时车位" [ref=e473]:
+                      - generic [ref=e474]: 临时车位
+                    - cell "空闲" [ref=e475]:
+                      - generic [ref=e476]:
+                        - generic:
+                          - generic: 空闲
+                    - cell [ref=e477]
+                    - cell "¥0.00" [ref=e478]:
+                      - generic [ref=e479]: ¥0.00
+                    - cell "2026-06-02 18:24:00" [ref=e480]:
+                      - generic [ref=e481]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e482]:
+                      - generic [ref=e483]:
+                        - button "编辑" [ref=e484] [cursor=pointer]:
+                          - generic [ref=e485]: 编辑
+                        - button "删除" [ref=e486] [cursor=pointer]:
+                          - generic [ref=e487]: 删除
+                  - row "8 18 B002 阳光花园 12.00 租赁车位 已租 陈志强 ¥250.00 2026-06-02 18:24:00 编辑 删除" [ref=e488]:
+                    - cell "8" [ref=e489]:
+                      - generic [ref=e491]: "8"
+                    - cell "18" [ref=e492]:
+                      - generic [ref=e493]: "18"
+                    - cell "B002" [ref=e494]:
+                      - generic [ref=e495]: B002
+                    - cell "阳光花园" [ref=e496]:
+                      - generic [ref=e497]: 阳光花园
+                    - cell "12.00" [ref=e498]:
+                      - generic [ref=e499]: "12.00"
+                    - cell "租赁车位" [ref=e500]:
+                      - generic [ref=e501]: 租赁车位
+                    - cell "已租" [ref=e502]:
+                      - generic [ref=e503]:
+                        - generic:
+                          - generic: 已租
+                    - cell "陈志强" [ref=e504]:
+                      - generic [ref=e505]: 陈志强
+                    - cell "¥250.00" [ref=e506]:
+                      - generic [ref=e507]: ¥250.00
+                    - cell "2026-06-02 18:24:00" [ref=e508]:
+                      - generic [ref=e509]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e510]:
+                      - generic [ref=e511]:
+                        - button "编辑" [ref=e512] [cursor=pointer]:
+                          - generic [ref=e513]: 编辑
+                        - button "删除" [ref=e514] [cursor=pointer]:
+                          - generic [ref=e515]: 删除
+                  - row "9 17 B001 阳光花园 12.50 租赁车位 已租 刘美华 ¥250.00 2026-06-02 18:24:00 编辑 删除" [ref=e516]:
+                    - cell "9" [ref=e517]:
+                      - generic [ref=e519]: "9"
+                    - cell "17" [ref=e520]:
+                      - generic [ref=e521]: "17"
+                    - cell "B001" [ref=e522]:
+                      - generic [ref=e523]: B001
+                    - cell "阳光花园" [ref=e524]:
+                      - generic [ref=e525]: 阳光花园
+                    - cell "12.50" [ref=e526]:
+                      - generic [ref=e527]: "12.50"
+                    - cell "租赁车位" [ref=e528]:
+                      - generic [ref=e529]: 租赁车位
+                    - cell "已租" [ref=e530]:
+                      - generic [ref=e531]:
+                        - generic:
+                          - generic: 已租
+                    - cell "刘美华" [ref=e532]:
+                      - generic [ref=e533]: 刘美华
+                    - cell "¥250.00" [ref=e534]:
+                      - generic [ref=e535]: ¥250.00
+                    - cell "2026-06-02 18:24:00" [ref=e536]:
+                      - generic [ref=e537]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e538]:
+                      - generic [ref=e539]:
+                        - button "编辑" [ref=e540] [cursor=pointer]:
+                          - generic [ref=e541]: 编辑
+                        - button "删除" [ref=e542] [cursor=pointer]:
+                          - generic [ref=e543]: 删除
+                  - row "10 16 A003 阳光花园 16.00 产权车位 已售 张建国 ¥300.00 2026-06-02 18:24:00 编辑 删除" [ref=e544]:
+                    - cell "10" [ref=e545]:
+                      - generic [ref=e547]: "10"
+                    - cell "16" [ref=e548]:
+                      - generic [ref=e549]: "16"
+                    - cell "A003" [ref=e550]:
+                      - generic [ref=e551]: A003
+                    - cell "阳光花园" [ref=e552]:
+                      - generic [ref=e553]: 阳光花园
+                    - cell "16.00" [ref=e554]:
+                      - generic [ref=e555]: "16.00"
+                    - cell "产权车位" [ref=e556]:
+                      - generic [ref=e557]: 产权车位
+                    - cell "已售" [ref=e558]:
+                      - generic [ref=e559]:
+                        - generic:
+                          - generic: 已售
+                    - cell "张建国" [ref=e560]:
+                      - generic [ref=e561]: 张建国
+                    - cell "¥300.00" [ref=e562]:
+                      - generic [ref=e563]: ¥300.00
+                    - cell "2026-06-02 18:24:00" [ref=e564]:
+                      - generic [ref=e565]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e566]:
+                      - generic [ref=e567]:
+                        - button "编辑" [ref=e568] [cursor=pointer]:
+                          - generic [ref=e569]: 编辑
+                        - button "删除" [ref=e570] [cursor=pointer]:
+                          - generic [ref=e571]: 删除
+                  - row "11 15 A002 阳光花园 14.80 产权车位 已售 李芳 ¥300.00 2026-06-02 18:24:00 编辑 删除" [ref=e572]:
+                    - cell "11" [ref=e573]:
+                      - generic [ref=e575]: "11"
+                    - cell "15" [ref=e576]:
+                      - generic [ref=e577]: "15"
+                    - cell "A002" [ref=e578]:
+                      - generic [ref=e579]: A002
+                    - cell "阳光花园" [ref=e580]:
+                      - generic [ref=e581]: 阳光花园
+                    - cell "14.80" [ref=e582]:
+                      - generic [ref=e583]: "14.80"
+                    - cell "产权车位" [ref=e584]:
+                      - generic [ref=e585]: 产权车位
+                    - cell "已售" [ref=e586]:
+                      - generic [ref=e587]:
+                        - generic:
+                          - generic: 已售
+                    - cell "李芳" [ref=e588]:
+                      - generic [ref=e589]: 李芳
+                    - cell "¥300.00" [ref=e590]:
+                      - generic [ref=e591]: ¥300.00
+                    - cell "2026-06-02 18:24:00" [ref=e592]:
+                      - generic [ref=e593]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e594]:
+                      - generic [ref=e595]:
+                        - button "编辑" [ref=e596] [cursor=pointer]:
+                          - generic [ref=e597]: 编辑
+                        - button "删除" [ref=e598] [cursor=pointer]:
+                          - generic [ref=e599]: 删除
+                  - row "12 14 A001 阳光花园 15.50 产权车位 已售 王大伟 ¥300.00 2026-06-02 18:24:00 编辑 删除" [ref=e600]:
+                    - cell "12" [ref=e601]:
+                      - generic [ref=e603]: "12"
+                    - cell "14" [ref=e604]:
+                      - generic [ref=e605]: "14"
+                    - cell "A001" [ref=e606]:
+                      - generic [ref=e607]: A001
+                    - cell "阳光花园" [ref=e608]:
+                      - generic [ref=e609]: 阳光花园
+                    - cell "15.50" [ref=e610]:
+                      - generic [ref=e611]: "15.50"
+                    - cell "产权车位" [ref=e612]:
+                      - generic [ref=e613]: 产权车位
+                    - cell "已售" [ref=e614]:
+                      - generic [ref=e615]:
+                        - generic:
+                          - generic: 已售
+                    - cell "王大伟" [ref=e616]:
+                      - generic [ref=e617]: 王大伟
+                    - cell "¥300.00" [ref=e618]:
+                      - generic [ref=e619]: ¥300.00
+                    - cell "2026-06-02 18:24:00" [ref=e620]:
+                      - generic [ref=e621]: 2026-06-02 18:24:00
+                    - cell "编辑 删除" [ref=e622]:
+                      - generic [ref=e623]:
+                        - button "编辑" [ref=e624] [cursor=pointer]:
+                          - generic [ref=e625]: 编辑
+                        - button "删除" [ref=e626] [cursor=pointer]:
+                          - generic [ref=e627]: 删除
+            - img [ref=e631]
+          - generic [ref=e634]:
+            - generic [ref=e635]: 共 12 条
+            - generic [ref=e638] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e640]
+                - generic [ref=e641]: 15el.pagination.pagesize
+              - img [ref=e644]
+            - button "上一页" [disabled] [ref=e646]:
+              - generic:
+                - img
+            - list [ref=e647]:
+              - listitem "el.pagination.currentPage" [ref=e648]: "1"
+            - button "下一页" [disabled] [ref=e649]:
+              - generic:
+                - img

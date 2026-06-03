@@ -1,0 +1,49 @@
+# 运行时生成
+/runtime/
+/admin/node_modules/
+/public/admin/
+public/index.html
+
+# 依赖
+/composer.phar
+/vendor/
+
+# 环境/密钥
+.env
+.env.*
+
+# 系统文件
+Thumbs.db
+.DS_Store
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 临时调试脚本
+/_check_*.php
+/_debug_*.php
+/_test_*.php
+/_raw_*.php
+/_curl_test.bat
+/_test_cookie.txt
+
+# 根目录垃圾文件
+/{
+/{console.log*
+/{if*
+/$null
+/column*
+/console.log*
+/date*
+/fetch_assoc*
+/fetchAll*
+/find*
+/first
+/getMessage*
+/query*
+/select*
+/text

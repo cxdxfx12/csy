@@ -1,0 +1,97 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "家庭成员" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "家庭成员" [selected] [ref=e44]:
+          - text: 家庭成员
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "家庭成员"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e52]:
+          - generic [ref=e56]:
+            - generic:
+              - combobox [ref=e58]
+              - generic [ref=e59]: 选择业主
+            - img [ref=e62] [cursor=pointer]
+          - generic [ref=e65]:
+            - button "搜索" [ref=e66] [cursor=pointer]:
+              - generic [ref=e67]: 搜索
+            - button "重置" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: 重置
+        - generic [ref=e71]:
+          - button "添加家庭成员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]: 添加家庭成员
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - table [ref=e78]:
+                - rowgroup [ref=e92]:
+                  - row "# ID 姓名 所属业主 关系 性别 手机 身份证 关联房间 备注 创建时间 操作" [ref=e93]:
+                    - columnheader "#" [ref=e94]:
+                      - generic [ref=e95]: "#"
+                    - columnheader "ID" [ref=e96]:
+                      - generic [ref=e97]: ID
+                    - columnheader "姓名" [ref=e98]:
+                      - generic [ref=e99]: 姓名
+                    - columnheader "所属业主" [ref=e100]:
+                      - generic [ref=e101]: 所属业主
+                    - columnheader "关系" [ref=e102]:
+                      - generic [ref=e103]: 关系
+                    - columnheader "性别" [ref=e104]:
+                      - generic [ref=e105]: 性别
+                    - columnheader "手机" [ref=e106]:
+                      - generic [ref=e107]: 手机
+                    - columnheader "身份证" [ref=e108]:
+                      - generic [ref=e109]: 身份证
+                    - columnheader "关联房间" [ref=e110]:
+                      - generic [ref=e111]: 关联房间
+                    - columnheader "备注" [ref=e112]:
+                      - generic [ref=e113]: 备注
+                    - columnheader "创建时间" [ref=e114]:
+                      - generic [ref=e115]: 创建时间
+                    - columnheader "操作" [ref=e116]:
+                      - generic [ref=e117]: 操作
+              - generic [ref=e121]:
+                - table:
+                  - rowgroup
+                - generic [ref=e123]: el.table.emptyText
+            - img [ref=e127]
+          - generic [ref=e130]:
+            - generic [ref=e131]: 共 0 条
+            - generic [ref=e134] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e136]
+                - generic [ref=e137]: 15el.pagination.pagesize
+              - img [ref=e140]
+            - button "上一页" [disabled] [ref=e142]:
+              - generic:
+                - img
+            - list [ref=e143]:
+              - listitem "el.pagination.currentPage" [ref=e144]: "1"
+            - button "下一页" [disabled] [ref=e145]:
+              - generic:
+                - img

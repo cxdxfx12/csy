@@ -1,0 +1,12 @@
+- generic [ref=e4]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: 🏢
+    - heading "大圣物业管理平台" [level=1] [ref=e8]
+    - paragraph [ref=e9]: 杭州喵喵至家网络有限公司 · 智慧社区物业管理平台
+  - generic [ref=e10]:
+    - heading "欢迎回来" [level=2] [ref=e11]
+    - paragraph [ref=e12]: 请登录您的管理账户
+    - generic [ref=e13]:
+      - textbox "管理员账号" [ref=e15]: admin
+      - textbox "登录密码" [ref=e17]: admin123
+      - button "🚀 登 录" [ref=e18] [cursor=pointer]

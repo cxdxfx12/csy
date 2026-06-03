@@ -1,0 +1,167 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e10]:
+      - menuitem "数据概览" [ref=e11]:
+        - generic [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: 数据概览
+          - img [ref=e18]
+      - menuitem "系统管理" [ref=e20]:
+        - generic [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: 系统管理
+          - img [ref=e27]
+      - menuitem "房产管理" [ref=e29]:
+        - generic [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e34]: 房产管理
+          - img [ref=e36]
+      - menuitem "业主管理" [ref=e38]:
+        - generic [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e43]: 业主管理
+          - img [ref=e45]
+      - menuitem "收费管理" [ref=e47]:
+        - generic [ref=e48] [cursor=pointer]:
+          - img [ref=e50]
+          - generic [ref=e54]: 收费管理
+          - img [ref=e56]
+      - menuitem "报修管理" [expanded] [ref=e58]:
+        - generic [ref=e59] [cursor=pointer]:
+          - img [ref=e61]
+          - generic [ref=e63]: 报修管理
+          - img [ref=e65]
+        - menu:
+          - menuitem "报修工单" [ref=e67] [cursor=pointer]:
+            - img [ref=e69]
+            - generic [ref=e71]: 报修工单
+          - menuitem "维修人员" [ref=e72] [cursor=pointer]:
+            - img [ref=e74]
+            - generic [ref=e76]: 维修人员
+      - menuitem "安保管理" [ref=e77]:
+        - generic [ref=e78] [cursor=pointer]:
+          - generic [ref=e80]: 安保管理
+          - img [ref=e82]
+      - menuitem "停车管理" [ref=e84]:
+        - generic [ref=e85] [cursor=pointer]:
+          - img [ref=e87]
+          - generic [ref=e89]: 停车管理
+          - img [ref=e91]
+      - menuitem "公告通知" [ref=e93]:
+        - generic [ref=e94] [cursor=pointer]:
+          - img [ref=e96]
+          - generic [ref=e100]: 公告通知
+          - img [ref=e102]
+      - menuitem "设备管理" [ref=e104]:
+        - generic [ref=e105] [cursor=pointer]:
+          - img [ref=e107]
+          - generic [ref=e112]: 设备管理
+          - img [ref=e114]
+      - menuitem "投诉建议" [ref=e116]:
+        - generic [ref=e117] [cursor=pointer]:
+          - img [ref=e119]
+          - generic [ref=e121]: 投诉建议
+          - img [ref=e123]
+      - menuitem "打印中心" [ref=e125]:
+        - generic [ref=e126] [cursor=pointer]:
+          - img [ref=e128]
+          - generic [ref=e130]: 打印中心
+          - img [ref=e132]
+      - menuitem "物业人员" [ref=e134]:
+        - generic [ref=e135] [cursor=pointer]:
+          - img [ref=e137]
+          - generic [ref=e139]: 物业人员
+          - img [ref=e141]
+      - menuitem "外部供应商" [ref=e143]:
+        - generic [ref=e144] [cursor=pointer]:
+          - img [ref=e146]
+          - generic [ref=e148]: 外部供应商
+          - img [ref=e150]
+  - generic [ref=e152]:
+    - generic [ref=e153]:
+      - generic [ref=e154]:
+        - button [ref=e155] [cursor=pointer]:
+          - img [ref=e157]
+        - navigation "el.breadcrumb.label" [ref=e159]:
+          - generic [ref=e160]:
+            - link "工作台" [ref=e161]
+            - text: /
+          - link "工单管理" [ref=e163]
+      - generic [ref=e164]:
+        - generic [ref=e165]:
+          - button [ref=e166] [cursor=pointer]:
+            - img [ref=e168]
+          - superscript [ref=e172]
+        - button "超级管理员" [ref=e174] [cursor=pointer]:
+          - img [ref=e177]
+          - generic [ref=e179]: 超级管理员
+    - generic [ref=e181]:
+      - tablist [ref=e185]:
+        - tab "📊 控制台" [ref=e186]
+        - tab "工单管理" [selected] [ref=e187]:
+          - text: 工单管理
+          - img [ref=e189]
+      - generic [ref=e191]:
+        - tabpanel "工单管理"
+    - main [ref=e192]:
+      - generic [ref=e193]:
+        - generic [ref=e195]:
+          - textbox "工单号/报修人/电话" [ref=e200]
+          - generic [ref=e205] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e207]
+              - generic [ref=e208]: 小区
+            - img [ref=e211]
+          - generic [ref=e216] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e218]
+              - generic [ref=e219]: 状态
+            - img [ref=e222]
+          - generic [ref=e225]:
+            - button "搜索" [ref=e226] [cursor=pointer]:
+              - generic [ref=e227]: 搜索
+            - button "重置" [ref=e228] [cursor=pointer]:
+              - generic [ref=e229]: 重置
+        - generic [ref=e231]:
+          - generic [ref=e233]:
+            - table [ref=e235]:
+              - rowgroup [ref=e246]:
+                - row "# 工单号 报修人 房间 类型 状态 维修人 报修时间 操作" [ref=e247]:
+                  - columnheader "#" [ref=e248]:
+                    - generic [ref=e249]: "#"
+                  - columnheader "工单号" [ref=e250]:
+                    - generic [ref=e251]: 工单号
+                  - columnheader "报修人" [ref=e252]:
+                    - generic [ref=e253]: 报修人
+                  - columnheader "房间" [ref=e254]:
+                    - generic [ref=e255]: 房间
+                  - columnheader "类型" [ref=e256]:
+                    - generic [ref=e257]: 类型
+                  - columnheader "状态" [ref=e258]:
+                    - generic [ref=e259]: 状态
+                  - columnheader "维修人" [ref=e260]:
+                    - generic [ref=e261]: 维修人
+                  - columnheader "报修时间" [ref=e262]:
+                    - generic [ref=e263]: 报修时间
+                  - columnheader "操作" [ref=e264]:
+                    - generic [ref=e265]: 操作
+            - generic [ref=e269]:
+              - table:
+                - rowgroup
+              - generic [ref=e271]: el.table.emptyText
+          - generic [ref=e274]:
+            - generic [ref=e275]: 共 0 条
+            - generic [ref=e278] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e280]
+                - generic [ref=e281]: 15el.pagination.pagesize
+              - img [ref=e284]
+            - button "上一页" [disabled] [ref=e286]:
+              - generic:
+                - img
+            - list [ref=e287]:
+              - listitem "el.pagination.currentPage" [ref=e288]: "1"
+            - button "下一页" [disabled] [ref=e289]:
+              - generic:
+                - img

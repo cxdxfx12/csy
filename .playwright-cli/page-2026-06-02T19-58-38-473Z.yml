@@ -1,0 +1,41 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e8]:
+      - generic:
+        - menubar
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "系统配置" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "管理员" [ref=e31] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "系统配置" [selected] [ref=e44]:
+          - text: 系统配置
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "系统配置"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e56] [cursor=pointer]:
+          - generic:
+            - combobox [ref=e58]
+            - generic: 系统配置
+          - img [ref=e61]
+        - button "保存配置" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]: 保存配置

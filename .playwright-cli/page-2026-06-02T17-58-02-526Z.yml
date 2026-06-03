@@ -1,0 +1,458 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - menubar [ref=e160]:
+      - menuitem "数据概览" [ref=e161]:
+        - generic [ref=e162] [cursor=pointer]:
+          - img [ref=e164]
+          - generic [ref=e166]: 数据概览
+          - img [ref=e168]
+      - menuitem "系统管理" [ref=e170]:
+        - generic [ref=e171] [cursor=pointer]:
+          - img [ref=e173]
+          - generic [ref=e175]: 系统管理
+          - img [ref=e177]
+      - menuitem "房产管理" [ref=e179]:
+        - generic [ref=e180] [cursor=pointer]:
+          - img [ref=e182]
+          - generic [ref=e184]: 房产管理
+          - img [ref=e186]
+      - menuitem "业主管理" [ref=e188]:
+        - generic [ref=e189] [cursor=pointer]:
+          - img [ref=e191]
+          - generic [ref=e193]: 业主管理
+          - img [ref=e195]
+      - menuitem "收费管理" [expanded] [ref=e197]:
+        - generic [ref=e198] [cursor=pointer]:
+          - img [ref=e200]
+          - generic [ref=e204]: 收费管理
+          - img [ref=e206]
+        - menu [ref=e208]:
+          - menuitem "收费项目" [ref=e209] [cursor=pointer]:
+            - img [ref=e211]
+            - generic [ref=e214]: 收费项目
+          - menuitem "账单管理" [ref=e215] [cursor=pointer]:
+            - img [ref=e217]
+            - generic [ref=e219]: 账单管理
+          - menuitem "缴费记录" [ref=e220] [cursor=pointer]:
+            - img [ref=e222]
+            - generic [ref=e225]: 缴费记录
+          - menuitem "抄表管理" [ref=e226] [cursor=pointer]:
+            - img [ref=e228]
+            - generic [ref=e232]: 抄表管理
+          - menuitem "财务流水" [ref=e233] [cursor=pointer]:
+            - img [ref=e235]
+            - generic [ref=e237]: 财务流水
+          - menuitem "欠费管理" [ref=e238] [cursor=pointer]:
+            - img [ref=e240]
+            - generic [ref=e244]: 欠费管理
+      - menuitem "报修管理" [ref=e245]:
+        - generic [ref=e246] [cursor=pointer]:
+          - img [ref=e248]
+          - generic [ref=e250]: 报修管理
+          - img [ref=e252]
+      - menuitem "安保管理" [ref=e254]:
+        - generic [ref=e255] [cursor=pointer]:
+          - generic [ref=e257]: 安保管理
+          - img [ref=e259]
+      - menuitem "停车管理" [ref=e261]:
+        - generic [ref=e262] [cursor=pointer]:
+          - img [ref=e264]
+          - generic [ref=e266]: 停车管理
+          - img [ref=e268]
+      - menuitem "公告通知" [ref=e270]:
+        - generic [ref=e271] [cursor=pointer]:
+          - img [ref=e273]
+          - generic [ref=e277]: 公告通知
+          - img [ref=e279]
+      - menuitem "设备管理" [ref=e281]:
+        - generic [ref=e282] [cursor=pointer]:
+          - img [ref=e284]
+          - generic [ref=e289]: 设备管理
+          - img [ref=e291]
+      - menuitem "投诉建议" [ref=e293]:
+        - generic [ref=e294] [cursor=pointer]:
+          - img [ref=e296]
+          - generic [ref=e298]: 投诉建议
+          - img [ref=e300]
+      - menuitem "打印中心" [ref=e302]:
+        - generic [ref=e303] [cursor=pointer]:
+          - img [ref=e305]
+          - generic [ref=e307]: 打印中心
+          - img [ref=e309]
+      - menuitem "物业人员" [ref=e311]:
+        - generic [ref=e312] [cursor=pointer]:
+          - img [ref=e314]
+          - generic [ref=e316]: 物业人员
+          - img [ref=e318]
+      - menuitem "外部供应商" [ref=e320]:
+        - generic [ref=e321] [cursor=pointer]:
+          - img [ref=e323]
+          - generic [ref=e325]: 外部供应商
+          - img [ref=e327]
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+        - navigation "el.breadcrumb.label" [ref=e16]:
+          - generic [ref=e17]:
+            - link "工作台" [ref=e18]
+            - text: /
+          - link "欠费管理" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - button [ref=e23] [cursor=pointer]:
+            - img [ref=e25]
+          - superscript [ref=e29]
+        - button "超级管理员" [ref=e329] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 超级管理员
+    - generic [ref=e38]:
+      - tablist [ref=e42]:
+        - tab "📊 控制台" [ref=e43]
+        - tab "欠费管理" [selected] [ref=e44]:
+          - text: 欠费管理
+          - img [ref=e46]
+      - generic [ref=e48]:
+        - tabpanel "欠费管理"
+    - main [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - textbox "房间号/楼栋/业主/电话" [ref=e57]
+            - generic [ref=e62] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e64]
+                - generic [ref=e65]: 选择小区
+              - img [ref=e68]
+            - generic [ref=e71]:
+              - button "搜索" [ref=e72] [cursor=pointer]:
+                - generic [ref=e73]: 搜索
+              - button "重置" [ref=e74] [cursor=pointer]:
+                - generic [ref=e75]: 重置
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: 欠费房间
+              - generic [ref=e79]: "9"
+            - generic [ref=e80]:
+              - generic [ref=e81]: 欠费总额
+              - generic [ref=e82]: ¥2882.80
+            - generic [ref=e83]:
+              - generic [ref=e84]: 欠费账单
+              - generic [ref=e85]: "15"
+        - generic [ref=e87]:
+          - generic [ref=e89]:
+            - table [ref=e91]:
+              - rowgroup [ref=e105]:
+                - row "# 小区 楼栋 房间号 业主 电话 账单数 应收总额 已付 欠费金额 最近催单 操作" [ref=e106]:
+                  - columnheader "#" [ref=e107]:
+                    - generic [ref=e108]: "#"
+                  - columnheader "小区" [ref=e109]:
+                    - generic [ref=e110]: 小区
+                  - columnheader "楼栋" [ref=e111]:
+                    - generic [ref=e112]: 楼栋
+                  - columnheader "房间号" [ref=e113]:
+                    - generic [ref=e114]: 房间号
+                  - columnheader "业主" [ref=e115]:
+                    - generic [ref=e116]: 业主
+                  - columnheader "电话" [ref=e117]:
+                    - generic [ref=e118]: 电话
+                  - columnheader "账单数" [ref=e119]:
+                    - generic [ref=e120]: 账单数
+                  - columnheader "应收总额" [ref=e121]:
+                    - generic [ref=e122]: 应收总额
+                  - columnheader "已付" [ref=e123]:
+                    - generic [ref=e124]: 已付
+                  - columnheader "欠费金额" [ref=e125]:
+                    - generic [ref=e126]: 欠费金额
+                  - columnheader "最近催单" [ref=e127]:
+                    - generic [ref=e128]: 最近催单
+                  - columnheader "操作" [ref=e129]:
+                    - generic [ref=e130]: 操作
+            - table [ref=e330]:
+              - rowgroup [ref=e344]:
+                - row "1 阳光花园 1号楼 1801 - 2 ¥556.40 ¥100.00 ¥456.40 未催单 📢 催单 记录" [ref=e345]:
+                  - cell "1" [ref=e346]:
+                    - generic [ref=e348]: "1"
+                  - cell "阳光花园" [ref=e349]:
+                    - generic [ref=e350]: 阳光花园
+                  - cell "1号楼" [ref=e351]:
+                    - generic [ref=e352]: 1号楼
+                  - cell "1801" [ref=e353]:
+                    - generic [ref=e354]: "1801"
+                  - cell "-" [ref=e355]:
+                    - generic [ref=e356]: "-"
+                  - cell [ref=e357]
+                  - cell "2" [ref=e358]:
+                    - generic [ref=e359]: "2"
+                  - cell "¥556.40" [ref=e360]:
+                    - generic [ref=e361]: ¥556.40
+                  - cell "¥100.00" [ref=e362]:
+                    - generic [ref=e363]: ¥100.00
+                  - cell "¥456.40" [ref=e364]:
+                    - generic [ref=e365]: ¥456.40
+                  - cell "未催单" [ref=e366]:
+                    - generic [ref=e367]: 未催单
+                  - cell "📢 催单 记录" [ref=e368]:
+                    - generic [ref=e369]:
+                      - button "📢 催单" [ref=e370] [cursor=pointer]:
+                        - generic [ref=e371]: 📢 催单
+                      - button "记录" [ref=e372] [cursor=pointer]:
+                        - generic [ref=e373]: 记录
+                - row "2 阳光花园 1号楼 901 王大伟 13900001001 2 ¥433.10 ¥0.00 ¥433.10 未催单 📢 催单 记录" [ref=e374]:
+                  - cell "2" [ref=e375]:
+                    - generic [ref=e377]: "2"
+                  - cell "阳光花园" [ref=e378]:
+                    - generic [ref=e379]: 阳光花园
+                  - cell "1号楼" [ref=e380]:
+                    - generic [ref=e381]: 1号楼
+                  - cell "901" [ref=e382]:
+                    - generic [ref=e383]: "901"
+                  - cell "王大伟" [ref=e384]:
+                    - generic [ref=e385]: 王大伟
+                  - cell "13900001001" [ref=e386]:
+                    - generic [ref=e387]: "13900001001"
+                  - cell "2" [ref=e388]:
+                    - generic [ref=e389]: "2"
+                  - cell "¥433.10" [ref=e390]:
+                    - generic [ref=e391]: ¥433.10
+                  - cell "¥0.00" [ref=e392]:
+                    - generic [ref=e393]: ¥0.00
+                  - cell "¥433.10" [ref=e394]:
+                    - generic [ref=e395]: ¥433.10
+                  - cell "未催单" [ref=e396]:
+                    - generic [ref=e397]: 未催单
+                  - cell "📢 催单 记录" [ref=e398]:
+                    - generic [ref=e399]:
+                      - button "📢 催单" [ref=e400] [cursor=pointer]:
+                        - generic [ref=e401]: 📢 催单
+                      - button "记录" [ref=e402] [cursor=pointer]:
+                        - generic [ref=e403]: 记录
+                - row "3 翠苑新城 A栋 1801 徐春梅 13900002004 1 ¥396.80 ¥0.00 ¥396.80 未催单 📢 催单 记录" [ref=e404]:
+                  - cell "3" [ref=e405]:
+                    - generic [ref=e407]: "3"
+                  - cell "翠苑新城" [ref=e408]:
+                    - generic [ref=e409]: 翠苑新城
+                  - cell "A栋" [ref=e410]:
+                    - generic [ref=e411]: A栋
+                  - cell "1801" [ref=e412]:
+                    - generic [ref=e413]: "1801"
+                  - cell "徐春梅" [ref=e414]:
+                    - generic [ref=e415]: 徐春梅
+                  - cell "13900002004" [ref=e416]:
+                    - generic [ref=e417]: "13900002004"
+                  - cell "1" [ref=e418]:
+                    - generic [ref=e419]: "1"
+                  - cell "¥396.80" [ref=e420]:
+                    - generic [ref=e421]: ¥396.80
+                  - cell "¥0.00" [ref=e422]:
+                    - generic [ref=e423]: ¥0.00
+                  - cell "¥396.80" [ref=e424]:
+                    - generic [ref=e425]: ¥396.80
+                  - cell "未催单" [ref=e426]:
+                    - generic [ref=e427]: 未催单
+                  - cell "📢 催单 记录" [ref=e428]:
+                    - generic [ref=e429]:
+                      - button "📢 催单" [ref=e430] [cursor=pointer]:
+                        - generic [ref=e431]: 📢 催单
+                      - button "记录" [ref=e432] [cursor=pointer]:
+                        - generic [ref=e433]: 记录
+                - row "4 阳光花园 1号楼 102 - 2 ¥470.60 ¥80.00 ¥390.60 未催单 📢 催单 记录" [ref=e434]:
+                  - cell "4" [ref=e435]:
+                    - generic [ref=e437]: "4"
+                  - cell "阳光花园" [ref=e438]:
+                    - generic [ref=e439]: 阳光花园
+                  - cell "1号楼" [ref=e440]:
+                    - generic [ref=e441]: 1号楼
+                  - cell "102" [ref=e442]:
+                    - generic [ref=e443]: "102"
+                  - cell "-" [ref=e444]:
+                    - generic [ref=e445]: "-"
+                  - cell [ref=e446]
+                  - cell "2" [ref=e447]:
+                    - generic [ref=e448]: "2"
+                  - cell "¥470.60" [ref=e449]:
+                    - generic [ref=e450]: ¥470.60
+                  - cell "¥80.00" [ref=e451]:
+                    - generic [ref=e452]: ¥80.00
+                  - cell "¥390.60" [ref=e453]:
+                    - generic [ref=e454]: ¥390.60
+                  - cell "未催单" [ref=e455]:
+                    - generic [ref=e456]: 未催单
+                  - cell "📢 催单 记录" [ref=e457]:
+                    - generic [ref=e458]:
+                      - button "📢 催单" [ref=e459] [cursor=pointer]:
+                        - generic [ref=e460]: 📢 催单
+                      - button "记录" [ref=e461] [cursor=pointer]:
+                        - generic [ref=e462]: 记录
+                - row "5 翠苑新城 A栋 102 赵文博 13900002001 1 ¥358.40 ¥0.00 ¥358.40 未催单 📢 催单 记录" [ref=e463]:
+                  - cell "5" [ref=e464]:
+                    - generic [ref=e466]: "5"
+                  - cell "翠苑新城" [ref=e467]:
+                    - generic [ref=e468]: 翠苑新城
+                  - cell "A栋" [ref=e469]:
+                    - generic [ref=e470]: A栋
+                  - cell "102" [ref=e471]:
+                    - generic [ref=e472]: "102"
+                  - cell "赵文博" [ref=e473]:
+                    - generic [ref=e474]: 赵文博
+                  - cell "13900002001" [ref=e475]:
+                    - generic [ref=e476]: "13900002001"
+                  - cell "1" [ref=e477]:
+                    - generic [ref=e478]: "1"
+                  - cell "¥358.40" [ref=e479]:
+                    - generic [ref=e480]: ¥358.40
+                  - cell "¥0.00" [ref=e481]:
+                    - generic [ref=e482]: ¥0.00
+                  - cell "¥358.40" [ref=e483]:
+                    - generic [ref=e484]: ¥358.40
+                  - cell "未催单" [ref=e485]:
+                    - generic [ref=e486]: 未催单
+                  - cell "📢 催单 记录" [ref=e487]:
+                    - generic [ref=e488]:
+                      - button "📢 催单" [ref=e489] [cursor=pointer]:
+                        - generic [ref=e490]: 📢 催单
+                      - button "记录" [ref=e491] [cursor=pointer]:
+                        - generic [ref=e492]: 记录
+                - row "6 翠苑新城 A栋 1802 周晓燕 13900002002 1 ¥350.00 ¥0.00 ¥350.00 未催单 📢 催单 记录" [ref=e493]:
+                  - cell "6" [ref=e494]:
+                    - generic [ref=e496]: "6"
+                  - cell "翠苑新城" [ref=e497]:
+                    - generic [ref=e498]: 翠苑新城
+                  - cell "A栋" [ref=e499]:
+                    - generic [ref=e500]: A栋
+                  - cell "1802" [ref=e501]:
+                    - generic [ref=e502]: "1802"
+                  - cell "周晓燕" [ref=e503]:
+                    - generic [ref=e504]: 周晓燕
+                  - cell "13900002002" [ref=e505]:
+                    - generic [ref=e506]: "13900002002"
+                  - cell "1" [ref=e507]:
+                    - generic [ref=e508]: "1"
+                  - cell "¥350.00" [ref=e509]:
+                    - generic [ref=e510]: ¥350.00
+                  - cell "¥0.00" [ref=e511]:
+                    - generic [ref=e512]: ¥0.00
+                  - cell "¥350.00" [ref=e513]:
+                    - generic [ref=e514]: ¥350.00
+                  - cell "未催单" [ref=e515]:
+                    - generic [ref=e516]: 未催单
+                  - cell "📢 催单 记录" [ref=e517]:
+                    - generic [ref=e518]:
+                      - button "📢 催单" [ref=e519] [cursor=pointer]:
+                        - generic [ref=e520]: 📢 催单
+                      - button "记录" [ref=e521] [cursor=pointer]:
+                        - generic [ref=e522]: 记录
+                - row "7 翠苑新城 B栋 102 - 1 ¥291.20 ¥0.00 ¥291.20 未催单 📢 催单 记录" [ref=e523]:
+                  - cell "7" [ref=e524]:
+                    - generic [ref=e526]: "7"
+                  - cell "翠苑新城" [ref=e527]:
+                    - generic [ref=e528]: 翠苑新城
+                  - cell "B栋" [ref=e529]:
+                    - generic [ref=e530]: B栋
+                  - cell "102" [ref=e531]:
+                    - generic [ref=e532]: "102"
+                  - cell "-" [ref=e533]:
+                    - generic [ref=e534]: "-"
+                  - cell [ref=e535]
+                  - cell "1" [ref=e536]:
+                    - generic [ref=e537]: "1"
+                  - cell "¥291.20" [ref=e538]:
+                    - generic [ref=e539]: ¥291.20
+                  - cell "¥0.00" [ref=e540]:
+                    - generic [ref=e541]: ¥0.00
+                  - cell "¥291.20" [ref=e542]:
+                    - generic [ref=e543]: ¥291.20
+                  - cell "未催单" [ref=e544]:
+                    - generic [ref=e545]: 未催单
+                  - cell "📢 催单 记录" [ref=e546]:
+                    - generic [ref=e547]:
+                      - button "📢 催单" [ref=e548] [cursor=pointer]:
+                        - generic [ref=e549]: 📢 催单
+                      - button "记录" [ref=e550] [cursor=pointer]:
+                        - generic [ref=e551]: 记录
+                - row "8 翠苑新城 A栋 901 吴建国 13900002003 2 ¥306.50 ¥200.00 ¥106.50 未催单 📢 催单 记录" [ref=e552]:
+                  - cell "8" [ref=e553]:
+                    - generic [ref=e555]: "8"
+                  - cell "翠苑新城" [ref=e556]:
+                    - generic [ref=e557]: 翠苑新城
+                  - cell "A栋" [ref=e558]:
+                    - generic [ref=e559]: A栋
+                  - cell "901" [ref=e560]:
+                    - generic [ref=e561]: "901"
+                  - cell "吴建国" [ref=e562]:
+                    - generic [ref=e563]: 吴建国
+                  - cell "13900002003" [ref=e564]:
+                    - generic [ref=e565]: "13900002003"
+                  - cell "2" [ref=e566]:
+                    - generic [ref=e567]: "2"
+                  - cell "¥306.50" [ref=e568]:
+                    - generic [ref=e569]: ¥306.50
+                  - cell "¥200.00" [ref=e570]:
+                    - generic [ref=e571]: ¥200.00
+                  - cell "¥106.50" [ref=e572]:
+                    - generic [ref=e573]: ¥106.50
+                  - cell "未催单" [ref=e574]:
+                    - generic [ref=e575]: 未催单
+                  - cell "📢 催单 记录" [ref=e576]:
+                    - generic [ref=e577]:
+                      - button "📢 催单" [ref=e578] [cursor=pointer]:
+                        - generic [ref=e579]: 📢 催单
+                      - button "记录" [ref=e580] [cursor=pointer]:
+                        - generic [ref=e581]: 记录
+                - row "9 阳光花园 1号楼 101 李芳 13900001002 3 ¥139.80 ¥40.00 ¥99.80 未催单 📢 催单 记录" [ref=e582]:
+                  - cell "9" [ref=e583]:
+                    - generic [ref=e585]: "9"
+                  - cell "阳光花园" [ref=e586]:
+                    - generic [ref=e587]: 阳光花园
+                  - cell "1号楼" [ref=e588]:
+                    - generic [ref=e589]: 1号楼
+                  - cell "101" [ref=e590]:
+                    - generic [ref=e591]: "101"
+                  - cell "李芳" [ref=e592]:
+                    - generic [ref=e593]: 李芳
+                  - cell "13900001002" [ref=e594]:
+                    - generic [ref=e595]: "13900001002"
+                  - cell "3" [ref=e596]:
+                    - generic [ref=e597]: "3"
+                  - cell "¥139.80" [ref=e598]:
+                    - generic [ref=e599]: ¥139.80
+                  - cell "¥40.00" [ref=e600]:
+                    - generic [ref=e601]: ¥40.00
+                  - cell "¥99.80" [ref=e602]:
+                    - generic [ref=e603]: ¥99.80
+                  - cell "未催单" [ref=e604]:
+                    - generic [ref=e605]: 未催单
+                  - cell "📢 催单 记录" [ref=e606]:
+                    - generic [ref=e607]:
+                      - button "📢 催单" [ref=e608] [cursor=pointer]:
+                        - generic [ref=e609]: 📢 催单
+                      - button "记录" [ref=e610] [cursor=pointer]:
+                        - generic [ref=e611]: 记录
+          - generic [ref=e143]:
+            - generic [ref=e144]: 共 9 条
+            - generic [ref=e147] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e149]
+                - generic [ref=e150]: 15el.pagination.pagesize
+              - img [ref=e153]
+            - button "上一页" [disabled] [ref=e155]:
+              - generic:
+                - img
+            - list [ref=e156]:
+              - listitem "el.pagination.currentPage" [ref=e157]: "1"
+            - button "下一页" [disabled] [ref=e158]:
+              - generic:
+                - img
+        - dialog "催单确认" [ref=e613]:
+          - generic [active] [ref=e614]:
+            - generic [ref=e615]:
+              - heading "催单确认" [level=2] [ref=e616]
+              - button "el.dialog.close" [ref=e617] [cursor=pointer]:
+                - img [ref=e619]
+            - generic [ref=e621]:
+              - button "取消" [ref=e622] [cursor=pointer]:
+                - generic [ref=e623]: 取消
+              - button "确认催单" [ref=e624] [cursor=pointer]:
+                - generic [ref=e625]: 确认催单
