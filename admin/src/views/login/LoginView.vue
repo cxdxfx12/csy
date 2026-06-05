@@ -2,9 +2,9 @@
   <div class="login-page">
     <div class="login-card">
       <div class="login-left">
+        <img src="/admin/assets/images/welcome-girl.png" alt="" class="welcome-girl" />
         <div class="brand">
-          <div class="brand-icon">🐒</div>
-          <h1>大圣物业管理平台</h1>
+          <img src="/admin/assets/images/monkey-icon.png" alt="" class="brand-icon-img" />
           <p>杭州喵喵至家网络有限公司 · 智慧社区物业管理平台</p>
         </div>
       </div>
@@ -298,8 +298,10 @@ async function handleBind() {
 <style scoped>
 .login-page { height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2b6cb0,#2c5282); }
 .login-card { display:flex;background:#fff;border-radius:20px;box-shadow:0 25px 50px rgba(0,0,0,0.15);overflow:hidden;width:800px;min-height:480px; }
-.login-left { flex:1;background:linear-gradient(135deg,#2b6cb0,#3182ce);padding:40px;display:flex;flex-direction:column;justify-content:center; }
-.brand-icon { font-size:48px;margin-bottom:8px; }
+.login-left { flex:1;background:linear-gradient(135deg,#2b6cb0,#3182ce);padding:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden; }
+.welcome-girl { width:100%;max-width:320px;height:auto;object-fit:contain;margin-bottom:16px;border-radius:12px; }
+.brand { text-align:center;z-index:2; }
+.brand-icon-img { width:64px;height:64px;object-fit:contain;margin-bottom:8px; }
 .brand h1 { color:#fff;font-size:22px;font-weight:700;margin-bottom:4px; }
 .brand p { color:rgba(255,255,255,0.7);font-size:13px; }
 .login-right { width:360px;padding:40px;display:flex;flex-direction:column;justify-content:center; }

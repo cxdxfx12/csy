@@ -47,22 +47,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 $req = new app\Request();
 set_request($req);
 $uri = $_SERVER['REQUEST_URI'];
-$path = parse_url((string)$uri, PHP_URL_PATH) ?? '';
-$path = trim($path, '/');
+$rawPath = parse_url((string)$uri, PHP_URL_PATH) ?? '';
+
+// 官网首页：根路径直接输出 index.html
+if ($rawPath === '/' || $rawPath === '/index.html') {
+    $homepage = __DIR__ . '/index.html';
+    if (file_exists($homepage)) {
+        header('Content-Type: text/html; charset=utf-8');
+        readfile($homepage);
+        exit;
+    }
+}
+
+$path = trim($rawPath, '/');
+// 根路径 trim 后为空，还原为 '/' 以便匹配路由
+if ($path === '') $path = '/';
 if (strpos($path, 'api.php/') === 0) $path = substr($path, 8);
 if (strpos($path, 'index.php/') === 0) $path = substr($path, 10);
 if (strpos($path, 'index.php') === 0) $path = substr($path, 9);
 // admin Vue 端直接以 /api 作为 baseURL，路径如 /api/admin/login
-// 仅在第二段是 admin/staff/manager 时剥离 api/ 前缀
-// api 模块自身的路由（如 api/repair/list）保留
+// 前端 axios: baseURL='/api' + url='/api/admin/xxx' → '/api/api/admin/xxx' 双重前缀
+// 缓存中路由格式为 api/admin/xxx（含 api/ 前缀），故只剥离多余层
+// api 模块自身的路由（如 api/repair/list）保持不变
 $knownShowModules = ['admin', 'staff', 'manager'];
+if (strpos($path, 'api/api/') === 0) {
+    // 剥离前端误拼接的多余一层 api/，保留单层 api/
+    $path = substr($path, 4);
+}
+// 兼容存量服务器旧缓存（admin/ 不含 api/ 前缀的格式）
 if (strpos($path, 'api/') === 0) {
     $segments = explode('/', $path);
     if (count($segments) >= 2 && in_array($segments[1], $knownShowModules)) {
-        $path = substr($path, 4); // 剥离前缀 'api/'
+        // 双保险：如果缓存里有 api/admin/xxx 就能匹配；没有的话剥离也匹配不了
+        // 不做额外剥离，保持原样
     }
 }
 $path = ltrim($path, '/');
+
 $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
 // =========== 加载路由定义（带缓存） ===========

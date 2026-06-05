@@ -1,0 +1,16 @@
+{
+  "name": "ds",
+  "version": "1.0.0",
+  "description": "> 杭州喵喵至家网络有限公司 · 智慧社区物业管理平台",
+  "main": "_eval_claim.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "basic-ftp": "^6.0.1",
+    "node-ssh": "^13.2.1"
+  }
+}

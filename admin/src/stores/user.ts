@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function fetchInfo() {
-    const res = await apiGet<{ userInfo: UserInfo; menus: MenuItem[]; permissions: string[] }>('/admin/login/info')
+    const res = await apiGet<{ userInfo: UserInfo; menus: MenuItem[]; permissions: string[] }>('/admin/info')
     userInfo.value = res.data.userInfo
     menus.value = res.data.menus
     permissions.value = res.data.permissions

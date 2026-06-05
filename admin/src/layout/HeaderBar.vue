@@ -109,7 +109,7 @@ const notifyItems = computed(() => {
 
 async function fetchBadges() {
   try {
-    const res = await apiGet<Record<string, number>>('/api/admin/badge/counts')
+    const res = await apiGet<Record<string, number>>('/admin/badge/counts')
     const d = res.data || res || {}
     // 按 category 读取
     const keys = ['bill', 'repair', 'complaint', 'order', 'vote', 'activity']

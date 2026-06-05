@@ -102,6 +102,7 @@ Route::group('api/admin', function () {
     Route::post('login', 'admin/Login/login');
     Route::post('logout', 'admin/Login/logout');
     Route::get('info', 'admin/Login/info');
+    Route::get('login/info', 'admin/Login/info'); // 兼容前端旧版错误 URL
     // 微信
     Route::get('wechatOAuth', 'admin/Login/wechatOAuth');
     Route::get('wechatCallback', 'admin/Login/wechatCallback');
@@ -111,6 +112,7 @@ Route::group('api/admin', function () {
 
     // 系统管理 - 管理员
     Route::get('user/list', 'admin/AdminUser/lists');
+    Route::get('AdminUser/lists', 'admin/AdminUser/lists'); // 兼容前端旧版路径
     Route::post('user/add', 'admin/AdminUser/add');
     Route::post('user/edit', 'admin/AdminUser/edit');
     Route::post('user/delete', 'admin/AdminUser/delete');
@@ -143,6 +145,7 @@ Route::group('api/admin', function () {
 
     // 小区管理
     Route::get('community/list', 'admin/Community/lists');
+    Route::get('community/listAll', 'admin/Community/lists'); // 兼容前端旧版路径
     Route::post('community/add', 'admin/Community/add');
     Route::post('community/edit', 'admin/Community/edit');
     Route::post('community/delete', 'admin/Community/delete');
