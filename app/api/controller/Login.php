@@ -9,7 +9,7 @@ use service\WechatService;
 
 class Login extends BaseApi
 {
-    protected $noAuth = ['login', 'register', 'sendSms', 'resetPassword', 'wechatOAuth', 'wechatCallback', 'wechatLogin', 'wechatAutoRegister'];
+    protected $noAuth = ['login', 'register', 'sendSms', 'resetPassword', 'wechatOAuth', 'wechatCallback', 'wechatLogin', 'wechatAutoRegister', 'communityList'];
 
     public function login()
     {
@@ -39,6 +39,13 @@ class Login extends BaseApi
         $data['password'] = encrypt_password($data['password']);
         $data['register_time'] = date('Y-m-d H:i:s');
         $data['create_time'] = date('Y-m-d H:i:s');
+
+        // 只保留 ds_owner 表中存在的字段，避免 1054 错误
+        $allowed = ['community_id','realname','gender','phone','password',
+            'id_card','birthday','email','avatar','type','emergency_contact',
+            'emergency_phone','status','remark','register_time','create_time'];
+        $data = array_intersect_key($data, array_flip($allowed));
+
         Db::name('owner')->insert($data);
         return $this->success([], '注册成功');
     }
@@ -81,12 +88,20 @@ class Login extends BaseApi
         $communityId = intval($this->request->param('community_id', 0));
         $redirectTo = $this->request->param('redirect', '/owner.html');
 
+        // 未传小区ID时，自动查找第一个已配置微信的小区
         if ($communityId <= 0) {
-            // 未指定小区则跳到选择页
-            $communityId = $this->request->param('cid', 0);
+            $config = Db::name('community_wechat_config')
+                ->where('status', 1)
+                ->where('app_id', '<>', '')
+                ->where('app_secret', '<>', '')
+                ->order('id asc')
+                ->find();
+            if ($config) {
+                $communityId = $config['community_id'];
+            }
         }
         if ($communityId <= 0) {
-            return $this->error('请指定小区ID（?community_id=X）');
+            return $this->error('系统尚未配置微信公众号');
         }
 
         $wxConfig = WechatService::getCommunityWechatConfig($communityId);
@@ -94,8 +109,8 @@ class Login extends BaseApi
             return $this->error('该小区未配置微信公众号');
         }
 
-        // 回调地址：当前域名的 /index.php/api/wechatCallback
-        $domain = $this->request->domain();
+        // 回调地址：使用配置的OAuth域名
+        $domain = WechatService::getOAuthDomain();
         $callbackUrl = $domain . '/index.php/api/wechatCallback';
         // state 存社区ID和回跳地址
         $state = base64_encode(json_encode([
@@ -103,7 +118,13 @@ class Login extends BaseApi
             'redirect'     => $redirectTo,
         ]));
 
-        $oauthUrl = WechatService::buildOAuthUrl($wxConfig['app_id'], $callbackUrl, 'snsapi_base', $state);
+        $oauthUrl = WechatService::buildOAuthUrl($wxConfig['app_id'], $callbackUrl, 'snsapi_userinfo', $state);
+
+        // 前端直接跳转模式：返回 JSON，避免 302 跨域重定向导致微信不拦截 OAuth
+        if ($this->request->param('json') == '1') {
+            return $this->success(['oauth_url' => $oauthUrl], 'ok');
+        }
+
         return redirect($oauthUrl);
     }
 
@@ -143,7 +164,7 @@ class Login extends BaseApi
         $token = $this->loginByOpenid($openid, $communityId, $wxConfig);
 
         // 重定向回前端，带上 token
-        $domain = $this->request->domain();
+        $domain = WechatService::getOAuthDomain();
         $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
         $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
         return redirect($finalUrl);
@@ -205,6 +226,18 @@ class Login extends BaseApi
                 Db::name('owner')->where('id', $byUnion['id'])->update(['openid' => $openid]);
                 return $this->issueToken($byUnion, '微信登录成功（已关联）');
             }
+        }
+
+        // 检查是否有已软删除的同 openid 记录，有则恢复
+        $deleted = Db::name('owner')->where('openid', $openid)->whereNotNull('delete_time')->find();
+        if ($deleted) {
+            Db::name('owner')->where('id', $deleted['id'])->update([
+                'delete_time'     => null,
+                'last_login_time' => date('Y-m-d H:i:s'),
+                'wechat_unionid'  => $unionid ?: $deleted['wechat_unionid'],
+            ]);
+            $owner = Db::name('owner')->where('id', $deleted['id'])->find();
+            return $this->issueToken($owner, '微信登录成功');
         }
 
         // 新建业主记录
@@ -284,14 +317,24 @@ class Login extends BaseApi
     // ========== 私有辅助 ==========
 
     /**
-     * 签发 JWT token + 更新登录时间
+     * 获取启用的小区列表（公开接口，供登录页下拉使用）
      */
-    private function issueToken(array $owner, string $msg = '登录成功')
+    public function communityList()
     {
-        if ($owner['status'] != 1) {
-            return $this->error('账户已被禁用');
-        }
+        $list = Db::name('community')
+            ->where('delete_time', null)
+            ->where('status', 1)
+            ->field('id, name')
+            ->order('id', 'asc')
+            ->select();
+        return $this->success($list);
+    }
 
+    /**
+     * 签发 JWT token（纯字符串，不包装响应）
+     */
+    private function _makeToken(array $owner): string
+    {
         $jwtConfig = config('jwt');
         $now = time();
         $payload = [
@@ -308,6 +351,20 @@ class Login extends BaseApi
         Db::name('owner')->where('id', $owner['id'])->update([
             'last_login_time' => date('Y-m-d H:i:s'),
         ]);
+
+        return $token;
+    }
+
+    /**
+     * 签发 JWT token + 更新登录时间（包装为 JSON 响应）
+     */
+    private function issueToken(array $owner, string $msg = '登录成功')
+    {
+        if ($owner['status'] != 1) {
+            return $this->error('账户已被禁用');
+        }
+
+        $token = $this->_makeToken($owner);
 
         return $this->success([
             'token'    => $token,
@@ -331,29 +388,33 @@ class Login extends BaseApi
     {
         $owner = Db::name('owner')->where('openid', $openid)->whereNull('delete_time')->find();
 
-        if ($owner) {
-            // 已有用户
-            $resp = $this->issueToken($owner, '微信登录成功');
-        } else {
-            // 新建用户
-            $newOwnerId = Db::name('owner')->insertGetId([
-                'community_id'    => $communityId,
-                'realname'        => '微信用户',
-                'phone'           => '',
-                'password'        => '',
-                'openid'          => $openid,
-                'type'            => 1,
-                'status'          => 1,
-                'register_time'   => date('Y-m-d H:i:s'),
-                'last_login_time' => date('Y-m-d H:i:s'),
-                'create_time'     => date('Y-m-d H:i:s'),
-            ]);
-            $newOwner = Db::name('owner')->where('id', $newOwnerId)->find();
-            $resp = $this->issueToken($newOwner, '微信登录成功（新用户）');
+        if (!$owner) {
+            // 检查是否有已软删除的同 openid 记录，有则恢复
+            $deleted = Db::name('owner')->where('openid', $openid)->whereNotNull('delete_time')->find();
+            if ($deleted) {
+                Db::name('owner')->where('id', $deleted['id'])->update([
+                    'delete_time'     => null,
+                    'last_login_time' => date('Y-m-d H:i:s'),
+                ]);
+                $owner = Db::name('owner')->where('id', $deleted['id'])->find();
+            } else {
+                // 新建用户
+                $newOwnerId = Db::name('owner')->insertGetId([
+                    'community_id'    => $communityId,
+                    'realname'        => '微信用户',
+                    'phone'           => '',
+                    'password'        => '',
+                    'openid'          => $openid,
+                    'type'            => 1,
+                    'status'          => 1,
+                    'register_time'   => date('Y-m-d H:i:s'),
+                    'last_login_time' => date('Y-m-d H:i:s'),
+                    'create_time'     => date('Y-m-d H:i:s'),
+                ]);
+                $owner = Db::name('owner')->where('id', $newOwnerId)->find();
+            }
         }
 
-        // 从 issueToken 的 Json response 里取 token
-        $data = $resp->getData();
-        return $data['data']['token'] ?? '';
+        return $this->_makeToken($owner);
     }
 }

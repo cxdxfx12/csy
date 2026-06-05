@@ -11,7 +11,12 @@ class RepairOrder extends BaseAdmin
         [$page, $limit] = $this->getPage();
         $where = [['ro.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['ro.community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['ro.community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('ro.community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['ro.status', '=', $status];
         $keyword = $this->request->param('keyword', '');
@@ -38,6 +43,7 @@ class RepairOrder extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['order_no'] = build_order_no('DSR');
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('repair_order')->insert($data);
@@ -47,6 +53,8 @@ class RepairOrder extends BaseAdmin
     public function assign()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('repair_order')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         $workerId = $this->request->post('worker_id', 0);
         Db::name('repair_order')->where('id', $id)->update([
             'assignee_id' => $workerId,
@@ -60,6 +68,8 @@ class RepairOrder extends BaseAdmin
     public function close()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('repair_order')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         $remark = $this->request->post('remark', '');
         Db::name('repair_order')->where('id', $id)->update([
             'status' => 6,
@@ -83,6 +93,8 @@ class RepairOrder extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('repair_order')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('repair_order')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

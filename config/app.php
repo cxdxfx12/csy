@@ -7,6 +7,9 @@ return [
     'app_name'            => '大圣物业管理系统',
     // 应用地址
     'app_host'            => '',
+    // 微信 OAuth 回调域名（必须与微信公众平台后台「网页授权域名」完全一致）
+    // 留空则自动从请求域名获取。填写示例：http://www.hbdxm.com 或 https://www.hbdxm.com
+    'wx_oauth_domain'     => 'https://www.hbdxm.com',
     // 应用Trace
     'app_trace'           => false,
     // 应用模式

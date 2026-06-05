@@ -58,14 +58,16 @@ class Role extends BaseAdmin
 
     public function savePermission()
     {
-        $roleId = $this->request->post('role_id', 0);
-        $menuIds = $this->request->post('menu_ids/a', []);
+        $roleId = (int)$this->request->post('role_id', 0);
+        // 注意：自定义 Request 类不支持 ThinkPHP 的 /a 修饰符，直接用 post() 拿数组
+        $menuIds = $this->request->post('menu_ids', []);
+        if (!is_array($menuIds)) $menuIds = [];
 
         Db::name('role_menu')->where('role_id', $roleId)->delete();
         if (!empty($menuIds)) {
             $data = [];
             foreach ($menuIds as $menuId) {
-                $data[] = ['role_id' => $roleId, 'menu_id' => $menuId];
+                $data[] = ['role_id' => $roleId, 'menu_id' => intval($menuId)];
             }
             Db::name('role_menu')->insertAll($data);
         }

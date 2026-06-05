@@ -46,6 +46,7 @@ const router = createRouter({
         { path: 'equipment/index', name: 'EquipmentIndex', component: () => import('@/views/equipment/EquipmentIndex.vue'), meta: { title: '设备台账' } },
         { path: 'equipment/maintain', name: 'EquipmentMaintain', component: () => import('@/views/equipment/EquipmentMaintain.vue'), meta: { title: '维保记录' } },
         { path: 'complaint/index', name: 'ComplaintIndex', component: () => import('@/views/complaint/ComplaintIndex.vue'), meta: { title: '投诉管理' } },
+        { path: 'print', redirect: '/print/receipt' },
         { path: 'print/receipt', name: 'PrintReceipt', component: () => import('@/views/print/Receipt.vue'), meta: { title: '收据打印' } },
         { path: 'print/notice', name: 'PrintNotice', component: () => import('@/views/print/PrintNotice.vue'), meta: { title: '催缴通知' } },
         { path: 'staff/index', name: 'StaffIndex', component: () => import('@/views/staff/StaffIndex.vue'), meta: { title: '员工档案' } },

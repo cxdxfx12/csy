@@ -9,21 +9,29 @@ class Equipment extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['e.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['e.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
         $category = $this->request->param('category', 0);
-        if ($category) $where[] = ['e.category', '=', $category];
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['e.status', '=', $status];
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['e.name|e.code|e.model', 'like', "%{$keyword}%"];
 
-        $total = Db::name('equipment')->alias('e')->where($where)->count();
-        $list = Db::name('equipment')->alias('e')
+        $cntQuery = Db::name('equipment')->alias('e')->whereNull('`e`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($category) $cntQuery->where('`e`.`category`', '=', $category);
+        if ($status !== '') $cntQuery->where('`e`.`status`', '=', $status);
+        if ($keyword) $cntQuery->where('`e`.`name`|`e`.`code`|`e`.`model`', 'like', "%{$keyword}%");
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('equipment')->alias('e')
             ->leftJoin('community c', 'c.id = e.community_id')
             ->field('e.*, c.name as community_name')
-            ->where($where)->page($page, $limit)->order('e.id', 'desc')->select();
+            ->whereNull('`e`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($category) $listQuery->where('`e`.`category`', '=', $category);
+        if ($status !== '') $listQuery->where('`e`.`status`', '=', $status);
+        if ($keyword) $listQuery->where('`e`.`name`|`e`.`code`|`e`.`model`', 'like', "%{$keyword}%");
+        $list = $listQuery->page($page, $limit)->order('e.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

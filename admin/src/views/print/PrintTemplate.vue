@@ -80,6 +80,9 @@
           <el-option label="表单" value="form" />
           <el-option label="其他" value="other" />
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-select" @change="loadData">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+        </el-select>
         <el-select v-model="query.status" placeholder="启用状态" clearable class="filter-select" @change="loadData">
           <el-option label="已启用" :value="1" />
           <el-option label="已禁用" :value="0" />
@@ -219,7 +222,7 @@
       class="template-dialog"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" ref="formRef" label-width="100px" class="template-form">
+      <el-form :model="form" ref="formRef" :rules="formRules" label-width="100px" class="template-form">
         <div class="form-section">
           <div class="section-title">
             <el-icon><InfoFilled /></el-icon>
@@ -227,12 +230,12 @@
           </div>
           <el-row :gutter="16">
             <el-col :span="12">
-              <el-form-item label="模板名称" required>
+              <el-form-item label="模板名称" prop="name">
                 <el-input v-model="form.name" placeholder="如：标准缴费收据" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="模板编码" required>
+              <el-form-item label="模板编码" prop="code">
                 <el-input v-model="form.code" placeholder="如：receipt_standard" />
               </el-form-item>
             </el-col>
@@ -361,8 +364,14 @@ const dialogVisible = ref(false)
 const editId = ref(0)
 const formRef = ref()
 const viewMode = ref<'grid' | 'list'>('grid')
+const communities = ref<any[]>([])
 
-const query = reactive({ page: 1, limit: 12, keyword: '', type: '', status: undefined as any })
+const formRules = {
+  name: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
+  code: [{ required: true, message: '请输入模板编码', trigger: 'blur' }],
+}
+
+const query = reactive({ page: 1, limit: 12, keyword: '', type: '', status: undefined as any, community_id: 0 as any })
 const form = reactive<any>({
   name: '', code: '', type: 'receipt', content: '',
   page_size: 'A4', page_orientation: 'portrait',
@@ -403,9 +412,15 @@ async function loadData() {
     if (query.keyword) params.keyword = query.keyword
     if (query.type) params.type = query.type
     if (query.status !== undefined && query.status !== '') params.status = query.status
-    const res = await apiGet('/admin/print/printTemplateList', { params })
-    if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
-  } catch (_) { list.value = []; total.value = 0 }
+    if (query.community_id) params.community_id = query.community_id
+    const res = await apiGet('/admin/print/printTemplateList', params)
+    console.log('[PrintTemplate] loadData response:', JSON.stringify({ code: res?.code, dataIsArr: Array.isArray(res?.data), dataLen: (res?.data as any)?.length, count: res?.count }))
+    if (res && res.code === 0) { list.value = res.data || []; total.value = res.count || 0 }
+  } catch (err) {
+    console.error('[PrintTemplate] loadData error:', err)
+    ElMessage.error('加载打印模板列表失败: ' + ((err as any)?.msg || (err as any)?.message || '未知错误'))
+    list.value = []; total.value = 0
+  }
   finally { loading.value = false }
 }
 
@@ -428,17 +443,25 @@ function openForm(row?: any) {
 }
 
 async function handleSubmit() {
+  try {
+    await formRef.value?.validate()
+  } catch { return }
   submitting.value = true
   try {
     const url = editId.value ? '/admin/print/printTemplateEdit' : '/admin/print/printTemplateAdd'
     const payload = { ...form, id: editId.value || undefined }
+    console.log('[PrintTemplate] handleSubmit:', { url, payload: JSON.stringify(payload) })
     const res = await apiPost(url, payload)
+    console.log('[PrintTemplate] handleSubmit response:', JSON.stringify(res))
     if (res && res.code === 0) {
       ElMessage.success(editId.value ? '模板已更新' : '模板已创建')
       dialogVisible.value = false
       loadData()
     }
-  } catch (_) {}
+  } catch (err) {
+    console.error('[PrintTemplate] handleSubmit error:', err)
+    ElMessage.error('提交失败: ' + ((err as any)?.msg || (err as any)?.message || '未知错误'))
+  }
   finally { submitting.value = false }
 }
 
@@ -456,7 +479,10 @@ async function handleDelete(row: any) {
   } catch (_) {}
 }
 
-onMounted(() => loadData())
+onMounted(async () => {
+  try { const r = await apiGet('/admin/community/list', { limit: 999 }); communities.value = r.data?.list || r.data || [] } catch {}
+  loadData()
+})
 
 watch([() => query.page, () => query.limit], () => {
   loadData()

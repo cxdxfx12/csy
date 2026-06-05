@@ -12,8 +12,13 @@ class PrintTemplate extends BaseAdmin
         $where = [['delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['name|code|content', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
+        $type = $this->request->param('type', '');
+        if ($type) $where[] = ['type', '=', $type];
+        $status = $this->request->param('status', '');
+        if ($status !== '') $where[] = ['status', '=', intval($status)];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['community_id', '=', $cid];
         $total = Db::name('print_template')->where($where)->count();
         $list = Db::name('print_template')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->table($list, $total);

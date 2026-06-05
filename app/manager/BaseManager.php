@@ -49,13 +49,20 @@ class BaseManager extends BaseController
             $this->managerId   = $user['id'];
             $this->managerInfo = $user;
 
-            // 从 community_ids 中取第一个小区作为管理小区
-            $ids = array_filter(explode(',', $user['community_ids'] ?? ''));
-            $this->communityId = !empty($ids) ? intval($ids[0]) : 0;
+            // 从 community_ids 中取第一个小区作为默认管理小区
+            $allIds = array_values(array_filter(array_map('intval', explode(',', $user['community_ids'] ?? ''))));
+            $this->communityId = !empty($allIds) ? $allIds[0] : 0;
+
+            // 支持前端通过 X-Community-Id 请求头切换小区（需在管理的范围内）
+            $reqCid = intval($this->request->header('X-Community-Id', 0));
+            if ($reqCid > 0 && in_array($reqCid, $allIds)) {
+                $this->communityId = $reqCid;
+            }
 
             $this->request->managerId   = $this->managerId;
             $this->request->managerInfo = $this->managerInfo;
             $this->request->communityId = $this->communityId;
+            $this->request->managedCommunityIds = $allIds;
         } catch (\Exception $e) {
             $this->error('登录已过期，请重新登录', 401);
         }

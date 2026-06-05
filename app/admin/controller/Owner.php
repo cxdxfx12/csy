@@ -9,14 +9,15 @@ class Owner extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $keyword     = $this->request->param('keyword', '');
-        $communityId = $this->request->param('community_id', 0);
-        $type        = $this->request->param('type', 0);
+        $keyword = $this->request->param('keyword', '');
+        $cid     = $this->getFilteredCommunityId();
+        $type    = $this->request->param('type', 0);
 
         // count 直接查 owner 表，不 JOIN
         $cntQuery = Db::name('owner')->whereNull('delete_time');
         if ($keyword)     $cntQuery->where('realname|phone|id_card', 'like', "%{$keyword}%");
-        if ($communityId) $cntQuery->where('community_id', $communityId);
+        if ($cid === -1)  $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('community_id', $cid);
         if ($type)        $cntQuery->where('type', $type);
         $total = $cntQuery->count();
 
@@ -29,7 +30,8 @@ class Owner extends BaseAdmin
             ->field(implode(',', $ownerFields) . ', c.name as community_name')
             ->whereNull('`o`.`delete_time`');
         if ($keyword)     $listQuery->where('o.realname|o.phone|o.id_card', 'like', "%{$keyword}%");
-        if ($communityId) $listQuery->where('`o`.`community_id`', '=', intval($communityId));
+        if ($cid === -1)  $listQuery->where('`o`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`o`.`community_id`', '=', intval($cid));
         if ($type)        $listQuery->where('`o`.`type`', '=', intval($type));
         $list = $listQuery->order('o.id', 'desc')->page($page, $limit)->select();
 
@@ -71,6 +73,9 @@ class Owner extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+
+        // 校验社区权限
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
 
         // 过滤不应插入 owner 表的字段
         unset($data['id'], $data['room_id']);
@@ -131,6 +136,15 @@ class Owner extends BaseAdmin
         $data = $this->request->post();
         $id = intval($data['id'] ?? 0);
         if (!$id) return $this->error('参数错误');
+
+        // 校验归属小区权限
+        $owner = Db::name('owner')->where('id', $id)->find();
+        if (!$owner) return $this->error('业主不存在');
+        $this->validateCommunityAccess($owner['community_id'] ?? 0);
+        if (!empty($data['community_id'])) {
+            $this->validateCommunityAccess($data['community_id']);
+        }
+
         unset($data['id'], $data['room_id']);
 
         if (isset($data['password']) && !empty($data['password'])) {
@@ -200,6 +214,11 @@ class Owner extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        // 校验归属小区权限
+        $owner = Db::name('owner')->where('id', $id)->find();
+        if (!$owner) return $this->error('业主不存在');
+        $this->validateCommunityAccess($owner['community_id'] ?? 0);
+
         Db::name('owner')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         $roomIds = Db::name('owner_room')->where('owner_id', $id)->whereNull('delete_time')->column('room_id');
         if (!empty($roomIds)) {

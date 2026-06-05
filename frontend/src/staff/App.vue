@@ -13,12 +13,13 @@
     </div>
     <nav class="tab-bar" v-if="$route.path !== '/login'">
       <router-link to="/home" class="tab"><span>🏠</span><em>首页</em></router-link>
-      <router-link to="/repair" class="tab"><span>🔧</span><em>报修</em><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
+      <router-link to="/repair" class="tab" @click="dismissBadge('repair')"><span>🔧</span><em>报修</em><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
       <router-link to="/meter" class="tab"><span>📊</span><em>抄表</em></router-link>
-      <router-link to="/charge" class="tab"><span>💰</span><em>收费</em><b v-if="badges.charge>0">{{ badges.charge > 99 ? '99+' : badges.charge }}</b></router-link>
+      <router-link to="/charge" class="tab" @click="dismissBadge('charge')"><span>💰</span><em>收费</em><b v-if="badges.charge>0">{{ badges.charge > 99 ? '99+' : badges.charge }}</b></router-link>
       <router-link to="/patrol" class="tab"><span>🛡️</span><em>巡更</em></router-link>
       <router-link to="/visitor" class="tab"><span>👤</span><em>访客</em></router-link>
-      <router-link to="/order" class="tab"><span>📋</span><em>工单</em><b v-if="badges.order>0">{{ badges.order > 99 ? '99+' : badges.order }}</b></router-link>
+      <router-link to="/order" class="tab" @click="dismissBadge('order')"><span>📋</span><em>工单</em><b v-if="badges.order>0">{{ badges.order > 99 ? '99+' : badges.order }}</b></router-link>
+      <router-link to="/complaint" class="tab" @click="dismissBadge('complaint')"><span>📢</span><em>投诉</em><b v-if="badges.complaint>0">{{ badges.complaint > 99 ? '99+' : badges.complaint }}</b></router-link>
     </nav>
   </div>
 </template>
@@ -32,7 +33,8 @@ const router = useRouter()
 const api = createApi('/api/staff', 'staff_token')
 
 // 角标数字
-const badges = reactive({ repair: 0, charge: 0, order: 0 })
+const badges = reactive({ repair: 0, charge: 0, order: 0, complaint: 0, vote: 0, activity: 0 })
+const badgesRaw = reactive({ repair: 0, charge: 0, order: 0, complaint: 0, vote: 0, activity: 0 })
 
 // 新消息弹窗
 const notifyShow = ref(false)
@@ -48,38 +50,54 @@ async function fetchBadges() {
     const res = await api('/badge/counts')
     if (res.code !== 0) return
     const d = res.data
+    const keys = ['repair','charge','order','complaint','vote','activity']
+
+    // 记录原始值
+    keys.forEach(k => { badgesRaw[k] = d[k] || 0 })
+
+    // 应用已读消除
+    const seen = JSON.parse(localStorage.getItem('staff_badge_seen') || '{}')
+    keys.forEach(k => { badges[k] = Math.max(0, (d[k] || 0) - (seen[k] || 0)) })
 
     // 对比是否有新增
     if (lastBadges) {
       const growth = []
       if (d.repair > (lastBadges.repair || 0)) growth.push({ key: 'repair', title: '新报修单', text: d.last_repair ? `房间 ${d.last_repair.room_number || '--'} ${d.last_repair.title || ''}` : `+${d.repair - lastBadges.repair} 条待接单`, route: '/repair' })
       if (d.charge > (lastBadges.charge || 0)) growth.push({ key: 'charge', title: '新待缴账单', text: d.last_bill ? `${d.last_bill.owner_name || '--'} ¥${d.last_bill.total_amount || 0}` : `+${d.charge - lastBadges.charge} 条未缴费`, route: '/charge' })
-      if (d.order  > (lastBadges.order  || 0)) growth.push({ key: 'order',  title: '新工单',       text: `+${d.order - lastBadges.order} 条进行中`,                               route: '/order' })
-      // 只弹最新的一条
+      if (d.order  > (lastBadges.order  || 0)) growth.push({ key: 'order',  title: '新工单',       text: `+${d.order - lastBadges.order} 条进行中`, route: '/order' })
+      if (d.complaint > (lastBadges.complaint || 0)) growth.push({ key: 'complaint', title: '新投诉', text: d.last_complaint ? (d.last_complaint.content || '').substring(0,30) : `+${d.complaint - lastBadges.complaint} 条待处理`, route: '/complaint' })
+      if (d.vote > (lastBadges.vote || 0)) growth.push({ key: 'vote', title: '新投票', text: d.last_vote ? d.last_vote.title : `+${d.vote - lastBadges.vote} 个进行中`, route: '/order' })
+      if (d.activity > (lastBadges.activity || 0)) growth.push({ key: 'activity', title: '新活动', text: d.last_activity ? d.last_activity.title : `+${d.activity - lastBadges.activity} 个报名中`, route: '/order' })
       if (growth.length > 0) {
         const g = growth[0]
         notifyTitle.value = g.title
         notifyText.value = g.text
         notifyRoute.value = g.route
         notifyShow.value = true
-        // 5 秒后自动消失
         setTimeout(() => { notifyShow.value = false }, 5000)
       }
     }
 
     lastBadges = { ...d }
-    badges.repair = d.repair || 0
-    badges.charge = d.charge || 0
-    badges.order  = d.order  || 0
-  } catch (e) {
-    // 静默失败
-  }
+  } catch (e) { /* 静默 */ }
 }
 
 // 点击弹窗跳转
 function goNotify() {
-  if (notifyRoute.value) router.push(notifyRoute.value)
+  if (notifyRoute.value) {
+    const key = notifyRoute.value.substring(1)
+    if (['repair','charge','order','complaint'].includes(key)) dismissBadge(key)
+    router.push(notifyRoute.value)
+  }
   notifyShow.value = false
+}
+
+// 点击阅读后角标消失
+function dismissBadge(key) {
+  const seen = JSON.parse(localStorage.getItem('staff_badge_seen') || '{}')
+  seen[key] = badgesRaw[key] || 0
+  localStorage.setItem('staff_badge_seen', JSON.stringify(seen))
+  badges[key] = 0
 }
 
 onBeforeMount(() => {

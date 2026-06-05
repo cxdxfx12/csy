@@ -11,6 +11,8 @@ import ChargeView from './views/ChargeView.vue'
 import PatrolView from './views/PatrolView.vue'
 import VisitorView from './views/VisitorView.vue'
 import OrderView from './views/OrderView.vue'
+import ComplaintView from './views/ComplaintView.vue'
+import ProfileView from './views/ProfileView.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -21,7 +23,9 @@ const routes = [
   { path: '/charge', component: ChargeView },
   { path: '/patrol', component: PatrolView },
   { path: '/visitor', component: VisitorView },
-  { path: '/order', component: OrderView }
+  { path: '/order', component: OrderView },
+  { path: '/complaint', component: ComplaintView },
+  { path: '/profile', component: ProfileView }
 ]
 
 const router = createRouter({ history: createWebHashHistory(), routes })

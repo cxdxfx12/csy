@@ -12,8 +12,9 @@ class Vote extends BaseAdmin
         $where = [['v.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['v.title', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['v.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['v.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['v.community_id', '=', $cid];
         $status = $this->request->param('status', 0);
         if ($status) $where[] = ['v.status', '=', $status];
 
@@ -38,25 +39,27 @@ class Vote extends BaseAdmin
         $options = $data['options'] ?? [];
         unset($data['options']);
 
+        // 至少需要2个有效选项
+        $data['type'] = $data['type'] ?? 1;
+        $options = array_values(array_filter($options, function($t) { return !empty(trim($t)); }));
+        if (count($options) < 2) {
+            return $this->error('至少需要2个有效选项');
+        }
+
         $data['create_time'] = date('Y-m-d H:i:s');
         $data['status'] = $data['status'] ?? 1;
         $voteId = Db::name('vote')->insertGetId($data);
 
-        if (!empty($options)) {
-            $insertOptions = [];
-            foreach ($options as $i => $title) {
-                if (empty(trim($title))) continue;
-                $insertOptions[] = [
-                    'vote_id' => $voteId,
-                    'title' => trim($title),
-                    'sort' => $i + 1,
-                    'count' => 0,
-                ];
-            }
-            if (!empty($insertOptions)) {
-                Db::name('vote_option')->insertAll($insertOptions);
-            }
+        $insertOptions = [];
+        foreach ($options as $i => $title) {
+            $insertOptions[] = [
+                'vote_id' => $voteId,
+                'title' => trim($title),
+                'sort' => $i + 1,
+                'count' => 0,
+            ];
         }
+        Db::name('vote_option')->insertAll($insertOptions);
 
         return $this->success(['id' => $voteId], '添加成功');
     }
@@ -68,24 +71,26 @@ class Vote extends BaseAdmin
         $options = $data['options'] ?? [];
         unset($data['options']);
 
+        // 至少需要2个有效选项
+        $data['type'] = $data['type'] ?? 1;
+        $options = array_values(array_filter($options, function($t) { return !empty(trim($t)); }));
+        if (count($options) < 2) {
+            return $this->error('至少需要2个有效选项');
+        }
+
         Db::name('vote')->where('id', $id)->update($data);
 
-        if (!empty($options)) {
-            Db::name('vote_option')->where('vote_id', $id)->delete();
-            $insertOptions = [];
-            foreach ($options as $i => $title) {
-                if (empty(trim($title))) continue;
-                $insertOptions[] = [
-                    'vote_id' => $id,
-                    'title' => trim($title),
-                    'sort' => $i + 1,
-                    'count' => 0,
-                ];
-            }
-            if (!empty($insertOptions)) {
-                Db::name('vote_option')->insertAll($insertOptions);
-            }
+        Db::name('vote_option')->where('vote_id', $id)->delete();
+        $insertOptions = [];
+        foreach ($options as $i => $title) {
+            $insertOptions[] = [
+                'vote_id' => $id,
+                'title' => trim($title),
+                'sort' => $i + 1,
+                'count' => 0,
+            ];
         }
+        Db::name('vote_option')->insertAll($insertOptions);
 
         return $this->success([], '修改成功');
     }

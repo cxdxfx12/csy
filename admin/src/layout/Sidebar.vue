@@ -4,9 +4,9 @@
   </div>
   <div class="sidebar-menu-wrap">
     <el-scrollbar>
-      <el-menu :default-active="route.path" :collapse="appStore.sidebarCollapsed" router class="sidebar-menu">
+      <el-menu :default-active="route.path" :collapse="appStore.sidebarCollapsed" class="sidebar-menu" @select="handleSelect">
         <template v-for="menu in menuList" :key="menu.id">
-          <el-sub-menu v-if="menu.children?.length" :index="menu.route">
+          <el-sub-menu v-if="menu.children?.length" :index="String(menu.id)">
             <template #title>
               <el-icon><component :is="menuIcon(menu)" /></el-icon>
               <span>{{ menu.name }}</span>
@@ -28,12 +28,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
 import type { MenuItem } from '@/types/api'
 
 const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore()
 
@@ -69,6 +70,16 @@ const iconMap: Record<string, string> = {
 function menuIcon(menu: MenuItem): string {
   const p = (menu.permission || menu.route || '').split(':').pop()?.split('/').pop() || ''
   return iconMap[p] || 'Menu'
+}
+
+function handleSelect(index: string) {
+  // index 是子菜单项的 route（以 / 开头）或父级 sub-menu 的 id（纯数字）
+  // 只有 index 以 / 开头、与当前路径不同、且路由表中确实存在对应路由时才导航
+  if (!index || !index.startsWith('/') || index === route.path) return
+  const resolved = router.resolve(index)
+  if (resolved.matched.length > 0) {
+    router.push(index)
+  }
 }
 </script>
 

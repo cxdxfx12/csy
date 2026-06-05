@@ -12,6 +12,7 @@
       </template>
 
       <el-form :model="query" inline>
+        <el-form-item><el-select v-model="query.community_id" placeholder="小区" clearable style="width:150px;" @change="onCommunityChange"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" /></el-select></el-form-item>
         <el-form-item><el-input v-model="query.keyword" placeholder="姓名/工号" clearable style="width:180px;" /></el-form-item>
         <el-form-item><el-date-picker v-model="query.date_start" type="date" placeholder="开始日期" value-format="YYYY-MM-DD" style="width:140px;" /></el-form-item>
         <el-form-item><el-date-picker v-model="query.date_end" type="date" placeholder="结束日期" value-format="YYYY-MM-DD" style="width:140px;" /></el-form-item>
@@ -22,6 +23,7 @@
       <el-table :data="list" v-loading="loading" stripe border style="width:100%;">
         <el-table-column prop="job_no" label="工号" width="90" />
         <el-table-column prop="staff_name" label="姓名" width="90" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="attendance_date" label="日期" width="110" />
         <el-table-column prop="sign_in_time" label="签到时间" width="110" />
         <el-table-column prop="sign_out_time" label="签退时间" width="110" />
@@ -37,7 +39,7 @@
 
     <el-dialog v-model="dialogVisible" :title="formTitle" width="480px" destroy-on-close>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
-        <el-form-item label="员工" prop="staff_id"><el-select v-model="form.staff_id" filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in staffList" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
+        <el-form-item label="员工" prop="staff_id"><el-select v-model="form.staff_id" filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in filteredStaff" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
         <el-form-item label="日期" prop="attendance_date"><el-date-picker v-model="form.attendance_date" type="date" style="width:100%;" value-format="YYYY-MM-DD" /></el-form-item>
         <el-form-item label="签到时间"><el-time-picker v-model="form.sign_in_time" format="HH:mm" value-format="HH:mm" style="width:100%;" /></el-form-item>
         <el-form-item label="签退时间"><el-time-picker v-model="form.sign_out_time" format="HH:mm" value-format="HH:mm" style="width:100%;" /></el-form-item>
@@ -49,7 +51,7 @@
 
     <el-dialog v-model="batchVisible" title="批量打卡" width="480px" destroy-on-close>
       <el-form :model="batchForm" label-width="100px">
-        <el-form-item label="选择员工"><el-select v-model="batchForm.staff_ids" multiple filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in staffList" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
+        <el-form-item label="选择员工"><el-select v-model="batchForm.staff_ids" multiple filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in filteredStaff" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
         <el-form-item label="日期"><el-date-picker v-model="batchForm.attendance_date" type="date" style="width:100%;" value-format="YYYY-MM-DD" /></el-form-item>
         <el-form-item label="考勤状态"><el-select v-model="batchForm.type" style="width:100%;"><el-option label="出勤" :value="1" /><el-option label="迟到" :value="2" /><el-option label="早退" :value="3" /><el-option label="请假" :value="4" /></el-select></el-form-item>
       </el-form>
@@ -59,9 +61,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
+
+const filteredStaff = computed(() => {
+  if (!query.community_id) return staffList.value
+  return staffList.value.filter((s: any) => s.community_id == query.community_id)
+})
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -72,15 +79,28 @@ const submitting = ref(false)
 const formRef = ref<any>(null)
 const formTitle = ref('新增考勤')
 const staffList = ref<any[]>([])
+const communities = ref<any[]>([])
 const typeMap: Record<number,string> = { 1: '出勤', 2: '迟到', 3: '早退', 4: '请假', 5: '旷工' }
 const typeTag: Record<number,string> = { 1: 'success', 2: 'warning', 3: 'warning', 4: 'info', 5: 'danger' }
 
-const query = reactive({ keyword: '', date_start: '', date_end: '', type: undefined as any, page: 1, limit: 15 })
+const query = reactive({ community_id: undefined as any, keyword: '', date_start: '', date_end: '', type: undefined as any, page: 1, limit: 15 })
 const form = reactive<any>({ id: 0, staff_id: '', attendance_date: '', sign_in_time: '', sign_out_time: '', type: 1, remark: '' })
 const batchForm = reactive({ staff_ids: [] as any[], attendance_date: '', type: 1 })
 const rules = { staff_id: [{ required: true, message: '请选择员工' }], attendance_date: [{ required: true, message: '请选择日期' }], type: [{ required: true, message: '请选择状态' }] }
 
-function resetQuery() { Object.assign(query, { keyword: '', date_start: '', date_end: '', type: undefined, page: 1 }); loadData() }
+function resetQuery() { Object.assign(query, { community_id: undefined, keyword: '', date_start: '', date_end: '', type: undefined, page: 1 }); loadData() }
+
+// 小区切换时重新加载员工列表
+function onCommunityChange() {
+  loadStaffList()
+  loadData()
+}
+
+async function loadStaffList() {
+  const params: any = { page: 1, limit: 500 }
+  if (query.community_id) params.community_id = query.community_id
+  try { const r = await apiGet('/admin/Staff/lists', params); staffList.value = r.data.list || r.data } catch {}
+}
 
 async function loadData() {
   loading.value = true
@@ -121,6 +141,7 @@ async function submitBatch() {
 async function handleDelete(id: number) { await apiPost('/admin/Attendance/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
+  try { const r = await apiGet('/admin/Community/lists', {}); communities.value = r.data.list || r.data } catch {}
   try { const r = await apiGet('/admin/Staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
   loadData()
 })

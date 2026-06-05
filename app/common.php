@@ -94,6 +94,17 @@ if (!function_exists('build_order_no')) {
     }
 }
 
+if (!function_exists('redirect')) {
+    /**
+     * URL 重定向
+     */
+    function redirect(string $url, int $code = 302)
+    {
+        header('Location: ' . $url, true, $code);
+        exit;
+    }
+}
+
 if (!function_exists('encrypt_password')) {
     /**
      * 密码加密（bcrypt）

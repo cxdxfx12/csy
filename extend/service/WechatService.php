@@ -111,6 +111,28 @@ class WechatService
             ->find();
     }
 
+    // ---------- OAuth 域名 ----------
+
+    /**
+     * 获取 OAuth 回调域名（优先使用配置，确保与微信后台一致）
+     * @return string 如 http://www.hbdxm.com
+     */
+    public static function getOAuthDomain(): string
+    {
+        $domain = config('app.wx_oauth_domain', '');
+        if (!empty($domain)) return rtrim($domain, '/');
+
+        // 无配置时从请求中获取
+        $scheme = 'http';
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        ) {
+            $scheme = 'https';
+        }
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '127.0.0.1';
+        return $scheme . '://' . $host;
+    }
+
     // ---------- 内部工具 ----------
 
     private static function requestGet(string $url): array

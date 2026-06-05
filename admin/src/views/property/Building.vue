@@ -11,7 +11,10 @@
       </el-form>
     </div>
     <el-card shadow="never" class="table-card">
-      <div class="table-toolbar"><el-button type="primary" @click="openForm()">添加楼栋</el-button></div>
+      <div class="table-toolbar">
+        <el-button type="primary" @click="openForm()">添加楼栋</el-button>
+        <el-button v-if="canForceDelete" type="danger" @click="openForceDeleteDialog">删除楼栋</el-button>
+      </div>
       <el-table :data="list" v-loading="loading" stripe border>
         <el-table-column type="index" label="#" width="50" />
         <el-table-column prop="id" label="ID" width="60" />
@@ -24,6 +27,7 @@
         </el-table-column>
         <el-table-column prop="units" label="单元数" width="70" />
         <el-table-column prop="total_rooms" label="房间数" width="80" />
+        <el-table-column prop="manager_name" label="管理员" width="100" />
         <el-table-column prop="sort" label="排序" width="70" />
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{row}">
@@ -37,10 +41,38 @@
       </div>
     </el-card>
 
+    <!-- 强制删除楼栋对话框 -->
+    <el-dialog v-model="forceDeleteVisible" title="删除楼栋" width="500px" destroy-on-close>
+      <el-alert type="error" :closable="false" show-icon style="margin-bottom:16px;">
+        <template #title>⚠️ 危险操作：将删除整栋楼及其所有房间数据，不可恢复！</template>
+      </el-alert>
+      <el-form label-width="80px">
+        <el-form-item label="所属小区">
+          <el-select v-model="forceDeleteForm.community_id" placeholder="先选择小区" style="width:100%;" @change="onForceDeleteCommunityChange">
+            <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择楼栋">
+          <el-select v-model="forceDeleteForm.building_id" placeholder="选择要删除的楼栋" style="width:100%;" :disabled="!forceDeleteForm.community_id">
+            <el-option v-for="b in forceDeleteBuildings" :key="b.id" :label="b.name + ' (' + (b.total_rooms || 0) + '间房)'" :value="b.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="forceDeleteVisible = false">取消</el-button>
+        <el-button type="danger" @click="doForceDelete" :loading="forceDeleting" :disabled="!forceDeleteForm.building_id">确认强制删除</el-button>
+      </template>
+    </el-dialog>
+
     <el-dialog v-model="dialogVisible" :title="formTitle" width="720px" destroy-on-close>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="所属小区" prop="community_id"><el-select v-model="form.community_id" placeholder="选择小区" style="width:100%;"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" /></el-select></el-form-item>
         <el-form-item label="名称" prop="name"><el-input v-model="form.name" placeholder="楼栋名称" /></el-form-item>
+        <el-form-item label="楼栋管理员">
+          <el-select v-model="form.manager_id" placeholder="选择管理员" clearable style="width:100%;" filterable>
+            <el-option v-for="s in staffList" :key="s.id" :label="s.realname + ' - ' + (s.department || s.position || '')" :value="s.id" />
+          </el-select>
+        </el-form-item>
         <el-row :gutter="16">
           <el-col :span="8"><el-form-item label="层数"><el-input-number v-model="form.floors" :min="1" style="width:100%;" /></el-form-item></el-col>
           <el-col :span="8"><el-form-item label="单元数"><el-input-number v-model="form.units" :min="1" style="width:100%;" /></el-form-item></el-col>
@@ -52,7 +84,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="底商层数">
-              <el-input-number v-model="form.commercial_floors" :min="1" :max="form.floors - 1" :disabled="!form.has_commercial || !isAdd" style="width:100%;" />
+              <el-input-number v-model="form.commercial_floors" :min="1" :max="Math.max(1, form.floors - 1)" :disabled="!form.has_commercial || !isAdd" style="width:100%;" />
             </el-form-item>
           </el-col>
           <el-col :span="8" v-if="isAdd && form.has_commercial">
@@ -114,6 +146,13 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+const canForceDelete = computed(() => {
+  const roleId = userStore.userInfo?.role_id ?? 99
+  return roleId <= 2
+})
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -123,6 +162,7 @@ const submitting = ref(false)
 const formRef = ref<any>(null)
 const formTitle = ref('添加楼栋')
 const communities = ref<any[]>([])
+const staffList = ref<any[]>([])
 
 const defaultUnitConfig = () => ({ rooms_per_floor: 2, areas: [0, 0], sameAsFirst: false })
 
@@ -130,11 +170,55 @@ const query = reactive({ keyword: '', community_id: undefined as any, page: 1, l
 const form = reactive<any>({
   id: 0, community_id: '', name: '', floors: 1, units: 1, sort: 0,
   has_commercial: false, commercial_floors: 1,
+  manager_id: 0 as any,
   units_config: [defaultUnitConfig()]
 })
 const rules = {
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   community_id: [{ required: true, message: '请选择小区', trigger: 'change' }]
+}
+
+// 强制删除楼栋
+const forceDeleteVisible = ref(false)
+const forceDeleting = ref(false)
+const forceDeleteBuildings = ref<any[]>([])
+const forceDeleteForm = reactive({ community_id: '' as any, building_id: '' as any })
+
+function openForceDeleteDialog() {
+  forceDeleteForm.community_id = ''
+  forceDeleteForm.building_id = ''
+  forceDeleteBuildings.value = []
+  forceDeleteVisible.value = true
+}
+
+async function onForceDeleteCommunityChange(cid: number) {
+  forceDeleteForm.building_id = ''
+  if (!cid) { forceDeleteBuildings.value = []; return }
+  try {
+    const r = await apiGet('/admin/building/list', { community_id: cid, limit: 999 })
+    forceDeleteBuildings.value = (r.data?.list || r.data || [])
+  } catch { forceDeleteBuildings.value = [] }
+}
+
+async function doForceDelete() {
+  if (!forceDeleteForm.building_id) return
+  const building = forceDeleteBuildings.value.find(b => b.id === forceDeleteForm.building_id)
+  const label = building ? `"${building.name}"（${building.total_rooms || 0} 间房）` : `ID=${forceDeleteForm.building_id}`
+  try {
+    await ElMessageBox.confirm(
+      `确定要强制删除楼栋 ${label} 吗？该楼栋下所有房间数据将被永久删除，不可恢复！`,
+      '危险操作确认',
+      { type: 'error', confirmButtonText: '确认删除', cancelButtonText: '取消' }
+    )
+  } catch { return }
+  forceDeleting.value = true
+  try {
+    await apiPost('/admin/building/delete', { id: forceDeleteForm.building_id, force: 1 })
+    ElMessage.success('删除成功，已级联删除所有房间')
+    forceDeleteVisible.value = false
+    loadData()
+  } catch { /* apiPost 已 toast */ }
+  finally { forceDeleting.value = false }
 }
 
 const isAdd = computed(() => form.id === 0)
@@ -222,12 +306,14 @@ function openForm(row?: any) {
       id: row.id, community_id: row.community_id || '', name: row.name || '',
       floors: row.floors || 1, units: row.units || 1, sort: row.sort || 0,
       has_commercial: !!(row.has_commercial), commercial_floors: row.commercial_floors || 0,
+      manager_id: row.manager_id || 0,
       units_config: []
     })
   } else {
     Object.assign(form, {
       id: 0, community_id: '', name: '', floors: 1, units: 1, sort: 0,
       has_commercial: false, commercial_floors: 1,
+      manager_id: 0,
       units_config: [defaultUnitConfig()]
     })
   }
@@ -241,7 +327,7 @@ async function submitForm() {
   try {
     let payload: any
     if (form.id) {
-      payload = { id: form.id, community_id: form.community_id, name: form.name, floors: form.floors, units: form.units, sort: form.sort, has_commercial: form.has_commercial ? 1 : 0, commercial_floors: form.commercial_floors }
+      payload = { id: form.id, community_id: form.community_id, name: form.name, floors: form.floors, units: form.units, sort: form.sort, has_commercial: form.has_commercial ? 1 : 0, commercial_floors: form.commercial_floors, manager_id: form.manager_id || 0 }
     } else {
       payload = {
         community_id: form.community_id,
@@ -250,6 +336,7 @@ async function submitForm() {
         units: form.units,
         has_commercial: form.has_commercial ? 1 : 0,
         commercial_floors: form.has_commercial ? form.commercial_floors : 0,
+        manager_id: form.manager_id || 0,
         units_config: form.units_config.map((u: any) => ({ rooms_per_floor: u.rooms_per_floor, areas: [...u.areas] })),
         sort: form.sort
       }
@@ -275,6 +362,7 @@ async function handleDelete(row: any) {
 
 onMounted(async () => {
   try { const r = await apiGet('/admin/community/list', { limit: 999 }); communities.value = r.data?.list || r.data || [] } catch {}
+  try { const r = await apiGet('/admin/staff/lists', { limit: 999, status: 1 }); staffList.value = r.data?.list || r.data || [] } catch {}
   loadData()
 })
 </script>

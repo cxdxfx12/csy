@@ -195,7 +195,7 @@ async function loadData() {
     const res = await apiGet('/admin/charge/dunningList', {
       page: query.page, limit: query.limit, keyword: query.keyword, channel: query.channel
     })
-    if (res.code === 0) { list.value = res.data?.list || []; total.value = res.data?.total || 0; calcStats() }
+    if (res.code === 0) { list.value = res.data?.list || res.data || []; total.value = res.count || res.data?.total || list.value.length; calcStats() }
   } finally { loading.value = false }
 }
 

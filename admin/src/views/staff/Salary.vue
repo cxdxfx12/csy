@@ -12,6 +12,7 @@
       </template>
 
       <el-form :model="query" inline>
+        <el-form-item><el-select v-model="query.community_id" placeholder="小区" clearable style="width:150px;" @change="onCommunityChange"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" /></el-select></el-form-item>
         <el-form-item><el-input v-model="query.keyword" placeholder="姓名/工号" clearable style="width:180px;" /></el-form-item>
         <el-form-item><el-input v-model="query.month" placeholder="月份(如2025-06)" clearable style="width:160px;" /></el-form-item>
         <el-form-item><el-select v-model="query.status" placeholder="发放状态" clearable style="width:120px;"><el-option label="未发放" :value="0" /><el-option label="已发放" :value="1" /></el-select></el-form-item>
@@ -21,6 +22,7 @@
       <el-table :data="list" v-loading="loading" stripe border style="width:100%;" show-summary :summary-method="getSummaries">
         <el-table-column prop="job_no" label="工号" width="90" />
         <el-table-column prop="staff_name" label="姓名" width="90" />
+        <el-table-column prop="community_name" label="小区" width="120" />
         <el-table-column prop="salary_month" label="月份" width="90" />
         <el-table-column prop="base_salary" label="基本工资" width="100"><template #default="{row}">¥{{ row.base_salary||0 }}</template></el-table-column>
         <el-table-column prop="bonus" label="奖金" width="90"><template #default="{row}">¥{{ row.bonus||0 }}</template></el-table-column>
@@ -42,7 +44,7 @@
 
     <el-dialog v-model="dialogVisible" :title="formTitle" width="560px" destroy-on-close>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
-        <el-form-item label="员工" prop="staff_id"><el-select v-model="form.staff_id" filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in staffList" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
+        <el-form-item label="员工" prop="staff_id"><el-select v-model="form.staff_id" filterable placeholder="选择员工" style="width:100%;"><el-option v-for="s in filteredStaff" :key="s.id" :label="s.realname+'('+s.job_no+')'" :value="s.id" /></el-select></el-form-item>
         <el-form-item label="月份" prop="salary_month"><el-input v-model="form.salary_month" placeholder="如:2025-06" /></el-form-item>
         <el-row :gutter="15">
           <el-col :span="12"><el-form-item label="基本工资"><el-input-number v-model="form.base_salary" :min="0" :precision="2" style="width:100%;" /></el-form-item></el-col>
@@ -77,6 +79,11 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
 
+const filteredStaff = computed(() => {
+  if (!query.community_id) return staffList.value
+  return staffList.value.filter((s: any) => s.community_id == query.community_id)
+})
+
 const list = ref<any[]>([])
 const total = ref(0)
 const loading = ref(false)
@@ -86,9 +93,10 @@ const submitting = ref(false)
 const formRef = ref<any>(null)
 const formTitle = ref('添加工资')
 const staffList = ref<any[]>([])
+const communities = ref<any[]>([])
 const batchMonth = ref('')
 
-const query = reactive({ keyword: '', month: '', status: undefined as any, page: 1, limit: 15 })
+const query = reactive({ community_id: undefined as any, keyword: '', month: '', status: undefined as any, page: 1, limit: 15 })
 const form = reactive<any>({ id: 0, staff_id: '', salary_month: '', base_salary: 0, bonus: 0, overtime_pay: 0, subsidy: 0, deduction: 0, social_insurance: 0, net_salary: 0, remark: '' })
 const rules = { staff_id: [{ required: true, message: '请选择员工' }], salary_month: [{ required: true, message: '请输入月份' }] }
 
@@ -96,7 +104,15 @@ const computedSalary = computed(() => {
   return '¥' + Math.round((Number(form.base_salary||0) + Number(form.bonus||0) + Number(form.overtime_pay||0) + Number(form.subsidy||0) - Number(form.deduction||0) - Number(form.social_insurance||0)) * 100) / 100
 })
 
-function resetQuery() { Object.assign(query, { keyword: '', month: '', status: undefined, page: 1 }); loadData() }
+function resetQuery() { Object.assign(query, { community_id: undefined, keyword: '', month: '', status: undefined, page: 1 }); loadData() }
+
+function onCommunityChange() { loadStaffList(); loadData() }
+
+async function loadStaffList() {
+  const params: any = { page: 1, limit: 500 }
+  if (query.community_id) params.community_id = query.community_id
+  try { const r = await apiGet('/admin/Staff/lists', params); staffList.value = r.data.list || r.data } catch {}
+}
 
 async function loadData() {
   loading.value = true
@@ -151,6 +167,7 @@ function getSummaries(param: any) {
 }
 
 onMounted(async () => {
+  try { const r = await apiGet('/admin/Community/lists', {}); communities.value = r.data.list || r.data } catch {}
   try { const r = await apiGet('/admin/Staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
   loadData()
 })

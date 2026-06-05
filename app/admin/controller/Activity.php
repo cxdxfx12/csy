@@ -12,8 +12,9 @@ class Activity extends BaseAdmin
         $where = [['a.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['a.title', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['a.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['a.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['a.community_id', '=', $cid];
         $status = $this->request->param('status', 0);
         if ($status) $where[] = ['a.status', '=', $status];
 
@@ -35,7 +36,7 @@ class Activity extends BaseAdmin
     {
         $data = $this->request->post();
         $data['create_time'] = date('Y-m-d H:i:s');
-        $data['status'] = $data['status'] ?? 1;
+        $data['status'] = $data['status'] ?? 2; // 默认"报名中"，业主端立即可见
         $data['current_participants'] = 0;
         $data['max_participants'] = $data['max_participants'] ?? 0;
         $activityId = Db::name('activity')->insertGetId($data);

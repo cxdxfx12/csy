@@ -8,27 +8,40 @@ class Device extends BaseAdmin
 {
     public function listAll()
     {
-        $list = Db::name('device')->where('delete_time', null)->field('id, device_name, device_code, device_type')->order('id', 'desc')->select();
+        $cid = $this->getFilteredCommunityId();
+        $query = Db::name('device')->whereNull('delete_time');
+        if ($cid === -1) $query->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $query->where('community_id', '=', intval($cid));
+        $list = $query->field('id, device_name, device_code, device_type')->order('id', 'desc')->select();
         return $this->success($list);
     }
 
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['d.delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['d.device_name|d.device_code|d.location|d.remark', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['d.community_id', '=', intval($communityId)];
         $deviceType = $this->request->param('device_type', '');
-        if ($deviceType !== '') $where[] = ['d.device_type', '=', $deviceType];
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['d.status', '=', intval($status)];
-        $total = Db::name('device')->alias('d')->where($where)->count();
-        $list = Db::name('device')->alias('d')
+
+        $cntQuery = Db::name('device')->alias('d')->whereNull('`d`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`d`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`d`.`community_id`', '=', intval($cid));
+        if ($keyword) $cntQuery->where('`d`.`device_name`|`d`.`device_code`|`d`.`location`|`d`.`remark`', 'like', "%{$keyword}%");
+        if ($deviceType !== '') $cntQuery->where('`d`.`device_type`', '=', $deviceType);
+        if ($status !== '') $cntQuery->where('`d`.`status`', '=', intval($status));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('device')->alias('d')
             ->leftJoin('community c', 'c.id = d.community_id')
             ->field('d.*, c.name as community_name')
-            ->where($where)->page($page, $limit)->order('d.id', 'desc')->select();
+            ->whereNull('`d`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`d`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`d`.`community_id`', '=', intval($cid));
+        if ($keyword) $listQuery->where('`d`.`device_name`|`d`.`device_code`|`d`.`location`|`d`.`remark`', 'like', "%{$keyword}%");
+        if ($deviceType !== '') $listQuery->where('`d`.`device_type`', '=', $deviceType);
+        if ($status !== '') $listQuery->where('`d`.`status`', '=', intval($status));
+        $list = $listQuery->page($page, $limit)->order('d.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

@@ -101,10 +101,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="活动状态">
+              <el-select v-model="form.status" placeholder="报名中" style="width:100%">
+                <el-option label="草稿（暂不发布）" :value="1" />
+                <el-option label="报名中（业主可见）" :value="2" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
             <el-form-item label="人数上限">
               <el-input-number v-model="form.max_participants" :min="0" :max="9999" placeholder="0=不限" style="width:100%" controls-position="right" />
             </el-form-item>
           </el-col>
+          <el-col :span="12"></el-col>
         </el-row>
         <el-form-item label="活动标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入活动标题" maxlength="100" show-word-limit />
@@ -184,7 +195,7 @@ const signups = ref<any[]>([])
 let currentActivityId = 0
 
 const query = reactive({ keyword: '', community_id: '', status: '', page: 1, limit: 15 })
-const form = reactive<any>({ id: 0, community_id: '', title: '', location: '', content: '', cover_image: '', start_time: '', end_time: '', max_participants: 0 })
+const form = reactive<any>({ id: 0, community_id: '', title: '', location: '', content: '', cover_image: '', start_time: '', end_time: '', max_participants: 0, status: 2 })
 const rules = {
   title: [{ required: true, message: '请输入活动标题', trigger: 'blur' }],
   community_id: [{ required: true, message: '请选择小区', trigger: 'change' }],
@@ -216,12 +227,12 @@ function openForm(row?: any) {
   if (row) {
     apiGet<any>('/admin/activity/detail', { id: row.id }).then(res => {
       const d = res.data
-      Object.assign(form, { id: d.id, community_id: d.community_id, title: d.title, location: d.location, content: d.content || '', cover_image: d.cover_image || '', start_time: d.start_time, end_time: d.end_time, max_participants: d.max_participants || 0 })
+      Object.assign(form, { id: d.id, community_id: d.community_id, title: d.title, location: d.location, content: d.content || '', cover_image: d.cover_image || '', start_time: d.start_time, end_time: d.end_time, max_participants: d.max_participants || 0, status: d.status || 2 })
       dialogVisible.value = true
     })
     return
   }
-  Object.assign(form, { id: 0, community_id: '', title: '', location: '', content: '', cover_image: '', start_time: '', end_time: '', max_participants: 0 })
+  Object.assign(form, { id: 0, community_id: '', title: '', location: '', content: '', cover_image: '', start_time: '', end_time: '', max_participants: 0, status: 2 })
   dialogVisible.value = true
 }
 async function submitForm() {

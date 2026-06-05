@@ -9,17 +9,26 @@ class PushDevice extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['device_token|user_type|user_id', 'like', "%{$keyword}%"];
         $platform = $this->request->param('platform', '');
-        if ($platform) $where[] = ['platform', '=', $platform];
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['status', '=', intval($status)];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
-        $total = Db::name('push_device')->where($where)->count();
-        $list = Db::name('push_device')->where($where)->page($page, $limit)->order('id', 'desc')->select();
+
+        $cntQuery = Db::name('push_device')->whereNull('delete_time');
+        if ($cid === -1) $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('community_id', '=', intval($cid));
+        if ($keyword) $cntQuery->where('device_token|user_type|user_id', 'like', "%{$keyword}%");
+        if ($platform) $cntQuery->where('platform', '=', $platform);
+        if ($status !== '') $cntQuery->where('status', '=', intval($status));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('push_device')->whereNull('delete_time');
+        if ($cid === -1) $listQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('community_id', '=', intval($cid));
+        if ($keyword) $listQuery->where('device_token|user_type|user_id', 'like', "%{$keyword}%");
+        if ($platform) $listQuery->where('platform', '=', $platform);
+        if ($status !== '') $listQuery->where('status', '=', intval($status));
+        $list = $listQuery->page($page, $limit)->order('id', 'desc')->select();
         return $this->table($list, $total);
     }
 

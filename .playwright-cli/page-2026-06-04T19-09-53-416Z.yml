@@ -1,0 +1,293 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]:
+          - img [ref=e9]
+          - generic "双击可复制IP" [ref=e11]: 西部数码面板
+          - generic [ref=e12]: "0"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - link "首页" [ref=e20] [cursor=pointer]:
+              - /url: /home
+              - img [ref=e21]
+              - generic [ref=e23]: 首页
+          - listitem [ref=e24]:
+            - link "网站" [ref=e25] [cursor=pointer]:
+              - /url: /site
+              - img [ref=e26]
+              - generic [ref=e28]: 网站
+          - listitem [ref=e29]:
+            - link "数据库" [ref=e30] [cursor=pointer]:
+              - /url: /database
+              - img [ref=e31]
+              - generic [ref=e33]: 数据库
+          - listitem [ref=e34]:
+            - link "Docker" [ref=e35] [cursor=pointer]:
+              - /url: /docker
+              - img [ref=e36]
+              - generic [ref=e38]: Docker
+          - listitem [ref=e39]:
+            - link "监控" [ref=e40] [cursor=pointer]:
+              - /url: /control
+              - img [ref=e41]
+              - generic [ref=e43]: 监控
+          - listitem [ref=e44]:
+            - link "安全" [ref=e45] [cursor=pointer]:
+              - /url: /firewall
+              - img [ref=e46]
+              - generic [ref=e48]: 安全
+          - listitem [ref=e49]:
+            - link "WAF" [ref=e50] [cursor=pointer]:
+              - /url: /waf
+              - img [ref=e51]
+              - generic [ref=e53]: WAF
+          - listitem [ref=e54]:
+            - link "文件" [ref=e55] [cursor=pointer]:
+              - /url: /files
+              - img [ref=e56]
+              - generic [ref=e58]: 文件
+          - listitem [ref=e59]:
+            - link "日志" [ref=e60] [cursor=pointer]:
+              - /url: /logs
+              - img [ref=e61]
+              - generic [ref=e63]: 日志
+          - listitem [ref=e64]:
+            - link "域名" [ref=e65] [cursor=pointer]:
+              - /url: /domain
+              - img [ref=e66]
+              - generic [ref=e68]: 域名
+          - listitem [ref=e69]:
+            - link "SSL" [ref=e70] [cursor=pointer]:
+              - /url: /ssl
+              - img [ref=e71]
+              - generic [ref=e73]: SSL
+          - listitem [ref=e74]:
+            - link "终端" [ref=e75] [cursor=pointer]:
+              - /url: /xterm
+              - img [ref=e76]
+              - generic [ref=e78]: 终端
+          - listitem [ref=e79]:
+            - link "AI" [ref=e80] [cursor=pointer]:
+              - /url: /ai
+              - img [ref=e81]
+              - generic [ref=e83]: AI
+          - listitem [ref=e84]:
+            - link "节点管理" [ref=e85] [cursor=pointer]:
+              - /url: /node
+              - img [ref=e86]
+              - generic [ref=e88]: 节点管理
+          - listitem [ref=e89]:
+            - link "计划任务" [ref=e90] [cursor=pointer]:
+              - /url: /crontab
+              - img [ref=e91]
+              - generic [ref=e93]: 计划任务
+          - listitem [ref=e94]:
+            - link "软件商店" [ref=e95] [cursor=pointer]:
+              - /url: /soft
+              - img [ref=e96]
+              - generic [ref=e98]: 软件商店
+          - listitem [ref=e99]:
+            - link "设置" [ref=e100] [cursor=pointer]:
+              - /url: /config
+              - img [ref=e101]
+              - generic [ref=e103]: 设置
+          - listitem [ref=e104]:
+            - link "退出" [ref=e105] [cursor=pointer]:
+              - /url: javascript:;
+              - img [ref=e106]
+              - generic [ref=e108]: 退出
+        - generic [ref=e110]:
+          - generic [ref=e113] [cursor=pointer]: 
+          - generic [ref=e116] [cursor=pointer]: 
+    - generic [ref=e117]:
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124] [cursor=pointer]:
+              - generic [ref=e125]:
+                - img [ref=e127]
+                - generic [ref=e128]: wwwroot
+              - generic [ref=e130]: 
+            - generic [ref=e131] [cursor=pointer]: 
+          - generic:  
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - generic [ref=e135] [cursor=pointer]: 
+            - generic [ref=e137]:
+              - text: 
+              - generic [ref=e138] [cursor=pointer]:
+                - generic [ref=e139]: 根目录
+                - generic [ref=e140]: 
+              - generic [ref=e141] [cursor=pointer]:
+                - generic [ref=e142]: www
+                - generic [ref=e143]: 
+              - generic [ref=e144] [cursor=pointer]:
+                - generic [ref=e145]: wwwroot
+                - generic [ref=e146]: 
+            - generic [ref=e148] [cursor=pointer]: 
+            - text: 
+          - generic [ref=e149]:
+            - generic [ref=e150]:
+              - textbox "搜索文件/目录" [ref=e152]
+              - button "" [ref=e154] [cursor=pointer]:
+                - generic [ref=e156]: 
+            - generic [ref=e158] [cursor=pointer]:
+              - generic [ref=e159]:
+                - checkbox "包含子目录"
+              - generic [ref=e161]: 包含子目录
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - button "上传/下载 " [ref=e165] [cursor=pointer]:
+              - generic [ref=e166]:
+                - text: 上传/下载
+                - generic [ref=e167]: 
+            - button "新建 " [ref=e169] [cursor=pointer]:
+              - generic [ref=e170]:
+                - img [ref=e172]
+                - text: 新建
+                - generic [ref=e173]: 
+            - button "文件内容搜索" [ref=e174] [cursor=pointer]:
+              - generic [ref=e176]: 文件内容搜索
+            - button "收藏夹 " [ref=e178] [cursor=pointer]:
+              - generic [ref=e179]:
+                - text: 收藏夹
+                - generic [ref=e181]: 
+            - button "终端" [ref=e182] [cursor=pointer]:
+              - generic [ref=e184]: 终端
+            - button "/(根目录)41.9 GB " [ref=e188] [cursor=pointer]:
+              - generic [ref=e189]:
+                - text:  /(根目录)41.9 GB
+                - generic [ref=e190]: 
+            - button "更多功能 " [ref=e192] [cursor=pointer]:
+              - generic [ref=e193]:
+                - text: 更多功能
+                - generic [ref=e194]: 
+          - generic [ref=e195]:
+            - text:  
+            - button " 回收站" [ref=e196] [cursor=pointer]:
+              - generic [ref=e197]:
+                - generic [ref=e198]: 
+                - text: 回收站
+            - generic [ref=e199]:
+              - img [ref=e201] [cursor=pointer]
+              - img [ref=e209] [cursor=pointer]
+        - generic [ref=e214]:
+          - generic [ref=e216]:
+            - generic [ref=e217]:
+              - generic [ref=e221] [cursor=pointer]:
+                - checkbox
+              - generic [ref=e223] [cursor=pointer]:
+                - generic [ref=e224]: 文件名称
+                - generic [ref=e225]:
+                  - generic [ref=e226]: 
+                  - generic [ref=e227]: 
+              - generic [ref=e229]: 企业级防篡改
+              - generic [ref=e231]: 权限/所有者
+              - generic [ref=e232] [cursor=pointer]:
+                - generic [ref=e233]: 大小
+                - generic [ref=e234]:
+                  - generic [ref=e235]: 
+                  - generic [ref=e236]: 
+              - generic [ref=e237] [cursor=pointer]:
+                - generic [ref=e238]: 修改时间
+                - generic [ref=e239]:
+                  - generic [ref=e240]: 
+                  - generic [ref=e241]: 
+              - generic [ref=e243]: 备注
+              - generic [ref=e245]: 操作
+            - generic [ref=e341]:
+              - generic [ref=e343]:
+                - generic "www.hbdxm.com" [ref=e350] [cursor=pointer]
+                - generic [ref=e352] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e353]
+                - generic "755/root" [ref=e355]
+                - generic "点击计算大小" [ref=e357]:
+                  - generic [ref=e358] [cursor=pointer]: 计算
+                - generic [ref=e360]: 2026-06-05 03:04:16
+                - generic [ref=e364] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e365]: 
+              - generic [ref=e367]:
+                - generic "www.hbdxm.com_bak" [ref=e374] [cursor=pointer]
+                - generic [ref=e376] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e377]
+                - generic "755/root" [ref=e379]
+                - generic "点击计算大小" [ref=e381]:
+                  - generic [ref=e382] [cursor=pointer]: 计算
+                - generic [ref=e384]: 2026-06-03 20:32:56
+                - generic [ref=e388] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e389]: 
+              - generic [ref=e391]:
+                - generic "www.hbdxm.com_x2n6s.tar.gz" [ref=e398] [cursor=pointer]
+                - generic [ref=e400] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e401]
+                - generic "755/www" [ref=e403]
+                - generic [ref=e404]: 355.05 MB
+                - generic [ref=e406]: 2026-06-03 20:27:22
+                - generic [ref=e410] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e411]: 
+          - generic [ref=e282]:
+            - generic [ref=e283]:
+              - generic [ref=e284]: 共2个目录，1个文件，文件大小
+              - generic [ref=e286] [cursor=pointer]: 计算
+            - generic [ref=e288]:
+              - button "上一页" [disabled] [ref=e289]:
+                - generic:
+                  - img
+              - list [ref=e290]:
+                - listitem "第 1 页" [ref=e291]: "1"
+              - button "下一页" [disabled] [ref=e292]:
+                - generic:
+                  - img
+              - generic [ref=e295] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e297]
+                  - generic [ref=e298]: 500条/页
+                - img [ref=e301]
+              - generic [ref=e303]: 共 3 条
+              - generic [ref=e304]:
+                - generic [ref=e305]: 前往
+                - spinbutton "页" [ref=e308]: "1"
+                - generic [ref=e309]: 页
+      - generic [ref=e310]:
+        - generic [ref=e311]: 西部数码与宝塔联合定制版©2014-2026 广东堡塔安全技术有限公司 (bt.cn)
+        - separator [ref=e312]
+        - link "论坛求助" [ref=e313] [cursor=pointer]:
+          - /url: http://www.bt.cn/bbs
+          - generic [ref=e314]:
+            - img [ref=e315]
+            - generic [ref=e317]: 论坛求助
+        - separator [ref=e318]
+        - link "使用手册" [ref=e319] [cursor=pointer]:
+          - /url: https://docs.bt.cn
+          - generic [ref=e320]:
+            - img [ref=e321]
+            - generic [ref=e323]: 使用手册
+        - separator [ref=e324]
+        - generic [ref=e325]:
+          - img [ref=e326]
+          - generic [ref=e328] [cursor=pointer]: 微信公众号
+        - separator [ref=e329]
+        - link "正版查询" [ref=e330] [cursor=pointer]:
+          - /url: https://www.bt.cn/auth
+          - generic [ref=e331]:
+            - img [ref=e332]
+            - generic [ref=e334]: 正版查询
+        - separator [ref=e335]
+        - generic [ref=e336]:
+          - img [ref=e337]
+          - generic [ref=e339] [cursor=pointer]: 联系人工客服
+    - generic [ref=e412]:
+      - generic [ref=e413] [cursor=pointer]:
+        - img [ref=e415]
+        - generic [ref=e436]: AI
+        - generic [ref=e437]: 助手
+      - generic [ref=e439] [cursor=pointer]: 
+  - img
+  - generic:             

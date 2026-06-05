@@ -48,6 +48,9 @@
         <el-select v-model="query.is_renewal" placeholder="是否续约" clearable class="filter-sel" @change="handleSearch">
           <el-option label="新签" :value="0"/><el-option label="续约" :value="1"/>
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-sel" @change="handleSearch">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+        </el-select>
       </div>
       <div class="filter-right">
         <el-button @click="resetQuery" text><el-icon><Refresh /></el-icon>重置</el-button>
@@ -97,9 +100,9 @@
             <el-col :span="12"><el-form-item label="租客类型"><el-select v-model="form.tenant_type" style="width:100%"><el-option label="个人" value="0"/><el-option label="企业" value="1"/></el-select></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
-            <el-col :span="8"><el-form-item label="房源ID"><el-input-number v-model="form.property_id" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
-            <el-col :span="8"><el-form-item label="租客ID"><el-input-number v-model="form.tenant_id" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
-            <el-col :span="8"><el-form-item label="所属小区"><el-input-number v-model="form.community_id" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
+            <el-col :span="8"><el-form-item label="关联房源"><el-select v-model="form.property_id" filterable clearable placeholder="选择房源" style="width:100%"><el-option v-for="p in properties" :key="p.id" :label="p.property_name+' (¥'+p.monthly_rent+')'" :value="p.id"/></el-select></el-form-item></el-col>
+            <el-col :span="8"><el-form-item label="关联租客"><el-select v-model="form.tenant_id" filterable clearable placeholder="选择租客" style="width:100%"><el-option v-for="t in tenants" :key="t.id" :label="t.name+' ('+t.mobile+')'" :value="t.id"/></el-select></el-form-item></el-col>
+            <el-col :span="8"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable @change="onFormCommunityChange"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
             <el-col :span="12"><el-form-item label="合同状态"><el-select v-model="form.status" style="width:100%"><el-option label="履行中" value="履行中"/><el-option label="即将到期" value="即将到期"/><el-option label="已到期" value="已到期"/><el-option label="已终止" value="已终止"/></el-select></el-form-item></el-col>
@@ -166,7 +169,10 @@ const dialogVisible = ref(false)
 const editId = ref(0)
 const formRef = ref()
 
-const query = reactive({ page:1, limit:15, keyword:'', status:'', is_renewal:undefined as any })
+const query = reactive({ page:1, limit:15, keyword:'', status:'', is_renewal:undefined as any, community_id:undefined as any })
+const communities = ref<any[]>([])
+const properties = ref<any[]>([])
+const tenants = ref<any[]>([])
 const form = reactive<any>({
   community_id:0, contract_no:'', property_id:0, tenant_id:0, tenant_type:'0',
   monthly_rent:'', deposit_amount:'', deposit_months:1, lease_start:'', lease_end:'',
@@ -190,7 +196,7 @@ function cycleLabel(v:any){const m:Record<string,string>={'1':'月付','3':'季�
 function contractDot(s:string){const m:Record<string,string>={'履行中':'dot-active','即将到期':'dot-expiring','已到期':'dot-ended','已终止':'dot-terminated'};return m[s]||''}
 
 function handleSearch(){query.page=1;loadData()}
-function resetQuery(){query.keyword='';query.status='';query.is_renewal=undefined;query.page=1;loadData()}
+function resetQuery(){query.keyword='';query.status='';query.is_renewal=undefined;query.community_id=undefined;query.page=1;loadData()}
 
 async function loadData(){
   loading.value=true
@@ -199,15 +205,39 @@ async function loadData(){
     if(query.keyword)p.keyword=query.keyword
     if(query.status)p.status=query.status
     if(query.is_renewal!==undefined&&query.is_renewal!=='')p.is_renewal=query.is_renewal
+    if(query.community_id)p.community_id=query.community_id
     const res:any=await apiGet('/admin/lease/leaseContractList',p)
-    if(res&&(res.code===0||res.code===undefined)){list.value=res.data?.list||[];total.value=res.data?.total||0}
+    if(res&&(res.code===0||res.code===undefined)){list.value=res.data||[];total.value=res.count||0}
   }catch(_){list.value=[];total.value=0}
   finally{loading.value=false}
 }
 
+async function loadProperties(community_id?:any){
+  try{
+    const p:any={limit:999}
+    if(community_id)p.community_id=community_id
+    const r:any=await apiGet('/admin/lease/leasePropertyList',p)
+    properties.value=r.data||[]
+  }catch(_){properties.value=[]}
+}
+async function loadTenants(community_id?:any){
+  try{
+    const p:any={limit:999}
+    if(community_id)p.community_id=community_id
+    const r:any=await apiGet('/admin/lease/leaseTenantList',p)
+    tenants.value=r.data||[]
+  }catch(_){tenants.value=[]}
+}
+function onFormCommunityChange(val:any){
+  loadProperties(val)
+  loadTenants(val)
+}
+
 function openForm(row?:any){
   if(row){editId.value=row.id;Object.keys(form).forEach(k=>{if(row[k]!==undefined)(form as any)[k]=row[k]})}
-  else{editId.value=0;Object.assign(form,{community_id:0,contract_no:'',property_id:0,tenant_id:0,tenant_type:'0',monthly_rent:'',deposit_amount:'',deposit_months:1,lease_start:'',lease_end:'',lease_months:12,rent_day:1,rent_cycle:'1',property_tax:'',property_tax_bearer:1,is_renewal:0,prev_contract_id:0,status:'履行中',sign_time:'',signer:'',terminate_time:'',terminate_reason:'',files:'',remark:''})}
+  else{editId.value=0;Object.assign(form,{community_id:0,contract_no:'',property_id:'',tenant_id:'',tenant_type:'0',monthly_rent:'',deposit_amount:'',deposit_months:1,lease_start:'',lease_end:'',lease_months:12,rent_day:1,rent_cycle:'1',property_tax:'',property_tax_bearer:1,is_renewal:0,prev_contract_id:0,status:'履行中',sign_time:'',signer:'',terminate_time:'',terminate_reason:'',files:'',remark:''})}
+  loadProperties(form.community_id||undefined)
+  loadTenants(form.community_id||undefined)
   dialogVisible.value=true
 }
 
@@ -226,7 +256,10 @@ async function handleDelete(row:any){
   try{await ElMessageBox.confirm('确定删除该合同？','提示',{type:'warning'});const res:any=await apiPost('/admin/lease/leaseContractDelete',{id:row.id});if(res&&(res.code===0||res.code===undefined)){ElMessage.success('删除成功');loadData()}}catch(_){}
 }
 
-onMounted(()=>loadData())
+onMounted(async ()=>{
+  try{const r:any=await apiGet('/admin/community/list',{limit:999});communities.value=r.data?.list||r.data||[]}catch(_){}
+  loadData()
+})
 watch([()=>query.page,()=>query.limit],()=>loadData())
 </script>
 

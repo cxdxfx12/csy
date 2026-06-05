@@ -45,7 +45,13 @@
         <el-form-item label="用户名" prop="username"><el-input v-model="form.username" placeholder="登录用户名" :disabled="!!form.id" /></el-form-item>
         <el-form-item label="昵称" prop="nickname"><el-input v-model="form.nickname" placeholder="显示昵称" /></el-form-item>
         <el-form-item label="手机号"><el-input v-model="form.phone" placeholder="手机号" maxlength="11" /></el-form-item>
-        <el-form-item label="角色" prop="role_id"><el-select v-model="form.role_id" placeholder="选择角色" style="width:100%;"><el-option v-for="r in roles" :key="r.id" :label="r.name" :value="r.id" /></el-select></el-form-item>
+        <el-form-item label="角色" prop="role_id"><el-select v-model="form.role_id" placeholder="选择角色" style="width:100%;" @change="onRoleChange"><el-option v-for="r in roles" :key="r.id" :label="r.name" :value="r.id" /></el-select></el-form-item>
+        <el-form-item label="所属小区" prop="community_ids">
+          <el-select v-model="form.community_ids" multiple placeholder="选择小区（可多选）" style="width:100%;" filterable>
+            <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+          </el-select>
+          <div style="font-size:11px;color:#999;margin-top:2px;">物管经理/客服/财务/安保/工程需绑定小区（非此类角色可留空）</div>
+        </el-form-item>
         <el-form-item label="密码" :prop="form.id ? '' : 'password'"><el-input v-model="form.password" placeholder="密码" type="password" /></el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status"><el-radio :value="1">正常</el-radio><el-radio :value="0">禁用</el-radio></el-radio-group>
@@ -60,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
 import { formatTime } from '@/utils/format'
@@ -73,10 +79,19 @@ const submitting = ref(false)
 const formRef = ref<any>(null)
 const formTitle = ref('添加管理员')
 const roles = ref<any[]>([])
+const communities = ref<any[]>([])
 
 const query = reactive({ keyword: '', role_id: undefined as any, status: undefined as any, page: 1, limit: 15, sort: '', order: '' })
-const form = reactive<any>({ id: 0, username: '', nickname: '', phone: '', role_id: '', password: '', status: 1 })
+const form = reactive<any>({ id: 0, username: '', nickname: '', phone: '', role_id: '', community_ids: [], password: '', status: 1 })
 const rules = { username: [{ required: true, message: '请输入用户名', trigger: 'blur' }], nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }], role_id: [{ required: true, message: '请选择角色', trigger: 'change' }], password: [{ required: true, message: '请输入密码', trigger: 'blur' }] }
+
+// 需要绑定小区的角色ID
+const communityRoles = [3, 4, 5, 6, 7]
+const showCommunitySelector = computed(() => communityRoles.includes(Number(form.role_id)))
+
+function onRoleChange(val: any) {
+  if (!communityRoles.includes(val)) form.community_ids = []
+}
 
 function resetQuery() { Object.assign(query, { keyword: '', role_id: undefined, status: undefined, page: 1 }) }
 
@@ -94,8 +109,16 @@ async function loadData() {
 
 function openForm(row?: any) {
   formTitle.value = row ? '编辑管理员' : '添加管理员'
-  Object.assign(form, row || { id: 0, username: '', nickname: '', phone: '', role_id: '', password: '', status: 1 })
-  if (row) form.password = ''
+  if (row) {
+    Object.assign(form, {
+      id: row.id, username: row.username, nickname: row.nickname, phone: row.phone || '',
+      role_id: row.role_id, status: row.status,
+      community_ids: row.community_ids ? row.community_ids.split(',').map(Number) : [],
+      password: ''
+    })
+  } else {
+    Object.assign(form, { id: 0, username: '', nickname: '', phone: '', role_id: '', community_ids: [], password: '', status: 1 })
+  }
   dialogVisible.value = true
 }
 
@@ -105,8 +128,12 @@ async function submitForm() {
   submitting.value = true
   try {
     const url = form.id ? '/admin/user/edit' : '/admin/user/add'
-    const payload = { ...form }
+    const payload: any = { ...form }
     if (form.id && !payload.password) delete payload.password
+    // community_ids 转逗号分隔字符串（后端需要字符串格式）
+    if (Array.isArray(payload.community_ids)) {
+      payload.community_ids = payload.community_ids.join(',')
+    }
     await apiPost(url, payload)
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false
@@ -130,6 +157,7 @@ async function toggleStatus(row: any) {
 
 onMounted(async () => {
   try { const r = await apiGet('/admin/role/list'); roles.value = r.data || [] } catch {}
+  try { const r = await apiGet('/admin/community/listAll'); communities.value = r.data || [] } catch {}
   loadData()
 })
 </script>

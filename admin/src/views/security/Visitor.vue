@@ -40,6 +40,7 @@
 
     <el-dialog v-model="dialogVisible" :title="formTitle" width="560px" destroy-on-close>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
+        <el-form-item label="所属小区" prop="community_id"><el-select v-model="form.community_id" placeholder="选择小区" style="width:100%;"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" /></el-select></el-form-item>
         <el-form-item label="访客姓名" prop="name"><el-input v-model="form.name" placeholder="访客姓名" /></el-form-item>
         <el-form-item label="手机号" prop="phone"><el-input v-model="form.phone" placeholder="手机号" maxlength="11" /></el-form-item>
         <el-form-item label="身份证"><el-input v-model="form.id_card" placeholder="身份证号码" maxlength="18" /></el-form-item>
@@ -74,8 +75,8 @@ const statusMap: Record<number, string> = { 1: '待进入', 2: '已进入', 3: '
 const statusType: Record<number, string> = { 1: 'info', 2: 'success', 3: 'danger' }
 
 const query = reactive({ keyword: '', community_id: undefined as any, status: undefined as any, page: 1, limit: 15 })
-const form = reactive<any>({ id: 0, name: '', phone: '', id_card: '', owner_id: undefined, room_id: undefined, visit_purpose: '', visitor_count: 1 })
-const rules = { name: [{ required: true, message: '请输入访客姓名', trigger: 'blur' }], phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }] }
+const form = reactive<any>({ id: 0, community_id: '', name: '', phone: '', id_card: '', owner_id: undefined, room_id: undefined, visit_purpose: '', visitor_count: 1 })
+const rules = { name: [{ required: true, message: '请输入访客姓名', trigger: 'blur' }], phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }], community_id: [{ required: true, message: '请选择小区', trigger: 'change' }] }
 
 function resetQuery() { query.keyword = ''; query.community_id = undefined; query.status = undefined; query.page = 1; loadData() }
 
@@ -96,7 +97,7 @@ async function onOwnerChange(val: any) {
 
 function openForm(row?: any) {
   formTitle.value = row ? '编辑访客' : '访客登记'
-  Object.assign(form, row || { id: 0, name: '', phone: '', id_card: '', owner_id: undefined, room_id: undefined, visit_purpose: '', visitor_count: 1 })
+  Object.assign(form, row || { id: 0, community_id: '', name: '', phone: '', id_card: '', owner_id: undefined, room_id: undefined, visit_purpose: '', visitor_count: 1 })
   dialogVisible.value = true
 }
 

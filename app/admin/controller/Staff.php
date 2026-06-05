@@ -17,6 +17,13 @@ class Staff extends BaseAdmin
         if (!empty($params['community_id'])) {
             $query->where('community_id', $params['community_id']);
         }
+        // 小区角色强制数据隔离
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) {
+            $query->where('community_id', 'in', $this->request->boundCommunityIds);
+        } elseif ($cid > 0) {
+            // already filtered above
+        }
         if (isset($params['status']) && $params['status'] !== '') {
             $query->where('status', $params['status']);
         }
@@ -36,6 +43,7 @@ class Staff extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        unset($data['community_name']); // 表中无此字段，仅用于前端展示
         // 检查手机号唯一性
         if (!empty($data['phone'])) {
             $exist = Db::name('staff')->where('phone', $data['phone'])->where('delete_time', null)->find();
@@ -59,6 +67,7 @@ class Staff extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        unset($data['community_name']); // 表中无此字段，仅用于前端展示
         // 检查手机号唯一性（排除自身）
         if (!empty($data['phone'])) {
             $exist = Db::name('staff')->where('phone', $data['phone'])

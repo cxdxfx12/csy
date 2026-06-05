@@ -9,19 +9,22 @@ class Building extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $communityId = $this->request->param('community_id', 0);
+        $cid = $this->getFilteredCommunityId();
 
         // count 直接用无别名查询
         $cntQuery = Db::name('building')->whereNull('delete_time');
-        if ($communityId) $cntQuery->where('community_id', $communityId);
+        if ($cid === -1) $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('community_id', $cid);
         $total = $cntQuery->count();
 
         // list 查询用别名+JOIN，别名映射给前端用 floors/units
         $listQuery = Db::name('building')->alias('b')
             ->leftJoin('community c', 'c.id = b.community_id')
-            ->field('b.*, b.floor_count as floors, b.unit_count as units, c.name as community_name')
+            ->leftJoin('staff s', 's.id = b.manager_id')
+            ->field('b.*, b.floor_count as floors, b.unit_count as units, c.name as community_name, s.realname as manager_name')
             ->whereNull('`b`.`delete_time`');
-        if ($communityId) $listQuery->where('`b`.`community_id`', '=', intval($communityId));
+        if ($cid === -1) $listQuery->where('`b`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`b`.`community_id`', '=', intval($cid));
         $list = $listQuery->order('b.sort', 'asc')->page($page, $limit)->select();
         return $this->table($list, $total);
     }
@@ -125,10 +128,20 @@ class Building extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $force = $this->request->post('force', 0);
+        $roleId = $this->adminInfo['role_id'] ?? 0;
+
         $roomCount = Db::name('room')->where('building_id', $id)->count();
-        if ($roomCount > 0) return $this->error('该楼栋下还有房间，无法删除');
+        if ($roomCount > 0) {
+            // 强制删除：仅超管(1)和系统管理员(2)可用，级联删除所有房间
+            if ($force && in_array($roleId, [1, 2])) {
+                Db::name('room')->where('building_id', $id)->delete();
+            } else {
+                return $this->error('该楼栋下还有房间，无法删除。仅超管/管理员可使用强制删除');
+            }
+        }
         Db::name('building')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
-        return $this->success([], '删除成功');
+        return $this->success(['deleted_rooms' => $roomCount], '删除成功' . ($roomCount > 0 ? '，已级联删除 ' . $roomCount . ' 个房间' : ''));
     }
 
     public function listAll()

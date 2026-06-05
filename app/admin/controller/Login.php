@@ -4,12 +4,11 @@ namespace app\admin\controller;
 use app\admin\BaseAdmin;
 use Firebase\JWT\JWT;
 use think\facade\Db;
-use think\facade\Cache;
 use service\WechatService;
 
 class Login extends BaseAdmin
 {
-    protected $noAuth = ['login', 'captcha', 'logout', 'wechatOAuth', 'wechatCallback', 'wechatLogin', 'wechatBind'];
+    protected $noAuth = ['login', 'captcha', 'logout', 'wechatOAuth', 'wechatCallback', 'wechatLogin', 'wechatBind', 'wechatLoginStatus'];
 
     public function login()
     {
@@ -22,15 +21,22 @@ class Login extends BaseAdmin
             return $this->error('请输入用户名和密码');
         }
 
-        // 验证码校验（必填）
+        // 验证码校验（必填）—— 使用 Session 存储，不依赖文件缓存
         if (empty($captchaKey) || empty($captcha)) {
             return $this->error('请输入验证码');
         }
-        $cached = Cache::get('captcha_' . $captchaKey);
-        if (empty($cached) || strtolower($cached) != strtolower($captcha)) {
+        $this->ensureSession();
+        $sessCaptcha = $_SESSION['admin_captcha'] ?? null;
+        $sessKey     = $_SESSION['admin_captcha_key'] ?? null;
+        $sessTime    = $_SESSION['admin_captcha_time'] ?? 0;
+        // 清除 Session 中的验证码（一次性使用）
+        unset($_SESSION['admin_captcha'], $_SESSION['admin_captcha_key'], $_SESSION['admin_captcha_time']);
+        if (empty($sessCaptcha) || $sessKey !== $captchaKey || time() - $sessTime > 300) {
             return $this->error('验证码错误或已过期');
         }
-        Cache::delete('captcha_' . $captchaKey);
+        if (strtolower($sessCaptcha) != strtolower($captcha)) {
+            return $this->error('验证码错误或已过期');
+        }
 
         $admin = Db::name('admin_user')->where('username', $username)->find();
         if (!$admin) {
@@ -57,7 +63,11 @@ class Login extends BaseAdmin
     {
         $key = md5(uniqid(mt_rand(), true));
         $code = substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4);
-        Cache::set('captcha_' . $key, $code, 300);
+        // 使用 Session 存储验证码（不依赖文件缓存，避免 runtime 目录权限问题）
+        $this->ensureSession();
+        $_SESSION['admin_captcha']      = $code;
+        $_SESSION['admin_captcha_key']  = $key;
+        $_SESSION['admin_captcha_time'] = time();
 
         // 生成验证码图片（不依赖字体文件）
         $width = 130; $height = 44;
@@ -118,17 +128,46 @@ class Login extends BaseAdmin
         $menus = [];
         $roleId = $adminInfo['role_id'];
 
+        // 获取角色信息和权限白名单
+        $role = Db::name('role')->where('id', $roleId)->find();
+        $allowedControllers = $roleId == 1 ? '*' : $this->getRolePermissions($role['code'] ?? '');
+
         if ($roleId == 1) {
+            // 超管：全部菜单
             $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
         } else {
+            // 非超管：先按 role_menu 表取菜单，兜底全量后再按控制器权限过滤
             $menuIds = Db::name('role_menu')->where('role_id', $roleId)->column('menu_id');
             if (!empty($menuIds)) {
                 $menus = Db::name('menu')->whereIn('id', $menuIds)->where('status', 1)->order('sort', 'asc')->select();
             }
+            if (empty($menus)) {
+                $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
+            }
+            // 始终按控制器白名单过滤菜单（处理 role_menu 中可能包含的超管菜单）
+            if ($allowedControllers !== '*') {
+                $permMap = $this->buildPermissionMap();
+                $menus = array_values(array_filter((array)$menus, function ($menu) use ($permMap, $allowedControllers) {
+                    $perm = $menu['permission'] ?? '';
+                    if (empty($perm) || ($menu['parent_id'] ?? 0) == 0) return true; // 父级目录或顶级菜单保留
+                    return isset($permMap[$perm]) && in_array($permMap[$perm], $allowedControllers);
+                }));
+            }
         }
 
-        $role = Db::name('role')->where('id', $roleId)->find();
-        $permissions = Db::name('menu')->where('type', 'in', [2, 3])->column('permission');
+        // 权限列表也按角色过滤
+        if ($allowedControllers === '*') {
+            $permissions = Db::name('menu')->where('type', 'in', [2, 3])->column('permission');
+        } else {
+            $permMap = $this->buildPermissionMap();
+            $allPerms = Db::name('menu')->where('type', 'in', [2, 3])->column('permission');
+            $permissions = [];
+            foreach ($allPerms as $p) {
+                if (isset($permMap[$p]) && in_array($permMap[$p], $allowedControllers)) {
+                    $permissions[] = $p;
+                }
+            }
+        }
 
         // 补充小区信息（仅角色3-7需要）
         $communityIds = $adminInfo['community_ids'] ?? '';
@@ -165,7 +204,18 @@ class Login extends BaseAdmin
             $communityId = intval($this->request->param('cid', 0));
         }
         if ($communityId <= 0) {
-            return $this->error('请指定小区ID（?community_id=X）');
+            // 自动取第一个有微信配置的小区
+            $first = Db::name('community_wechat_config')
+                ->where('status', 1)
+                ->where('app_id', '<>', '')
+                ->order('id', 'asc')
+                ->find();
+            if ($first) {
+                $communityId = intval($first['community_id']);
+            }
+        }
+        if ($communityId <= 0) {
+            return $this->error('没有可用的小区微信配置，请先在后台配置微信公众号');
         }
 
         $wxConfig = WechatService::getCommunityWechatConfig($communityId);
@@ -173,14 +223,30 @@ class Login extends BaseAdmin
             return $this->error('该小区未配置微信公众号');
         }
 
-        $domain = $this->request->domain();
+        $domain = WechatService::getOAuthDomain();
         $callbackUrl = $domain . '/index.php/admin/wechatCallback';
+
+        // 生成扫码登录会话（PC端轮询用），使用直接文件存储避免 Cache 权限问题
+        $sessionKey = md5(uniqid('wxlogin_', true));
+        $this->wxSessionSet($sessionKey, ['status' => 'pending', 'time' => time()], 300);
+
         $state = base64_encode(json_encode([
             'community_id' => $communityId,
-            'redirect'     => '/admin/login.html',
+            'redirect'     => '/admin/login',
+            'session_key'  => $sessionKey,
         ]));
 
-        $oauthUrl = WechatService::buildOAuthUrl($wxConfig['app_id'], $callbackUrl, 'snsapi_base', $state);
+        $oauthUrl = WechatService::buildOAuthUrl($wxConfig['app_id'], $callbackUrl, 'snsapi_userinfo', $state);
+
+        // 前端直接跳转模式：返回 JSON，由前端用 location.href 跳转
+        // 避免服务器 302 跨域重定向链导致微信浏览器不拦截 OAuth
+        if ($this->request->param('json') == '1') {
+            return $this->success([
+                'oauth_url'   => $oauthUrl,
+                'session_key' => $sessionKey,
+            ], 'ok');
+        }
+
         return redirect($oauthUrl);
     }
 
@@ -219,16 +285,34 @@ class Login extends BaseAdmin
             ->where('status', 1)
             ->find();
 
-        $domain = $this->request->domain();
+        $domain = WechatService::getOAuthDomain();
 
         if ($admin) {
             // 已有绑定账号，签发 token 并重定向
             $token = $this->makeToken($admin);
+            // 通过 session_key 回传给 PC 端轮询
+            $sessionKey = $state['session_key'] ?? '';
+            if ($sessionKey) {
+                $this->wxSessionSet($sessionKey, [
+                    'status' => 'ok',
+                    'token'  => $token,
+                    'time'   => time(),
+                ], 300);
+            }
             $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
             $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
             return redirect($finalUrl);
         } else {
             // 没有绑定账号 → 跳转到绑定页，带上 openid
+            $sessionKey = $state['session_key'] ?? '';
+            if ($sessionKey) {
+                $this->wxSessionSet($sessionKey, [
+                    'status'    => 'need_bind',
+                    'openid'    => $openid,
+                    'cid'       => $communityId,
+                    'time'      => time(),
+                ], 300);
+            }
             $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
             $finalUrl = $domain . $redirectTo . $sep . 'wx_openid=' . urlencode($openid) . '&wx_cid=' . $communityId . '&action=wx_bind';
             return redirect($finalUrl);
@@ -305,7 +389,99 @@ class Login extends BaseAdmin
         return $this->loginSuccess($admin, '微信绑定成功');
     }
 
+    // ========== PC 端扫码轮询状态 ==========
+
+    public function wechatLoginStatus()
+    {
+        $sessionKey = $this->request->param('session', '');
+        if (empty($sessionKey)) {
+            return $this->error('缺少会话标识');
+        }
+
+        $data = $this->wxSessionGet($sessionKey);
+        if (!$data) {
+            return $this->success(['status' => 'expired'], '会话已过期');
+        }
+
+        if ($data['status'] === 'ok') {
+            // 返回 token 并清除缓存
+            $this->wxSessionDelete($sessionKey);
+            return $this->success([
+                'status' => 'ok',
+                'token'  => $data['token'],
+            ], '登录成功');
+        }
+
+        if ($data['status'] === 'need_bind') {
+            $this->wxSessionDelete($sessionKey);
+            return $this->success([
+                'status'    => 'need_bind',
+                'openid'    => $data['openid'] ?? '',
+                'cid'       => $data['cid'] ?? 0,
+            ], '需要绑定账号');
+        }
+
+        return $this->success(['status' => 'pending'], '等待扫码');
+    }
+
     // ========== 私有辅助 ==========
+
+    /**
+     * 确保 Session 已启动（用于验证码存储）
+     */
+    private function ensureSession(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            $savePath = session_save_path() ?: sys_get_temp_dir();
+            if (!is_dir($savePath)) {
+                @mkdir($savePath, 0755, true);
+            }
+            session_start();
+        }
+    }
+
+    /**
+     * 直接文件存储：写入扫码登录会话（绕过 ThinkPHP Cache 避免文件权限问题）
+     */
+    private function wxSessionSet(string $key, array $data, int $ttl = 300): void
+    {
+        $dir = RUNTIME_PATH . 'cache' . DIRECTORY_SEPARATOR;
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        $file = $dir . 'wxlogin_' . md5($key) . '.php';
+        $payload = [
+            'data'      => $data,
+            'expire_at' => time() + $ttl,
+        ];
+        @file_put_contents($file, '<?php return ' . var_export($payload, true) . ';', LOCK_EX);
+    }
+
+    /**
+     * 直接文件存储：读取扫码登录会话
+     */
+    private function wxSessionGet(string $key): ?array
+    {
+        $file = RUNTIME_PATH . 'cache' . DIRECTORY_SEPARATOR . 'wxlogin_' . md5($key) . '.php';
+        if (!file_exists($file)) return null;
+        $payload = @include $file;
+        if (!$payload || !is_array($payload) || ($payload['expire_at'] ?? 0) < time()) {
+            @unlink($file);
+            return null;
+        }
+        return $payload['data'] ?? null;
+    }
+
+    /**
+     * 直接文件存储：删除扫码登录会话
+     */
+    private function wxSessionDelete(string $key): void
+    {
+        $file = RUNTIME_PATH . 'cache' . DIRECTORY_SEPARATOR . 'wxlogin_' . md5($key) . '.php';
+        if (file_exists($file)) {
+            @unlink($file);
+        }
+    }
 
     private function makeToken(array $admin): string
     {
@@ -334,6 +510,7 @@ class Login extends BaseAdmin
 
         // 获取角色和权限
         $role = Db::name('role')->where('id', $admin['role_id'])->find();
+        $allowedControllers = $admin['role_id'] == 1 ? '*' : $this->getRolePermissions($role['code'] ?? '');
         $menus = [];
         if ($admin['role_id'] == 1) {
             $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
@@ -341,6 +518,19 @@ class Login extends BaseAdmin
             $menuIds = Db::name('role_menu')->where('role_id', $admin['role_id'])->column('menu_id');
             if (!empty($menuIds)) {
                 $menus = Db::name('menu')->whereIn('id', $menuIds)->where('status', 1)->order('sort', 'asc')->select();
+            }
+            // 兜底：如果角色菜单表为空，显示所有可用菜单（后端控制器权限仍会拦截无权限操作）
+            if (empty($menus)) {
+                $menus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
+            }
+            // 按控制器白名单过滤菜单
+            if ($allowedControllers !== '*') {
+                $permMap = $this->buildPermissionMap();
+                $menus = array_values(array_filter((array)$menus, function ($menu) use ($permMap, $allowedControllers) {
+                    $perm = $menu['permission'] ?? '';
+                    if (empty($perm) || ($menu['parent_id'] ?? 0) == 0) return true;
+                    return isset($permMap[$perm]) && in_array($permMap[$perm], $allowedControllers);
+                }));
             }
         }
 

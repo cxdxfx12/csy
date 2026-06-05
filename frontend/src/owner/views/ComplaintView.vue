@@ -30,14 +30,19 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { createApi } from '@/shared/api.js'
-import { showToast, statusLabels, statusColors } from '@/shared/utils.js'
+import { showToast } from '@/shared/utils.js'
 const api = createApi('/api/api', 'owner_token')
 const form = reactive({ title: '', content: '', contact: '' })
 const list = ref([])
 const showForm = ref(false)
 const loading = ref(false)
-const stText = s => statusLabels[s] || s
-const stColor = s => statusColors[s] || '#999'
+
+// 投诉专用状态映射（与数据库 ds_complaint.status 一致）
+// 1=待处理 2=处理中 3=已处理 4=已关闭 5=已评价
+const complaintStatusLabels = { 1: '待处理', 2: '处理中', 3: '已处理', 4: '已关闭', 5: '已评价' }
+const complaintStatusColors = { 1: '#f59e0b', 2: '#3b82f6', 3: '#10b981', 4: '#6b7280', 5: '#8b5cf6' }
+const stText = s => complaintStatusLabels[s] || s
+const stColor = s => complaintStatusColors[s] || '#999'
 
 onMounted(async () => {
   const res = await api('/complaint/list')

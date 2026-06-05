@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
 
@@ -119,6 +119,16 @@ async function openPermission(row: any) {
     permVisible.value = true
   } catch {}
 }
+
+// 弹窗打开后，等树组件完全挂载再设置选中状态
+watch(permVisible, (val) => {
+  if (!val) return
+  nextTick(() => {
+    setTimeout(() => {
+      permTreeRef.value?.setCheckedKeys(checkedIds.value)
+    }, 50)
+  })
+})
 
 async function submitPermission() {
   const ids = permTreeRef.value?.getCheckedKeys() || []

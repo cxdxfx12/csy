@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `ds_building` (
   `floor_count` int(11) NOT NULL DEFAULT '1' COMMENT '层数',
   `floor_rooms` int(11) NOT NULL DEFAULT '0' COMMENT '每层户数',
   `total_rooms` int(11) NOT NULL DEFAULT '0' COMMENT '总户数',
+  `manager_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '楼栋管理员(关联ds_staff.id)',
   `build_year` year DEFAULT NULL COMMENT '建造年份',
   `elevator_count` int(11) NOT NULL DEFAULT '0' COMMENT '电梯数量',
   `floor_height` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT '层高(米)',

@@ -37,10 +37,20 @@ Route::group('staff', function () {
     Route::post('order/create', 'staff/StaffOrder/create');
     Route::post('order/close', 'staff/StaffOrder/close');
 
+    // 投诉建议
+    Route::get('complaint/list', 'staff/StaffComplaint/lists');
+    Route::get('complaint/detail', 'staff/StaffComplaint/detail');
+    Route::post('complaint/handle', 'staff/StaffComplaint/handle');
+
     // 角标 & 消息提醒
     Route::get('badge/counts', 'staff/StaffBadge/counts');
 
     // 个人中心
     Route::post('profile/edit', 'staff/StaffProfile/edit');
     Route::get('profile/info', 'staff/StaffProfile/info');
+
+    // 考勤 & 排班 & 工资查看
+    Route::get('attendance/lists', 'staff/StaffProfile/attendance');
+    Route::get('schedule/lists', 'staff/StaffProfile/schedule');
+    Route::get('salary/lists', 'staff/StaffProfile/salary');
 });

@@ -10,8 +10,9 @@ class Bill extends BaseAdmin
     {
         [$page, $limit] = $this->getPage();
         $where = [['b.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['b.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['b.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['b.community_id', '=', $cid];
         $ownerId = $this->request->param('owner_id', 0);
         if ($ownerId) $where[] = ['b.owner_id', '=', $ownerId];
         $status = $this->request->param('status', '');
@@ -21,7 +22,10 @@ class Bill extends BaseAdmin
         $period = $this->request->param('period', '');
         if ($period) $where[] = ['b.bill_period', '=', $period];
 
-        $total = Db::name('bill')->alias('b')->where($where)->count();
+        $total = Db::name('bill')->alias('b')
+            ->leftJoin('owner o', 'o.id = b.owner_id')
+            ->leftJoin('room r', 'r.id = b.room_id')
+            ->where($where)->count();
         $list = Db::name('bill')->alias('b')
             ->leftJoin('owner o', 'o.id = b.owner_id')
             ->leftJoin('room r', 'r.id = b.room_id')

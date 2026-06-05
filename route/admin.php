@@ -10,6 +10,7 @@ Route::post('admin/logout', 'admin/Login/logout');
 // 微信登录
 Route::get('admin/wechatOAuth', 'admin/Login/wechatOAuth');
 Route::get('admin/wechatCallback', 'admin/Login/wechatCallback');
+Route::get('admin/wechatLoginStatus', 'admin/Login/wechatLoginStatus');
 Route::post('admin/wechatLogin', 'admin/Login/wechatLogin');
 Route::post('admin/wechatBind', 'admin/Login/wechatBind');
 
@@ -140,6 +141,7 @@ Route::group('admin', function () {
 
     // 维修人员
     Route::get('admin/repair/workerList', 'admin/RepairWorker/lists');
+    Route::get('admin/repair/staffList', 'admin/RepairWorker/staffList');
     Route::post('admin/repair/workerAdd', 'admin/RepairWorker/add');
     Route::post('admin/repair/workerEdit', 'admin/RepairWorker/edit');
     Route::post('admin/repair/workerDelete', 'admin/RepairWorker/delete');

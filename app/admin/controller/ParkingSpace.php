@@ -10,8 +10,9 @@ class ParkingSpace extends BaseAdmin
     {
         [$page, $limit] = $this->getPage();
         $where = [['ps.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['ps.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['ps.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['ps.community_id', '=', $cid];
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['ps.status', '=', $status];
         $keyword = $this->request->param('keyword', '');
@@ -28,6 +29,7 @@ class ParkingSpace extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
         if (isset($data['price'])) { $data['monthly_fee'] = $data['price']; unset($data['price']); }
         Db::name('parking_space')->insert($data);
@@ -37,6 +39,8 @@ class ParkingSpace extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        $space = Db::name('parking_space')->where('id', $data['id'])->find();
+        if ($space) $this->validateCommunityAccess($space['community_id'] ?? 0);
         if (isset($data['price'])) { $data['monthly_fee'] = $data['price']; unset($data['price']); }
         Db::name('parking_space')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
@@ -45,6 +49,8 @@ class ParkingSpace extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $space = Db::name('parking_space')->where('id', $id)->find();
+        if ($space) $this->validateCommunityAccess($space['community_id'] ?? 0);
         Db::name('parking_space')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

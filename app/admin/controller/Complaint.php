@@ -11,7 +11,12 @@ class Complaint extends BaseAdmin
         [$page, $limit] = $this->getPage();
         $where = [['c.delete_time', 'null', '']];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['c.community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['c.community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('c.community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['c.status', '=', $status];
         $type = $this->request->param('type', 0);
@@ -33,6 +38,8 @@ class Complaint extends BaseAdmin
     public function handle()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('complaint')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         $handleContent = $this->request->post('handle_content', '');
         $status = $this->request->post('status', 3);
 
@@ -49,6 +56,8 @@ class Complaint extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('complaint')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('complaint')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

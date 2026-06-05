@@ -9,14 +9,20 @@ class PatrolRoute extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['pr.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['pr.community_id', '=', $communityId];
-        $total = Db::name('patrol_route')->alias('pr')->where($where)->count();
-        $list = Db::name('patrol_route')->alias('pr')
+        $cid = $this->getFilteredCommunityId();
+
+        $cntQuery = Db::name('patrol_route')->whereNull('delete_time');
+        if ($cid === -1) $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('community_id', '=', intval($cid));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('patrol_route')->alias('pr')
             ->leftJoin('community c', 'c.id = pr.community_id')
             ->field('pr.*, c.name as community_name')
-            ->where($where)->page($page, $limit)->order('pr.id', 'desc')->select();
+            ->whereNull('`pr`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`pr`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`pr`.`community_id`', '=', intval($cid));
+        $list = $listQuery->page($page, $limit)->order('pr.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

@@ -184,7 +184,7 @@ function avatarColor(title: string): string {
 async function loadActivities() {
   try {
     const res = await apiGet('/admin/activity/list', { page: 1, limit: 999 })
-    if (res.code === 0) activities.value = res.data.list || []
+    if (res.code === 0) activities.value = (res.data as any)?.list || (Array.isArray(res.data) ? res.data : [])
   } catch (_) { /* ignore */ }
 }
 
@@ -194,7 +194,7 @@ async function loadData() {
     const res = await apiGet('/admin/activity/signupList', {
       page: query.page, limit: query.limit, keyword: query.keyword, activity_id: query.activity_id
     })
-    if (res.code === 0) { list.value = res.data?.list || []; total.value = res.data?.total || 0; calcStats() }
+    if (res.code === 0) { list.value = (res.data as any)?.list || (Array.isArray(res.data) ? res.data : []); total.value = (res.data as any)?.total || res.count || 0; calcStats() }
   } finally { loading.value = false }
 }
 

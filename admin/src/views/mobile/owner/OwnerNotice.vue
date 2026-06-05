@@ -43,6 +43,17 @@ onMounted(async () => {
     const d = await r.json()
     notices.value = d.data?.list || d.data || []
   } catch (e) {}
+
+  // 进入公告页即标记已读：获取最新公告总数并存储
+  try {
+    const badgeRes = await fetch('/api/badge/counts', {
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('owner_token') },
+    })
+    const badgeData = await badgeRes.json()
+    if (badgeData.code === 0) {
+      localStorage.setItem('owner_notice_last_read', String(badgeData.data.notice || 0))
+    }
+  } catch (e) {}
 })
 </script>
 <style scoped>

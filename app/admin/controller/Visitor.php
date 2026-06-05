@@ -9,18 +9,25 @@ class Visitor extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['v.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['v.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['v.status', '=', $status];
-        $total = Db::name('visitor')->alias('v')->where($where)->count();
-        $list = Db::name('visitor')->alias('v')
+
+        $cntQuery = Db::name('visitor')->alias('v')->whereNull('`v`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`v`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`v`.`community_id`', '=', intval($cid));
+        if ($status !== '') $cntQuery->where('`v`.`status`', '=', $status);
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('visitor')->alias('v')
             ->leftJoin('owner o', 'o.id = v.owner_id')
             ->leftJoin('room r', 'r.id = v.room_id')
             ->leftJoin('community com', 'com.id = v.community_id')
             ->field('v.*, v.visit_reason as visit_purpose, o.realname as owner_name, r.room_number, r.building_name, com.name as community_name')
-            ->where($where)->page($page, $limit)->order('v.id', 'desc')->select();
+            ->whereNull('`v`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`v`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`v`.`community_id`', '=', intval($cid));
+        if ($status !== '') $listQuery->where('`v`.`status`', '=', $status);
+        $list = $listQuery->order('v.id', 'desc')->page($page, $limit)->select();
         return $this->table($list, $total);
     }
 

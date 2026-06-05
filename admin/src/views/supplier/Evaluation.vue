@@ -17,7 +17,7 @@
 
       <el-table :data="list" v-loading="loading" stripe border style="width:100%;">
         <el-table-column prop="supplier_name" label="供应商" width="180" />
-        <el-table-column prop="rating" label="评分" width="180"><template #default="{row}"><el-rate v-model="row.rating" disabled show-score text-color="#ff9900" /></template></el-table-column>
+        <el-table-column prop="rating" label="评分" width="180"><template #default="{row}"><el-rate :model-value="Number(row.rating) || 0" disabled show-score text-color="#ff9900" /></template></el-table-column>
         <el-table-column prop="evaluator" label="评价人" width="100" />
         <el-table-column prop="content" label="评价内容" show-overflow-tooltip />
         <el-table-column prop="create_time" label="评价时间" width="110" />
@@ -65,14 +65,17 @@ async function loadData() {
   loading.value = true
   try {
     const res = await apiGet('/admin/Evaluation/lists', { ...query })
-    list.value = res.data.list || res.data
+    const raw = res.data.list || res.data
+    const data = Array.isArray(raw) ? raw : []
+    list.value = data.map((item: any) => ({ ...item, rating: Number(item.rating) || 0 }))
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
 }
 
 function openForm(row?: any) {
   formTitle.value = row ? '编辑评价' : '新增评价'
-  Object.assign(form, row || { id: 0, supplier_id: '', rating: 5, evaluator: '', content: '' })
+  const data = row ? { ...row, rating: Number(row.rating) || 0 } : { id: 0, supplier_id: '', rating: 5, evaluator: '', content: '' }
+  Object.assign(form, data)
   dialogVisible.value = true
 }
 

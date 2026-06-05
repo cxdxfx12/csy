@@ -12,6 +12,10 @@ import RepairView from './views/RepairView.vue'
 import ComplaintView from './views/ComplaintView.vue'
 import NoticeView from './views/NoticeView.vue'
 import VisitorView from './views/VisitorView.vue'
+import VehicleView from './views/VehicleView.vue'
+import VoteView from './views/VoteView.vue'
+import ActivityView from './views/ActivityView.vue'
+import ClaimView from './views/ClaimView.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -23,7 +27,11 @@ const routes = [
   { path: '/repair', component: RepairView },
   { path: '/complaint', component: ComplaintView },
   { path: '/notice', component: NoticeView },
-  { path: '/visitor', component: VisitorView }
+  { path: '/visitor', component: VisitorView },
+  { path: '/vehicle', component: VehicleView },
+  { path: '/vote', component: VoteView },
+  { path: '/activity', component: ActivityView },
+  { path: '/claim', component: ClaimView }
 ]
 
 const router = createRouter({ history: createWebHashHistory(), routes })

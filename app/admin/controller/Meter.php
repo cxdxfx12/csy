@@ -10,8 +10,9 @@ class Meter extends BaseAdmin
     {
         [$page, $limit] = $this->getPage();
         $where = [['m.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['m.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['m.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['m.community_id', '=', $cid];
         $type = $this->request->param('type', 0);
         if ($type) $where[] = ['m.type', '=', $type];
         $keyword = $this->request->param('keyword', '');
@@ -36,6 +37,12 @@ class Meter extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        // 从房间获取 community_id
+        if (empty($data['community_id']) && !empty($data['room_id'])) {
+            $room = Db::name('room')->where('id', $data['room_id'])->find();
+            $data['community_id'] = $room['community_id'] ?? 0;
+        }
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         // 自动计算用量
         $data['usage_amount'] = floatval($data['current_reading'] ?? 0) - floatval($data['previous_reading'] ?? 0);
         $data['operator_id'] = get_admin_id();
@@ -48,12 +55,6 @@ class Meter extends BaseAdmin
         }
         if (empty($data['reading_date'])) {
             $data['reading_date'] = date('Y-m-d');
-        }
-
-        // 从房间获取 community_id
-        if (empty($data['community_id']) && !empty($data['room_id'])) {
-            $room = Db::name('room')->where('id', $data['room_id'])->find();
-            $data['community_id'] = $room['community_id'] ?? 0;
         }
 
         // 只保留 DB 实际存在的字段，防止 injection
@@ -70,6 +71,8 @@ class Meter extends BaseAdmin
         $data = $this->request->post();
         $id = $data['id'] ?? 0;
         if (!$id) return $this->error('缺少ID');
+        $record = Db::name('meter_reading')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
 
         // 自动计算用量
         if (isset($data['current_reading']) && isset($data['previous_reading'])) {
@@ -94,6 +97,8 @@ class Meter extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('meter_reading')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('meter_reading')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

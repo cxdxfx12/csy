@@ -9,23 +9,35 @@ class ElevatorInspection extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['ei.delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['ei.inspector|ei.inspection_company|ei.remark|e.elevator_no', 'like', "%{$keyword}%"];
         $elevatorId = $this->request->param('elevator_id', 0);
-        if ($elevatorId) $where[] = ['ei.elevator_id', '=', intval($elevatorId)];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['e.community_id', '=', intval($communityId)];
         $inspectionType = $this->request->param('inspection_type', '');
-        if ($inspectionType !== '') $where[] = ['ei.inspection_type', '=', intval($inspectionType)];
         $result = $this->request->param('result', '');
-        if ($result !== '') $where[] = ['ei.result', '=', intval($result)];
-        $total = Db::name('elevator_inspection')->alias('ei')->where($where)->count();
-        $list = Db::name('elevator_inspection')->alias('ei')
+
+        $cntQuery = Db::name('elevator_inspection')->alias('ei')
+            ->leftJoin('elevator e', 'e.id = ei.elevator_id')
+            ->whereNull('`ei`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($keyword) $cntQuery->where('`ei`.`inspector`|`ei`.`inspection_company`|`ei`.`remark`|`e`.`elevator_no`', 'like', "%{$keyword}%");
+        if ($elevatorId) $cntQuery->where('`ei`.`elevator_id`', '=', intval($elevatorId));
+        if ($inspectionType !== '') $cntQuery->where('`ei`.`inspection_type`', '=', intval($inspectionType));
+        if ($result !== '') $cntQuery->where('`ei`.`result`', '=', intval($result));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('elevator_inspection')->alias('ei')
             ->leftJoin('elevator e', 'e.id = ei.elevator_id')
             ->leftJoin('community c', 'c.id = e.community_id')
             ->field('ei.*, e.elevator_no, e.community_id, c.name as community_name')
-            ->where($where)->page($page, $limit)->order('ei.id', 'desc')->select();
+            ->whereNull('`ei`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($keyword) $listQuery->where('`ei`.`inspector`|`ei`.`inspection_company`|`ei`.`remark`|`e`.`elevator_no`', 'like', "%{$keyword}%");
+        if ($elevatorId) $listQuery->where('`ei`.`elevator_id`', '=', intval($elevatorId));
+        if ($inspectionType !== '') $listQuery->where('`ei`.`inspection_type`', '=', intval($inspectionType));
+        if ($result !== '') $listQuery->where('`ei`.`result`', '=', intval($result));
+        $list = $listQuery->page($page, $limit)->order('ei.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

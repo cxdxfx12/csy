@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column label="评分" width="80" align="center">
           <template #default="{ row }">
-            <el-rate v-if="row.rating > 0" :model-value="row.rating" disabled size="small" />
+            <el-rate v-if="Number(row.rating) > 0" :model-value="Number(row.rating) || 0" disabled size="small" />
             <span v-else class="text-muted">-</span>
           </template>
         </el-table-column>
@@ -199,7 +199,8 @@ async function loadData() {
       status: query.status || undefined,
       type: query.type || undefined,
     })
-    list.value = (res.data as any)?.list || (res.data as any) || []
+    const raw = (res.data as any)?.list || (res.data as any) || []
+    list.value = Array.isArray(raw) ? raw.map((item: any) => ({ ...item, rating: Number(item.rating) || 0 })) : raw
     total.value = (res.data as any)?.total || res.count || 0
     loadStats()
   } finally { loading.value = false }

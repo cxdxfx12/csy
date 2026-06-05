@@ -21,7 +21,7 @@
         <el-table-column prop="contact_person" label="联系人" width="100" />
         <el-table-column prop="contact_phone" label="联系电话" width="130" />
         <el-table-column prop="email" label="邮箱" width="170" show-overflow-tooltip />
-        <el-table-column prop="rating" label="评分" width="100"><template #default="{row}"><el-rate v-model="row.rating" disabled show-score text-color="#ff9900" /></template></el-table-column>
+        <el-table-column prop="rating" label="评分" width="100"><template #default="{row}"><el-rate :model-value="Number(row.rating) || 0" disabled show-score text-color="#ff9900" /></template></el-table-column>
         <el-table-column prop="status" label="状态" width="80"><template #default="{row}"><el-tag :type="row.status===1?'success':'danger'">{{ row.status===1?'正常':'停用' }}</el-tag></template></el-table-column>
         <el-table-column prop="create_time" label="登记时间" width="110" />
         <el-table-column fixed="right" label="操作" width="160"><template #default="{row}">
@@ -60,7 +60,7 @@
         <el-descriptions-item label="联系电话">{{ detail.contact_phone||'-' }}</el-descriptions-item>
         <el-descriptions-item label="邮箱" :span="2">{{ detail.email||'-' }}</el-descriptions-item>
         <el-descriptions-item label="地址" :span="2">{{ detail.address||'-' }}</el-descriptions-item>
-        <el-descriptions-item label="综合评分"><el-rate v-model="detail.avg_rating" disabled show-score /></el-descriptions-item>
+        <el-descriptions-item label="综合评分"><el-rate :model-value="Number(detail.avg_rating) || 0" disabled show-score /></el-descriptions-item>
         <el-descriptions-item label="采购次数">{{ detail.purchase_count }}</el-descriptions-item>
         <el-descriptions-item label="采购总额">¥{{ detail.purchase_total||0 }}</el-descriptions-item>
         <el-descriptions-item label="合同数量">{{ detail.contract_count }}</el-descriptions-item>
@@ -97,7 +97,9 @@ async function loadData() {
   loading.value = true
   try {
     const res = await apiGet('/admin/Supplier/lists', { ...query })
-    list.value = res.data.list || res.data
+    const raw = res.data.list || res.data
+    const data = Array.isArray(raw) ? raw : []
+    list.value = data.map((item: any) => ({ ...item, rating: Number(item.rating) || 0 }))
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
 }
@@ -124,7 +126,9 @@ async function handleDelete(id: number) { await apiPost('/admin/Supplier/delete'
 
 async function viewDetail(row: any) {
   const res = await apiGet('/admin/Supplier/detail', { id: row.id })
-  detail.value = res.data
+  const d = res.data
+  if (d) { d.avg_rating = Number(d.avg_rating) || 0; d.rating = Number(d.rating) || 0 }
+  detail.value = d
   detailVisible.value = true
 }
 

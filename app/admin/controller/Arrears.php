@@ -7,75 +7,103 @@ use think\facade\Db;
 class Arrears extends BaseAdmin
 {
     /**
-     * 欠费列表：按房间汇总
+     * 欠费列表：按业主汇总（一个业主可能有多套房）
      */
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $communityId = intval($this->request->param('community_id', 0));
+        $cid = $this->getFilteredCommunityId();
         $keyword = trim($this->request->param('keyword', ''));
 
         $pdo = Db::name('bill')->getPdo();
 
-        // 子查询条件
-        $whereClause = "WHERE b.delete_time IS NULL AND b.status IN (1,2)";
-        if ($communityId) $whereClause .= " AND b.community_id = " . intval($communityId);
-
-        $sql = "SELECT 
-            r.id as room_id, r.room_number, r.building_name, r.area,
-            c.id as community_id, c.name as community_name,
-            o.id as owner_id, o.realname as owner_name, o.phone as owner_phone,
-            s.bill_count, s.total_amount, s.paid_amount, s.arrears_amount
-        FROM ds_room r
-        INNER JOIN (
-            SELECT room_id, 
-                COUNT(*) as bill_count,
-                SUM(total_amount) as total_amount,
-                SUM(paid_amount) as paid_amount,
-                SUM(total_amount - paid_amount) as arrears_amount
-            FROM ds_bill b
-            $whereClause
-            GROUP BY room_id
-        ) s ON s.room_id = r.id
-        LEFT JOIN ds_community c ON c.id = r.community_id
-        LEFT JOIN ds_owner_room o_r ON o_r.room_id = r.id AND o_r.is_primary = 1 AND o_r.delete_time IS NULL
-        LEFT JOIN ds_owner o ON o.id = o_r.owner_id AND o.delete_time IS NULL
-        WHERE r.delete_time IS NULL";
-
-        $params = [];
-        if ($keyword) {
-            $kw = "%{$keyword}%";
-            $sql .= " AND (r.room_number LIKE ? OR r.building_name LIKE ? OR o.realname LIKE ? OR o.phone LIKE ?)";
-            $params = [$kw, $kw, $kw, $kw];
+        // 子查询：每间房的欠费汇总
+        $billSubWhere = "WHERE b.delete_time IS NULL AND b.status IN (1,2)";
+        if ($cid === -1) {
+            $boundStr = implode(',', $this->request->boundCommunityIds);
+            $billSubWhere .= " AND b.community_id IN ({$boundStr})";
+        } elseif ($cid > 0) {
+            $billSubWhere .= " AND b.community_id = " . intval($cid);
         }
 
-        // Count
-        $countSql = "SELECT COUNT(*) as total FROM ($sql) tmp";
+        // 按业主汇总欠费（LEFT JOIN 房间聚合结果）
+        $sql = "SELECT 
+            o.id as owner_id, o.realname as owner_name, o.phone as owner_phone, o.id_card, o.type as owner_type,
+            s.community_id, s.community_name,
+            COUNT(DISTINCT s.room_id) as room_count,
+            GROUP_CONCAT(DISTINCT CONCAT(s.building_name, '-', s.room_number) ORDER BY s.building_name, s.room_number SEPARATOR '、') as room_list,
+            SUM(s.bill_count) as bill_count,
+            SUM(s.total_amount) as total_amount,
+            SUM(s.paid_amount) as paid_amount,
+            SUM(s.arrears_amount) as arrears_amount
+        FROM ds_owner o
+        INNER JOIN ds_owner_room o_r ON o_r.owner_id = o.id AND o_r.is_primary = 1 AND o_r.delete_time IS NULL
+        INNER JOIN ds_room r ON r.id = o_r.room_id AND r.delete_time IS NULL
+        INNER JOIN (
+            SELECT b.room_id,
+                r2.community_id,
+                c.name as community_name,
+                r2.building_name,
+                r2.room_number,
+                COUNT(*) as bill_count,
+                SUM(b.total_amount) as total_amount,
+                SUM(b.paid_amount) as paid_amount,
+                SUM(b.total_amount - b.paid_amount) as arrears_amount
+            FROM ds_bill b
+            INNER JOIN ds_room r2 ON r2.id = b.room_id
+            LEFT JOIN ds_community c ON c.id = r2.community_id
+            $billSubWhere
+            GROUP BY b.room_id, r2.community_id, c.name, r2.building_name, r2.room_number
+        ) s ON s.room_id = r.id
+        WHERE o.delete_time IS NULL";
+
+        $params = [];
+        if ($cid === -1) {
+            $boundStr = implode(',', $this->request->boundCommunityIds);
+            $sql .= " AND o.community_id IN ({$boundStr})";
+        } elseif ($cid > 0) {
+            $sql .= " AND o.community_id = ?";
+            $params[] = $cid;
+        }
+        if ($keyword) {
+            $kw = "%{$keyword}%";
+            $sql .= " AND (o.realname LIKE ? OR o.phone LIKE ? OR s.building_name LIKE ? OR s.room_number LIKE ?)";
+            $params = array_merge($params, [$kw, $kw, $kw, $kw]);
+        }
+
+        // Group + order clause
+        $groupClause = " GROUP BY o.id, o.realname, o.phone, o.id_card, o.type, s.community_id, s.community_name";
+        // 只显示有实际欠费的业主（arrears_amount > 0），交清后自动消失
+        $groupClause .= " HAVING arrears_amount > 0";
+        $orderClause = " ORDER BY arrears_amount DESC";
+
+        // Count: wrap grouped result
+        $countSql = "SELECT COUNT(*) as total FROM ({$sql}{$groupClause}) tmp";
         $stmt = $pdo->prepare($countSql);
         $stmt->execute($params);
         $total = (int)($stmt->fetch(\PDO::FETCH_ASSOC)['total'] ?? 0);
 
         // Paginate
         $offset = ($page - 1) * $limit;
-        $sql .= " ORDER BY s.arrears_amount DESC LIMIT {$limit} OFFSET {$offset}";
+        $sql .= $groupClause . $orderClause . " LIMIT {$limit} OFFSET {$offset}";
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        // 补充每间房最近催单时间
+        // 补充每位业主最近催缴时间
         if (!empty($list)) {
-            $roomIds = array_column($list, 'room_id');
-            if (!empty($roomIds)) {
-                $placeholders = implode(',', array_fill(0, count($roomIds), '?'));
-                $stmt = $pdo->prepare("SELECT room_id, MAX(create_time) as last_dunning_time FROM ds_bill_dunning WHERE room_id IN ($placeholders) GROUP BY room_id");
-                $stmt->execute(array_values($roomIds));
+            $ownerIds = array_column($list, 'owner_id');
+            if (!empty($ownerIds)) {
+                $placeholders = implode(',', array_fill(0, count($ownerIds), '?'));
+                $stmt = $pdo->prepare("SELECT owner_id, MAX(create_time) as last_dunning_time FROM ds_bill_dunning WHERE owner_id IN ($placeholders) GROUP BY owner_id");
+                $stmt->execute(array_values($ownerIds));
                 $dunnings = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                 $dunningMap = [];
                 foreach ($dunnings as $d) {
-                    $dunningMap[$d['room_id']] = $d['last_dunning_time'];
+                    $dunningMap[$d['owner_id']] = $d['last_dunning_time'];
                 }
                 foreach ($list as &$row) {
-                    $row['last_dunning_time'] = $dunningMap[$row['room_id']] ?? '';
+                    $row['last_dunning_time'] = $dunningMap[$row['owner_id']] ?? '';
                 }
             }
         }
@@ -84,66 +112,72 @@ class Arrears extends BaseAdmin
     }
 
     /**
-     * 催单：记录催单，更新账单催单信息
+     * 催单：按业主催缴其所有欠费房间
      */
     public function dunning()
     {
-        $roomId = intval($this->request->post('room_id', 0));
+        $ownerId = intval($this->request->post('owner_id', 0));
         $remark = trim($this->request->post('remark', ''));
 
-        if (!$roomId) return $this->error('请选择房间');
+        if (!$ownerId) return $this->error('请选择业主');
 
-        $room = Db::name('room')->where('id', $roomId)->find();
-        if (!$room) return $this->error('房间不存在');
+        $owner = Db::name('owner')->where('id', $ownerId)->find();
+        if (!$owner) return $this->error('业主不存在');
 
-        // 查询该房间所有未缴/部分缴纳账单
-        $bills = Db::name('bill')
-            ->where('room_id', $roomId)
-            ->where('delete_time', null)
-            ->whereIn('status', [1, 2])
-            ->select();
+        $roomsData = $this->getOwnerArrearsRooms($ownerId);
+        if (empty($roomsData)) return $this->error('该业主名下无欠费房间');
 
-        if (empty($bills)) return $this->error('该房间无欠费账单');
-
-        $totalAmount = 0;
-        $paidAmount = 0;
-        foreach ($bills as $b) {
-            $totalAmount += $b['total_amount'];
-            $paidAmount += $b['paid_amount'];
-        }
-        $arrears = round($totalAmount - $paidAmount, 2);
-
-        // 找业主
-        $ownerRoom = Db::name('owner_room')
-            ->where('room_id', $roomId)
-            ->where('is_primary', 1)
-            ->where('delete_time', null)
-            ->find();
-        $ownerId = $ownerRoom['owner_id'] ?? 0;
-
-        // 事务
         $pdo = Db::name('bill')->getPdo();
         $pdo->beginTransaction();
         try {
-            // 插入催单记录
-            Db::name('bill_dunning')->insert([
-                'community_id'  => $room['community_id'],
-                'room_id'       => $roomId,
-                'owner_id'      => $ownerId,
-                'total_amount'  => $totalAmount,
-                'paid_amount'   => $paidAmount,
-                'arrears_amount'=> $arrears,
-                'bill_count'    => count($bills),
-                'remark'        => $remark,
-                'admin_id'      => $this->adminId,
-                'create_time'   => date('Y-m-d H:i:s'),
-            ]);
-
-            // 更新账单催单次数和时间
             $now = date('Y-m-d H:i:s');
-            foreach ($bills as $b) {
-                $stmt = $pdo->prepare("UPDATE ds_bill SET dunning_count = dunning_count + 1, dunning_time = ? WHERE id = ?");
-                $stmt->execute([$now, $b['id']]);
+            $allBillDetails = [];
+            $grandTotal = 0;
+            $grandPaid = 0;
+            $totalBillCount = 0;
+            $roomNames = [];
+
+            foreach ($roomsData as $rd) {
+                $bills = $rd['bills'];
+                $amts = $rd['amounts'];
+                $grandTotal += $amts['total'];
+                $grandPaid += $amts['paid'];
+                $totalBillCount += count($bills);
+                $roomNames[] = $rd['room']['room_number'];
+
+                // 插入催单记录
+                Db::name('bill_dunning')->insert([
+                    'community_id'   => $rd['room']['community_id'],
+                    'room_id'        => $rd['room']['id'],
+                    'owner_id'       => $ownerId,
+                    'total_amount'   => $amts['total'],
+                    'paid_amount'    => $amts['paid'],
+                    'arrears_amount' => $amts['arrears'],
+                    'bill_count'     => count($bills),
+                    'remark'         => $remark,
+                    'admin_id'       => $this->adminId,
+                    'create_time'    => $now,
+                ]);
+
+                // 更新账单催缴次数
+                foreach ($bills as $b) {
+                    $stmt = $pdo->prepare("UPDATE ds_bill SET dunning_count = dunning_count + 1, dunning_time = ? WHERE id = ?");
+                    $stmt->execute([$now, $b['id']]);
+                }
+
+                // 收集账单明细
+                foreach ($bills as $b) {
+                    $allBillDetails[] = [
+                        'bill_no'          => $b['bill_no'],
+                        'charge_item_name' => $b['charge_item_name'],
+                        'bill_period'      => $b['bill_period'],
+                        'room_number'      => $rd['room']['room_number'],
+                        'total_amount'     => $b['total_amount'],
+                        'paid_amount'      => $b['paid_amount'],
+                        'arrears'          => round($b['total_amount'] - $b['paid_amount'], 2),
+                        'due_date'         => $b['due_date'],
+                    ];
+                }
             }
 
             $pdo->commit();
@@ -152,94 +186,89 @@ class Arrears extends BaseAdmin
             return $this->error('催单失败：' . $e->getMessage());
         }
 
-        // 组装详情
-        $owner = $ownerId ? Db::name('owner')->where('id', $ownerId)->find() : null;
+        $arrears = round($grandTotal - $grandPaid, 2);
         return $this->success([
-            'room_number'   => $room['room_number'],
-            'owner_name'    => $owner['realname'] ?? '未知',
-            'owner_phone'   => $owner['phone'] ?? '',
-            'total_amount'  => $totalAmount,
-            'paid_amount'   => $paidAmount,
-            'arrears_amount'=> $arrears,
-            'bill_count'    => count($bills),
-            'bill_details'  => array_map(function ($b) {
-                return [
-                    'bill_no'           => $b['bill_no'],
-                    'charge_item_name'  => $b['charge_item_name'],
-                    'bill_period'       => $b['bill_period'],
-                    'total_amount'      => $b['total_amount'],
-                    'paid_amount'       => $b['paid_amount'],
-                    'arrears'           => round($b['total_amount'] - $b['paid_amount'], 2),
-                    'due_date'          => $b['due_date'],
-                ];
-            }, $bills),
+            'owner_name'     => $owner['realname'],
+            'owner_phone'    => $owner['phone'] ?? '',
+            'room_list'      => implode('、', $roomNames),
+            'total_amount'   => $grandTotal,
+            'paid_amount'    => $grandPaid,
+            'arrears_amount' => $arrears,
+            'bill_count'     => $totalBillCount,
+            'bill_details'   => $allBillDetails,
         ], '催单成功');
     }
 
     /**
-     * 短信催缴
+     * 短信催缴：按业主发送
      */
     public function smsDunning()
     {
-        $roomId = intval($this->request->post('room_id', 0));
+        $ownerId = intval($this->request->post('owner_id', 0));
         $remark = trim($this->request->post('remark', ''));
 
-        if (!$roomId) return $this->error('请选择房间');
+        if (!$ownerId) return $this->error('请选择业主');
 
-        $room = Db::name('room')->where('id', $roomId)->find();
-        if (!$room) return $this->error('房间不存在');
+        $owner = Db::name('owner')->where('id', $ownerId)->find();
+        if (!$owner) return $this->error('业主不存在');
+        if (empty($owner['phone'])) return $this->error('该业主未登记手机号，无法发送短信');
 
-        $community = Db::name('community')->where('id', $room['community_id'])->find();
+        $roomsData = $this->getOwnerArrearsRooms($ownerId);
+        if (empty($roomsData)) return $this->error('该业主名下无欠费房间');
+
+        // 取第一个房间的小区配置
+        $firstRoom = $roomsData[0]['room'];
+        $community = Db::name('community')->where('id', $firstRoom['community_id'])->find();
         if (empty($community['sms_key'])) {
             return $this->error('该小区未配置短信接口KEY，请先在【短信配置】中设置');
         }
 
-        $ownerRow = $this->getPrimaryOwner($roomId);
-        if (empty($ownerRow['phone'])) {
-            return $this->error('该房间业主未登记手机号，无法发送短信');
-        }
-
-        $bills = Db::name('bill')
-            ->where('room_id', $roomId)->where('delete_time', null)
-            ->whereIn('status', [1, 2])->select();
-        if (empty($bills)) return $this->error('该房间无欠费账单');
-
-        $amounts = $this->calcAmounts($bills);
+        // 汇总数据
+        [$grandTotal, $grandPaid, $totalBillCount, $roomNames] = $this->aggregateRoomsData($roomsData);
+        $arrears = round($grandTotal - $grandPaid, 2);
 
         $smsContent = sprintf(
-            '【%s】尊敬的%s，您有%d笔欠费共¥%.2f，请尽快缴费。详询物业。',
-            $community['name'], $ownerRow['realname'] ?: '业主',
-            count($bills), $amounts['arrears']
+            '【%s】尊敬的%s，您在%s共有%d笔欠费共¥%.2f，请尽快缴费。详询物业。',
+            $community['name'],
+            $owner['realname'] ?: '业主',
+            implode('、', $roomNames),
+            $totalBillCount,
+            $arrears
         );
 
-        $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'sms');
+        $this->recordOwnerDunning($roomsData, $ownerId, $remark, 'sms');
 
         return $this->success([
-            'channel'       => 'sms',
-            'phone'         => substr($ownerRow['phone'], 0, 3) . '****' . substr($ownerRow['phone'], -4),
-            'content'       => $smsContent,
-            'room_number'   => $room['room_number'],
-            'owner_name'    => $ownerRow['realname'] ?: '未知',
-            'bill_count'    => count($bills),
-            'arrears_amount'=> $amounts['arrears'],
+            'channel'        => 'sms',
+            'phone'          => substr($owner['phone'], 0, 3) . '****' . substr($owner['phone'], -4),
+            'content'        => $smsContent,
+            'owner_name'     => $owner['realname'],
+            'room_list'      => implode('、', $roomNames),
+            'bill_count'     => $totalBillCount,
+            'arrears_amount' => $arrears,
         ], '短信催缴已发送');
     }
 
     /**
-     * 公众号模板消息催缴
+     * 公众号模板消息催缴：按业主发送
      */
     public function wechatDunning()
     {
-        $roomId = intval($this->request->post('room_id', 0));
+        $ownerId = intval($this->request->post('owner_id', 0));
         $remark = trim($this->request->post('remark', ''));
 
-        if (!$roomId) return $this->error('请选择房间');
+        if (!$ownerId) return $this->error('请选择业主');
 
-        $room = Db::name('room')->where('id', $roomId)->find();
-        if (!$room) return $this->error('房间不存在');
+        $owner = Db::name('owner')->where('id', $ownerId)->find();
+        if (!$owner) return $this->error('业主不存在');
+        if (empty($owner['openid'])) return $this->error('该业主未绑定公众号，无法推送模板消息');
 
+        $roomsData = $this->getOwnerArrearsRooms($ownerId);
+        if (empty($roomsData)) return $this->error('该业主名下无欠费房间');
+
+        $firstRoom = $roomsData[0]['room'];
         $wxConfig = Db::name('community_wechat_config')
-            ->where('community_id', $room['community_id'])
+            ->where('community_id', $firstRoom['community_id'])
             ->where('status', 1)
             ->find();
         if (!$wxConfig || empty($wxConfig['app_id'])) {
@@ -249,42 +278,40 @@ class Arrears extends BaseAdmin
             return $this->error('该小区公众号未配置催缴通知模板ID，请先在【公众号配置】中设置');
         }
 
-        $ownerRow = $this->getPrimaryOwner($roomId);
-        if (empty($ownerRow['openid'])) {
-            return $this->error('该业主未绑定公众号，无法推送模板消息');
-        }
+        [$grandTotal, $grandPaid, $totalBillCount, $roomNames] = $this->aggregateRoomsData($roomsData);
+        $arrears = round($grandTotal - $grandPaid, 2);
 
-        $bills = Db::name('bill')
-            ->where('room_id', $roomId)->where('delete_time', null)
-            ->whereIn('status', [1, 2])->select();
-        if (empty($bills)) return $this->error('该房间无欠费账单');
-
-        $amounts = $this->calcAmounts($bills);
-
-        $this->recordDunning($room, $ownerRow, $amounts, $bills, $remark, 'wechat');
+        $this->recordOwnerDunning($roomsData, $ownerId, $remark, 'wechat');
 
         return $this->success([
-            'channel'       => 'wechat',
-            'template_id'   => $wxConfig['template_arrears'],
-            'openid'        => substr($ownerRow['openid'], 0, 6) . '****',
-            'room_number'   => $room['room_number'],
-            'owner_name'    => $ownerRow['realname'] ?: '未知',
-            'bill_count'    => count($bills),
-            'arrears_amount'=> $amounts['arrears'],
+            'channel'        => 'wechat',
+            'template_id'    => $wxConfig['template_arrears'],
+            'openid'         => substr($owner['openid'], 0, 6) . '****',
+            'owner_name'     => $owner['realname'],
+            'room_list'      => implode('、', $roomNames),
+            'bill_count'     => $totalBillCount,
+            'arrears_amount' => $arrears,
         ], '公众号模板消息已推送');
     }
 
     /**
-     * 催单历史
+     * 催单历史：按业主查询
      */
     public function history()
     {
-        $roomId = intval($this->request->param('room_id', 0));
-        if (!$roomId) return $this->error('请选择房间');
+        $ownerId = intval($this->request->param('owner_id', 0));
+        if (!$ownerId) return $this->error('请选择业主');
 
         $pdo = Db::name('bill_dunning')->getPdo();
-        $stmt = $pdo->prepare("SELECT d.*, a.nickname as admin_name FROM ds_bill_dunning d LEFT JOIN ds_admin_user a ON a.id = d.admin_id WHERE d.room_id = ? ORDER BY d.id DESC");
-        $stmt->execute([$roomId]);
+        $stmt = $pdo->prepare("
+            SELECT d.*, r.room_number, r.building_name, a.nickname as admin_name 
+            FROM ds_bill_dunning d 
+            LEFT JOIN ds_room r ON r.id = d.room_id 
+            LEFT JOIN ds_admin_user a ON a.id = d.admin_id 
+            WHERE d.owner_id = ? 
+            ORDER BY d.id DESC
+        ");
+        $stmt->execute([$ownerId]);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return $this->success($list);
@@ -292,47 +319,105 @@ class Arrears extends BaseAdmin
 
     // ==================== 私有方法 ====================
 
-    private function getPrimaryOwner($roomId)
+    /**
+     * 获取某业主名下所有欠费房间及其账单
+     */
+    private function getOwnerArrearsRooms($ownerId)
     {
-        $or = Db::name('owner_room')
-            ->where('room_id', $roomId)->where('is_primary', 1)
-            ->where('delete_time', null)->find();
-        if ($or) {
-            return Db::name('owner')->where('id', $or['owner_id'])->find() ?: [];
+        // 找到该业主作为主业主的所有房间
+        $ownerRooms = Db::name('owner_room')
+            ->where('owner_id', $ownerId)
+            ->where('is_primary', 1)
+            ->where('delete_time', null)
+            ->select();
+
+        if (empty($ownerRooms)) return [];
+
+        $result = [];
+        foreach ($ownerRooms as $or) {
+            $roomId = $or['room_id'];
+            $room = Db::name('room')->where('id', $roomId)->find();
+            if (!$room) continue;
+
+            $bills = Db::name('bill')
+                ->where('room_id', $roomId)
+                ->where('delete_time', null)
+                ->whereIn('status', [1, 2])
+                ->select();
+
+            if (empty($bills)) continue; // 该房间无欠费
+
+            $total = 0;
+            $paid = 0;
+            foreach ($bills as $b) {
+                $total += $b['total_amount'];
+                $paid += $b['paid_amount'];
+            }
+
+            $result[] = [
+                'room'    => $room,
+                'bills'   => $bills,
+                'amounts' => [
+                    'total'   => $total,
+                    'paid'    => $paid,
+                    'arrears' => round($total - $paid, 2),
+                ],
+            ];
         }
-        return [];
+
+        return $result;
     }
 
-    private function calcAmounts($bills)
+    /**
+     * 汇总业主所有房间的金额和账单数
+     */
+    private function aggregateRoomsData($roomsData)
     {
-        $total = 0; $paid = 0;
-        foreach ($bills as $b) { $total += $b['total_amount']; $paid += $b['paid_amount']; }
-        return ['total' => $total, 'paid' => $paid, 'arrears' => round($total - $paid, 2)];
+        $grandTotal = 0;
+        $grandPaid = 0;
+        $totalBillCount = 0;
+        $roomNames = [];
+        foreach ($roomsData as $rd) {
+            $grandTotal += $rd['amounts']['total'];
+            $grandPaid += $rd['amounts']['paid'];
+            $totalBillCount += count($rd['bills']);
+            $roomNames[] = $rd['room']['room_number'];
+        }
+        return [$grandTotal, $grandPaid, $totalBillCount, $roomNames];
     }
 
-    private function recordDunning($room, $ownerRow, $amounts, $bills, $remark, $channel)
+    /**
+     * 按业主记录催缴（事务：insert dunning + update bills）
+     */
+    private function recordOwnerDunning($roomsData, $ownerId, $remark, $channel)
     {
-        $ownerId = $ownerRow['id'] ?? 0;
         $pdo = Db::name('bill')->getPdo();
         $pdo->beginTransaction();
         try {
-            Db::name('bill_dunning')->insert([
-                'community_id'   => $room['community_id'],
-                'room_id'        => $room['id'],
-                'owner_id'       => $ownerId,
-                'total_amount'   => $amounts['total'],
-                'paid_amount'    => $amounts['paid'],
-                'arrears_amount' => $amounts['arrears'],
-                'bill_count'     => count($bills),
-                'remark'         => $remark,
-                'channel'        => $channel,
-                'admin_id'       => $this->adminId,
-                'create_time'    => date('Y-m-d H:i:s'),
-            ]);
             $now = date('Y-m-d H:i:s');
-            foreach ($bills as $b) {
-                $stmt = $pdo->prepare("UPDATE ds_bill SET dunning_count = dunning_count + 1, dunning_time = ? WHERE id = ?");
-                $stmt->execute([$now, $b['id']]);
+            foreach ($roomsData as $rd) {
+                $bills = $rd['bills'];
+                $amts = $rd['amounts'];
+                $room = $rd['room'];
+
+                Db::name('bill_dunning')->insert([
+                    'community_id'   => $room['community_id'],
+                    'room_id'        => $room['id'],
+                    'owner_id'       => $ownerId,
+                    'total_amount'   => $amts['total'],
+                    'paid_amount'    => $amts['paid'],
+                    'arrears_amount' => $amts['arrears'],
+                    'bill_count'     => count($bills),
+                    'remark'         => $remark,
+                    'channel'        => $channel,
+                    'admin_id'       => $this->adminId,
+                    'create_time'    => $now,
+                ]);
+
+                foreach ($bills as $b) {
+                    $stmt = $pdo->prepare("UPDATE ds_bill SET dunning_count = dunning_count + 1, dunning_time = ? WHERE id = ?");
+                    $stmt->execute([$now, $b['id']]);
+                }
             }
             $pdo->commit();
         } catch (\Exception $e) {

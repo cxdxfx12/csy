@@ -173,9 +173,16 @@
       <el-form :model="form" ref="formRef" :rules="rules" label-width="90px">
         <el-row :gutter="16">
           <el-col :span="12">
+            <el-form-item label="所属小区" prop="community_id">
+              <el-select v-model="form.community_id" placeholder="选择小区" style="width:100%" @change="onFormCommunityChange">
+                <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="关联电梯" prop="elevator_id">
               <el-select v-model="form.elevator_id" placeholder="选择电梯" filterable style="width:100%">
-                <el-option v-for="e in elevators" :key="e.id" :label="e.elevator_no + ' (' + (e.brand||'') + ' ' + (e.model||'') + ')'" :value="e.id" />
+                <el-option v-for="e in filteredElevators" :key="e.id" :label="e.elevator_no + ' (' + (e.brand||'') + ' ' + (e.model||'') + ')'" :value="e.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -275,16 +282,23 @@ const communities = ref<any[]>([])
 const elevators = ref<any[]>([])
 
 const query = reactive({ page: 1, limit: 15, keyword: '', community_id: 0, elevator_id: 0, fault_type: '', status: '' })
-const form = reactive<any>({ elevator_id: null, fault_type: '', fault_time: '', description: '', is_trapped: 0, trapped_persons: 0, rescue_time: '', repair_company: '', repair_person: '', repair_time: '', repair_result: '', cost: 0, status: 0 })
+const form = reactive<any>({ community_id: null, elevator_id: null, fault_type: '', fault_time: '', description: '', is_trapped: 0, trapped_persons: 0, rescue_time: '', repair_company: '', repair_person: '', repair_time: '', repair_result: '', cost: 0, status: 0 })
 
 const faultTypes = ['门锁故障', '控制系统故障', '驱动系统故障', '安全回路故障', '门机故障', '平层故障', '噪音异响', '急停故障', '通讯故障', '其他故障']
 
 const rules = {
+  community_id: [{ required: true, message: '请选择所属小区', trigger: 'change' }],
   elevator_id: [{ required: true, message: '请选择关联电梯', trigger: 'change' }],
   fault_type: [{ required: true, message: '请选择故障类型', trigger: 'change' }],
   fault_time: [{ required: true, message: '请选择故障时间', trigger: 'change' }],
   description: [{ required: true, message: '请输入故障描述', trigger: 'blur' }],
 }
+
+const filteredElevators = computed(() => {
+  const data = elevators.value || []
+  if (!form.community_id) return data
+  return data.filter((e: any) => e.community_id == form.community_id)
+})
 
 const stats = computed(() => ({
   total: total.value,
@@ -339,14 +353,18 @@ function resetQuery() {
   query.page = 1; loadData()
 }
 
+function onFormCommunityChange() {
+  form.elevator_id = null
+}
+
 function openForm(row?: any) {
   if (row) {
     editId.value = row.id
-    const keys = ['elevator_id','fault_type','fault_time','description','is_trapped','trapped_persons','rescue_time','repair_company','repair_person','repair_time','repair_result','cost','status']
+    const keys = ['community_id','elevator_id','fault_type','fault_time','description','is_trapped','trapped_persons','rescue_time','repair_company','repair_person','repair_time','repair_result','cost','status']
     keys.forEach(k => { (form as any)[k] = row[k] ?? (k === 'status' ? 0 : (k === 'is_trapped' ? 0 : (k === 'trapped_persons' ? 0 : (k === 'cost' ? 0 : '')))) })
   } else {
     editId.value = 0
-    Object.assign(form, { elevator_id: null, fault_type: '', fault_time: '', description: '', is_trapped: 0, trapped_persons: 0, rescue_time: '', repair_company: '', repair_person: '', repair_time: '', repair_result: '', cost: 0, status: 0 })
+    Object.assign(form, { community_id: null, elevator_id: null, fault_type: '', fault_time: '', description: '', is_trapped: 0, trapped_persons: 0, rescue_time: '', repair_company: '', repair_person: '', repair_time: '', repair_result: '', cost: 0, status: 0 })
   }
   dialogVisible.value = true
 }

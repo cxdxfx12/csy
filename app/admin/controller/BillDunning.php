@@ -14,8 +14,9 @@ class BillDunning extends BaseAdmin
         if ($keyword) {
             $where[] = ['r.room_number|b.building_name|o.realname', 'like', "%{$keyword}%"];
         }
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['d.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['d.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['d.community_id', '=', $cid];
         $channel = $this->request->param('channel', '');
         if ($channel) $where[] = ['d.channel', '=', $channel];
 

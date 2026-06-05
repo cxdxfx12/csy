@@ -53,11 +53,18 @@ class StaffBadge extends BaseStaff
         $workerId = $this->getWorkerId();
 
         $data = [
-            'repair' => 0,    // 报修-待接单 (status=2, 指派给自己)
-            'charge' => 0,    // 收费-未缴账单
-            'order'  => 0,    // 工单-进行中 (status=1,2,3)
-            'last_repair' => null, // 最新报修单
-            'last_bill'   => null, // 最新账单
+            'repair'    => 0,  // 报修-待接单
+            'charge'    => 0,  // 收费-未缴账单
+            'order'     => 0,  // 工单-进行中
+            'complaint' => 0,  // 投诉-待处理
+            'vote'      => 0,  // 进行中投票
+            'activity'  => 0,  // 进行中活动
+            'last_repair' => null,
+            'last_bill'   => null,
+            'last_order'  => null,
+            'last_complaint' => null,
+            'last_vote'   => null,
+            'last_activity' => null,
         ];
 
         if (!$communityId) {
@@ -111,6 +118,45 @@ class StaffBadge extends BaseStaff
             ->where('delete_time', null)
             ->whereIn('status', [1, 2, 3])
             ->count();
+
+        // ===== 投诉：待处理 =====
+        $data['complaint'] = Db::name('complaint')
+            ->where('community_id', $communityId)
+            ->where('status', 1)
+            ->whereNull('delete_time')
+            ->count();
+        if ($data['complaint'] > 0) {
+            $data['last_complaint'] = Db::name('complaint')
+                ->where('community_id', $communityId)->where('status', 1)
+                ->whereNull('delete_time')->order('id', 'desc')->find();
+        }
+
+        // ===== 投票：进行中 =====
+        $data['vote'] = Db::name('vote')
+            ->where('community_id', $communityId)->where('status', 2)
+            ->whereNull('delete_time')->count();
+        if ($data['vote'] > 0) {
+            $data['last_vote'] = Db::name('vote')
+                ->where('community_id', $communityId)->where('status', 2)
+                ->whereNull('delete_time')->order('id', 'desc')->find();
+        }
+
+        // ===== 活动：进行中/报名中 =====
+        $data['activity'] = Db::name('activity')
+            ->where('community_id', $communityId)->whereIn('status', [2, 3])
+            ->whereNull('delete_time')->count();
+        if ($data['activity'] > 0) {
+            $data['last_activity'] = Db::name('activity')
+                ->where('community_id', $communityId)->whereIn('status', [2, 3])
+                ->whereNull('delete_time')->order('id', 'desc')->find();
+        }
+
+        // ===== 工单最新（供弹窗用） =====
+        if ($data['order'] > 0) {
+            $data['last_order'] = Db::name('repair_order')
+                ->where('community_id', $communityId)->whereIn('status', [1, 2, 3])
+                ->where('delete_time', null)->order('id', 'desc')->find();
+        }
 
         return $this->success($data);
     }

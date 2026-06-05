@@ -102,12 +102,11 @@ function loadRoutes() {
                 if (!empty($groupStack)) array_pop($groupStack);
                 continue;
             }
-            // 匹配 Route::get|post|put|delete|patch('url', 'module/Controller/action')
-            if (preg_match("/Route::(get|post|put|delete|patch)\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)/i", $trimmed, $m)) {
+            // 匹配 Route::get|post|put|delete|patch|any('url', 'module/Controller/action')
+            if (preg_match("/Route::(get|post|put|delete|patch|any)\s*\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)/i", $trimmed, $m)) {
                 $method = strtoupper($m[1]);
                 $url = $m[2];
                 // 如果 URL 不以当前 group 前缀开头，则添加前缀
-                // （兼容 admin.php 中已在 URL 中包含模块前缀的写法）
                 if (!empty($groupStack)) {
                     $prefix = implode('', $groupStack);
                     $prefixClean = rtrim($prefix, '/');
@@ -117,12 +116,16 @@ function loadRoutes() {
                 }
                 $handler = explode('/', $m[3]);
                 if (count($handler) >= 3) {
-                    $urlKey = $method . ':' . $url;
-                    $routes[$urlKey] = [
-                        'module' => $handler[0],
-                        'ctrl' => $handler[1],
-                        'action' => $handler[2],
-                    ];
+                    // any 注册为 GET + POST 两条路由
+                    $methods = ($method === 'ANY') ? ['GET', 'POST'] : [$method];
+                    foreach ($methods as $mth) {
+                        $urlKey = $mth . ':' . $url;
+                        $routes[$urlKey] = [
+                            'module' => $handler[0],
+                            'ctrl' => $handler[1],
+                            'action' => $handler[2],
+                        ];
+                    }
                 }
             }
         }
@@ -148,6 +151,29 @@ try {
     $routes = loadRoutes();
     $routeKey = $requestMethod . ':' . $path;
     $matched = $routes[$routeKey] ?? null;
+
+    // 参数化路由匹配：将 <param> 转换为正则捕获
+    if (!$matched) {
+        foreach ($routes as $routePattern => $handler) {
+            if (strpos($routePattern, '<') === false) continue;
+            // 提取参数名列表
+            preg_match_all('/<([^>]+)>/', $routePattern, $paramNames);
+            // 将 <param> 替换为捕获组
+            $regex = '#^' . preg_replace('/<[^>]+>/', '([^/]+)', $routePattern) . '$#';
+            if (preg_match($regex, $routeKey, $m)) {
+                $matched = $handler;
+                // 将捕获值注入 $_REQUEST / $_GET
+                array_shift($m); // 去掉完整匹配
+                foreach ($paramNames[1] as $i => $name) {
+                    if (isset($m[$i])) {
+                        $_REQUEST[$name] = $m[$i];
+                        $_GET[$name] = $m[$i];
+                    }
+                }
+                break;
+            }
+        }
+    }
 
     if ($matched) {
         $module = $matched['module'];

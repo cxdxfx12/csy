@@ -13,7 +13,12 @@ class Notice extends BaseAdmin
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['n.title|n.content', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['n.community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['n.community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('n.community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['n.status', '=', $status];
         $total = Db::name('notice')->alias('n')->where($where)->count();
@@ -27,6 +32,7 @@ class Notice extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['published_by'] = get_admin_info()['nickname'] ?? '';
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('notice')->insert($data);
@@ -36,6 +42,11 @@ class Notice extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        $notice = Db::name('notice')->where('id', $data['id'])->find();
+        if ($notice) {
+            $this->validateCommunityAccess($notice['community_id'] ?? 0);
+            if (!empty($data['community_id'])) $this->validateCommunityAccess($data['community_id']);
+        }
         Db::name('notice')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
     }
@@ -43,6 +54,8 @@ class Notice extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $notice = Db::name('notice')->where('id', $id)->find();
+        if ($notice) $this->validateCommunityAccess($notice['community_id'] ?? 0);
         Db::name('notice')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -50,7 +63,8 @@ class Notice extends BaseAdmin
     public function publish()
     {
         $id = $this->request->post('id', 0);
-        $status = $this->request->post('status', 2);
+        $notice = Db::name('notice')->where('id', $id)->find();
+        if ($notice) $this->validateCommunityAccess($notice['community_id'] ?? 0);
         $publishTime = $status == 2 ? date('Y-m-d H:i:s') : null;
         Db::name('notice')->where('id', $id)->update([
             'status' => $status,

@@ -13,7 +13,12 @@ class InvoiceInfo extends BaseAdmin
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['company_name|tax_id', 'like', "%{$keyword}%"];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
         $total = Db::name('invoice_info')->where($where)->count();
         $list = Db::name('invoice_info')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->table($list, $total);
@@ -22,6 +27,7 @@ class InvoiceInfo extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('invoice_info')->insert($data);
         return $this->success([], '添加成功');
@@ -30,6 +36,11 @@ class InvoiceInfo extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        $record = Db::name('invoice_info')->where('id', $data['id'])->find();
+        if ($record) {
+            $this->validateCommunityAccess($record['community_id'] ?? 0);
+            if (!empty($data['community_id'])) $this->validateCommunityAccess($data['community_id']);
+        }
         Db::name('invoice_info')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
     }
@@ -37,6 +48,8 @@ class InvoiceInfo extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('invoice_info')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('invoice_info')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

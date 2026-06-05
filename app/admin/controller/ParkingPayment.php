@@ -12,8 +12,9 @@ class ParkingPayment extends BaseAdmin
         $where = [['pp.delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['pp.plate_no|pp.trade_no|pp.remark', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['pp.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['pp.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['pp.community_id', '=', $cid];
         $paymentType = $this->request->param('payment_type', '');
         if ($paymentType !== '') $where[] = ['pp.payment_type', '=', intval($paymentType)];
         $payMethod = $this->request->param('pay_method', '');

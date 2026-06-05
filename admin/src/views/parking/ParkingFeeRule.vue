@@ -29,6 +29,9 @@
     <!-- 搜索 -->
     <div class="filter-row">
       <el-input v-model="query.keyword" placeholder="搜索费率名称/车辆类型" clearable prefix-icon="Search" class="f-inp" @keyup.enter="loadData" />
+      <el-select v-model="query.community_id" placeholder="所属小区" clearable class="f-sel" @change="loadData">
+        <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+      </el-select>
       <el-button type="primary" @click="loadData" :icon="Search">搜索</el-button>
       <el-button @click="resetQuery" :icon="RefreshRight">重置</el-button>
     </div>
@@ -104,6 +107,9 @@
             <el-form-item label="规则名称"><el-input v-model="form.name" placeholder="如：临时车-白天" /></el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="所属小区"><el-select v-model="form.community_id" placeholder="选择小区" style="width:100%" clearable><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="车辆类型"><el-select v-model="form.vehicle_type" placeholder="选择类型" style="width:100%">
               <el-option label="临时车" value="临时车" />
               <el-option label="月租车" value="月租车" />
@@ -162,7 +168,8 @@ const dialogVisible = ref(false)
 const editId = ref(0)
 const submitting = ref(false)
 const formRef = ref()
-const query = reactive({ page: 1, limit: 12, keyword: '' })
+const query = reactive({ page: 1, limit: 12, keyword: '', community_id: undefined as any })
+const communities = ref<any[]>([])
 const form = reactive<any>({ charge_type: 1, free_minutes: 0, unit_duration: 60 })
 
 const ruleCount = computed(() => {
@@ -178,12 +185,12 @@ const ruleCount = computed(() => {
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/parking/parkingFeeRuleList', { params: { page: query.page, limit: query.limit, keyword: query.keyword } })
-    if (res.code === 0) { list.value = res.data?.list || []; total.value = res.data?.total || 0 }
+    const res = await apiGet('/admin/parking/parkingFeeRuleList', { page: query.page, limit: query.limit, keyword: query.keyword, community_id: query.community_id || undefined })
+    if (res.code === 0) { list.value = res.data || []; total.value = res.count || 0 }
   } finally { loading.value = false }
 }
 
-function resetQuery() { query.keyword = ''; query.page = 1; loadData() }
+function resetQuery() { query.keyword = ''; query.community_id = undefined; query.page = 1; loadData() }
 
 function openForm(row?: any) {
   if (row) { editId.value = row.id; Object.assign(form, row) }
@@ -205,7 +212,10 @@ async function handleDelete(row: any) {
   if (res.code === 0) { ElMessage.success('删除成功'); loadData() }
 }
 
-onMounted(loadData)
+onMounted(async () => {
+  try { const r: any = await apiGet('/admin/community/list', { limit: 999 }); communities.value = r.data?.list || r.data || [] } catch (_) { }
+  loadData()
+})
 </script>
 
 <style scoped>

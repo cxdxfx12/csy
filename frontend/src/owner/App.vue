@@ -14,10 +14,13 @@
     <nav class="tab-bar" v-if="$route.path !== '/login' && $route.path !== '/register'">
       <router-link to="/home" class="tab"><span>🏠</span><em>首页</em></router-link>
       <router-link to="/room" class="tab"><span>🏢</span><em>房产</em></router-link>
-      <router-link to="/bill" class="tab"><span>💰</span><em>账单</em><b v-if="badges.bill>0">{{ badges.bill > 99 ? '99+' : badges.bill }}</b></router-link>
-      <router-link to="/repair" class="tab"><span>🔧</span><em>报修</em><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
-      <router-link to="/notice" class="tab"><span>📢</span><em>公告</em><b v-if="badges.notice>0">{{ badges.notice > 99 ? '99+' : badges.notice }}</b></router-link>
-      <router-link to="/visitor" class="tab"><span>👤</span><em>访客</em></router-link>
+      <router-link to="/bill" class="tab" @click="dismissBadge('bill')"><span>💰</span><em>账单</em><b v-if="badges.bill>0">{{ badges.bill > 99 ? '99+' : badges.bill }}</b></router-link>
+      <router-link to="/repair" class="tab" @click="dismissBadge('repair')"><span>🔧</span><em>报修</em><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
+      <router-link to="/complaint" class="tab" @click="dismissBadge('complaint')"><span>📝</span><em>投诉</em><b v-if="badges.complaint>0">{{ badges.complaint > 99 ? '99+' : badges.complaint }}</b></router-link>
+      <router-link to="/notice" class="tab" @click="dismissBadge('notice')"><span>📢</span><em>公告</em><b v-if="badges.notice>0">{{ badges.notice > 99 ? '99+' : badges.notice }}</b></router-link>
+      <router-link to="/vehicle" class="tab"><span>🚗</span><em>车辆</em></router-link>
+      <router-link to="/vote" class="tab" @click="dismissBadge('vote')"><span>🗳</span><em>投票</em><b v-if="badges.vote>0">{{ badges.vote > 99 ? '99+' : badges.vote }}</b></router-link>
+      <router-link to="/activity" class="tab" @click="dismissBadge('activity')"><span>🎉</span><em>活动</em><b v-if="badges.activity>0">{{ badges.activity > 99 ? '99+' : badges.activity }}</b></router-link>
     </nav>
   </div>
 </template>
@@ -30,7 +33,8 @@ const route = useRoute()
 const router = useRouter()
 const api = createApi('/api/api', 'owner_token')
 
-const badges = reactive({ bill: 0, repair: 0, notice: 0 })
+const badges = reactive({ bill: 0, repair: 0, notice: 0, complaint: 0, vote: 0, activity: 0 })
+const badgesRaw = reactive({ bill: 0, repair: 0, notice: 0, complaint: 0, vote: 0, activity: 0 })
 const notifyShow = ref(false)
 const notifyTitle = ref('')
 const notifyText = ref('')
@@ -43,12 +47,23 @@ async function fetchBadges() {
     const res = await api('/badge/counts')
     if (res.code !== 0) return
     const d = res.data
+    const keys = ['bill','repair','notice','complaint','vote','activity']
+
+    // 记录原始值
+    keys.forEach(k => { badgesRaw[k] = d[k] || 0 })
+
+    // 应用已读消除
+    const seen = JSON.parse(localStorage.getItem('badge_seen') || '{}')
+    keys.forEach(k => { badges[k] = Math.max(0, (d[k] || 0) - (seen[k] || 0)) })
 
     if (lastBadges) {
       const growth = []
       if (d.bill   > (lastBadges.bill   || 0)) growth.push({ key: 'bill',   title: '新账单',   text: d.last_bill   ? `¥${d.last_bill.total_amount || 0}` : `+${d.bill - lastBadges.bill} 条待缴`,    route: '/bill' })
       if (d.repair > (lastBadges.repair || 0)) growth.push({ key: 'repair', title: '报修进度', text: d.last_repair ? (d.last_repair.title || '') : `+${d.repair - lastBadges.repair} 条处理中`, route: '/repair' })
       if (d.notice > (lastBadges.notice || 0)) growth.push({ key: 'notice', title: '新公告',   text: d.last_notice ? (d.last_notice.title || '') : `+${d.notice - lastBadges.notice} 条新公告`,    route: '/notice' })
+      if (d.complaint > (lastBadges.complaint || 0)) growth.push({ key: 'complaint', title: '投诉更新', text: d.last_complaint ? (d.last_complaint.content || '').substring(0,30) : `+${d.complaint - lastBadges.complaint} 条处理中`, route: '/complaint' })
+      if (d.vote > (lastBadges.vote || 0)) growth.push({ key: 'vote', title: '新投票', text: d.last_vote ? d.last_vote.title : `+${d.vote - lastBadges.vote} 个待投`, route: '/vote' })
+      if (d.activity > (lastBadges.activity || 0)) growth.push({ key: 'activity', title: '新活动', text: d.last_activity ? d.last_activity.title : `+${d.activity - lastBadges.activity} 个可报名`, route: '/activity' })
       if (growth.length > 0) {
         const g = growth[0]
         notifyTitle.value = g.title
@@ -60,15 +75,23 @@ async function fetchBadges() {
     }
 
     lastBadges = { ...d }
-    badges.bill   = d.bill   || 0
-    badges.repair = d.repair || 0
-    badges.notice = d.notice || 0
   } catch (e) { /* 静默 */ }
 }
 
 function goNotify() {
-  if (notifyRoute.value) router.push(notifyRoute.value)
+  if (notifyRoute.value) {
+    dismissBadge(notifyRoute.value.substring(1))
+    router.push(notifyRoute.value)
+  }
   notifyShow.value = false
+}
+
+// 点击阅读后角标消失
+function dismissBadge(key) {
+  const seen = JSON.parse(localStorage.getItem('badge_seen') || '{}')
+  seen[key] = badgesRaw[key] || 0
+  localStorage.setItem('badge_seen', JSON.stringify(seen))
+  badges[key] = 0
 }
 
 onBeforeMount(() => {
@@ -96,10 +119,10 @@ onUnmounted(() => {
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#333;-webkit-tap-highlight-color:transparent}
 #owner-app{min-height:100vh;padding-bottom:68px}
 /* 底部导航 */
-.tab-bar{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #e5e7eb;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.tab{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#999;font-size:10px;min-width:48px;position:relative}
-.tab span{font-size:22px;line-height:1.3}
-.tab em{font-style:normal;margin-top:1px}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;height:56px;background:#fff;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #e5e7eb;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.tab{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#999;font-size:9px;min-width:0;position:relative;flex:1}
+.tab span{font-size:18px;line-height:1.2}
+.tab em{font-style:normal;margin-top:0}
 .tab.router-link-active{color:#2563eb}
 .tab.router-link-active span{transform:scale(1.1)}
 /* 角标 */

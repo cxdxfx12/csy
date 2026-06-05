@@ -12,13 +12,28 @@
         <span class="community-tag" v-if="profile.community_name">{{ profile.community_name }}</span>
       </div>
     </div>
+    <!-- 负责楼栋 -->
+    <div class="building-section" v-if="profile && profile.buildings && profile.buildings.length > 0">
+      <div class="section-title">📋 我负责的楼栋</div>
+      <div class="building-list">
+        <div class="building-item" v-for="b in profile.buildings" :key="b.id">
+          <span class="building-icon">🏢</span>
+          <div class="building-info">
+            <strong>{{ b.name }}</strong>
+            <small>{{ b.community_name }} · {{ b.floor_count }}层 · {{ b.total_rooms }}户</small>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="grid">
-      <router-link to="/repair" class="card"><span>🔧</span><label>报修处理</label><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
+      <router-link to="/repair" class="card" @click="dismissBadge('repair')"><span>🔧</span><label>报修处理</label><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
       <router-link to="/meter" class="card"><span>📊</span><label>抄表录入</label></router-link>
-      <router-link to="/charge" class="card"><span>💰</span><label>移动收费</label><b v-if="badges.charge>0">{{ badges.charge > 99 ? '99+' : badges.charge }}</b></router-link>
+      <router-link to="/charge" class="card" @click="dismissBadge('charge')"><span>💰</span><label>移动收费</label><b v-if="badges.charge>0">{{ badges.charge > 99 ? '99+' : badges.charge }}</b></router-link>
       <router-link to="/patrol" class="card"><span>🛡️</span><label>安保巡更</label></router-link>
       <router-link to="/visitor" class="card"><span>👤</span><label>访客登记</label></router-link>
-      <router-link to="/order" class="card"><span>📋</span><label>工单管理</label><b v-if="badges.order>0">{{ badges.order > 99 ? '99+' : badges.order }}</b></router-link>
+      <router-link to="/order" class="card" @click="dismissBadge('order')"><span>📋</span><label>工单管理</label><b v-if="badges.order>0">{{ badges.order > 99 ? '99+' : badges.order }}</b></router-link>
+      <router-link to="/complaint" class="card" @click="dismissBadge('complaint')"><span>📢</span><label>投诉处理</label><b v-if="badges.complaint>0">{{ badges.complaint > 99 ? '99+' : badges.complaint }}</b></router-link>
+      <router-link to="/profile" class="card profile-card"><span>👤</span><label>个人中心</label></router-link>
     </div>
   </div>
 </template>
@@ -30,7 +45,8 @@ const router = useRouter()
 const api = createApi('/api/staff', 'staff_token')
 const auth = createAuth('staff_token')
 const profile = ref(null)
-const badges = reactive({ repair: 0, charge: 0, order: 0 })
+const badges = reactive({ repair: 0, charge: 0, order: 0, complaint: 0 })
+const badgesRaw = reactive({ repair: 0, charge: 0, order: 0, complaint: 0 })
 let timer = null
 
 onMounted(async () => {
@@ -48,11 +64,20 @@ async function fetchBadges() {
   try {
     const res = await api('/badge/counts')
     if (res.code === 0) {
-      badges.repair = res.data.repair || 0
-      badges.charge = res.data.charge || 0
-      badges.order  = res.data.order  || 0
+      const d = res.data
+      const keys = ['repair','charge','order','complaint']
+      keys.forEach(k => { badgesRaw[k] = d[k] || 0 })
+      const seen = JSON.parse(localStorage.getItem('staff_badge_seen') || '{}')
+      keys.forEach(k => { badges[k] = Math.max(0, (d[k] || 0) - (seen[k] || 0)) })
     }
   } catch (e) { /* 静默 */ }
+}
+
+function dismissBadge(key) {
+  const seen = JSON.parse(localStorage.getItem('staff_badge_seen') || '{}')
+  seen[key] = badgesRaw[key] || 0
+  localStorage.setItem('staff_badge_seen', JSON.stringify(seen))
+  badges[key] = 0
 }
 
 function logout() {
@@ -70,6 +95,14 @@ header h1{font-size:20px;color:#1f2937}
 .user-card strong{display:block;font-size:16px}
 .user-card small{color:#9ca3af;font-size:13px}
 .community-tag{display:inline-block;margin-top:4px;padding:2px 10px;background:#e0f2fe;color:#0369a1;font-size:12px;border-radius:10px;font-weight:500}
+/* 负责楼栋 */
+.building-section{margin-bottom:20px}
+.section-title{font-size:15px;font-weight:600;color:#1f2937;margin-bottom:10px}
+.building-list{display:flex;flex-direction:column;gap:8px}
+.building-item{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.building-icon{font-size:28px}
+.building-info strong{display:block;font-size:14px;color:#1f2937}
+.building-info small{font-size:12px;color:#9ca3af}
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .card{background:#fff;border-radius:12px;padding:20px 12px;text-align:center;text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .2s;position:relative}
 .card:active{transform:scale(.97)}

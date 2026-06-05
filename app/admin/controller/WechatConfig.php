@@ -59,9 +59,16 @@ class WechatConfig extends BaseAdmin
             $config['encoding_aes_key'] = $this->maskKey($config['encoding_aes_key'], 5);
         }
 
+        // 服务器回调 URL
+        $serverUrl = '';
+        if ($config && !empty($config['token'])) {
+            $serverUrl = request()->domain() . '/api/wechat/server/' . $communityId;
+        }
+
         return $this->success([
-            'community' => ['id' => $community['id'], 'name' => $community['name'], 'code' => $community['code']],
-            'config'    => $config ?: null,
+            'community'  => ['id' => $community['id'], 'name' => $community['name'], 'code' => $community['code']],
+            'config'     => $config ?: null,
+            'server_url' => $serverUrl,
         ]);
     }
 
@@ -142,11 +149,14 @@ class WechatConfig extends BaseAdmin
             return $this->error('配置不完整：' . implode('；', $errors));
         }
 
+        $serverUrl = request()->domain() . '/api/wechat/server/' . $communityId;
+
         return $this->success([
             'app_id'        => $config['app_id'],
             'original_id'   => $config['original_id'],
             'tpl_success'   => $config['template_pay_success'] ? '已配置' : '未配置',
             'tpl_arrears'   => $config['template_arrears'] ? '已配置' : '未配置',
+            'server_url'    => $serverUrl,
         ], '公众号配置校验通过 ✓');
     }
 

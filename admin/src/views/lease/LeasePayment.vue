@@ -55,6 +55,9 @@
         <el-select v-model="query.status" placeholder="支付状态" clearable class="filter-sel" @change="handleSearch">
           <el-option label="已支付" value="已支付"/><el-option label="待支付" value="待支付"/><el-option label="已退款" value="已退款"/><el-option label="部分支付" value="部分支付"/>
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-sel" @change="handleSearch">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+        </el-select>
       </div>
       <div class="filter-right">
         <el-button @click="resetQuery" text><el-icon><Refresh /></el-icon>重置</el-button>
@@ -127,7 +130,8 @@ const loading = ref(false)
 const detailVisible = ref(false)
 const detailRow = ref<any>(null)
 
-const query = reactive({ page:1, limit:15, keyword:'', payment_type:'', pay_method:'', status:'' })
+const query = reactive({ page:1, limit:15, keyword:'', payment_type:'', pay_method:'', status:'', community_id:undefined as any })
+const communities = ref<any[]>([])
 
 const stats = computed(()=>{
   const data = list.value||[]
@@ -150,7 +154,7 @@ function paymentStatusTag(s:string){
 }
 
 function handleSearch(){query.page=1;loadData()}
-function resetQuery(){query.keyword='';query.payment_type='';query.pay_method='';query.status='';query.page=1;loadData()}
+function resetQuery(){query.keyword='';query.payment_type='';query.pay_method='';query.status='';query.community_id=undefined;query.page=1;loadData()}
 
 async function loadData(){
   loading.value=true
@@ -160,15 +164,19 @@ async function loadData(){
     if(query.payment_type)p.payment_type=query.payment_type
     if(query.pay_method)p.pay_method=query.pay_method
     if(query.status)p.status=query.status
+    if(query.community_id)p.community_id=query.community_id
     const res:any=await apiGet('/admin/lease/leasePaymentList',p)
-    if(res&&(res.code===0||res.code===undefined)){list.value=res.data?.list||[];total.value=res.data?.total||0}
+    if(res&&(res.code===0||res.code===undefined)){list.value=res.data||[];total.value=res.count||0}
   }catch(_){list.value=[];total.value=0}
   finally{loading.value=false}
 }
 
 function showDetail(row:any){detailRow.value=row;detailVisible.value=true}
 
-onMounted(()=>loadData())
+onMounted(async ()=>{
+  try{const r:any=await apiGet('/admin/community/list',{limit:999});communities.value=r.data?.list||r.data||[]}catch(_){}
+  loadData()
+})
 watch([()=>query.page,()=>query.limit],()=>loadData())
 </script>
 

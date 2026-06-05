@@ -45,6 +45,9 @@
         <el-select v-model="query.termination_type" placeholder="退租类型" clearable class="filter-sel" @change="handleSearch">
           <el-option label="到期退租" value="到期退租"/><el-option label="提前退租" value="提前退租"/><el-option label="违约退租" value="违约退租"/><el-option label="协商退租" value="协商退租"/>
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-sel" @change="handleSearch">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+        </el-select>
       </div>
       <div class="filter-right">
         <el-button @click="resetQuery" text><el-icon><Refresh /></el-icon>重置</el-button>
@@ -83,7 +86,10 @@
         <div class="form-section">
           <div class="section-title"><el-icon><InfoFilled /></el-icon>退租基本信息</div>
           <el-row :gutter="16">
-            <el-col :span="12"><el-form-item label="合同ID" required><el-input-number v-model="form.contract_id" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="关联合同" required><el-select v-model="form.contract_id" filterable clearable placeholder="选择合同" style="width:100%" @change="onContractChange"><el-option v-for="c in contracts" :key="c.id" :label="c.contract_no+' (¥'+c.monthly_rent+'/月)'" :value="c.id"/></el-select></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable @change="onFormCommunityChange"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
+          </el-row>
+          <el-row :gutter="16">
             <el-col :span="12"><el-form-item label="退租类型"><el-select v-model="form.termination_type" style="width:100%"><el-option label="到期退租" value="到期退租"/><el-option label="提前退租" value="提前退租"/><el-option label="违约退租" value="违约退租"/><el-option label="协商退租" value="协商退租"/></el-select></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
@@ -151,9 +157,11 @@ const dialogVisible = ref(false)
 const editId = ref(0)
 const formRef = ref()
 
-const query = reactive({ page:1, limit:15, keyword:'', termination_type:'' })
+const query = reactive({ page:1, limit:15, keyword:'', termination_type:'', community_id:undefined as any })
+const communities = ref<any[]>([])
+const contracts = ref<any[]>([])
 const form = reactive<any>({
-  contract_id:0, termination_type:'到期退租', apply_time:'', actual_terminate_time:'', reason:'',
+  community_id:0, contract_id:0, termination_type:'到期退租', apply_time:'', actual_terminate_time:'', reason:'',
   deposit_refund:'', deposit_deduct:'0', deduct_detail:'', property_check_result:'',
   property_damage:'', damage_compensation:'0', water_reading:'', electric_reading:'',
   gas_reading:'', unpaid_bills:'0', settlement_amount:'', settlement_time:'',
@@ -177,7 +185,7 @@ function termTypeTag(s:string){
 }
 
 function handleSearch(){query.page=1;loadData()}
-function resetQuery(){query.keyword='';query.termination_type='';query.page=1;loadData()}
+function resetQuery(){query.keyword='';query.termination_type='';query.community_id=undefined;query.page=1;loadData()}
 
 async function loadData(){
   loading.value=true
@@ -185,15 +193,36 @@ async function loadData(){
     const p:any={page:query.page,limit:query.limit}
     if(query.keyword)p.keyword=query.keyword
     if(query.termination_type)p.termination_type=query.termination_type
+    if(query.community_id)p.community_id=query.community_id
     const res:any=await apiGet('/admin/lease/leaseTerminationList',p)
-    if(res&&(res.code===0||res.code===undefined)){list.value=res.data?.list||[];total.value=res.data?.total||0}
+    if(res&&(res.code===0||res.code===undefined)){list.value=res.data||[];total.value=res.count||0}
   }catch(_){list.value=[];total.value=0}
   finally{loading.value=false}
 }
 
+async function loadContracts(community_id?:any){
+  try{
+    const p:any={limit:999}
+    if(community_id)p.community_id=community_id
+    const r:any=await apiGet('/admin/lease/leaseContractList',p)
+    contracts.value=r.data||[]
+  }catch(_){contracts.value=[]}
+}
+function onFormCommunityChange(val:any){
+  loadContracts(val)
+}
+function onContractChange(contractId:any){
+  const c=contracts.value.find((x:any)=>x.id===contractId)
+  if(c){
+    form.community_id=c.community_id||0
+    if(c.deposit_amount)form.deposit_refund=c.deposit_amount
+  }
+}
+
 function openForm(row?:any){
   if(row){editId.value=row.id;Object.keys(form).forEach(k=>{if(row[k]!==undefined)(form as any)[k]=row[k]})}
-  else{editId.value=0;Object.assign(form,{contract_id:0,termination_type:'到期退租',apply_time:'',actual_terminate_time:'',reason:'',deposit_refund:'',deposit_deduct:'0',deduct_detail:'',property_check_result:'',property_damage:'',damage_compensation:'0',water_reading:'',electric_reading:'',gas_reading:'',unpaid_bills:'0',settlement_amount:'',settlement_time:'',operator_id:0,files:'',remark:''})}
+  else{editId.value=0;Object.assign(form,{community_id:0,contract_id:'',termination_type:'到期退租',apply_time:'',actual_terminate_time:'',reason:'',deposit_refund:'',deposit_deduct:'0',deduct_detail:'',property_check_result:'',property_damage:'',damage_compensation:'0',water_reading:'',electric_reading:'',gas_reading:'',unpaid_bills:'0',settlement_amount:'',settlement_time:'',operator_id:0,files:'',remark:''})}
+  loadContracts(form.community_id||undefined)
   dialogVisible.value=true
 }
 
@@ -212,7 +241,10 @@ async function handleDelete(row:any){
   try{await ElMessageBox.confirm('确定删除该退租记录？','提示',{type:'warning'});const res:any=await apiPost('/admin/lease/leaseTerminationDelete',{id:row.id});if(res&&(res.code===0||res.code===undefined)){ElMessage.success('删除成功');loadData()}}catch(_){}
 }
 
-onMounted(()=>loadData())
+onMounted(async ()=>{
+  try{const r:any=await apiGet('/admin/community/list',{limit:999});communities.value=r.data?.list||r.data||[]}catch(_){}
+  loadData()
+})
 watch([()=>query.page,()=>query.limit],()=>loadData())
 </script>
 

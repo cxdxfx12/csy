@@ -1,0 +1,393 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]:
+          - img [ref=e9]
+          - generic "双击可复制IP" [ref=e11]: 西部数码面板
+          - generic [ref=e12]: "0"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - link "首页" [ref=e20] [cursor=pointer]:
+              - /url: /home
+              - img [ref=e21]
+              - generic [ref=e23]: 首页
+          - listitem [ref=e24]:
+            - link "网站" [ref=e25] [cursor=pointer]:
+              - /url: /site
+              - img [ref=e26]
+              - generic [ref=e28]: 网站
+          - listitem [ref=e29]:
+            - link "数据库" [ref=e30] [cursor=pointer]:
+              - /url: /database
+              - img [ref=e31]
+              - generic [ref=e33]: 数据库
+          - listitem [ref=e34]:
+            - link "Docker" [ref=e35] [cursor=pointer]:
+              - /url: /docker
+              - img [ref=e36]
+              - generic [ref=e38]: Docker
+          - listitem [ref=e39]:
+            - link "监控" [ref=e40] [cursor=pointer]:
+              - /url: /control
+              - img [ref=e41]
+              - generic [ref=e43]: 监控
+          - listitem [ref=e44]:
+            - link "安全" [ref=e45] [cursor=pointer]:
+              - /url: /firewall
+              - img [ref=e46]
+              - generic [ref=e48]: 安全
+          - listitem [ref=e49]:
+            - link "WAF" [ref=e50] [cursor=pointer]:
+              - /url: /waf
+              - img [ref=e51]
+              - generic [ref=e53]: WAF
+          - listitem [ref=e54]:
+            - link "文件" [ref=e55] [cursor=pointer]:
+              - /url: /files
+              - img [ref=e56]
+              - generic [ref=e58]: 文件
+          - listitem [ref=e59]:
+            - link "日志" [ref=e60] [cursor=pointer]:
+              - /url: /logs
+              - img [ref=e61]
+              - generic [ref=e63]: 日志
+          - listitem [ref=e64]:
+            - link "域名" [ref=e65] [cursor=pointer]:
+              - /url: /domain
+              - img [ref=e66]
+              - generic [ref=e68]: 域名
+          - listitem [ref=e69]:
+            - link "SSL" [ref=e70] [cursor=pointer]:
+              - /url: /ssl
+              - img [ref=e71]
+              - generic [ref=e73]: SSL
+          - listitem [ref=e74]:
+            - link "终端" [ref=e75] [cursor=pointer]:
+              - /url: /xterm
+              - img [ref=e76]
+              - generic [ref=e78]: 终端
+          - listitem [ref=e79]:
+            - link "AI" [ref=e80] [cursor=pointer]:
+              - /url: /ai
+              - img [ref=e81]
+              - generic [ref=e83]: AI
+          - listitem [ref=e84]:
+            - link "节点管理" [ref=e85] [cursor=pointer]:
+              - /url: /node
+              - img [ref=e86]
+              - generic [ref=e88]: 节点管理
+          - listitem [ref=e89]:
+            - link "计划任务" [ref=e90] [cursor=pointer]:
+              - /url: /crontab
+              - img [ref=e91]
+              - generic [ref=e93]: 计划任务
+          - listitem [ref=e94]:
+            - link "软件商店" [ref=e95] [cursor=pointer]:
+              - /url: /soft
+              - img [ref=e96]
+              - generic [ref=e98]: 软件商店
+          - listitem [ref=e99]:
+            - link "设置" [ref=e100] [cursor=pointer]:
+              - /url: /config
+              - img [ref=e101]
+              - generic [ref=e103]: 设置
+          - listitem [ref=e104]:
+            - link "退出" [ref=e105] [cursor=pointer]:
+              - /url: javascript:;
+              - img [ref=e106]
+              - generic [ref=e108]: 退出
+        - generic [ref=e110]:
+          - generic [ref=e113] [cursor=pointer]: 
+          - generic [ref=e116] [cursor=pointer]: 
+    - generic [ref=e117]:
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - img [ref=e123]
+            - separator [ref=e125]
+            - generic [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - generic [ref=e129]: CentOS 7
+            - separator [ref=e130]
+            - generic [ref=e132] [cursor=pointer]: 企业版
+          - generic [ref=e133]:
+            - generic [ref=e134] [cursor=pointer]: v11.7.0
+            - separator [ref=e135]
+            - generic "点击获取最新版面板程序" [ref=e137] [cursor=pointer]:
+              - img [ref=e138]
+              - generic [ref=e140]: 更新
+            - generic "修复面板会获取最新的面板代码程序，包含bug修复" [ref=e141] [cursor=pointer]:
+              - img [ref=e142]
+              - generic [ref=e144]: 修复
+            - generic "点击可选择重启面板或重启服务器" [ref=e145] [cursor=pointer]:
+              - img [ref=e146]
+              - generic [ref=e148]: 重启
+        - generic [ref=e150]:
+          - generic [ref=e153]:
+            - generic [ref=e155]:
+              - generic [ref=e156]: 
+              - generic [ref=e157]: 警告！当前面板使用HTTP访问，可能存在被窃取敏感信息风险，请立即开启【面板SSL】。
+              - generic [ref=e158] [cursor=pointer]: "[ 点击忽略 ]"
+              - generic [ref=e159] [cursor=pointer]: "[ 立即处理 ]"
+            - list [ref=e160]:
+              - listitem [ref=e161] [cursor=pointer]:
+                - button "幻灯片切换至索引 1" [ref=e162]
+          - generic [ref=e166]:
+            - generic [ref=e169]:
+              - generic [ref=e171]:
+                - generic "负载" [ref=e172]
+                - generic [ref=e173]: 运行流畅
+              - progressbar [ref=e175]:
+                - img [ref=e177]
+                - generic [ref=e182]: 0%
+            - generic [ref=e185]:
+              - generic [ref=e187]:
+                - generic "CPU" [ref=e188]
+                - generic [ref=e189]: 4核心
+              - progressbar [ref=e191]:
+                - img [ref=e193]
+                - generic [ref=e198]: 40%
+            - generic [ref=e201]:
+              - generic [ref=e203]:
+                - generic "内存" [ref=e204]
+                - generic [ref=e205]:
+                  - generic [ref=e206]: 1.1GB
+                  - text: / 3.7GB
+              - progressbar [ref=e208]:
+                - img [ref=e210]
+                - generic [ref=e215]: 29%
+            - generic [ref=e217]:
+              - generic [ref=e218]:
+                - generic [ref=e220]:
+                  - generic / [ref=e221]
+                  - generic [ref=e222]:
+                    - generic [ref=e223]: 4.9GB
+                    - text: / 49.1GB
+                - progressbar [ref=e225]:
+                  - img [ref=e227]
+                  - generic [ref=e232]: 10%
+              - text: 
+            - generic [ref=e234]:
+              - generic [ref=e235]:
+                - generic [ref=e237]:
+                  - generic "/home" [ref=e238]
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: 4.0GB
+                    - text: / 78.6GB
+                - progressbar [ref=e242]:
+                  - img [ref=e244]
+                  - generic [ref=e249]: 5%
+              - text: 
+          - generic [ref=e250]:
+            - generic [ref=e252]:
+              - generic [ref=e253]: 概览
+              - generic "自定义概览模块" [ref=e254] [cursor=pointer]:
+                - generic [ref=e255]: 
+            - generic [ref=e258]:
+              - generic [ref=e260] [cursor=pointer]:
+                - text: 
+                - generic [ref=e262]:
+                  - generic [ref=e263]: 网站
+                  - generic [ref=e264]:
+                    - generic [ref=e265]: "1"
+                    - generic [ref=e268]: 
+              - generic [ref=e270] [cursor=pointer]:
+                - text: 
+                - generic [ref=e272]:
+                  - generic [ref=e273]: 数据库
+                  - generic [ref=e274]:
+                    - generic [ref=e275]: "1"
+                    - generic [ref=e278]: 
+              - generic [ref=e280] [cursor=pointer]:
+                - text: 
+                - generic [ref=e282]:
+                  - generic [ref=e283]: 安全风险
+                  - generic [ref=e284]:
+                    - generic [ref=e285]: "27"
+                    - generic [ref=e288]: 
+              - generic [ref=e290] [cursor=pointer]:
+                - text: 
+                - generic [ref=e292]:
+                  - generic [ref=e293]: 备忘录
+                  - generic [ref=e295]: 当前内容为空，点击编辑
+        - generic [ref=e297]:
+          - generic [ref=e299]:
+            - generic [ref=e301]:
+              - generic [ref=e302]:
+                - generic [ref=e303] [cursor=pointer]: 流量
+                - generic [ref=e304] [cursor=pointer]: 磁盘IO
+              - generic [ref=e305]:
+                - generic [ref=e306]: 网卡
+                - generic [ref=e308] [cursor=pointer]:
+                  - generic:
+                    - combobox [ref=e310]
+                    - generic [ref=e311]: 所有
+                  - img [ref=e314]
+            - generic [ref=e318]:
+              - generic [ref=e320]:
+                - generic [ref=e325]: 上行
+                - generic [ref=e327]: 14.2 KB
+              - generic [ref=e329]:
+                - generic [ref=e334]: 下行
+                - generic [ref=e336]: 8.1 KB
+              - generic [ref=e338]:
+                - generic [ref=e340]: 总发送
+                - generic [ref=e342]: 1.8 GB
+              - generic [ref=e344]:
+                - generic [ref=e346]: 总接收
+                - generic [ref=e348]: 2.2 GB
+          - generic [ref=e355]:
+            - generic [ref=e357]:
+              - generic [ref=e358] [cursor=pointer]: 软件
+              - button "" [ref=e359] [cursor=pointer]:
+                - generic [ref=e361]: 
+            - generic [ref=e362]:
+              - generic [ref=e364] [cursor=pointer]:
+                - text: 
+                - img [ref=e367]
+                - generic [ref=e369]: 宝塔SSH终端 1.0 
+              - generic [ref=e371] [cursor=pointer]:
+                - text: 
+                - img [ref=e374]
+                - generic [ref=e376]: Linux工具箱 1.7 
+              - generic [ref=e378] [cursor=pointer]:
+                - text: 
+                - img [ref=e381]
+                - generic [ref=e383]:
+                  - text: Nginx 1.15.10
+                  - generic [ref=e384]: 
+              - generic [ref=e386] [cursor=pointer]:
+                - text: 
+                - img [ref=e389]
+                - generic [ref=e391]:
+                  - text: MySQL 8.0.24
+                  - generic [ref=e392]: 
+              - generic [ref=e394] [cursor=pointer]:
+                - text: 
+                - img [ref=e397]
+                - generic [ref=e399]:
+                  - text: PHP- 5.4.45
+                  - generic [ref=e400]: 
+              - generic [ref=e402] [cursor=pointer]:
+                - text: 
+                - img [ref=e405]
+                - generic [ref=e407]:
+                  - text: FTP服务 1.0.49
+                  - generic [ref=e408]: 
+              - generic [ref=e409] [cursor=pointer]:
+                - generic [ref=e410]: 推荐
+                - img [ref=e413]
+                - generic [ref=e415]: WAF
+                - generic [ref=e416]:
+                  - button "预览" [ref=e417]:
+                    - generic [ref=e418]: 预览
+                  - button "购买" [ref=e419]:
+                    - generic [ref=e420]: 购买
+              - generic [ref=e421] [cursor=pointer]:
+                - generic [ref=e422]: 推荐
+                - img [ref=e425]
+                - generic [ref=e427]: 网站监控报表
+                - generic [ref=e428]:
+                  - button "预览" [ref=e429]:
+                    - generic [ref=e430]: 预览
+                  - button "购买" [ref=e431]:
+                    - generic [ref=e432]: 购买
+              - generic [ref=e433] [cursor=pointer]:
+                - generic [ref=e434]: 推荐
+                - img [ref=e437]
+                - generic [ref=e439]: 堡塔企业级防篡改-重构版
+                - button "购买" [ref=e441]:
+                  - generic [ref=e442]: 购买
+              - generic [ref=e443] [cursor=pointer]:
+                - generic [ref=e444]: 推荐
+                - img [ref=e447]
+                - generic [ref=e449]: 堡塔防入侵
+                - button "购买" [ref=e451]:
+                  - generic [ref=e452]: 购买
+        - generic [ref=e456]:
+          - generic [ref=e457]:
+            - button "立即开通" [ref=e460] [cursor=pointer]
+            - generic [ref=e462]:
+              - generic [ref=e463]:
+                - img [ref=e464]
+                - generic [ref=e466]: 5分钟极速响应（工作时间）
+              - generic [ref=e467]:
+                - img [ref=e468]
+                - generic [ref=e470]: 15天无理由退款
+              - generic [ref=e471]:
+                - img [ref=e472]
+                - generic [ref=e474]: 30+款付费插件
+              - generic [ref=e475]:
+                - img [ref=e476]
+                - generic [ref=e478]: 20+企业版专享功能
+              - generic [ref=e479]:
+                - img [ref=e480]
+                - generic [ref=e482]: 2张宝塔商用SSL证书（年付）
+              - generic [ref=e483]:
+                - img [ref=e484]
+                - generic [ref=e486]: 1000条免费短信（年付）
+          - text: 
+      - generic [ref=e487]:
+        - generic [ref=e488]: 西部数码与宝塔联合定制版©2014-2026 广东堡塔安全技术有限公司 (bt.cn)
+        - separator [ref=e489]
+        - link "论坛求助" [ref=e490] [cursor=pointer]:
+          - /url: http://www.bt.cn/bbs
+          - generic [ref=e491]:
+            - img [ref=e492]
+            - generic [ref=e494]: 论坛求助
+        - separator [ref=e495]
+        - link "使用手册" [ref=e496] [cursor=pointer]:
+          - /url: https://docs.bt.cn
+          - generic [ref=e497]:
+            - img [ref=e498]
+            - generic [ref=e500]: 使用手册
+        - separator [ref=e501]
+        - generic [ref=e502]:
+          - img [ref=e503]
+          - generic [ref=e505] [cursor=pointer]: 微信公众号
+        - separator [ref=e506]
+        - link "正版查询" [ref=e507] [cursor=pointer]:
+          - /url: https://www.bt.cn/auth
+          - generic [ref=e508]:
+            - img [ref=e509]
+            - generic [ref=e511]: 正版查询
+        - separator [ref=e512]
+        - generic [ref=e513]:
+          - img [ref=e514]
+          - generic [ref=e516] [cursor=pointer]: 联系人工客服
+    - generic [ref=e517]:
+      - generic [ref=e518] [cursor=pointer]:
+        - img [ref=e520]
+        - generic [ref=e541]: AI
+        - generic [ref=e542]: 助手
+      - generic [ref=e544] [cursor=pointer]: 
+  - img
+  - generic: 企业版    
+  - alert [ref=e545]:
+    - img [ref=e547]
+    - generic [ref=e549]:
+      - heading "登录成功" [level=2] [ref=e550]
+      - generic [ref=e552]:
+        - generic [ref=e553]:
+          - text: 当前登录信息：
+          - generic [ref=e554]:
+            - generic [ref=e555]:
+              - generic [ref=e556]: IP
+              - generic [ref=e557]: 115.205.248.116
+            - generic [ref=e558]:
+              - generic [ref=e559]: 归属地
+              - generic [ref=e560]: 中国电信 中国 浙江 杭州
+        - generic [ref=e561]:
+          - text: 上次登录信息：
+          - generic [ref=e562]:
+            - generic [ref=e563]:
+              - generic [ref=e564]: IP
+              - generic [ref=e565]: 115.205.248.116
+            - generic [ref=e566]:
+              - generic [ref=e567]: 归属地
+              - generic [ref=e568]: 中国电信 中国 浙江 杭州
+            - generic [ref=e569]:
+              - generic [ref=e570]: 时间
+              - generic [ref=e571]: 2026-06-05 02:50:43
+      - img [ref=e573] [cursor=pointer]

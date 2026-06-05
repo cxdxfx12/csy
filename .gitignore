@@ -2,8 +2,9 @@
 /runtime/
 /admin/node_modules/
 /frontend/node_modules/
-/public/admin/
-public/index.html
+
+# 用户上传数据（不覆盖）
+/public/uploads/
 
 # 依赖
 /composer.phar
@@ -24,6 +25,14 @@ Thumbs.db
 *.swp
 *.swo
 
+# 打包/压缩
+*.rar
+*.zip
+
+# 图片截图
+*.png
+*.jpg
+
 # 临时调试脚本
 /_check_*.php
 /_debug_*.php
@@ -31,9 +40,17 @@ Thumbs.db
 /_raw_*.php
 /_curl_test.bat
 /_test_cookie.txt
+/_test_ssh.py
+/*_test.txt
+/*_cookie.txt
+/*_out.txt
+
+# 工具目录
+/tools/
 
 # 根目录垃圾文件
-/{
+/{*
+/:{
 /{console.log*
 /{if*
 /$null
@@ -42,9 +59,23 @@ Thumbs.db
 /date*
 /fetch_assoc*
 /fetchAll*
+/fetch()
 /find*
 /first
 /getMessage*
 /query*
 /select*
+/exec*
+/execute*
 /text
+/bt_cookie.txt
+/btcookie.txt
+/*.yml
+/*.bat
+/*.cmd
+/*.py
+/*.png
+/*.jpg
+/deploy.zip
+/deploy*.py
+/package-lock.json

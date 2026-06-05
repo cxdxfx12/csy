@@ -11,7 +11,12 @@ class Finance extends BaseAdmin
         [$page, $limit] = $this->getPage();
         $where = [];
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
         $type = $this->request->param('type', 0);
         if ($type) $where[] = ['type', '=', $type];
         $startDate = $this->request->param('start_date', '');

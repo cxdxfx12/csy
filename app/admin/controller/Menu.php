@@ -15,7 +15,8 @@ class Menu extends BaseAdmin
 
     public function add()
     {
-        $data = $this->request->post();
+        $allowed = ['parent_id','name','route','permission','icon','sort','status'];
+        $data = array_intersect_key($this->request->post(), array_flip($allowed));
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('menu')->insert($data);
         return $this->success([], '添加成功');
@@ -23,7 +24,8 @@ class Menu extends BaseAdmin
 
     public function edit()
     {
-        $data = $this->request->post();
+        $allowed = ['id','parent_id','name','route','permission','icon','sort','status'];
+        $data = array_intersect_key($this->request->post(), array_flip($allowed));
         Db::name('menu')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
     }

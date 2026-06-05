@@ -85,7 +85,13 @@ async function loadData() {
 
 function openForm(row?: any) {
   formTitle.value = row ? '编辑菜单' : '添加菜单'
-  Object.assign(form, row || { id: 0, parent_id: undefined, name: '', route: '', permission: '', icon: '', sort: 0, status: 1 })
+  if (row) {
+    // 排除 children 等非数据库字段
+    const { id, parent_id, name, route, permission, icon, sort, status } = row
+    Object.assign(form, { id, parent_id, name: name || '', route: route || '', permission: permission || '', icon: icon || '', sort: sort ?? 0, status: status ?? 1 })
+  } else {
+    Object.assign(form, { id: 0, parent_id: undefined, name: '', route: '', permission: '', icon: '', sort: 0, status: 1 })
+  }
   dialogVisible.value = true
 }
 

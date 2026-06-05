@@ -9,17 +9,24 @@ class AccessCard extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['c.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['c.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['c.status', '=', $status];
-        $total = Db::name('access_card')->alias('c')->where($where)->count();
-        $list = Db::name('access_card')->alias('c')
+
+        $cntQuery = Db::name('access_card')->alias('c')->whereNull('`c`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`c`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`c`.`community_id`', '=', intval($cid));
+        if ($status !== '') $cntQuery->where('`c`.`status`', '=', $status);
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('access_card')->alias('c')
             ->leftJoin('owner o', 'o.id = c.owner_id')
             ->leftJoin('community com', 'com.id = c.community_id')
             ->field('c.*, o.realname as owner_name, com.name as community_name')
-            ->where($where)->page($page, $limit)->order('c.id', 'desc')->select();
+            ->whereNull('`c`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`c`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`c`.`community_id`', '=', intval($cid));
+        if ($status !== '') $listQuery->where('`c`.`status`', '=', $status);
+        $list = $listQuery->page($page, $limit)->order('c.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

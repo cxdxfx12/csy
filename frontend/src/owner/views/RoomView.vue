@@ -8,6 +8,7 @@
           <span class="title">🏢 {{ room.community_name }}</span>
         </div>
         <div class="item-body">
+          <p>楼栋：{{ room.building_name || '--' }} {{ room.unit ? room.unit + '单元' : '' }}</p>
           <p>房号：{{ room.room_no }}</p>
           <p>面积：{{ room.area || '--' }}㎡</p>
           <p>楼层：{{ room.floor || '--' }}</p>
@@ -21,6 +22,8 @@
         <h3>房产详情</h3>
         <div class="detail-info">
           <p><label>小区</label> {{ detail.community_name }}</p>
+          <p><label>楼栋</label> {{ detail.building_name || '--' }}</p>
+          <p><label>单元</label> {{ detail.unit || '--' }}</p>
           <p><label>房号</label> {{ detail.room_no }}</p>
           <p><label>面积</label> {{ detail.area || '--' }}㎡</p>
           <p><label>楼层</label> {{ detail.floor || '--' }}</p>

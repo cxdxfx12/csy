@@ -3,7 +3,14 @@
     <!-- Top Bar -->
     <header>
       <div class="header-left">
-        <h1>🏘️ {{ communityName }}<span v-if="communityName" class="title-divider">|</span><span class="title-sub">小区经理工作台</span></h1>
+        <h1>🏘️ {{ communityName || '小区经理工作台' }}<span v-if="communityName" class="title-divider">|</span><span v-if="communityName" class="title-sub">小区经理工作台</span></h1>
+      </div>
+      <div class="header-center" v-if="communities.length > 1">
+        <select v-model.number="selectedCommunityId" @change="switchCommunity" class="community-select">
+          <option v-for="c in communities" :key="c.id" :value="c.id">
+            {{ c.name }}（{{ c.code }}）
+          </option>
+        </select>
       </div>
       <div class="header-right">
         <span class="user-info">{{ managerName }}</span>
@@ -76,6 +83,161 @@
             <div class="charge-bar-bg"><div class="charge-bar" :style="{width:chargeRate.rate+'%'}"></div></div>
             <div class="charge-detail">已收 ¥{{ chargeRate.paid || 0 }} / 应收 ¥{{ chargeRate.total || 0 }}</div>
           </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Vote Tab -->
+    <template v-else-if="activeTab === 'vote'">
+      <div class="list-toolbar">
+        <button class="btn-search" @click="openVoteForm()">+ 新增投票</button>
+        <select v-model="voteStatusFilter" @change="loadVoteList" style="height:40px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:0 12px;color:#e2e8f0;font-size:14px;outline:none;">
+          <option value="0">全部状态</option>
+          <option value="1">草稿</option>
+          <option value="2">进行中</option>
+          <option value="3">已结束</option>
+        </select>
+      </div>
+      <div class="list-table-wrap">
+        <table v-if="voteList.length" class="list-table">
+          <thead><tr><th>ID</th><th>标题</th><th>类型</th><th>状态</th><th>选项</th><th>参与人数</th><th>时间</th><th style="width:240px;">操作</th></tr></thead>
+          <tbody>
+            <tr v-for="v in voteList" :key="v.id">
+              <td>{{ v.id }}</td>
+              <td class="text-ellipsis" style="max-width:180px;">{{ v.title }}</td>
+              <td><span class="tag">{{ v.type === 2 ? '多选' : '单选' }}</span></td>
+              <td><span :class="'tag tag-'+v.status">{{ voteStatusMap[v.status] }}</span></td>
+              <td>{{ v.option_count }}</td>
+              <td>{{ v.total_votes }}</td>
+              <td style="font-size:12px;">{{ v.start_time?.substring(0,10) || '-' }} ~ {{ v.end_time?.substring(0,10) || '-' }}</td>
+              <td class="action-btns">
+                <button v-if="v.status==1" class="btn-mini btn-green" @click="publishVote(v.id)">发布</button>
+                <button v-if="v.status==2" class="btn-mini btn-red" @click="closeVote(v.id)">结束</button>
+                <button v-if="v.status>=2" class="btn-mini btn-blue" @click="viewVoteResult(v.id)">结果</button>
+                <button v-if="v.status!=2" class="btn-mini" @click="openVoteForm(v)">编辑</button>
+                <button class="btn-mini btn-danger" @click="deleteVote(v.id)">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="empty">暂无投票数据</div>
+      </div>
+      <!-- Vote Form Modal -->
+      <div class="modal-overlay" v-if="voteFormVisible" @click.self="voteFormVisible=false">
+        <div class="modal-box">
+          <h3>{{ voteFormTitle }}</h3>
+          <div class="form-group"><label>标题</label><input v-model="voteForm.title" class="input" placeholder="投票标题" /></div>
+          <div class="form-group"><label>类型</label>
+            <select v-model.number="voteForm.type" style="width:100%;height:40px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:0 12px;color:#e2e8f0;font-size:14px;outline:none;">
+              <option :value="1">单选</option>
+              <option :value="2">多选</option>
+            </select>
+          </div>
+          <div class="form-group"><label>说明</label><textarea v-model="voteForm.content" class="input" rows="2" placeholder="投票说明(选填)"></textarea></div>
+          <div class="form-row"><div class="form-group"><label>开始时间</label><input v-model="voteForm.start_time" type="datetime-local" class="input" /></div><div class="form-group"><label>结束时间</label><input v-model="voteForm.end_time" type="datetime-local" class="input" /></div></div>
+          <div class="form-group"><label>选项列表（至少2个）</label></div>
+          <div v-for="(opt,idx) in voteForm.options" :key="idx" class="option-row">
+            <input v-model="voteForm.options[idx]" class="input" :placeholder="'选项'+(idx+1)" />
+            <button v-if="voteForm.options.length>2" class="btn-mini btn-danger" type="button" @click="voteForm.options.splice(idx,1)">×</button>
+          </div>
+          <button class="btn-mini" type="button" style="margin-top:8px" @click="addOption">+ 添加选项</button>
+          <div class="modal-actions"><button class="btn-cancel" @click="voteFormVisible=false">取消</button><button class="btn-search" @click="submitVote" :disabled="voteSubmitting">{{ voteSubmitting?'提交中...':'保存' }}</button></div>
+        </div>
+      </div>
+      <!-- Vote Result Modal -->
+      <div class="modal-overlay" v-if="voteResultVisible" @click.self="voteResultVisible=false">
+        <div class="modal-box">
+          <h3>📊 {{ voteResult.title }}</h3>
+          <div style="margin-bottom:12px;color:#94a3b8;">总投票人数: {{ voteResult.total_votes || 0 }}</div>
+          <div v-for="opt in (voteResult.options||[])" :key="opt.id" class="result-bar">
+            <div class="result-label"><span>{{ opt.title }}</span><span>{{ opt.percent }}% ({{ opt.count }}票)</span></div>
+            <div class="result-bg"><div class="result-fill" :style="{width:opt.percent+'%'}"></div></div>
+          </div>
+          <div class="modal-actions"><button class="btn-cancel" @click="voteResultVisible=false">关闭</button></div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Activity Tab -->
+    <template v-else-if="activeTab === 'activity'">
+      <div class="list-toolbar">
+        <button class="btn-search" @click="openActivityForm()">+ 新增活动</button>
+        <select v-model="activityStatusFilter" @change="loadActivityList" style="height:40px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:0 12px;color:#e2e8f0;font-size:14px;outline:none;">
+          <option value="0">全部状态</option>
+          <option value="1">草稿</option>
+          <option value="2">报名中</option>
+          <option value="3">进行中</option>
+          <option value="4">已结束</option>
+          <option value="5">已取消</option>
+        </select>
+      </div>
+      <div class="list-table-wrap">
+        <table v-if="activityList.length" class="list-table">
+          <thead><tr><th>ID</th><th>标题</th><th>地点</th><th>报名情况</th><th>状态</th><th>活动时间</th><th style="width:280px;">操作</th></tr></thead>
+          <tbody>
+            <tr v-for="a in activityList" :key="a.id">
+              <td>{{ a.id }}</td>
+              <td class="text-ellipsis" style="max-width:160px;">{{ a.title }}</td>
+              <td>{{ a.location || '-' }}</td>
+              <td><span class="tag tag-1" v-if="a.pending_signup>0">待审{{ a.pending_signup }}</span> <span class="tag tag-2">已通过{{ a.approved_signup||a.signup_count }}</span> / {{ a.max_participants||'不限' }}</td>
+              <td><span :class="'tag tag-'+a.status">{{ activityStatusMap[a.status] }}</span></td>
+              <td style="font-size:12px;">{{ a.start_time?.substring(0,10) || '-' }} ~ {{ a.end_time?.substring(0,10) || '-' }}</td>
+              <td class="action-btns">
+                <button v-if="a.status==1" class="btn-mini btn-green" @click="publishActivity(a.id)">发布</button>
+                <button v-if="a.status==1||a.status==2" class="btn-mini btn-blue" @click="startActivity(a.id)">开始</button>
+                <button v-if="a.status==2||a.status==3" class="btn-mini btn-red" @click="completeActivity(a.id)">结束</button>
+                <button v-if="a.status!=4&&a.status!=5" class="btn-mini btn-warn" @click="cancelActivity(a.id)">取消</button>
+                <button class="btn-mini btn-blue" @click="openSignupList(a)">报名管理</button>
+                <button v-if="a.status!=3" class="btn-mini" @click="openActivityForm(a)">编辑</button>
+                <button class="btn-mini btn-danger" @click="deleteActivity(a.id)">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="empty">暂无活动数据</div>
+      </div>
+      <!-- Activity Form Modal -->
+      <div class="modal-overlay" v-if="activityFormVisible" @click.self="activityFormVisible=false">
+        <div class="modal-box">
+          <h3>{{ activityFormTitle }}</h3>
+          <div class="form-group"><label>标题</label><input v-model="activityForm.title" class="input" placeholder="活动标题" /></div>
+          <div class="form-group"><label>地点</label><input v-model="activityForm.location" class="input" placeholder="活动地点" /></div>
+          <div class="form-group"><label>人数上限</label><input v-model.number="activityForm.max_participants" type="number" class="input" placeholder="0表示不限" /></div>
+          <div class="form-row"><div class="form-group"><label>开始时间</label><input v-model="activityForm.start_time" type="datetime-local" class="input" /></div><div class="form-group"><label>结束时间</label><input v-model="activityForm.end_time" type="datetime-local" class="input" /></div></div>
+          <div class="form-group"><label>详情</label><textarea v-model="activityForm.content" class="input" rows="3" placeholder="活动详情..."></textarea></div>
+          <div class="modal-actions"><button class="btn-cancel" @click="activityFormVisible=false">取消</button><button class="btn-search" @click="submitActivity" :disabled="activitySubmitting">{{ activitySubmitting?'提交中...':'保存' }}</button></div>
+        </div>
+      </div>
+      <!-- Signup List Modal -->
+      <div class="modal-overlay" v-if="signupListVisible" @click.self="signupListVisible=false">
+        <div class="modal-box" style="max-width:700px;">
+          <h3>📋 报名管理 - {{ signupActivityTitle }}</h3>
+          <div class="list-toolbar" style="margin-bottom:12px;">
+            <select v-model="signupStatusFilter" @change="loadSignupList" style="height:36px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:0 10px;color:#e2e8f0;font-size:13px;outline:none;">
+              <option :value="-1">全部</option><option :value="0">待审核</option><option :value="1">已通过</option><option :value="2">已拒绝</option>
+            </select>
+          </div>
+          <div class="list-table-wrap">
+            <table v-if="signupList.length" class="list-table">
+              <thead><tr><th>姓名</th><th>手机号</th><th>备注</th><th>状态</th><th>报名时间</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr v-for="s in signupList" :key="s.id">
+                  <td>{{ s.owner_name || s.name }}</td>
+                  <td>{{ s.owner_phone || s.phone }}</td>
+                  <td style="font-size:12px;">{{ s.remark || '-' }}</td>
+                  <td><span :class="'tag tag-'+(s.status==0?1:s.status==1?2:5)">{{ signupStatusMap[s.status] }}</span></td>
+                  <td style="font-size:12px;">{{ s.create_time?.substring(0,16) }}</td>
+                  <td class="action-btns">
+                    <button v-if="s.status==0" class="btn-mini btn-green" @click="approveSignup(s.id)">通过</button>
+                    <button v-if="s.status==0" class="btn-mini btn-warn" @click="rejectSignup(s.id)">拒绝</button>
+                    <button class="btn-mini btn-danger" @click="cancelSignup(s.id)">移除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-else class="empty">暂无报名记录</div>
+          </div>
+          <div class="modal-actions"><button class="btn-cancel" @click="signupListVisible=false">关闭</button></div>
         </div>
       </div>
     </template>
@@ -168,13 +330,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createApi, createAuth } from '@/shared/api.js'
 
 const router = useRouter()
-const api = createApi('/api/manager', 'manager_token')
+// rawApi 是原始 API；下面包装成自动带 X-Community-Id 请求头的 api
+const rawApi = createApi('/api/manager', 'manager_token')
 const auth = createAuth('manager_token')
+
+function api(path, options = {}) {
+  const opts = { ...options, headers: { ...options.headers } }
+  if (selectedCommunityId.value) {
+    opts.headers['X-Community-Id'] = String(selectedCommunityId.value)
+  }
+  return rawApi(path, opts)
+}
 
 const loading = ref(true)
 const error = ref('')
@@ -188,12 +359,18 @@ const tabs = [
   { key: 'bill', label: '账单', icon: '💰' },
   { key: 'repair', label: '报修', icon: '🔧' },
   { key: 'complaint', label: '投诉', icon: '📢' },
+  { key: 'vote', label: '投票', icon: '🗳️' },
+  { key: 'activity', label: '活动', icon: '🎉' },
 ]
 
 const statusMap = {
   repair: { 1:'待派修', 2:'待接单', 3:'处理中', 4:'已完成', 5:'已关闭' },
   complaint: { 1:'待处理', 2:'处理中', 3:'已解决', 4:'已关闭' }
 }
+
+// 小区选择
+const communities = ref([])
+const selectedCommunityId = ref(parseInt(localStorage.getItem('manager_cid')) || 0)
 
 // Dashboard data
 const stats = ref(null)
@@ -232,10 +409,216 @@ const apiMap = {
   complaint: '/complaint/list',
 }
 
-onMounted(loadAll)
+// ===== 投票相关 =====
+const voteList = ref([])
+const voteStatusFilter = ref(0)
+const voteFormVisible = ref(false)
+const voteFormTitle = ref('新增投票')
+const voteSubmitting = ref(false)
+const voteForm = reactive({ id: 0, title: '', type: 1, content: '', start_time: '', end_time: '', options: ['', ''] })
+const voteResultVisible = ref(false)
+const voteResult = ref({})
+const voteStatusMap = { 1: '草稿', 2: '进行中', 3: '已结束' }
+
+function openVoteForm(item) {
+  if (item) {
+    voteFormTitle.value = '编辑投票'
+    voteForm.id = item.id; voteForm.title = item.title; voteForm.type = item.type
+    voteForm.content = item.content || ''
+    voteForm.start_time = item.start_time?.substring(0,16) || ''
+    voteForm.end_time = item.end_time?.substring(0,16) || ''
+    // 加载选项
+    api('/vote/detail?id=' + item.id).then(r => {
+      if (r.code === 0) {
+        voteForm.options = (r.data.options || []).map(o => o.title)
+      }
+    })
+  } else {
+    voteFormTitle.value = '新增投票'
+    voteForm.id = 0; voteForm.title = ''; voteForm.type = 1; voteForm.content = ''
+    voteForm.start_time = ''; voteForm.end_time = ''; voteForm.options = ['', '']
+  }
+  voteFormVisible.value = true
+}
+function addOption() { voteForm.options.push('') }
+async function submitVote() {
+  if (!voteForm.title) return alert('请输入标题')
+  const validOptions = voteForm.options.filter(o => o.trim())
+  if (validOptions.length < 2) return alert('至少需要2个有效选项')
+  voteSubmitting.value = true
+  const data = { title: voteForm.title, type: voteForm.type, content: voteForm.content, start_time: voteForm.start_time, end_time: voteForm.end_time, options: validOptions }
+  if (voteForm.id) data.id = voteForm.id
+  const url = voteForm.id ? '/vote/edit' : '/vote/add'
+  try {
+    const res = await api(url, { method: 'POST', body: JSON.stringify(data) })
+    if (res.code === 0) { voteFormVisible.value = false; loadVoteList() }
+    else alert(res.msg || '操作失败')
+  } catch(e) { alert('操作失败: ' + e.message) }
+  voteSubmitting.value = false
+}
+async function publishVote(id) {
+  if (!confirm('确认发布该投票？')) return
+  const res = await api('/vote/publish', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadVoteList(); else alert(res.msg)
+}
+async function closeVote(id) {
+  if (!confirm('确认结束该投票？')) return
+  const res = await api('/vote/close', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadVoteList(); else alert(res.msg)
+}
+async function viewVoteResult(id) {
+  const res = await api('/vote/result?id=' + id)
+  if (res.code === 0) { voteResult.value = res.data; voteResultVisible.value = true }
+  else alert(res.msg)
+}
+async function deleteVote(id) {
+  if (!confirm('确认删除该投票？')) return
+  const res = await api('/vote/delete', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadVoteList(); else alert(res.msg)
+}
+async function loadVoteList() {
+  const params = { page: 1, limit: 200 }
+  if (voteStatusFilter.value) params.status = voteStatusFilter.value
+  const query = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&')
+  try {
+    const res = await api('/vote/list?' + query)
+    voteList.value = res.code === 0 ? (res.data?.list || res.data || []) : []
+  } catch { voteList.value = [] }
+}
+
+// ===== 活动相关 =====
+const activityList = ref([])
+const activityStatusFilter = ref(0)
+const activityFormVisible = ref(false)
+const activityFormTitle = ref('新增活动')
+const activitySubmitting = ref(false)
+const activityForm = reactive({ id: 0, title: '', location: '', content: '', max_participants: 0, start_time: '', end_time: '' })
+const activityStatusMap = { 1: '草稿', 2: '报名中', 3: '进行中', 4: '已结束', 5: '已取消' }
+const signupListVisible = ref(false)
+const signupActivityId = ref(0)
+const signupActivityTitle = ref('')
+const signupList = ref([])
+const signupStatusFilter = ref(-1)
+const signupStatusMap = { 0: '待审核', 1: '已通过', 2: '已拒绝' }
+
+function openActivityForm(item) {
+  if (item) {
+    activityFormTitle.value = '编辑活动'; activityForm.id = item.id
+    activityForm.title = item.title; activityForm.location = item.location || ''
+    activityForm.content = item.content || ''; activityForm.max_participants = item.max_participants || 0
+    activityForm.start_time = item.start_time?.substring(0,16) || ''
+    activityForm.end_time = item.end_time?.substring(0,16) || ''
+  } else {
+    activityFormTitle.value = '新增活动'; activityForm.id = 0
+    activityForm.title = ''; activityForm.location = ''; activityForm.content = ''
+    activityForm.max_participants = 0; activityForm.start_time = ''; activityForm.end_time = ''
+  }
+  activityFormVisible.value = true
+}
+async function submitActivity() {
+  if (!activityForm.title) return alert('请输入标题')
+  activitySubmitting.value = true
+  const data = { title: activityForm.title, location: activityForm.location, content: activityForm.content, max_participants: activityForm.max_participants, start_time: activityForm.start_time, end_time: activityForm.end_time }
+  if (activityForm.id) data.id = activityForm.id
+  const url = activityForm.id ? '/activity/edit' : '/activity/add'
+  try {
+    const res = await api(url, { method: 'POST', body: JSON.stringify(data) })
+    if (res.code === 0) { activityFormVisible.value = false; loadActivityList() }
+    else alert(res.msg || '操作失败')
+  } catch(e) { alert('操作失败: ' + e.message) }
+  activitySubmitting.value = false
+}
+async function publishActivity(id) {
+  if (!confirm('确认发布该活动？')) return
+  const res = await api('/activity/publish', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadActivityList(); else alert(res.msg)
+}
+async function startActivity(id) {
+  if (!confirm('确认开始该活动？')) return
+  const res = await api('/activity/start', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadActivityList(); else alert(res.msg)
+}
+async function completeActivity(id) {
+  if (!confirm('确认结束该活动？')) return
+  const res = await api('/activity/complete', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadActivityList(); else alert(res.msg)
+}
+async function cancelActivity(id) {
+  if (!confirm('确认取消该活动？')) return
+  const res = await api('/activity/cancel', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadActivityList(); else alert(res.msg)
+}
+async function deleteActivity(id) {
+  if (!confirm('确认删除该活动？')) return
+  const res = await api('/activity/delete', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadActivityList(); else alert(res.msg)
+}
+async function loadActivityList() {
+  const params = { page: 1, limit: 200 }
+  if (activityStatusFilter.value) params.status = activityStatusFilter.value
+  const query = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&')
+  try {
+    // 确保 signup status 字段存在
+    api('/activity/ensureSignupStatus').catch(()=>{})
+    const res = await api('/activity/list?' + query)
+    activityList.value = res.code === 0 ? (res.data?.list || res.data || []) : []
+  } catch { activityList.value = [] }
+}
+function openSignupList(activity) {
+  signupActivityId.value = activity.id
+  signupActivityTitle.value = activity.title
+  signupStatusFilter.value = -1
+  signupListVisible.value = true
+  loadSignupList()
+}
+async function loadSignupList() {
+  const params = { activity_id: signupActivityId.value, page: 1, limit: 500 }
+  if (signupStatusFilter.value >= 0) params.status = signupStatusFilter.value
+  const query = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&')
+  try {
+    const res = await api('/activity/signups?' + query)
+    signupList.value = res.code === 0 ? (res.data?.list || res.data || []) : []
+  } catch { signupList.value = [] }
+}
+async function approveSignup(id) {
+  const res = await api('/activity/approveSignup', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) { loadSignupList(); loadActivityList() } else alert(res.msg)
+}
+async function rejectSignup(id) {
+  const res = await api('/activity/rejectSignup', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) { loadSignupList(); loadActivityList() } else alert(res.msg)
+}
+async function cancelSignup(id) {
+  if (!confirm('确认移除该报名记录？')) return
+  const res = await api('/activity/cancelSignup', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) { loadSignupList(); loadActivityList() } else alert(res.msg)
+}
+
+onMounted(async () => {
+  await loadCommunities()
+  await loadAll()
+})
+
+async function loadCommunities() {
+  const res = await rawApi('/dashboard/communityList')
+  if (res.code === 0 && Array.isArray(res.data)) {
+    communities.value = res.data
+    // 如果已经有选择则保留；否则用后端返回的第一个
+    if (!selectedCommunityId.value && communities.value.length > 0) {
+      selectedCommunityId.value = communities.value[0].id
+      localStorage.setItem('manager_cid', String(selectedCommunityId.value))
+    }
+  }
+}
+
+function switchCommunity() {
+  localStorage.setItem('manager_cid', String(selectedCommunityId.value))
+  loadAll()
+}
 
 async function loadAll() {
   loading.value = true
+  error.value = ''
   try {
     const [infoRes, statRes, incomeRes, repairRes, ownerRes, todoRes, chargeRes] = await Promise.all([
       api('/dashboard/communityInfo'),
@@ -264,6 +647,8 @@ async function loadAll() {
 
 async function loadTabData() {
   if (activeTab.value === 'dashboard') return loadAll()
+  if (activeTab.value === 'vote') return loadVoteList()
+  if (activeTab.value === 'activity') return loadActivityList()
   loading.value = true
   try {
     const params = { page: page.value, limit }
@@ -294,6 +679,10 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 header h1{font-size:22px;color:#f1f5f9;display:flex;align-items:center;gap:8px}
 .title-divider{color:#64748b;font-weight:300}
 .title-sub{font-size:16px;color:#94a3b8;font-weight:400}
+.header-center{flex:1;display:flex;justify-content:center}
+.community-select{height:38px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:0 14px;color:#e2e8f0;font-size:14px;cursor:pointer;outline:none;min-width:180px}
+.community-select:focus{border-color:#10b981}
+.community-select option{background:#1e293b;color:#e2e8f0}
 .header-right{display:flex;align-items:center;gap:12px}
 .user-info{color:#94a3b8;font-size:13px}
 .btn-logout{background:rgba(255,255,255,.1);border:1px solid #334155;color:#94a3b8;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px}
@@ -369,4 +758,43 @@ header h1{font-size:22px;color:#f1f5f9;display:flex;align-items:center;gap:8px}
 .pagination button{height:36px;padding:0 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;cursor:pointer;font-size:13px}
 .pagination button:disabled{opacity:.4;cursor:default}
 .pagination span{color:#64748b;font-size:13px}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-box{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:24px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto}
+.modal-box h3{font-size:17px;color:#e2e8f0;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;color:#94a3b8;margin-bottom:6px}
+.form-row{display:flex;gap:12px}
+.form-row .form-group{flex:1}
+.input{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:9px 12px;color:#e2e8f0;font-size:14px;outline:none;box-sizing:border-box}
+.input:focus{border-color:#10b981}
+textarea.input{resize:vertical;min-height:60px}
+.option-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.option-row .input{flex:1}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid #334155}
+.btn-cancel{background:#334155;border:none;color:#94a3b8;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:14px}
+.btn-cancel:hover{background:#475569}
+
+/* Action buttons in table */
+.action-btns{display:flex;gap:4px;flex-wrap:wrap}
+.btn-mini{background:#334155;border:none;color:#94a3b8;padding:3px 10px;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap}
+.btn-mini:hover{background:#475569;color:#e2e8f0}
+.btn-mini.btn-green{background:#10b98122;color:#10b981}
+.btn-mini.btn-green:hover{background:#10b98133}
+.btn-mini.btn-blue{background:#3b82f622;color:#3b82f6}
+.btn-mini.btn-blue:hover{background:#3b82f633}
+.btn-mini.btn-red{background:#ef444422;color:#ef4444}
+.btn-mini.btn-red:hover{background:#ef444433}
+.btn-mini.btn-danger{background:#ef444422;color:#ef4444}
+.btn-mini.btn-danger:hover{background:#ef444433}
+.btn-mini.btn-warn{background:#f59e0b22;color:#f59e0b}
+.btn-mini.btn-warn:hover{background:#f59e0b33}
+
+/* Vote result */
+.result-bar{margin-bottom:12px}
+.result-label{display:flex;justify-content:space-between;font-size:13px;color:#e2e8f0;margin-bottom:4px}
+.result-label span:last-child{color:#94a3b8}
+.result-bg{height:8px;background:#0f172a;border-radius:4px;overflow:hidden}
+.result-fill{height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:4px;transition:width .5s}
 </style>

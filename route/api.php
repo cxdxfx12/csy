@@ -14,6 +14,8 @@ Route::group('api', function () {
     Route::post('wechatLogin', 'api/Login/wechatLogin');
     Route::post('wechatBind', 'api/Login/wechatBind');
     Route::post('wechatUnbind', 'api/Login/wechatUnbind');
+    // 小区列表（公开，供登录页小区选择下拉）
+    Route::get('communityList', 'api/Login/communityList');
 
     // 经理端微信认证（复用 manager 控制器）
     Route::get('manager/wechatOAuth', 'manager/ManagerLogin/wechatOAuth');
@@ -28,6 +30,13 @@ Route::group('api', function () {
 
     // 角标 & 消息提醒
     Route::get('badge/counts', 'api/Badge/counts');
+
+    // 微信服务器消息回调（关注/取消关注事件）
+    Route::get('wechat/server/<cid>', 'api/WechatServer/index');
+    Route::post('wechat/server/<cid>', 'api/WechatServer/index');
+
+    // 自助认领房产
+    Route::post('claimProperty', 'api/Claim/claim');
 
     // 房产
     Route::get('room/list', 'api/Room/lists');
@@ -66,6 +75,18 @@ Route::group('api', function () {
     Route::get('notice/list', 'api/Notice/lists');
     Route::get('notice/detail', 'api/Notice/detail');
 
+    // 业主投票
+    Route::get('vote/list', 'api/Vote/lists');
+    Route::get('vote/detail', 'api/Vote/detail');
+    Route::post('vote/vote', 'api/Vote/vote');
+
+    // 社区活动
+    Route::get('activity/list', 'api/Activity/lists');
+    Route::get('activity/detail', 'api/Activity/detail');
+    Route::post('activity/signup', 'api/Activity/signup');
+    Route::post('activity/cancelSignup', 'api/Activity/cancelSignup');
+    Route::get('activity/mySignups', 'api/Activity/mySignups');
+
     // 个人中心
     Route::post('profile/edit', 'api/Profile/edit');
     Route::post('profile/password', 'api/Profile/password');
@@ -84,6 +105,7 @@ Route::group('api/admin', function () {
     // 微信
     Route::get('wechatOAuth', 'admin/Login/wechatOAuth');
     Route::get('wechatCallback', 'admin/Login/wechatCallback');
+    Route::get('wechatLoginStatus', 'admin/Login/wechatLoginStatus');
     Route::post('wechatLogin', 'admin/Login/wechatLogin');
     Route::post('wechatBind', 'admin/Login/wechatBind');
 
@@ -233,6 +255,7 @@ Route::group('api/admin', function () {
 
     // 维修人员
     Route::get('repair/workerList', 'admin/RepairWorker/lists');
+    Route::get('repair/staffList', 'admin/RepairWorker/staffList');
     Route::post('repair/workerAdd', 'admin/RepairWorker/add');
     Route::post('repair/workerEdit', 'admin/RepairWorker/edit');
     Route::post('repair/workerDelete', 'admin/RepairWorker/delete');
@@ -361,6 +384,9 @@ Route::group('api/admin', function () {
     Route::get('activity/signupList', 'admin/Activity/signupList');
     Route::post('activity/cancelSignup', 'admin/Activity/cancelSignup');
 
+    // 角标通知
+    Route::get('badge/counts', 'admin/AdminBadge/counts');
+
     // 数据概览
     Route::get('dashboard/statistics', 'admin/Dashboard/statistics');
     Route::get('dashboard/incomeChart', 'admin/Dashboard/incomeChart');
@@ -382,8 +408,10 @@ Route::group('api/admin', function () {
     Route::get('print/notice', 'admin/Print/notice');
 
     // 打印模板
-    Route::get('print/templateList', 'admin/PrintTemplate/lists');
-    Route::post('print/templateEdit', 'admin/PrintTemplate/edit');
+    Route::get('print/printTemplateList', 'admin/PrintTemplate/lists');
+    Route::post('print/printTemplateAdd', 'admin/PrintTemplate/add');
+    Route::post('print/printTemplateEdit', 'admin/PrintTemplate/edit');
+    Route::post('print/printTemplateDelete', 'admin/PrintTemplate/delete');
 
     // 打印日志
     Route::get('print/logList', 'admin/PrintLog/lists');

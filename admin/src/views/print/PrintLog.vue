@@ -307,7 +307,7 @@ function businessTypeLabel(type: string) {
 
 function businessTypeColor(type: string) {
   const map: Record<string, string> = { receipt: 'success', notice: 'warning', contract: 'danger', form: 'info' }
-  return map[type] || ''
+  return map[type] || 'info'
 }
 
 function applyQuickFilter(key: string) {
@@ -347,8 +347,8 @@ async function loadData() {
       params.start_date = formatDate(query.dateRange[0])
       params.end_date = formatDate(query.dateRange[1])
     }
-    const res = await apiGet('/admin/print/printLogList', { params })
-    if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
+    const res = await apiGet('/admin/print/printLogList', params)
+    if (res && res.code === 0) { list.value = res.data || []; total.value = res.count || 0 }
   } catch (_) { list.value = []; total.value = 0 }
   finally { loading.value = false }
 }

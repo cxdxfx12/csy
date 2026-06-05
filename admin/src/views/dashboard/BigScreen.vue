@@ -5,11 +5,23 @@
       <span v-for="i in 40" :key="i" class="particle" :style="particleStyle()"></span>
     </div>
 
+    <!-- 无权限遮罩 -->
+    <div v-if="permissionDenied" class="denied-overlay">
+      <div class="denied-box">
+        <div class="denied-icon">🔒</div>
+        <h2>无权限访问</h2>
+        <p>只有系统超级管理员和小区物管经理可以查看数据大屏</p>
+        <button class="btn-back" @click="goBack">← 返回</button>
+      </div>
+    </div>
+
     <div class="screen-header">
       <div class="header-left">
         <div class="title-line"></div>
-        <h1 class="screen-title">智慧物业数据大屏</h1>
+        <span class="monkey-icon">🐵</span>
+        <h1 class="screen-title">大圣智慧物业数据大屏</h1>
         <div class="title-line" style="margin-left:16px;"></div>
+        <span v-if="communityName" class="community-badge">{{ communityName }}</span>
       </div>
       <div class="header-right">
         <span class="time-text">{{ currentTime }}</span>
@@ -17,6 +29,8 @@
           <span class="refresh-dot" :class="{ spinning: refreshing }"></span>
           {{ refreshCountdown }}s
         </span>
+        <button class="btn-back" @click="goBack" title="返回上一页">← 返回</button>
+        <button class="btn-close" @click="closeScreen" title="关闭大屏">✕ 关闭</button>
       </div>
     </div>
 
@@ -94,12 +108,16 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { apiGet } from '@/utils/request'
 import * as echarts from 'echarts'
 
+const router = useRouter()
 const data = ref<any>(null)
 const refreshing = ref(false)
 const refreshCountdown = ref(60)
+const communityName = ref('')
+const permissionDenied = ref(false)
 let countdownTimer: any = null
 
 const currentTime = ref('')
@@ -139,8 +157,20 @@ async function loadData() {
   refreshing.value = true
   try {
     const res = await apiGet<any>('/admin/dashboard/bigscreen')
-    if (res.code === 0) { data.value = res.data; await nextTick(); renderCharts() }
-  } catch {}
+    if (res.code === 0) {
+      data.value = res.data
+      communityName.value = res.data?.title || ''
+      permissionDenied.value = false
+      await nextTick()
+      renderCharts()
+    } else if (res.code === 403) {
+      permissionDenied.value = true
+      data.value = null
+    }
+  } catch {
+    permissionDenied.value = true
+    data.value = null
+  }
   refreshing.value = false
 }
 
@@ -195,6 +225,9 @@ function startRefreshLoop() {
 }
 function handleResize() { incomeChart?.resize(); repairPieChart?.resize(); chargePieChart?.resize() }
 
+function goBack() { router.go(-1) }
+function closeScreen() { router.push('/dashboard') }
+
 onMounted(() => { updateClock(); clockTimer=setInterval(updateClock,1000); loadData(); startRefreshLoop(); window.addEventListener('resize',handleResize) })
 onUnmounted(() => { clearInterval(clockTimer); clearInterval(countdownTimer); window.removeEventListener('resize',handleResize); incomeChart?.dispose(); repairPieChart?.dispose(); chargePieChart?.dispose() })
 </script>
@@ -210,7 +243,14 @@ onUnmounted(() => { clearInterval(clockTimer); clearInterval(countdownTimer); wi
 .header-left { display:flex; align-items:center; }
 .title-line { width:32px; height:2px; background:linear-gradient(90deg,transparent,#06b6d4); border-radius:1px; }
 .screen-title { font-size:22px; font-weight:700; letter-spacing:3px; background:linear-gradient(90deg,#06b6d4,#22d3ee,#f0c060); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0 16px; }
-.header-right { display:flex; align-items:center; gap:18px; }
+.monkey-icon { font-size:28px; flex-shrink:0; animation:bounce 1s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.community-badge { font-size:11px; color:#f0c060; background:rgba(240,192,96,.12); border:1px solid rgba(240,192,96,.3); padding:3px 10px; border-radius:12px; margin-left:12px; white-space:nowrap; }
+.btn-back, .btn-close { font-size:12px; padding:4px 12px; border-radius:4px; cursor:pointer; transition:all .2s; border:none; }
+.btn-back { background:rgba(59,130,246,.15); color:#60a5fa; border:1px solid rgba(59,130,246,.3); }
+.btn-back:hover { background:rgba(59,130,246,.3); color:#93c5fd; }
+.btn-close { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+.btn-close:hover { background:rgba(239,68,68,.3); color:#fca5a5; }
 .time-text { font-size:15px; color:#7b93b0; font-variant-numeric:tabular-nums; letter-spacing:1px; }
 .refresh-tag { font-size:12px; color:#4a6480; display:flex; align-items:center; gap:5px; }
 .refresh-dot { width:6px; height:6px; border-radius:50%; background:#06b6d4; transition:opacity .3s; }
@@ -253,4 +293,11 @@ onUnmounted(() => { clearInterval(clockTimer); clearInterval(countdownTimer); wi
 
 .screen-footer { position:relative; z-index:2; display:flex; align-items:center; justify-content:center; gap:8px; padding-top:6px; font-size:11px; color:#3a5a7a; flex-shrink:0; }
 .ft-sep { color:#1e3c5e; }
+
+.denied-overlay { position:absolute; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; background:rgba(7,11,26,.92); backdrop-filter:blur(8px); }
+.denied-box { text-align:center; }
+.denied-icon { font-size:64px; margin-bottom:16px; }
+.denied-box h2 { font-size:24px; color:#e0f0ff; margin:0 0 8px; }
+.denied-box p { font-size:14px; color:#5a7a9a; margin:0 0 24px; }
+.denied-box .btn-back { display:inline-block; text-decoration:none; }
 </style>

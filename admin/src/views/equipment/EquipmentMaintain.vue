@@ -3,6 +3,7 @@
     <div class="search-bar">
       <el-form :model="query" inline>
         <el-form-item><el-input v-model="query.keyword" placeholder="设备名称" clearable style="width:200px;" /></el-form-item>
+        <el-form-item><el-select v-model="query.community_id" placeholder="小区" clearable style="width:160px;"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" /></el-select></el-form-item>
         <el-form-item><el-select v-model="query.equipment_id" placeholder="设备" clearable style="width:180px;"><el-option v-for="e in equipments" :key="e.id" :label="e.name" :value="e.id" /></el-select></el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loadData">搜索</el-button>
@@ -68,14 +69,15 @@ const dialogVisible = ref(false)
 const submitting = ref(false)
 const formRef = ref<any>(null)
 const equipments = ref<any[]>([])
+const communities = ref<any[]>([])
 
 const typeMap: Record<number, string> = { 1: '日常巡检', 2: '定期维保', 3: '故障维修', 4: '紧急抢修' }
 
-const query = reactive({ keyword: '', equipment_id: undefined as any, page: 1, limit: 15 })
+const query = reactive({ keyword: '', community_id: undefined as any, equipment_id: undefined as any, page: 1, limit: 15 })
 const form = reactive<any>({ equipment_id: '', maintain_date: '', type: 1, content: '', maintainer: '', maintain_company: '', cost: 0, next_maintain_date: '' })
 const rules = { equipment_id: [{ required: true, message: '请选择设备', trigger: 'change' }], maintain_date: [{ required: true, message: '请选择维保日期', trigger: 'change' }] }
 
-function resetQuery() { query.keyword = ''; query.equipment_id = undefined; query.page = 1; loadData() }
+function resetQuery() { query.keyword = ''; query.community_id = undefined; query.equipment_id = undefined; query.page = 1; loadData() }
 
 async function loadData() {
   loading.value = true
@@ -115,6 +117,8 @@ async function handleDelete(row: any) {
 
 onMounted(async () => {
   try {
+    const rc = await apiGet('/admin/community/list', { limit: 999 })
+    communities.value = rc.data?.list || rc.data || []
     const re = await apiGet('/admin/equipment/list', { limit: 999 })
     equipments.value = re.data?.list || re.data || []
   } catch {}

@@ -190,6 +190,16 @@ class Dashboard extends BaseManager
         return $this->table($list, $total);
     }
 
+    /** 当前经理管理的所有小区列表 */
+    public function communityList()
+    {
+        $ids = $this->request->managedCommunityIds ?? [];
+        if (empty($ids)) return $this->success([], '暂无管理的小区');
+        $list = Db::name('community')->whereIn('id', $ids)->where('delete_time', null)
+            ->field('id, name, code, address')->order('id', 'asc')->select();
+        return $this->success($list);
+    }
+
     /** 小区信息 */
     public function communityInfo()
     {

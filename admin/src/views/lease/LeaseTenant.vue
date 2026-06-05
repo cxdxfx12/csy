@@ -48,6 +48,9 @@
         <el-select v-model="query.status" placeholder="租赁状态" clearable class="filter-sel" @change="handleSearch">
           <el-option label="在租" value="在租|1"/><el-option label="已退租" value="已退租|0"/>
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-sel" @change="handleSearch">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+        </el-select>
       </div>
       <div class="filter-right">
         <el-button @click="resetQuery" text><el-icon><Refresh /></el-icon>重置</el-button>
@@ -146,7 +149,7 @@
         <div class="form-section" style="border:none">
           <el-row :gutter="16">
             <el-col :span="12"><el-form-item label="租赁状态"><el-select v-model="form.status" style="width:100%"><el-option label="在租" value="在租"/><el-option label="已退租" value="已退租"/></el-select></el-form-item></el-col>
-            <el-col :span="12"><el-form-item label="所属小区"><el-input-number v-model="form.community_id" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
           </el-row>
           <el-form-item label="备注"><el-input v-model="form.remark" placeholder="备注信息"/></el-form-item>
         </div>
@@ -170,7 +173,8 @@ const dialogVisible = ref(false)
 const editId = ref(0)
 const formRef = ref()
 
-const query = reactive({ page:1, limit:12, keyword:'', gender:'', status:'' })
+const query = reactive({ page:1, limit:12, keyword:'', gender:'', status:'', community_id:undefined as any })
+const communities = ref<any[]>([])
 const form = reactive<any>({
   community_id:0, name:'', gender:'男', id_card:'', mobile:'', wechat:'', email:'',
   company_name:'', company_address:'', contact_person:'', contact_phone:'',
@@ -189,7 +193,7 @@ const stats = computed(()=>{
 
 function maskIdCard(id:string){if(!id||id.length<8)return id||'-';return id.slice(0,3)+'****'+id.slice(-4)}
 function handleSearch(){query.page=1;loadData()}
-function resetQuery(){query.keyword='';query.gender='';query.status='';query.page=1;loadData()}
+function resetQuery(){query.keyword='';query.gender='';query.status='';query.community_id=undefined;query.page=1;loadData()}
 
 async function loadData(){
   loading.value=true
@@ -198,8 +202,9 @@ async function loadData(){
     if(query.keyword)p.keyword=query.keyword
     if(query.gender)p.gender=query.gender
     if(query.status)p.status=query.status
+    if(query.community_id)p.community_id=query.community_id
     const res:any=await apiGet('/admin/lease/leaseTenantList',p)
-    if(res&&(res.code===0||res.code===undefined)){list.value=res.data?.list||[];total.value=res.data?.total||0}
+    if(res&&(res.code===0||res.code===undefined)){list.value=res.data||[];total.value=res.count||0}
   }catch(_){list.value=[];total.value=0}
   finally{loading.value=false}
 }
@@ -225,7 +230,10 @@ async function handleDelete(row:any){
   try{await ElMessageBox.confirm('确定删除该租客？','提示',{type:'warning'});const res:any=await apiPost('/admin/lease/leaseTenantDelete',{id:row.id});if(res&&(res.code===0||res.code===undefined)){ElMessage.success('删除成功');loadData()}}catch(_){}
 }
 
-onMounted(()=>loadData())
+onMounted(async ()=>{
+  try{const r:any=await apiGet('/admin/community/list',{limit:999});communities.value=r.data?.list||r.data||[]}catch(_){}
+  loadData()
+})
 watch([()=>query.page,()=>query.limit],()=>loadData())
 </script>
 

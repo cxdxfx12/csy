@@ -1,0 +1,544 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]:
+          - img [ref=e9]
+          - generic "双击可复制IP" [ref=e11]: 西部数码面板
+          - generic [ref=e12]: "0"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - link "首页" [ref=e20] [cursor=pointer]:
+              - /url: /home
+              - img [ref=e21]
+              - generic [ref=e23]: 首页
+          - listitem [ref=e24]:
+            - link "网站" [ref=e25] [cursor=pointer]:
+              - /url: /site
+              - img [ref=e26]
+              - generic [ref=e28]: 网站
+          - listitem [ref=e29]:
+            - link "数据库" [ref=e30] [cursor=pointer]:
+              - /url: /database
+              - img [ref=e31]
+              - generic [ref=e33]: 数据库
+          - listitem [ref=e34]:
+            - link "Docker" [ref=e35] [cursor=pointer]:
+              - /url: /docker
+              - img [ref=e36]
+              - generic [ref=e38]: Docker
+          - listitem [ref=e39]:
+            - link "监控" [ref=e40] [cursor=pointer]:
+              - /url: /control
+              - img [ref=e41]
+              - generic [ref=e43]: 监控
+          - listitem [ref=e44]:
+            - link "安全" [ref=e45] [cursor=pointer]:
+              - /url: /firewall
+              - img [ref=e46]
+              - generic [ref=e48]: 安全
+          - listitem [ref=e49]:
+            - link "WAF" [ref=e50] [cursor=pointer]:
+              - /url: /waf
+              - img [ref=e51]
+              - generic [ref=e53]: WAF
+          - listitem [ref=e54]:
+            - link "文件" [ref=e55] [cursor=pointer]:
+              - /url: /files
+              - img [ref=e56]
+              - generic [ref=e58]: 文件
+          - listitem [ref=e59]:
+            - link "日志" [ref=e60] [cursor=pointer]:
+              - /url: /logs
+              - img [ref=e61]
+              - generic [ref=e63]: 日志
+          - listitem [ref=e64]:
+            - link "域名" [ref=e65] [cursor=pointer]:
+              - /url: /domain
+              - img [ref=e66]
+              - generic [ref=e68]: 域名
+          - listitem [ref=e69]:
+            - link "SSL" [ref=e70] [cursor=pointer]:
+              - /url: /ssl
+              - img [ref=e71]
+              - generic [ref=e73]: SSL
+          - listitem [ref=e74]:
+            - link "终端" [ref=e75] [cursor=pointer]:
+              - /url: /xterm
+              - img [ref=e76]
+              - generic [ref=e78]: 终端
+          - listitem [ref=e79]:
+            - link "AI" [ref=e80] [cursor=pointer]:
+              - /url: /ai
+              - img [ref=e81]
+              - generic [ref=e83]: AI
+          - listitem [ref=e84]:
+            - link "节点管理" [ref=e85] [cursor=pointer]:
+              - /url: /node
+              - img [ref=e86]
+              - generic [ref=e88]: 节点管理
+          - listitem [ref=e89]:
+            - link "计划任务" [ref=e90] [cursor=pointer]:
+              - /url: /crontab
+              - img [ref=e91]
+              - generic [ref=e93]: 计划任务
+          - listitem [ref=e94]:
+            - link "软件商店" [ref=e95] [cursor=pointer]:
+              - /url: /soft
+              - img [ref=e96]
+              - generic [ref=e98]: 软件商店
+          - listitem [ref=e99]:
+            - link "设置" [ref=e100] [cursor=pointer]:
+              - /url: /config
+              - img [ref=e101]
+              - generic [ref=e103]: 设置
+          - listitem [ref=e104]:
+            - link "退出" [ref=e105] [cursor=pointer]:
+              - /url: javascript:;
+              - img [ref=e106]
+              - generic [ref=e108]: 退出
+        - generic [ref=e110]:
+          - generic [ref=e113] [cursor=pointer]: 
+          - generic [ref=e116] [cursor=pointer]: 
+    - generic [ref=e117]:
+      - generic [ref=e432]:
+        - generic [ref=e433]:
+          - generic [ref=e434]:
+            - generic [ref=e435] [cursor=pointer]:
+              - generic [ref=e436]:
+                - img [ref=e438]
+                - generic [ref=e439]: www
+              - text: 
+            - generic [ref=e440] [cursor=pointer]:
+              - generic [ref=e441]:
+                - img [ref=e443]
+                - generic [ref=e444]: www.hbdxm.com
+              - generic [ref=e446]: 
+            - generic [ref=e447] [cursor=pointer]: 
+          - generic:  
+        - generic [ref=e448]:
+          - generic [ref=e449]:
+            - generic [ref=e451] [cursor=pointer]: 
+            - generic [ref=e453]:
+              - text: 
+              - generic [ref=e454] [cursor=pointer]:
+                - generic [ref=e455]: 根目录
+                - generic [ref=e456]: 
+              - generic [ref=e457] [cursor=pointer]:
+                - generic [ref=e458]: www
+                - generic [ref=e459]: 
+              - generic [ref=e460] [cursor=pointer]:
+                - generic [ref=e461]: wwwroot
+                - generic [ref=e462]: 
+              - generic [ref=e463] [cursor=pointer]:
+                - generic [ref=e464]: www.hbdxm.com
+                - generic [ref=e465]: 
+            - generic [ref=e467] [cursor=pointer]: 
+            - text: 
+          - generic [ref=e468]:
+            - generic [ref=e469]:
+              - textbox "搜索文件/目录" [ref=e471]
+              - button "" [ref=e473] [cursor=pointer]:
+                - generic [ref=e475]: 
+            - generic [ref=e477] [cursor=pointer]:
+              - generic [ref=e478]:
+                - checkbox "包含子目录"
+              - generic [ref=e480]: 包含子目录
+        - generic [ref=e481]:
+          - generic [ref=e482]:
+            - button "上传/下载 " [ref=e484] [cursor=pointer]:
+              - generic [ref=e485]:
+                - text: 上传/下载
+                - generic [ref=e486]: 
+            - button "新建 " [ref=e488] [cursor=pointer]:
+              - generic [ref=e489]:
+                - img [ref=e491]
+                - text: 新建
+                - generic [ref=e492]: 
+            - button "文件内容搜索" [ref=e493] [cursor=pointer]:
+              - generic [ref=e495]: 文件内容搜索
+            - button "收藏夹 " [ref=e497] [cursor=pointer]:
+              - generic [ref=e498]:
+                - text: 收藏夹
+                - generic [ref=e500]: 
+            - button "终端" [ref=e501] [cursor=pointer]:
+              - generic [ref=e503]: 终端
+            - button "/(根目录)41.9 GB " [ref=e507] [cursor=pointer]:
+              - generic [ref=e508]:
+                - text:  /(根目录)41.9 GB
+                - generic [ref=e509]: 
+            - button "更多功能 " [ref=e511] [cursor=pointer]:
+              - generic [ref=e512]:
+                - text: 更多功能
+                - generic [ref=e513]: 
+          - generic [ref=e514]:
+            - text:  
+            - button " 回收站" [ref=e515] [cursor=pointer]:
+              - generic [ref=e516]:
+                - generic [ref=e517]: 
+                - text: 回收站
+            - generic [ref=e518]:
+              - img [ref=e520] [cursor=pointer]
+              - img [ref=e528] [cursor=pointer]
+        - generic [ref=e533]:
+          - generic [ref=e535]:
+            - generic [ref=e536]:
+              - generic [ref=e540] [cursor=pointer]:
+                - checkbox
+              - generic [ref=e542] [cursor=pointer]:
+                - generic [ref=e543]: 文件名称
+                - generic [ref=e544]:
+                  - generic [ref=e545]: 
+                  - generic [ref=e546]: 
+              - generic [ref=e548]: 企业级防篡改
+              - generic [ref=e550]: 权限/所有者
+              - generic [ref=e551] [cursor=pointer]:
+                - generic [ref=e552]: 大小
+                - generic [ref=e553]:
+                  - generic [ref=e554]: 
+                  - generic [ref=e555]: 
+              - generic [ref=e556] [cursor=pointer]:
+                - generic [ref=e557]: 修改时间
+                - generic [ref=e558]:
+                  - generic [ref=e559]: 
+                  - generic [ref=e560]: 
+              - generic [ref=e562]: 备注
+              - generic [ref=e564]: 操作
+            - generic [ref=e566]:
+              - generic [ref=e568]:
+                - generic ".git" [ref=e575] [cursor=pointer]
+                - generic [ref=e577] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e578]
+                - generic "755/root" [ref=e580]
+                - generic "点击计算大小" [ref=e582]:
+                  - generic [ref=e583] [cursor=pointer]: 计算
+                - generic [ref=e585]: 2026-06-05 03:32:01
+                - generic [ref=e589] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e590]: 
+              - generic [ref=e592]:
+                - generic ".playwright-cli" [ref=e599] [cursor=pointer]
+                - generic [ref=e601] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e602]
+                - generic "755/root" [ref=e604]
+                - generic "点击计算大小" [ref=e606]:
+                  - generic [ref=e607] [cursor=pointer]: 计算
+                - generic [ref=e609]: 2026-06-05 03:32:01
+                - generic [ref=e613] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e614]: 
+              - generic [ref=e616]:
+                - generic "admin" [ref=e623] [cursor=pointer]
+                - generic [ref=e625] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e626]
+                - generic "755/root" [ref=e628]
+                - generic "点击计算大小" [ref=e630]:
+                  - generic [ref=e631] [cursor=pointer]: 计算
+                - generic [ref=e633]: 2026-06-05 03:32:01
+                - generic [ref=e637] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e638]: 
+              - generic [ref=e640]:
+                - generic "app" [ref=e647] [cursor=pointer]
+                - generic [ref=e649] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e650]
+                - generic "755/root" [ref=e652]
+                - generic "点击计算大小" [ref=e654]:
+                  - generic [ref=e655] [cursor=pointer]: 计算
+                - generic [ref=e657]: 2026-06-05 03:32:01
+                - generic [ref=e661] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e662]: 
+              - generic [ref=e664]:
+                - generic "config" [ref=e671] [cursor=pointer]
+                - generic [ref=e673] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e674]
+                - generic "755/root" [ref=e676]
+                - generic "点击计算大小" [ref=e678]:
+                  - generic [ref=e679] [cursor=pointer]: 计算
+                - generic [ref=e681]: 2026-06-05 03:32:01
+                - generic [ref=e685] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e686]: 
+              - generic [ref=e688]:
+                - generic "database" [ref=e695] [cursor=pointer]
+                - generic [ref=e697] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e698]
+                - generic "755/root" [ref=e700]
+                - generic "点击计算大小" [ref=e702]:
+                  - generic [ref=e703] [cursor=pointer]: 计算
+                - generic [ref=e705]: 2026-06-05 03:32:01
+                - generic [ref=e709] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e710]: 
+              - generic [ref=e712]:
+                - generic "extend" [ref=e719] [cursor=pointer]
+                - generic [ref=e721] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e722]
+                - generic "755/root" [ref=e724]
+                - generic "点击计算大小" [ref=e726]:
+                  - generic [ref=e727] [cursor=pointer]: 计算
+                - generic [ref=e729]: 2026-06-05 03:32:01
+                - generic [ref=e733] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e734]: 
+              - generic [ref=e736]:
+                - generic "frontend" [ref=e743] [cursor=pointer]
+                - generic [ref=e745] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e746]
+                - generic "755/root" [ref=e748]
+                - generic "点击计算大小" [ref=e750]:
+                  - generic [ref=e751] [cursor=pointer]: 计算
+                - generic [ref=e753]: 2026-06-05 03:32:01
+                - generic [ref=e757] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e758]: 
+              - generic [ref=e760]:
+                - generic "middleware" [ref=e767] [cursor=pointer]
+                - generic [ref=e769] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e770]
+                - generic "755/root" [ref=e772]
+                - generic "点击计算大小" [ref=e774]:
+                  - generic [ref=e775] [cursor=pointer]: 计算
+                - generic [ref=e777]: 2026-06-05 03:32:01
+                - generic [ref=e781] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e782]: 
+              - generic [ref=e784]:
+                - generic "public" [ref=e791] [cursor=pointer]
+                - generic [ref=e793] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e794]
+                - generic "755/root" [ref=e796]
+                - generic "点击计算大小" [ref=e798]:
+                  - generic [ref=e799] [cursor=pointer]: 计算
+                - generic [ref=e801]: 2026-06-05 03:32:01
+                - generic [ref=e805] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e806]: 
+              - generic [ref=e808]:
+                - generic "route" [ref=e815] [cursor=pointer]
+                - generic [ref=e817] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e818]
+                - generic "755/root" [ref=e820]
+                - generic "点击计算大小" [ref=e822]:
+                  - generic [ref=e823] [cursor=pointer]: 计算
+                - generic [ref=e825]: 2026-06-05 03:32:01
+                - generic [ref=e829] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e830]: 
+              - generic [ref=e832]:
+                - generic ".gitignore" [ref=e839] [cursor=pointer]
+                - generic [ref=e841] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e842]
+                - generic "644/root" [ref=e844]
+                - generic [ref=e845]: 519 B
+                - generic [ref=e847]: 2026-06-05 03:32:01
+                - generic [ref=e851] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e852]: 
+              - generic [ref=e854]:
+                - generic ".htaccess" [ref=e861] [cursor=pointer]
+                - generic [ref=e863] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e864]
+                - generic "644/root" [ref=e866]
+                - generic [ref=e867]: 232 B
+                - generic [ref=e869]: 2026-06-05 03:32:01
+                - 'generic "PS: Apache用户配置文件(伪静态)" [ref=e871]'
+                - generic [ref=e874] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e875]: 
+              - generic [ref=e877]:
+                - generic "_fix_menu_route.php" [ref=e884] [cursor=pointer]
+                - generic [ref=e886] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e887]
+                - generic "644/root" [ref=e889]
+                - generic [ref=e890]: 651 B
+                - generic [ref=e892]: 2026-06-05 03:32:01
+                - generic [ref=e896] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e897]: 
+              - generic [ref=e899]:
+                - generic "composer-setup.php" [ref=e906] [cursor=pointer]
+                - generic [ref=e908] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e909]
+                - generic "644/root" [ref=e911]
+                - generic [ref=e912]: 58.13 KB
+                - generic [ref=e914]: 2026-06-05 03:32:01
+                - generic [ref=e918] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e919]: 
+              - generic [ref=e921]:
+                - generic "composer.json" [ref=e928] [cursor=pointer]
+                - generic [ref=e930] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e931]
+                - generic "644/root" [ref=e933]
+                - generic [ref=e934]: 1006 B
+                - generic [ref=e936]: 2026-06-05 03:32:01
+                - generic [ref=e940] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e941]: 
+              - generic [ref=e943]:
+                - generic "fetchColumn()" [ref=e950] [cursor=pointer]
+                - generic [ref=e952] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e953]
+                - generic "644/root" [ref=e955]
+                - generic [ref=e956]: 82 B
+                - generic [ref=e958]: 2026-06-05 03:32:01
+                - generic [ref=e962] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e963]: 
+              - generic [ref=e965]:
+                - generic "install_npm.bat" [ref=e972] [cursor=pointer]
+                - generic [ref=e974] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e975]
+                - generic "644/root" [ref=e977]
+                - generic [ref=e978]: 153 B
+                - generic [ref=e980]: 2026-06-05 03:32:01
+                - generic [ref=e984] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e985]: 
+              - generic [ref=e987]:
+                - generic [ref=e992]:
+                  - img [ref=e993]
+                  - generic "login_after.png" [ref=e994] [cursor=pointer]
+                - generic [ref=e996] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e997]
+                - generic "644/root" [ref=e999]
+                - generic [ref=e1000]: 298.98 KB
+                - generic [ref=e1002]: 2026-06-05 03:32:01
+                - generic [ref=e1006] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1007]: 
+              - generic [ref=e1009]:
+                - generic "nginx.conf" [ref=e1016] [cursor=pointer]
+                - generic [ref=e1018] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e1019]
+                - generic "644/root" [ref=e1021]
+                - generic [ref=e1022]: 1.06 KB
+                - generic [ref=e1024]: 2026-06-05 03:32:01
+                - generic [ref=e1028] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1029]: 
+              - generic [ref=e1031]:
+                - generic "package-lock.json" [ref=e1038] [cursor=pointer]
+                - generic [ref=e1040] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e1041]
+                - generic "644/root" [ref=e1043]
+                - generic [ref=e1044]: 81 B
+                - generic [ref=e1046]: 2026-06-05 03:32:01
+                - generic [ref=e1050] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1051]: 
+              - generic [ref=e1053]:
+                - generic "README.md" [ref=e1060] [cursor=pointer]
+                - generic [ref=e1062] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e1063]
+                - generic "644/root" [ref=e1065]
+                - generic [ref=e1066]: 6.03 KB
+                - generic [ref=e1068]: 2026-06-05 03:32:01
+                - generic [ref=e1072] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1073]: 
+              - generic [ref=e1075]:
+                - generic "start-server.bat" [ref=e1082] [cursor=pointer]
+                - generic [ref=e1084] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e1085]
+                - generic "644/root" [ref=e1087]
+                - generic [ref=e1088]: 243 B
+                - generic [ref=e1090]: 2026-06-05 03:32:01
+                - generic [ref=e1094] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1095]: 
+              - generic [ref=e1097]:
+                - generic "start.cmd" [ref=e1104] [cursor=pointer]
+                - generic [ref=e1106] [cursor=pointer]:
+                  - text: 未保护
+                  - img [ref=e1107]
+                - generic "644/root" [ref=e1109]
+                - generic [ref=e1110]: 1.79 KB
+                - generic [ref=e1112]: 2026-06-05 03:32:01
+                - generic [ref=e1116] [cursor=pointer]:
+                  - text: 更多
+                  - generic [ref=e1117]: 
+          - generic [ref=e1118]:
+            - generic [ref=e1119]:
+              - generic [ref=e1120]: 共11个目录，13个文件，文件大小
+              - generic [ref=e1122] [cursor=pointer]: 计算
+            - generic [ref=e1124]:
+              - button "上一页" [disabled] [ref=e1125]:
+                - generic:
+                  - img
+              - list [ref=e1126]:
+                - listitem "第 1 页" [ref=e1127]: "1"
+              - button "下一页" [disabled] [ref=e1128]:
+                - generic:
+                  - img
+              - generic [ref=e1131] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e1133]
+                  - generic [ref=e1134]: 500条/页
+                - img [ref=e1137]
+              - generic [ref=e1139]: 共 24 条
+              - generic [ref=e1140]:
+                - generic [ref=e1141]: 前往
+                - spinbutton "页" [ref=e1144]: "1"
+                - generic [ref=e1145]: 页
+      - generic [ref=e372]:
+        - generic [ref=e373]: 西部数码与宝塔联合定制版©2014-2026 广东堡塔安全技术有限公司 (bt.cn)
+        - separator [ref=e374]
+        - link "论坛求助" [ref=e375] [cursor=pointer]:
+          - /url: http://www.bt.cn/bbs
+          - generic [ref=e376]:
+            - img [ref=e377]
+            - generic [ref=e379]: 论坛求助
+        - separator [ref=e380]
+        - link "使用手册" [ref=e381] [cursor=pointer]:
+          - /url: https://docs.bt.cn
+          - generic [ref=e382]:
+            - img [ref=e383]
+            - generic [ref=e385]: 使用手册
+        - separator [ref=e386]
+        - generic [ref=e387]:
+          - img [ref=e388]
+          - generic [ref=e390] [cursor=pointer]: 微信公众号
+        - separator [ref=e391]
+        - link "正版查询" [ref=e392] [cursor=pointer]:
+          - /url: https://www.bt.cn/auth
+          - generic [ref=e393]:
+            - img [ref=e394]
+            - generic [ref=e396]: 正版查询
+        - separator [ref=e397]
+        - generic [ref=e398]:
+          - img [ref=e399]
+          - generic [ref=e401] [cursor=pointer]: 联系人工客服
+    - generic [ref=e402]:
+      - generic [ref=e403] [cursor=pointer]:
+        - img [ref=e405]
+        - generic [ref=e426]: AI
+        - generic [ref=e427]: 助手
+      - generic [ref=e429] [cursor=pointer]: 
+  - img
+  - generic:             

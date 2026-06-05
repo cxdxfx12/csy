@@ -10,8 +10,9 @@ class Vehicle extends BaseAdmin
     {
         [$page, $limit] = $this->getPage();
         $where = [['v.delete_time', 'null', '']];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['v.community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['v.community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['v.community_id', '=', $cid];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['v.plate_number|v.brand|v.model', 'like', "%{$keyword}%"];
         $total = Db::name('vehicle')->alias('v')->where($where)->count();
@@ -27,6 +28,7 @@ class Vehicle extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         // 检查同一小区下车牌号唯一性
         $exist = Db::name('vehicle')->where('community_id', $data['community_id'] ?? 0)
             ->where('plate_number', $data['plate_number'])->where('delete_time', null)->find();
@@ -41,6 +43,8 @@ class Vehicle extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        $vehicle = Db::name('vehicle')->where('id', $data['id'])->find();
+        if ($vehicle) $this->validateCommunityAccess($vehicle['community_id'] ?? 0);
         // 检查同一小区下车牌号唯一性（排除自身）
         $exist = Db::name('vehicle')->where('community_id', $data['community_id'] ?? 0)
             ->where('plate_number', $data['plate_number'])->where('id', '<>', $data['id'])
@@ -55,6 +59,8 @@ class Vehicle extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $vehicle = Db::name('vehicle')->where('id', $id)->find();
+        if ($vehicle) $this->validateCommunityAccess($vehicle['community_id'] ?? 0);
         Db::name('vehicle')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

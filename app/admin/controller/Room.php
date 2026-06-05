@@ -9,14 +9,15 @@ class Room extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $communityId = $this->request->param('community_id', 0);
-        $buildingId  = $this->request->param('building_id', 0);
-        $keyword     = $this->request->param('keyword', '');
-        $status      = $this->request->param('status', '');
+        $cid        = $this->getFilteredCommunityId();
+        $buildingId = $this->request->param('building_id', 0);
+        $keyword    = $this->request->param('keyword', '');
+        $status     = $this->request->param('status', '');
 
         // count 直接查 room 表，不 JOIN
         $cntQuery = Db::name('room')->whereNull('delete_time');
-        if ($communityId) $cntQuery->where('community_id', $communityId);
+        if ($cid === -1)  $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('community_id', $cid);
         if ($buildingId)  $cntQuery->where('building_id', $buildingId);
         if ($keyword)     $cntQuery->where('room_number', 'like', "%{$keyword}%");
         if ($status !== '') $cntQuery->where('status', $status);
@@ -29,7 +30,8 @@ class Room extends BaseAdmin
             ->leftJoin('owner o',     'o.id = r.owner_id')
             ->field('r.*, c.name as community_name, b.name as building_name, o.realname as owner_name, o.phone as owner_phone')
             ->whereNull('`r`.`delete_time`');
-        if ($communityId) $listQuery->where('`r`.`community_id`', '=', intval($communityId));
+        if ($cid === -1)  $listQuery->where('`r`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`r`.`community_id`', '=', intval($cid));
         if ($buildingId)  $listQuery->where('`r`.`building_id`', '=', intval($buildingId));
         if ($keyword)     $listQuery->where('r.room_number', 'like', "%{$keyword}%");
         if ($status !== '') $listQuery->where('`r`.`status`', '=', intval($status));
@@ -40,6 +42,9 @@ class Room extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $building = Db::name('building')->where('id', $data['building_id'])->find();
+        if (!$building) return $this->error('楼栋不存在');
+        $this->validateCommunityAccess($building['community_id'] ?? 0);
         $exist = Db::name('room')->where('building_id', $data['building_id'])
             ->where('room_number', $data['room_number'])->whereNull('delete_time')->find();
         if ($exist) {
@@ -57,6 +62,9 @@ class Room extends BaseAdmin
     public function edit()
     {
         $post = $this->request->post();
+        $room = Db::name('room')->where('id', $post['id'])->find();
+        if (!$room) return $this->error('房间不存在');
+        $this->validateCommunityAccess($room['community_id'] ?? 0);
         $data = ['id' => $post['id']];
         if (isset($post['area']))   $data['area']   = $post['area'];
         if (isset($post['layout'])) $data['layout'] = $post['layout'];
@@ -68,6 +76,9 @@ class Room extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $room = Db::name('room')->where('id', $id)->find();
+        if (!$room) return $this->error('房间不存在');
+        $this->validateCommunityAccess($room['community_id'] ?? 0);
         Db::name('room')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

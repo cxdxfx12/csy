@@ -9,24 +9,35 @@ class EquipmentMaintain extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['em.delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $equipmentId = $this->request->param('equipment_id', 0);
-        if ($equipmentId) $where[] = ['em.equipment_id', '=', $equipmentId];
         $startDate = $this->request->param('start_date', '');
         $endDate = $this->request->param('end_date', '');
-        if ($startDate) $where[] = ['em.maintain_date', '>=', $startDate];
-        if ($endDate) $where[] = ['em.maintain_date', '<=', $endDate];
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['eq.name|eq.code', 'like', "%{$keyword}%"];
 
-        $total = Db::name('equipment_maintain')->alias('em')
+        $cntQuery = Db::name('equipment_maintain')->alias('em')
             ->leftJoin('equipment eq', 'eq.id = em.equipment_id')
-            ->where($where)->count();
-        $list = Db::name('equipment_maintain')->alias('em')
+            ->whereNull('`em`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`eq`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`eq`.`community_id`', '=', intval($cid));
+        if ($equipmentId) $cntQuery->where('`em`.`equipment_id`', '=', $equipmentId);
+        if ($startDate) $cntQuery->where('`em`.`maintain_date`', '>=', $startDate);
+        if ($endDate) $cntQuery->where('`em`.`maintain_date`', '<=', $endDate);
+        if ($keyword) $cntQuery->where('`eq`.`name`|`eq`.`code`', 'like', "%{$keyword}%");
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('equipment_maintain')->alias('em')
             ->leftJoin('equipment eq', 'eq.id = em.equipment_id')
             ->leftJoin('community com', 'com.id = eq.community_id')
             ->field('em.*, eq.name as equipment_name, eq.code as equipment_code, com.name as community_name')
-            ->where($where)->page($page, $limit)->order('em.id', 'desc')->select();
+            ->whereNull('`em`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`eq`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`eq`.`community_id`', '=', intval($cid));
+        if ($equipmentId) $listQuery->where('`em`.`equipment_id`', '=', $equipmentId);
+        if ($startDate) $listQuery->where('`em`.`maintain_date`', '>=', $startDate);
+        if ($endDate) $listQuery->where('`em`.`maintain_date`', '<=', $endDate);
+        if ($keyword) $listQuery->where('`eq`.`name`|`eq`.`code`', 'like', "%{$keyword}%");
+        $list = $listQuery->page($page, $limit)->order('em.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

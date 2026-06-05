@@ -14,11 +14,20 @@
           <h2>欢迎回来</h2>
           <p class="subtitle">请登录您的管理账户</p>
           <div>
+            <div style="margin-bottom:16px;">
+              <select v-model="selectedCommunity" class="ni community-select">
+                <option :value="0">请选择小区（可选）</option>
+                <option v-for="c in communities" :key="c.id" :value="c.id">{{ c.name }}</option>
+              </select>
+            </div>
             <div style="margin-bottom:16px;"><input v-model="username" placeholder="管理员账号" class="ni" @keyup.enter="handleLogin" /></div>
             <div style="margin-bottom:16px;"><input v-model="password" type="password" placeholder="登录密码" class="ni" @keyup.enter="handleLogin" /></div>
-            <div style="margin-bottom:16px;display:flex;gap:8px;">
+            <div style="margin-bottom:16px;display:flex;gap:8px;align-items:center;">
               <input v-model="captchaCode" placeholder="验证码" class="ni" style="flex:1;" @keyup.enter="handleLogin" maxlength="4" />
-              <img :src="captchaImage" class="captcha-img" @click="fetchCaptcha" title="点击刷新" />
+              <img v-if="captchaImage" :src="captchaImage" class="captcha-img" @click="fetchCaptcha" title="点击刷新" />
+              <div v-else class="captcha-placeholder" @click="fetchCaptcha" title="点击刷新">
+                {{ captchaLoading ? '加载中...' : (captchaError || '点击获取') }}
+              </div>
             </div>
             <button class="lb" :disabled="loading" @click="handleLogin">{{ loading ? '登录中...' : '🚀 登 录' }}</button>
             <div v-if="error" class="error-msg">{{ error }}</div>
@@ -27,6 +36,26 @@
           <button class="btn-wechat" :disabled="loading" @click="handleWechatLogin">
             <span class="wx-icon">💬</span> 微信一键登录
           </button>
+          <!-- 二维码扫码弹窗 -->
+          <div v-if="showQrModal" class="qr-overlay" @click.self="closeQrModal">
+            <div class="qr-modal">
+              <div class="qr-close" @click="closeQrModal">✕</div>
+              <h3>微信扫码登录</h3>
+              <p class="qr-sub">请使用手机微信扫描下方二维码</p>
+              <div class="qr-img-box">
+                <img v-if="qrImageUrl" :src="qrImageUrl" alt="微信扫码" class="qr-img" />
+                <div v-else class="qr-loading">生成二维码中...</div>
+              </div>
+              <div class="qr-status" :class="qrStatus">
+                <span v-if="qrStatus === 'pending'">⏳ 等待扫码授权...</span>
+                <span v-else-if="qrStatus === 'ok'">✅ 登录成功，正在跳转...</span>
+                <span v-else-if="qrStatus === 'need_bind'">⚠️ 该微信未绑定账号，请先绑定</span>
+                <span v-else-if="qrStatus === 'expired'">⌛ 二维码已过期，请重新生成</span>
+                <span v-else-if="qrStatus === 'error'">{{ qrErrorMsg }}</span>
+              </div>
+              <button v-if="qrStatus === 'expired' || qrStatus === 'error'" class="qr-refresh-btn" @click="handleWechatLogin">🔄 重新生成</button>
+            </div>
+          </div>
         </template>
 
         <!-- 微信绑定 -->
@@ -58,12 +87,16 @@ const password = ref('')
 const captchaCode = ref('')
 const captchaKey = ref('')
 const captchaImage = ref('')
+const captchaLoading = ref(false)
+const captchaError = ref('')
 const loading = ref(false)
 const error = ref('')
 const showBind = ref(false)
 const bindUsername = ref('')
 const bindPassword = ref('')
 const wxOpenid = ref('')
+const communities = ref<any[]>([])
+const selectedCommunity = ref(0)
 
 // 检测微信 OAuth 回调
 onMounted(() => {
@@ -84,20 +117,35 @@ onMounted(() => {
     return
   }
   fetchCaptcha()
+  fetchCommunities()
 })
 
 async function fetchCaptcha() {
   try {
+    captchaLoading.value = true
+    captchaError.value = ''
     const res = await fetch('/api/admin/captcha')
     const data = await res.json()
     if (data.code === 0) {
       captchaKey.value = data.data.key
       captchaImage.value = data.data.image
       captchaCode.value = ''
+    } else {
+      captchaError.value = data.msg || '验证码加载失败'
     }
-  } catch (e) {
-    // ignore
+  } catch (e: any) {
+    captchaError.value = '网络异常，请检查连接后刷新'
+  } finally {
+    captchaLoading.value = false
   }
+}
+
+async function fetchCommunities() {
+  try {
+    const res = await fetch('/api/communityList')
+    const data = await res.json()
+    if (data.code === 0) communities.value = data.data || []
+  } catch { /* ignore */ }
 }
 
 async function handleLogin() {
@@ -120,6 +168,7 @@ async function handleLogin() {
     const data = await res.json()
     if (data.code === 0) {
       localStorage.setItem('admin_token', data.data.token)
+      if (selectedCommunity.value) localStorage.setItem('admin_community_id', String(selectedCommunity.value))
       ElMessage.success('登录成功')
       router.push('/')
     } else {
@@ -133,14 +182,87 @@ async function handleLogin() {
   }
 }
 
-function handleWechatLogin() {
-  let communityId = localStorage.getItem('wx_community_id')
-  if (!communityId) {
-    communityId = prompt('请输入小区ID（可在后台小区管理中查看）：', '')
-    if (!communityId) return
-    localStorage.setItem('wx_community_id', communityId)
+const showQrModal = ref(false)
+const qrImageUrl = ref('')
+const qrStatus = ref('pending')  // pending | ok | expired | error | need_bind
+const qrErrorMsg = ref('')
+let pollTimer: any = null
+
+async function handleWechatLogin() {
+  error.value = ''
+  try {
+    const cid = selectedCommunity.value ? `&community_id=${selectedCommunity.value}` : ''
+    const res = await fetch(`/api/admin/wechatOAuth?json=1${cid}`)
+    const data = await res.json()
+    if (data.code === 0 && data.data.oauth_url) {
+      const oauthUrl = data.data.oauth_url
+      const sessionKey = data.data.session_key || ''
+      // 生成二维码图片
+      qrImageUrl.value = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(oauthUrl)
+      qrStatus.value = 'pending'
+      showQrModal.value = true
+      // 开始轮询
+      if (sessionKey) {
+        startPolling(sessionKey)
+      }
+    } else {
+      error.value = data.msg || '获取微信授权链接失败'
+    }
+  } catch (e: any) {
+    error.value = '网络请求失败: ' + (e.message || '')
   }
-  location.href = `/api/admin/wechatOAuth?community_id=${communityId}`
+}
+
+function startPolling(sessionKey: string) {
+  let count = 0
+  pollTimer = setInterval(async () => {
+    count++
+    if (count > 150) { // 5分钟后过期
+      qrStatus.value = 'expired'
+      clearInterval(pollTimer!)
+      pollTimer = null
+      return
+    }
+    try {
+      const res = await fetch('/api/admin/wechatLoginStatus?session=' + encodeURIComponent(sessionKey))
+      const d = await res.json()
+      if (d.code === 0) {
+        if (d.data.status === 'ok') {
+          qrStatus.value = 'ok'
+          clearInterval(pollTimer!)
+          pollTimer = null
+          localStorage.setItem('admin_token', d.data.token)
+          if (selectedCommunity.value) localStorage.setItem('admin_community_id', String(selectedCommunity.value))
+          qrErrorMsg.value = '登录成功'
+          setTimeout(() => {
+            showQrModal.value = false
+            ElMessage.success('微信登录成功')
+            router.push('/')
+          }, 1000)
+        } else if (d.data.status === 'need_bind') {
+          qrStatus.value = 'need_bind'
+          clearInterval(pollTimer!)
+          pollTimer = null
+          qrErrorMsg.value = '该微信未绑定管理员账号，请先使用账号密码登录后绑定'
+        } else if (d.data.status === 'expired') {
+          qrStatus.value = 'expired'
+          clearInterval(pollTimer!)
+          pollTimer = null
+        }
+        // pending: keep polling
+      }
+    } catch (e) {
+      // ignore polling errors
+    }
+  }, 2000)
+}
+
+function closeQrModal() {
+  showQrModal.value = false
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
 }
 
 async function handleBind() {
@@ -159,6 +281,7 @@ async function handleBind() {
     const data = await res.json()
     if (data.code === 0) {
       localStorage.setItem('admin_token', data.data.token)
+      if (selectedCommunity.value) localStorage.setItem('admin_community_id', String(selectedCommunity.value))
       ElMessage.success('绑定成功')
       router.push('/')
     } else {
@@ -184,7 +307,10 @@ async function handleBind() {
 .subtitle { color:#a0aec0;font-size:14px;margin-bottom:24px; }
 .ni { width:100%;height:40px;border:1px solid #d9d9d9;border-radius:6px;padding:0 12px;font-size:14px;outline:none;box-sizing:border-box; }
 .ni:focus { border-color:#3182ce;box-shadow:0 0 0 3px rgba(49,130,206,0.1); }
+.community-select { appearance: auto; background:#fff; color:#333; cursor:pointer; }
+.community-select option { color:#333; }
 .captcha-img { height:40px;width:120px;border-radius:6px;border:1px solid #d9d9d9;cursor:pointer;flex-shrink:0; }
+.captcha-placeholder { height:40px;width:120px;border-radius:6px;border:1px dashed #d9d9d9;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#ff4d4f;background:#fff2f0; }
 .lb { width:100%;height:44px;background:linear-gradient(135deg,#2b6cb0,#3182ce);color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer; }
 .lb:hover { box-shadow:0 4px 14px rgba(43,108,176,0.3); }
 .lb:disabled { opacity:0.6;cursor:not-allowed; }
@@ -196,6 +322,23 @@ async function handleBind() {
 .btn-wechat:hover { background:#06ad56; }
 .btn-wechat:disabled { opacity:0.6;cursor:not-allowed; }
 .wx-icon { font-size:18px; }
+.qr-overlay { position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999; }
+.qr-modal { background:#fff;border-radius:16px;padding:32px 36px;text-align:center;max-width:360px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3); }
+.qr-close { position:absolute;top:12px;right:16px;cursor:pointer;font-size:20px;color:#999;line-height:1; }
+.qr-close:hover { color:#333; }
+.qr-modal h3 { margin:0 0 6px;font-size:20px;color:#1e293b; }
+.qr-sub { margin:0 0 20px;font-size:13px;color:#64748b; }
+.qr-img-box { width:220px;height:220px;margin:0 auto 16px;border-radius:12px;overflow:hidden;border:3px solid #e2e8f0;display:flex;align-items:center;justify-content:center; }
+.qr-img { width:100%;height:100%;object-fit:contain; }
+.qr-loading { color:#94a3b8;font-size:14px; }
+.qr-status { font-size:14px;padding:8px 12px;border-radius:8px; }
+.qr-status.pending { color:#d97706;background:#fffbeb; }
+.qr-status.ok { color:#059669;background:#ecfdf5; }
+.qr-status.expired,
+.qr-status.error { color:#dc2626;background:#fef2f2; }
+.qr-status.need_bind { color:#7c3aed;background:#f5f3ff; }
+.qr-refresh-btn { margin-top:12px;padding:8px 24px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer; }
+.qr-refresh-btn:hover { background:#2563eb; }
 .back-link { display:inline-block;margin-top:16px;color:#3182ce;font-size:13px;cursor:pointer;text-align:center;width:100%; }
 .back-link:hover { text-decoration:underline; }
 </style>

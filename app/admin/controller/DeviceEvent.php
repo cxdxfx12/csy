@@ -9,21 +9,32 @@ class DeviceEvent extends BaseAdmin
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['de.delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['de.event_type|de.content|d.device_name|d.device_code', 'like', "%{$keyword}%"];
         $eventType = $this->request->param('event_type', '');
-        if ($eventType !== '') $where[] = ['de.event_type', '=', $eventType];
         $deviceId = $this->request->param('device_id', 0);
-        if ($deviceId) $where[] = ['de.device_id', '=', intval($deviceId)];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['d.community_id', '=', intval($communityId)];
-        $total = Db::name('device_event')->alias('de')->where($where)->count();
-        $list = Db::name('device_event')->alias('de')
+
+        $cntQuery = Db::name('device_event')->alias('de')
+            ->leftJoin('device d', 'd.id = de.device_id')
+            ->whereNull('`de`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`d`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`d`.`community_id`', '=', intval($cid));
+        if ($keyword) $cntQuery->where('`de`.`event_type`|`de`.`content`|`d`.`device_name`|`d`.`device_code`', 'like', "%{$keyword}%");
+        if ($eventType !== '') $cntQuery->where('`de`.`event_type`', '=', $eventType);
+        if ($deviceId) $cntQuery->where('`de`.`device_id`', '=', intval($deviceId));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('device_event')->alias('de')
             ->leftJoin('device d', 'd.id = de.device_id')
             ->leftJoin('community c', 'c.id = d.community_id')
             ->field('de.*, d.device_name, d.device_code, d.device_type, c.name as community_name')
-            ->where($where)->page($page, $limit)->order('de.id', 'desc')->select();
+            ->whereNull('`de`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`d`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`d`.`community_id`', '=', intval($cid));
+        if ($keyword) $listQuery->where('`de`.`event_type`|`de`.`content`|`d`.`device_name`|`d`.`device_code`', 'like', "%{$keyword}%");
+        if ($eventType !== '') $listQuery->where('`de`.`event_type`', '=', $eventType);
+        if ($deviceId) $listQuery->where('`de`.`device_id`', '=', intval($deviceId));
+        $list = $listQuery->page($page, $limit)->order('de.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

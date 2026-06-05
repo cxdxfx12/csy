@@ -164,9 +164,16 @@
       <el-form :model="form" ref="formRef" :rules="rules" label-width="90px">
         <el-row :gutter="16">
           <el-col :span="12">
+            <el-form-item label="所属小区" prop="community_id">
+              <el-select v-model="form.community_id" placeholder="选择小区" style="width:100%" @change="onFormCommunityChange">
+                <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="关联电梯" prop="elevator_id">
               <el-select v-model="form.elevator_id" placeholder="选择电梯" filterable style="width:100%">
-                <el-option v-for="e in elevators" :key="e.id" :label="e.elevator_no + ' (' + (e.brand||'') + ' ' + (e.model||'') + ')'" :value="e.id" />
+                <el-option v-for="e in filteredElevators" :key="e.id" :label="e.elevator_no + ' (' + (e.brand||'') + ' ' + (e.model||'') + ')'" :value="e.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -246,15 +253,22 @@ const communities = ref<any[]>([])
 const elevators = ref<any[]>([])
 
 const query = reactive({ page: 1, limit: 15, keyword: '', community_id: 0, elevator_id: 0, inspection_type: '', result: '' })
-const form = reactive<any>({ elevator_id: null, inspection_type: 1, inspection_date: '', inspector: '', inspection_company: '', result: 1, rectify_items: '', certificate_file: '', remark: '' })
+const form = reactive<any>({ community_id: null, elevator_id: null, inspection_type: 1, inspection_date: '', inspector: '', inspection_company: '', result: 1, rectify_items: '', certificate_file: '', remark: '' })
 
 const rules = {
+  community_id: [{ required: true, message: '请选择所属小区', trigger: 'change' }],
   elevator_id: [{ required: true, message: '请选择关联电梯', trigger: 'change' }],
   inspection_type: [{ required: true, message: '请选择巡检类型', trigger: 'change' }],
   inspection_date: [{ required: true, message: '请选择巡检日期', trigger: 'change' }],
   inspector: [{ required: true, message: '请输入检查人', trigger: 'blur' }],
   inspection_company: [{ required: true, message: '请输入检查单位', trigger: 'blur' }],
 }
+
+const filteredElevators = computed(() => {
+  const data = elevators.value || []
+  if (!form.community_id) return data
+  return data.filter((e: any) => e.community_id == form.community_id)
+})
 
 const stats = computed(() => {
   const data = list.value || []
@@ -305,14 +319,18 @@ function resetQuery() {
   query.page = 1; loadData()
 }
 
+function onFormCommunityChange() {
+  form.elevator_id = null
+}
+
 function openForm(row?: any) {
   if (row) {
     editId.value = row.id
-    const keys = ['elevator_id','inspection_type','inspection_date','inspector','inspection_company','result','rectify_items','certificate_file','remark']
+    const keys = ['community_id','elevator_id','inspection_type','inspection_date','inspector','inspection_company','result','rectify_items','certificate_file','remark']
     keys.forEach(k => { (form as any)[k] = row[k] ?? (k === 'result' ? 1 : (k === 'inspection_type' ? 1 : '')) })
   } else {
     editId.value = 0
-    Object.assign(form, { elevator_id: null, inspection_type: 1, inspection_date: '', inspector: '', inspection_company: '', result: 1, rectify_items: '', certificate_file: '', remark: '' })
+    Object.assign(form, { community_id: null, elevator_id: null, inspection_type: 1, inspection_date: '', inspector: '', inspection_company: '', result: 1, rectify_items: '', certificate_file: '', remark: '' })
   }
   dialogVisible.value = true
 }

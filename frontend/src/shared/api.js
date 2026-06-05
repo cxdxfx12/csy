@@ -3,7 +3,6 @@
 //   /api/staff   → /index.php/staff
 //   /api/manager → /index.php/manager
 //   /api/api     → /index.php/api
-const BASE_HOST = 'http://dasheng.local'
 
 export function createApi(baseURL, tokenKey) {
   // 去掉多余的 /api 前缀，统一走 /index.php/ 入口
@@ -14,7 +13,7 @@ export function createApi(baseURL, tokenKey) {
     const headers = { 'Content-Type': 'application/json', ...options.headers }
     if (token) headers['Authorization'] = 'Bearer ' + token
 
-    const url = BASE_HOST + realBase + path
+    const url = realBase + path
     try {
       const res = await fetch(url, { ...options, headers })
       const data = await res.json()

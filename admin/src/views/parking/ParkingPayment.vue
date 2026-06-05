@@ -75,6 +75,9 @@
             <el-option label="支付宝" :value="2" />
             <el-option label="现金" :value="3" />
           </el-select>
+          <el-select v-model="query.community_id" placeholder="所属小区" clearable class="fp-sel" @change="loadData">
+            <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+          </el-select>
           <el-button type="primary" @click="loadData" :icon="Search">查询</el-button>
           <el-button @click="resetQuery" :icon="RefreshRight">重置</el-button>
         </div>
@@ -156,7 +159,8 @@ const list = ref<any[]>([])
 const total = ref(0)
 const loading = ref(false)
 const hdr = { background: '#f8fafc', color: '#475569', fontWeight: 600, fontSize: '13px', borderBottom: '2px solid #e2e8f0' }
-const query = reactive({ page: 1, limit: 15, keyword: '', payment_type: '', pay_method: '' })
+const query = reactive({ page: 1, limit: 15, keyword: '', payment_type: '', pay_method: '', community_id: undefined as any })
+const communities = ref<any[]>([])
 
 const stats = ref({ totalRevenue: 0, totalCount: 0, todayRevenue: 0, todayCount: 0, monthRevenue: 0, monthCount: 0, avgAmount: 0, peakDay: 0 })
 
@@ -201,13 +205,17 @@ async function loadData() {
     const p: any = { page: query.page, limit: query.limit, keyword: query.keyword }
     if (query.payment_type !== '') p.payment_type = query.payment_type
     if (query.pay_method !== '') p.pay_method = query.pay_method
+    if (query.community_id) p.community_id = query.community_id
     const res = await apiGet('/admin/parking/parkingPaymentList', p)
-    if (res.code === 0) { list.value = res.data?.list || []; total.value = res.data?.total || 0; calcStats() }
+    if (res.code === 0) { list.value = res.data || []; total.value = res.count || 0; calcStats() }
   } finally { loading.value = false }
 }
 
-function resetQuery() { query.keyword = ''; query.payment_type = ''; query.pay_method = ''; query.page = 1; loadData() }
-onMounted(loadData)
+function resetQuery() { query.keyword = ''; query.payment_type = ''; query.pay_method = ''; query.community_id = undefined; query.page = 1; loadData() }
+onMounted(async () => {
+  try { const r: any = await apiGet('/admin/community/list', { limit: 999 }); communities.value = r.data?.list || r.data || [] } catch (_) { }
+  loadData()
+})
 </script>
 
 <style scoped>

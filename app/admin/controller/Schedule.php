@@ -11,7 +11,7 @@ class Schedule extends BaseAdmin
         $params = $this->request->param();
         $query = Db::name('staff_schedule')->alias('sc')
             ->join('staff s', 'sc.staff_id = s.id', 'left')
-            ->field('sc.*, s.realname as staff_name, s.job_no');
+            ->field('sc.*, s.realname as staff_name, s.job_no, s.community_id');
 
         // 单条查询（表单编辑回显）
         if (!empty($params['id'])) {
@@ -20,6 +20,18 @@ class Schedule extends BaseAdmin
                 ->field('sc.*, s.realname as staff_name, s.job_no')
                 ->where('sc.id', $params['id'])->find();
             return $this->success(['list' => $info ? [$info] : []]);
+        }
+
+        // 小区筛选
+        if (!empty($params['community_id'])) {
+            $query->where('s.community_id', intval($params['community_id']));
+        }
+        // 小区角色数据隔离
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) {
+            $query->where('s.community_id', 'in', $this->request->boundCommunityIds);
+        } elseif ($cid > 0) {
+            $query->where('s.community_id', intval($cid));
         }
 
         if (!empty($params['keyword'])) {
@@ -39,6 +51,10 @@ class Schedule extends BaseAdmin
         $list = $query->order('sc.schedule_date', 'asc')
             ->page($params['page'] ?? 1, $params['limit'] ?? 15)
             ->select();
+
+        foreach ($list as &$row) {
+            $row['community_name'] = Db::name('community')->where('id', $row['community_id'])->value('name') ?? '-';
+        }
 
         return $this->success(['list' => $list, 'total' => $total]);
     }

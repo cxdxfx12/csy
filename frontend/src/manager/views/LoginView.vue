@@ -7,6 +7,10 @@
 
       <!-- 用户名密码登录 -->
       <div v-if="!showRegister">
+        <select v-model="communityId" class="comm-select">
+          <option :value="0">请选择小区（可选）</option>
+          <option v-for="c in communities" :key="c.id" :value="c.id">{{ c.name }}</option>
+        </select>
         <input v-model="username" type="text" placeholder="请输入用户名" @keyup.enter="doLogin" />
         <input v-model="password" type="password" placeholder="请输入密码" @keyup.enter="doLogin" />
         <button class="btn-primary" @click="doLogin" :disabled="loading">
@@ -49,6 +53,8 @@ const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const showRegister = ref(false)
+const communities = ref([])
+const communityId = ref(0)
 
 const regForm = ref({
   openid: '',
@@ -71,9 +77,10 @@ onMounted(() => {
   // 未绑定 → 进入注册流程
   if (q.action === 'wx_register' && q.wx_openid) {
     regForm.value.openid = q.wx_openid
-    regForm.value.community_id = parseInt(q.wx_cid) || 0
+    regForm.value.community_id = parseInt(q.wx_cid) || communityId.value || 0
     showRegister.value = true
   }
+  fetchCommunities()
 })
 
 async function doLogin() {
@@ -83,6 +90,7 @@ async function doLogin() {
   loading.value = false
   if (res.code === 0) {
     auth.setToken(res.data.token)
+    if (communityId.value) localStorage.setItem('manager_community_id', communityId.value)
     router.replace('/dashboard')
   } else {
     showToast(res.msg || '登录失败')
@@ -90,17 +98,20 @@ async function doLogin() {
 }
 
 function doWechatLogin() {
-  // 获取小区 ID
-  let communityId = localStorage.getItem('wx_community_id')
-  if (!communityId) {
-    communityId = prompt('请输入您管理的小区ID：', '')
-    if (!communityId) return
-    localStorage.setItem('wx_community_id', communityId)
-  }
-  // 跳转微信 OAuth
-  const baseUrl = 'http://dasheng.local/index.php/api/manager/wechatOAuth'
+  // 跳转微信 OAuth，后端自动检测小区（前端先获取 OAuth URL 再直接跳转，避免 302 跨域问题）
+  const baseUrl = `${window.location.origin}/index.php/api/manager/wechatOAuth`
+  const cid = communityId.value ? `&community_id=${communityId.value}` : ''
   const redirect = '/manager.html#/login'
-  location.href = `${baseUrl}?community_id=${communityId}&redirect=${encodeURIComponent(redirect)}`
+  fetch(`${baseUrl}?json=1&redirect=${encodeURIComponent(redirect)}${cid}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.code === 0 && data.data.oauth_url) {
+        location.href = data.data.oauth_url
+      } else {
+        showToast(data.msg || '获取微信授权链接失败')
+      }
+    })
+    .catch(() => showToast('网络请求失败'))
 }
 
 async function doRegister() {
@@ -121,6 +132,14 @@ async function doRegister() {
     showToast(res.msg || '注册失败')
   }
 }
+
+async function fetchCommunities() {
+  try {
+    const r = await fetch('/api/communityList')
+    const d = await r.json()
+    if (d.code === 0) communities.value = d.data
+  } catch {}
+}
 </script>
 
 <style scoped>
@@ -128,7 +147,10 @@ async function doRegister() {
 .login-card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:40px 32px;width:90%;max-width:380px;text-align:center}
 .logo{font-size:56px;margin-bottom:8px}
 h1{font-size:20px;color:#f1f5f9;margin-bottom:4px}
-.sub{color:#64748b;font-size:13px;margin-bottom:28px}
+.sub{color:#64748b;font-size:13px;margin-bottom:20px}
+.comm-select{width:100%;height:48px;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:0 14px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;cursor:pointer;appearance:auto}
+.comm-select:focus{border-color:#10b981}
+.comm-select option{background:#0f172a;color:#e2e8f0}
 input{width:100%;height:48px;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;transition:border .2s}
 input:focus{border-color:#10b981}
 .btn-primary{width:100%;height:48px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}

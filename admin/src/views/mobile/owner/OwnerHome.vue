@@ -24,20 +24,21 @@
   </MobileLayout>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MobileLayout from '../MobileLayout.vue'
 
 interface QuickItem { icon: string; t: string; path: string }
 
 const user = ref<any>({})
 const notices = ref<any[]>([])
+const noticeBadge = ref(0)
 
-const ownerTabs = [
+const ownerTabs = computed(() => [
   { path: '/mobile/owner/home', icon: '🏠', label: '首页' },
   { path: '/mobile/owner/bill', icon: '💰', label: '账单' },
   { path: '/mobile/owner/repair', icon: '🔧', label: '报修' },
-  { path: '/mobile/owner/notice', icon: '📢', label: '公告' },
-]
+  { path: '/mobile/owner/notice', icon: '📢', label: '公告', badge: noticeBadge.value },
+])
 
 const quick: QuickItem[] = [
   { icon: '💰', t: '费用查询', path: '/mobile/owner/bill' },
@@ -56,14 +57,28 @@ function truncate(str: string, len: number) {
 }
 
 onMounted(async () => {
+  const token = localStorage.getItem('owner_token')
   try {
     const r = await fetch('/api/index', {
-      headers: { Authorization: 'Bearer ' + localStorage.getItem('owner_token') },
+      headers: { Authorization: 'Bearer ' + token },
     })
     const d = await r.json()
     if (d.code === 0) {
       user.value = d.data.user
       notices.value = d.data.notices || []
+    }
+  } catch (e) {}
+
+  // 获取角标数量
+  try {
+    const badgeRes = await fetch('/api/badge/counts', {
+      headers: { Authorization: 'Bearer ' + token },
+    })
+    const badgeData = await badgeRes.json()
+    if (badgeData.code === 0) {
+      const currentCount = badgeData.data.notice || 0
+      const lastSeen = parseInt(localStorage.getItem('owner_notice_last_read') || '0', 10)
+      noticeBadge.value = Math.max(0, currentCount - lastSeen)
     }
   } catch (e) {}
 })

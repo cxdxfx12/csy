@@ -20,7 +20,12 @@ class Payment extends BaseAdmin
         }
 
         $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['p.community_id', '=', $communityId];
+        if ($communityId) {
+            $where[] = ['p.community_id', '=', $communityId];
+        } else {
+            $filter = $this->getCommunityFilter('p.community_id');
+            if (!empty($filter)) $where = array_merge($where, $filter);
+        }
 
         $payMethod = $this->request->param('pay_method', '');
         if ($payMethod !== '') $where[] = ['p.pay_method', '=', intval($payMethod)];
@@ -47,6 +52,7 @@ class Payment extends BaseAdmin
     {
         $data = $this->request->post();
         unset($data['id']);
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         if (empty($data['payment_no'])) {
             $data['payment_no'] = 'PAY' . date('YmdHis') . rand(1000, 9999);
         }
@@ -62,6 +68,10 @@ class Payment extends BaseAdmin
         $data = $this->request->post();
         $id = intval($data['id'] ?? 0);
         if (!$id) return $this->error('参数错误');
+        $record = Db::name($this->table)->where('id', $id)->find();
+        if ($record) {
+            $this->validateCommunityAccess($record['community_id'] ?? 0);
+        }
         unset($data['id']);
         $data['update_time'] = date('Y-m-d H:i:s');
         if (empty($data['pay_time'])) $data['pay_time'] = null;
@@ -73,6 +83,8 @@ class Payment extends BaseAdmin
     {
         $id = $this->request->post('id', 0);
         if (!$id) return $this->error('参数错误');
+        $record = Db::name($this->table)->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name($this->table)->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

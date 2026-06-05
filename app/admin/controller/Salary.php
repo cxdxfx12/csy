@@ -20,7 +20,19 @@ class Salary extends BaseAdmin
 
         $query = Db::name('staff_salary')->alias('sa')
             ->join('staff s', 'sa.staff_id = s.id', 'left')
-            ->field('sa.*, s.realname as staff_name, s.job_no');
+            ->field('sa.*, s.realname as staff_name, s.job_no, s.community_id');
+
+        // 小区筛选
+        if (!empty($params['community_id'])) {
+            $query->where('s.community_id', intval($params['community_id']));
+        }
+        // 小区角色数据隔离
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) {
+            $query->where('s.community_id', 'in', $this->request->boundCommunityIds);
+        } elseif ($cid > 0) {
+            $query->where('s.community_id', intval($cid));
+        }
 
         if (!empty($params['keyword'])) {
             $query->where('s.realname|s.job_no', 'like', '%' . $params['keyword'] . '%');
@@ -36,6 +48,10 @@ class Salary extends BaseAdmin
         $list = $query->order('sa.salary_month', 'desc')
             ->page($params['page'] ?? 1, $params['limit'] ?? 15)
             ->select();
+
+        foreach ($list as &$row) {
+            $row['community_name'] = Db::name('community')->where('id', $row['community_id'])->value('name') ?? '-';
+        }
 
         return $this->success(['list' => $list, 'total' => $total]);
     }

@@ -8,28 +8,41 @@ class Elevator extends BaseAdmin
 {
     public function listAll()
     {
-        $list = Db::name('elevator')->where('delete_time', null)->field('id, elevator_no, community_id, building_id, brand, model')->order('id', 'desc')->select();
+        $cid = $this->getFilteredCommunityId();
+        $query = Db::name('elevator')->whereNull('delete_time');
+        if ($cid === -1) $query->where('community_id', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $query->where('community_id', '=', intval($cid));
+        $list = $query->field('id, elevator_no, community_id, building_id, brand, model')->order('id', 'desc')->select();
         return $this->success($list);
     }
 
     public function lists()
     {
         [$page, $limit] = $this->getPage();
-        $where = [['e.delete_time', 'null', '']];
+        $cid = $this->getFilteredCommunityId();
         $keyword = $this->request->param('keyword', '');
-        if ($keyword) $where[] = ['e.elevator_no|e.brand|e.model|e.maintain_company|e.remark', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['e.community_id', '=', intval($communityId)];
         $buildingId = $this->request->param('building_id', 0);
-        if ($buildingId) $where[] = ['e.building_id', '=', intval($buildingId)];
         $status = $this->request->param('status', '');
-        if ($status !== '') $where[] = ['e.status', '=', intval($status)];
-        $total = Db::name('elevator')->alias('e')->where($where)->count();
-        $list = Db::name('elevator')->alias('e')
+
+        $cntQuery = Db::name('elevator')->alias('e')->whereNull('`e`.`delete_time`');
+        if ($cid === -1) $cntQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $cntQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($keyword) $cntQuery->where('`e`.`elevator_no`|`e`.`brand`|`e`.`model`|`e`.`maintain_company`|`e`.`remark`', 'like', "%{$keyword}%");
+        if ($buildingId) $cntQuery->where('`e`.`building_id`', '=', intval($buildingId));
+        if ($status !== '') $cntQuery->where('`e`.`status`', '=', intval($status));
+        $total = $cntQuery->count();
+
+        $listQuery = Db::name('elevator')->alias('e')
             ->leftJoin('community c', 'c.id = e.community_id')
             ->leftJoin('building b', 'b.id = e.building_id')
             ->field('e.*, c.name as community_name, b.name as building_name')
-            ->where($where)->page($page, $limit)->order('e.id', 'desc')->select();
+            ->whereNull('`e`.`delete_time`');
+        if ($cid === -1) $listQuery->where('`e`.`community_id`', 'in', $this->request->boundCommunityIds);
+        elseif ($cid > 0) $listQuery->where('`e`.`community_id`', '=', intval($cid));
+        if ($keyword) $listQuery->where('`e`.`elevator_no`|`e`.`brand`|`e`.`model`|`e`.`maintain_company`|`e`.`remark`', 'like', "%{$keyword}%");
+        if ($buildingId) $listQuery->where('`e`.`building_id`', '=', intval($buildingId));
+        if ($status !== '') $listQuery->where('`e`.`status`', '=', intval($status));
+        $list = $listQuery->page($page, $limit)->order('e.id', 'desc')->select();
         return $this->table($list, $total);
     }
 

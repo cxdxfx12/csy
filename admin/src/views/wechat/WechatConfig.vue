@@ -264,6 +264,26 @@
           </el-form>
         </div>
 
+        <!-- Section 2.5: 服务器回调 URL -->
+        <div v-if="serverUrl" class="section-block">
+          <div class="section-header">
+            <span class="section-dot"></span>
+            <span class="section-title">服务器回调地址</span>
+          </div>
+          <div class="server-url-box">
+            <div class="server-url-label">URL（填入微信后台 → 服务器配置）</div>
+            <div class="server-url-row">
+              <code class="server-url-text">{{ serverUrl }}</code>
+              <el-button size="small" type="primary" :icon="DocumentCopy" @click="copyServerUrl" round>
+                复制
+              </el-button>
+            </div>
+            <div class="form-hint">
+              在微信公众平台 → 设置与开发 → 基本配置 → 服务器配置中填写此URL和上方Token
+            </div>
+          </div>
+        </div>
+
         <!-- Section 3: 模板消息 -->
         <div class="section-block">
           <div class="section-header">
@@ -336,7 +356,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Search, RefreshRight, Setting, Edit, Connection, OfficeBuilding,
   CircleCheckFilled, WarningFilled, Key, Ticket, Lock, Link, Wallet,
-  Tickets, Check, InfoFilled, Folder,
+  Tickets, Check, InfoFilled, Folder, DocumentCopy,
 } from '@element-plus/icons-vue'
 import { apiGet, apiPost } from '@/utils/request'
 
@@ -346,6 +366,7 @@ const loading = ref(false)
 const saving = ref(false)
 const testing = ref(false)
 const drawerVisible = ref(false)
+const serverUrl = ref('')
 const currentCommunity = ref<{ id: number; name: string; code: string }>({ id: 0, name: '', code: '' })
 
 const query = reactive({ keyword: '', page: 1, limit: 12 })
@@ -384,6 +405,7 @@ function resetForm() {
 async function openConfig(row: any) {
   resetForm()
   currentCommunity.value = { id: row.id, name: row.name, code: row.code }
+  serverUrl.value = ''
   try {
     const r = await apiGet('/admin/wechat/configDetail', { community_id: row.id })
     const cfg = r.data?.config || null
@@ -398,6 +420,7 @@ async function openConfig(row: any) {
       form.template_pay_success = cfg.template_pay_success || ''
       form.template_arrears = cfg.template_arrears || ''
     }
+    serverUrl.value = r.data?.server_url || ''
   } catch { /* 新配置 */ }
   drawerVisible.value = true
 }
@@ -434,6 +457,22 @@ function testConfig(row: any) {
       ElMessage.success({ message: r.msg || '接口测试成功', duration: 3000 })
     } catch { /* handled */ }
   }).catch(() => { /* cancelled */ })
+}
+
+function copyServerUrl() {
+  if (!serverUrl.value) return
+  navigator.clipboard.writeText(serverUrl.value).then(() => {
+    ElMessage.success('已复制到剪贴板')
+  }).catch(() => {
+    // 降级：选中文本
+    const el = document.createElement('textarea')
+    el.value = serverUrl.value
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+    ElMessage.success('已复制到剪贴板')
+  })
 }
 
 onMounted(loadData)
@@ -564,6 +603,22 @@ onMounted(loadData)
 .drawer-subtitle { font-size: 12px; color: #a0aec0; margin: 2px 0 0; }
 
 .drawer-body { padding: 20px 24px; }
+
+/* Server URL box */
+.server-url-box {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #eff6ff, #eef2ff);
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+}
+.server-url-label { font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
+.server-url-row { display: flex; align-items: center; gap: 10px; }
+.server-url-text {
+  flex: 1; padding: 8px 12px;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+  font-size: 12px; color: #334155; word-break: break-all;
+  font-family: 'Courier New', monospace;
+}
 
 /* Guide card */
 .guide-card {

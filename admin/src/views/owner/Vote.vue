@@ -34,9 +34,7 @@
         <el-table-column prop="community_name" label="所属小区" width="140" />
         <el-table-column label="类型" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.type == 1 ? 'primary' : 'success'" size="small" effect="dark">
-              {{ row.type == 1 ? '单选' : '多选' }}
-            </el-tag>
+            <el-tag :type="row.type===2?'warning':'primary'" size="small" effect="dark">{{ row.type === 2 ? '多选' : '单选' }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
@@ -83,23 +81,11 @@
     <!-- 新增/编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="formTitle" width="650px" destroy-on-close>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="90px">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="所属小区" prop="community_id">
-              <el-select v-model="form.community_id" placeholder="请选择小区" style="width:100%">
-                <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="投票类型" prop="type">
-              <el-radio-group v-model="form.type">
-                <el-radio :value="1">单选</el-radio>
-                <el-radio :value="2">多选</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="所属小区" prop="community_id">
+          <el-select v-model="form.community_id" placeholder="请选择小区" style="width:100%">
+            <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="投票标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入投票标题" />
         </el-form-item>
@@ -118,17 +104,21 @@
         <el-form-item label="投票说明" prop="content">
           <el-input v-model="form.content" type="textarea" :rows="3" placeholder="可选，投票补充说明" />
         </el-form-item>
+        <el-form-item label="投票类型" prop="type">
+          <el-radio-group v-model="form.type">
+            <el-radio :value="1">单选</el-radio>
+            <el-radio :value="2">多选</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="投票选项">
           <div class="option-list">
             <div v-for="(opt, idx) in form.options" :key="idx" class="option-row">
               <span class="option-letter">{{ String.fromCharCode(65 + idx) }}.</span>
-              <el-input v-model="form.options[idx]" placeholder="选项内容" style="flex:1" />
-              <el-button type="danger" :icon="Delete" circle size="small" @click="removeOption(idx)" :disabled="form.options.length <= 2" />
+              <el-input v-model="form.options[idx]" placeholder="请输入选项内容" style="flex:1" />
+              <el-button v-if="form.options.length > 2" type="danger" :icon="Delete" circle size="small" @click="removeOption(idx)" />
             </div>
+            <el-button type="primary" link @click="addOption"><el-icon><Plus /></el-icon>添加选项</el-button>
           </div>
-          <el-button type="primary" dashed size="small" @click="addOption" style="margin-top:8px">
-            <el-icon><Plus /></el-icon>添加选项
-          </el-button>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -145,7 +135,7 @@
           <div class="result-meta">
             <el-tag :type="statusType(result.status)" effect="dark">{{ statusLabel(result.status) }}</el-tag>
             <span>小区：{{ result.community_name }}</span>
-            <span>类型：{{ result.type == 1 ? '单选' : '多选' }}</span>
+            <span>类型：{{ result.type === 2 ? '多选' : '单选' }}</span>
             <span>总投票数：<b>{{ result.total_votes }}</b></span>
           </div>
         </div>
@@ -195,6 +185,8 @@ const result = ref<any>(null)
 
 const query = reactive({ keyword: '', community_id: '', status: '', page: 1, limit: 15 })
 const form = reactive<any>({ id: 0, community_id: '', title: '', type: 1, content: '', start_time: '', end_time: '', options: ['', ''] })
+function addOption() { form.options.push('') }
+function removeOption(idx: number) { form.options.splice(idx, 1) }
 const rules = { title: [{ required: true, message: '请输入投票标题', trigger: 'blur' }], community_id: [{ required: true, message: '请选择小区', trigger: 'change' }] }
 
 const statusLabel = (s: number) => ({ 1: '草稿', 2: '进行中', 3: '已结束' } as any)[s] || '未知'
@@ -224,7 +216,7 @@ function openForm(row?: any) {
     apiGet<any>('/admin/vote/detail', { id: row.id }).then(res => {
       const d = res.data
       form.id = d.id; form.community_id = d.community_id; form.title = d.title
-      form.type = d.type; form.content = d.content || ''
+      form.type = d.type || 1; form.content = d.content || ''
       form.start_time = d.start_time; form.end_time = d.end_time
       form.options = (d.options && d.options.length) ? d.options.map((o: any) => o.title) : ['', '']
       dialogVisible.value = true
@@ -234,9 +226,6 @@ function openForm(row?: any) {
   Object.assign(form, { id: 0, community_id: '', title: '', type: 1, content: '', start_time: '', end_time: '', options: ['', ''] })
   dialogVisible.value = true
 }
-function addOption() { if (form.options.length < 10) form.options.push('') }
-function removeOption(idx: number) { if (form.options.length > 2) form.options.splice(idx, 1) }
-
 async function submitForm() {
   const valid = await formRef.value?.validate().catch(() => false)
   if (!valid) return

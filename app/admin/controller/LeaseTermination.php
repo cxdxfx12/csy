@@ -12,8 +12,9 @@ class LeaseTermination extends BaseAdmin
         $where = [['delete_time', 'null', '']];
         $keyword = $this->request->param('keyword', '');
         if ($keyword) $where[] = ['remark', 'like', "%{$keyword}%"];
-        $communityId = $this->request->param('community_id', 0);
-        if ($communityId) $where[] = ['community_id', '=', $communityId];
+        $cid = $this->getFilteredCommunityId();
+        if ($cid === -1) $where[] = ['community_id', 'in', $this->request->boundCommunityIds];
+        elseif ($cid > 0) $where[] = ['community_id', '=', $cid];
         $total = Db::name('lease_termination')->where($where)->count();
         $list = Db::name('lease_termination')->where($where)->page($page, $limit)->order('id', 'desc')->select();
         return $this->table($list, $total);

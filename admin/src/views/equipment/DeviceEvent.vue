@@ -144,9 +144,14 @@
     <!-- 编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="editId ? '编辑事件' : '记录事件'" width="550px" destroy-on-close top="8vh">
       <el-form :model="form" ref="formRef" :rules="rules" label-width="80px">
+        <el-form-item label="所属小区" prop="community_id">
+          <el-select v-model="form.community_id" placeholder="选择小区" style="width:100%" @change="onFormCommunityChange">
+            <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="关联设备" prop="device_id">
           <el-select v-model="form.device_id" placeholder="选择设备" filterable style="width:100%">
-            <el-option v-for="d in devices" :key="d.id" :label="d.device_name + ' (' + d.device_code + ')'" :value="d.id" />
+            <el-option v-for="d in filteredDevices" :key="d.id" :label="d.device_name + ' (' + d.device_code + ')'" :value="d.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="事件类型" prop="event_type">
@@ -183,7 +188,7 @@ const communities = ref<any[]>([])
 const devices = ref<any[]>([])
 
 const query = reactive({ page: 1, limit: 15, keyword: '', community_id: 0, device_id: 0, event_type: '' })
-const form = reactive<any>({ device_id: null, event_type: '', content: '' })
+const form = reactive<any>({ community_id: null, device_id: null, event_type: '', content: '' })
 
 const eventTypes = ['设备离线', '设备上线', '状态异常', '阈值告警', '通信超时', '配置变更', '固件升级', '故障报警', '自动恢复', '人工干预']
 
@@ -191,7 +196,14 @@ const rules = {
   device_id: [{ required: true, message: '请选择关联设备', trigger: 'change' }],
   event_type: [{ required: true, message: '请选择事件类型', trigger: 'change' }],
   content: [{ required: true, message: '请输入事件描述', trigger: 'blur' }],
+  community_id: [{ required: true, message: '请选择所属小区', trigger: 'change' }],
 }
+
+const filteredDevices = computed(() => {
+  const data = devices.value || []
+  if (!form.community_id) return data
+  return data.filter((d: any) => d.community_id == form.community_id)
+})
 
 const stats = computed(() => {
   const data = list.value || []
@@ -239,9 +251,13 @@ function resetQuery() {
   query.page = 1; loadData()
 }
 
+function onFormCommunityChange() {
+  form.device_id = null
+}
+
 function openForm(row?: any) {
-  if (row) { editId.value = row.id; Object.assign(form, { device_id: row.device_id, event_type: row.event_type, content: row.content }) }
-  else { editId.value = 0; Object.assign(form, { device_id: null, event_type: '', content: '' }) }
+  if (row) { editId.value = row.id; Object.assign(form, { community_id: row.community_id, device_id: row.device_id, event_type: row.event_type, content: row.content }) }
+  else { editId.value = 0; Object.assign(form, { community_id: null, device_id: null, event_type: '', content: '' }) }
   dialogVisible.value = true
 }
 

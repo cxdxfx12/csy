@@ -51,6 +51,9 @@
         <el-select v-model="query.decoration" placeholder="装修情况" clearable class="filter-sel" @change="handleSearch">
           <el-option label="精装" value="精装"/><el-option label="简装" value="简装"/><el-option label="毛坯" value="毛坯"/><el-option label="豪装" value="豪装"/>
         </el-select>
+        <el-select v-model="query.community_id" placeholder="所属小区" clearable class="filter-sel" @change="handleSearch">
+          <el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/>
+        </el-select>
       </div>
       <div class="filter-right">
         <el-radio-group v-model="viewMode" size="small" class="view-toggle">
@@ -131,12 +134,13 @@
           <div class="section-title"><el-icon><InfoFilled /></el-icon>基本信息</div>
           <el-row :gutter="16">
             <el-col :span="12"><el-form-item label="房源名称" required><el-input v-model="form.property_name" placeholder="如：阳光花园3栋201"/></el-form-item></el-col>
-            <el-col :span="12"><el-form-item label="房源类型"><el-select v-model="form.property_type" style="width:100%"><el-option label="住宅" value="住宅"/><el-option label="公寓" value="公寓"/><el-option label="商铺" value="商铺"/><el-option label="办公室" value="办公室"/><el-option label="仓库" value="仓库"/><el-option label="车位" value="车位"/></el-select></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
-            <el-col :span="8"><el-form-item label="楼层"><el-input-number v-model="form.floor" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
-            <el-col :span="8"><el-form-item label="建筑面积(㎡)"><el-input v-model="form.area_built" placeholder="如：86.5"/></el-form-item></el-col>
-            <el-col :span="8"><el-form-item label="实用面积(㎡)"><el-input v-model="form.area_used" placeholder="如：72.0"/></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="房源类型"><el-select v-model="form.property_type" style="width:100%"><el-option label="住宅" value="住宅"/><el-option label="公寓" value="公寓"/><el-option label="商铺" value="商铺"/><el-option label="办公室" value="办公室"/><el-option label="仓库" value="仓库"/><el-option label="车位" value="车位"/></el-select></el-form-item></el-col>
+            <el-col :span="6"><el-form-item label="楼层"><el-input-number v-model="form.floor" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
+            <el-col :span="6"><el-form-item label="建筑面积(㎡)"><el-input v-model="form.area_built" placeholder="如：86.5"/></el-form-item></el-col>
+            <el-col :span="6"><el-form-item label="实用面积(㎡)"><el-input v-model="form.area_used" placeholder="如：72.0"/></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
             <el-col :span="8"><el-form-item label="装修情况"><el-select v-model="form.decoration" style="width:100%"><el-option label="精装" value="精装"/><el-option label="简装" value="简装"/><el-option label="毛坯" value="毛坯"/><el-option label="豪装" value="豪装"/></el-select></el-form-item></el-col>
@@ -187,7 +191,8 @@ const editId = ref(0)
 const viewMode = ref<'card'|'table'>('card')
 const formRef = ref()
 
-const query = reactive({ page:1, limit:12, keyword:'', property_type:'', status:'', decoration:'' })
+const query = reactive({ page:1, limit:12, keyword:'', property_type:'', status:'', decoration:'', community_id:undefined as any })
+const communities = ref<any[]>([])
 const form = reactive<any>({
   community_id:0, building_id:0, room_id:0, property_name:'', property_type:'住宅',
   floor:1, area_built:'', area_used:'', decoration:'精装', direction:'南', feature_tags:'',
@@ -226,8 +231,9 @@ async function loadData(){
     if(query.property_type)p.property_type=query.property_type
     if(query.status)p.status=query.status
     if(query.decoration)p.decoration=query.decoration
+    if(query.community_id)p.community_id=query.community_id
     const res:any=await apiGet('/admin/lease/leasePropertyList',p)
-    if(res&&(res.code===0||res.code===undefined)){list.value=res.data?.list||[];total.value=res.data?.total||0}
+    if(res&&(res.code===0||res.code===undefined)){list.value=res.data||[];total.value=res.count||0}
   }catch(_){list.value=[];total.value=0}
   finally{loading.value=false}
 }
@@ -253,7 +259,10 @@ async function handleDelete(row:any){
   try{await ElMessageBox.confirm('确定删除该房源？','提示',{type:'warning'});const res:any=await apiPost('/admin/lease/leasePropertyDelete',{id:row.id});if(res&&(res.code===0||res.code===undefined)){ElMessage.success('删除成功');loadData()}}catch(_){}
 }
 
-onMounted(()=>loadData())
+onMounted(async ()=>{
+  try{const r:any=await apiGet('/admin/community/list',{limit:999});communities.value=r.data?.list||r.data||[]}catch(_){}
+  loadData()
+})
 watch([()=>query.page,()=>query.limit],()=>loadData())
 </script>
 
