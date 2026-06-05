@@ -3,7 +3,7 @@
     <header>
       <button class="back" @click="$router.back()">←</button>
       <h1>社区活动</h1>
-      <button class="btn-sm" :class="{ active: tab === 'my' }" @click="tab = tab === 'all' ? 'my' : 'all'">
+      <button type="button" class="btn-sm" :class="{ active: tab === 'my' }" @click.prevent="tab = tab === 'all' ? 'my' : 'all'">
         {{ tab === 'all' ? '我的' : '全部' }}
       </button>
     </header>

@@ -2,13 +2,117 @@
   <div id="manager-app">
     <router-view />
     <GlobalToast />
+    <!-- 新消息弹窗 -->
+    <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
+      <span class="notify-icon">🔔</span>
+      <div class="notify-body">
+        <strong>{{ notifyTitle }}</strong>
+        <small>{{ notifyText }}</small>
+      </div>
+      <button class="notify-close" @click.stop="notifyShow=false">✕</button>
+    </div>
+    <!-- 右上角通知小字 -->
+    <div class="pillar-popup" :class="{show:pillarShow}" @click="goPillar">
+      <span>📬</span><span>{{ pillarMsg }}</span>
+      <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
+    </div>
   </div>
 </template>
 <script setup>
-import { onBeforeMount } from 'vue'
+import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { createApi } from '@/shared/api.js'
+import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
+
 const route = useRoute()
 const router = useRouter()
+const api = createApi('/api/manager', 'manager_token')
+
+// 角标数字
+const badges = reactive({ repair: 0, bill: 0, owner: 0, complaint: 0, vote: 0, activity: 0 })
+let lastBadges = null
+let timer = null
+
+// 新消息弹窗
+const notifyShow = ref(false)
+const notifyTitle = ref('')
+const notifyText = ref('')
+const notifyRoute = ref('')
+
+async function fetchBadges() {
+  try {
+    const res = await api('/dashboard/pendingTodo')
+    if (res.code !== 0) return
+    const todos = Array.isArray(res.data) ? res.data : (res.data?.list || [])
+    // 将 todo 按类型归类计数
+    const d = { repair: 0, bill: 0, owner: 0, complaint: 0, vote: 0, activity: 0 }
+    let totalCount = 0
+    todos.forEach(t => {
+      const key = t.key || t.type || ''
+      if (key === 'repair') d.repair += (t.count || 0)
+      else if (key === 'bill') d.bill += (t.count || 0)
+      else if (key === 'owner') d.owner += (t.count || 0)
+      else if (key === 'complaint') d.complaint += (t.count || 0)
+      else if (key === 'vote') d.vote += (t.count || 0)
+      else if (key === 'activity') d.activity += (t.count || 0)
+      totalCount += (t.count || 0)
+    })
+    Object.keys(badges).forEach(k => { badges[k] = d[k] || 0 })
+
+    // 构造成长列表
+    const growth = []
+    const labelMap = { repair: '待修理', bill: '待缴费', owner: '待审核业主', complaint: '待处理投诉', vote: '待投票', activity: '待报名' }
+    const routeMap = { repair: '/dashboard?tab=repair', bill: '/dashboard?tab=bill', owner: '/dashboard?tab=owner', complaint: '/dashboard?tab=complaint', vote: '/dashboard?tab=vote', activity: '/dashboard?tab=activity' }
+    const iconMap = { repair: '🔧', bill: '💰', owner: '👥', complaint: '📢', vote: '🗳️', activity: '🎉' }
+
+    if (lastBadges) {
+      Object.keys(d).forEach(k => {
+        if (d[k] > (lastBadges[k] || 0)) {
+          growth.push({ key: k, title: `新${labelMap[k]}`, text: `+${d[k] - lastBadges[k]} 条`, route: routeMap[k] })
+        }
+      })
+    } else {
+      // 首次加载，有非零项就提示
+      Object.keys(d).forEach(k => {
+        if (d[k] > 0) {
+          growth.push({ key: k, title: labelMap[k], text: `${d[k]} 条`, route: routeMap[k] })
+        }
+      })
+    }
+
+    if (growth.length > 0) {
+      const g = growth[0]
+      notifyTitle.value = g.title
+      notifyText.value = g.text
+      notifyRoute.value = g.route
+      notifyShow.value = true
+      setTimeout(() => { notifyShow.value = false }, 5000)
+
+      // 🔔 播放声音
+      playNotificationSound()
+
+      // 右上角小字
+      showPillar(`您有 ${totalCount} 条待处理提醒`, '/dashboard')
+    }
+
+    lastBadges = { ...d }
+  } catch (e) { /* 静默 */ }
+}
+
+function goNotify() {
+  if (notifyRoute.value) {
+    router.push(notifyRoute.value)
+  }
+  notifyShow.value = false
+}
+
+function goPillar() {
+  if (pillarRoute.value) {
+    router.push(pillarRoute.value)
+  }
+  hidePillar()
+}
+
 onBeforeMount(() => {
   // 处理 OAuth 回调带回的 wechat_token（App.vue 层面兜底）
   const q = route.query
@@ -18,10 +122,30 @@ onBeforeMount(() => {
     return
   }
   if (localStorage.getItem('manager_token') && route.path === '/login') router.replace('/dashboard')
+  if (localStorage.getItem('manager_token')) {
+    fetchBadges()
+    timer = setInterval(fetchBadges, 30000)
+  }
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0}
 #manager-app{min-height:100vh}
+/* 新消息弹窗 */
+.notify-popup{position:fixed;top:-80px;left:12px;right:12px;background:#1f2937;color:#fff;border-radius:12px;padding:14px 44px 14px 16px;display:flex;align-items:center;gap:10px;z-index:999;transition:top .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}
+.notify-popup.show{top:48px}
+.notify-icon{font-size:22px;flex-shrink:0}
+.notify-body{flex:1;min-width:0}
+.notify-body strong{display:block;font-size:14px;margin-bottom:2px}
+.notify-body small{display:block;font-size:12px;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.notify-close{position:absolute;top:10px;right:12px;background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:0;line-height:1}
+/* 右上角通知小字 */
+.pillar-popup{position:fixed;top:16px;right:12px;background:#2563eb;color:#fff;border-radius:20px;padding:8px 36px 8px 14px;font-size:12px;z-index:1000;display:flex;align-items:center;gap:6px;opacity:0;transform:translateX(20px);transition:opacity .3s,transform .3s;cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.4);max-width:85vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pillar-popup.show{opacity:1;transform:translateX(0)}
+.pillar-close{position:absolute;top:50%;right:10px;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;padding:0;line-height:1}
 </style>

@@ -31,7 +31,7 @@ const routes = [
 const router = createRouter({ history: createWebHashHistory(), routes })
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('staff_token')
-  if (to.path !== '/login' && !token) next('/login')
+  if (to.path !== '/login' && !token) next({ path: '/login', query: to.query })
   else next()
 })
 

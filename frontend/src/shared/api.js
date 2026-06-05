@@ -16,11 +16,40 @@ export function createApi(baseURL, tokenKey) {
     const url = realBase + path
     try {
       const res = await fetch(url, { ...options, headers })
-      const data = await res.json()
+
+      // 始终尝试解析 JSON（微信浏览器可能返回特殊的 content-type）
+      // 先克隆一份，如果 JSON 解析失败可以用原始 response 读文本
+      let data
+      try {
+        data = await res.clone().json()
+      } catch (jsonErr) {
+        // JSON 解析失败，读取原始文本用于调试
+        const text = await res.text().catch(() => '')
+        console.error('JSON parse error:', url, res.status, text.substring(0, 500))
+        // 显示具体错误信息便于排查
+        const preview = text.substring(0, 200).replace(/</g,'&lt;')
+        return { code: -1, msg: '服务器响应异常(' + res.status + ')：' + preview, data: null }
+      }
+
+      // 401 未登录：清除 token
+      if (data.code === 401 || (res.status === 401 && data.msg && data.msg.includes('登录'))) {
+        localStorage.removeItem(tokenKey)
+        return { code: 401, msg: '登录已过期，请重新登录', data: null }
+      }
+
       return data
     } catch (e) {
-      console.error('API error:', url, e)
-      return { code: -1, msg: '网络请求失败', data: null }
+      // 网络错误：区分具体类型
+      let errMsg = '网络连接失败，请检查网络'
+      if (e.name === 'TypeError' && e.message === 'Failed to fetch') {
+        errMsg = '网络连接失败，请检查网络'
+      } else if (e.name === 'AbortError') {
+        errMsg = '请求已超时，请重试'
+      } else {
+        errMsg = '请求失败：' + (e.message || '未知错误')
+      }
+      console.error('API error:', url, e.name, e.message)
+      return { code: -1, msg: errMsg, data: null }
     }
   }
 }

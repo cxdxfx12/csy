@@ -12,6 +12,67 @@ export function showToast(msg, dur = 2000) {
   toastTimer = setTimeout(() => { toastShow.value = false }, dur)
 }
 
+// ========== 通知声音 ==========
+let audioCtx = null
+function getAudioCtx() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    } catch (e) { /* 静默 */ }
+  }
+  return audioCtx
+}
+
+/** 播放通知提示音（悦耳的双音叮咚） */
+export function playNotificationSound() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    // 恢复被浏览器挂起的 AudioContext
+    if (ctx.state === 'suspended') ctx.resume()
+    const now = ctx.currentTime
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc1.connect(gain)
+    osc2.connect(gain)
+    gain.connect(ctx.destination)
+    osc1.type = 'sine'
+    osc2.type = 'sine'
+    // 双音 "叮～咚"
+    osc1.frequency.setValueAtTime(880, now)
+    osc1.frequency.setValueAtTime(1047, now + 0.12)
+    osc2.frequency.setValueAtTime(0, now)
+    osc2.frequency.setValueAtTime(698, now + 0.25)
+    gain.gain.setValueAtTime(0.25, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5)
+    osc1.start(now)
+    osc1.stop(now + 0.3)
+    osc2.start(now + 0.2)
+    osc2.stop(now + 0.55)
+  } catch (e) { /* 静默 */ }
+}
+
+// ========== 右上角通知小字 ==========
+export const pillarMsg = ref('')
+export const pillarShow = ref(false)
+export const pillarRoute = ref('')
+let pillarTimer = null
+
+export function showPillar(title, route = '') {
+  pillarMsg.value = title
+  pillarRoute.value = route
+  pillarShow.value = true
+  clearTimeout(pillarTimer)
+  // 8秒后自动消失
+  pillarTimer = setTimeout(() => { pillarShow.value = false }, 8000)
+}
+
+export function hidePillar() {
+  pillarShow.value = false
+  clearTimeout(pillarTimer)
+}
+
 // 格式化日期
 export function formatDate(str, fmt = 'YYYY-MM-DD') {
   if (!str) return ''

@@ -15,7 +15,7 @@
       </button>
       <div class="divider"><span>或</span></div>
       <button class="btn-wechat" @click="doWechatLogin" :disabled="loading">
-        <span class="wx-icon">💬</span> 微信一键登录
+        <span class="wx-icon">💬</span> {{ loading ? '跳转中...' : '微信一键登录' }}
       </button>
       <!-- 微信绑定已有账号 -->
       <template v-if="showBind">
@@ -83,17 +83,22 @@ async function doLogin() {
 }
 
 function doWechatLogin() {
+  loading.value = true
   const cid = communityId.value ? `&community_id=${communityId.value}` : ''
-  fetch(`/api/staff/wechatOAuth?json=1${cid}`)
+  fetch(`/index.php/staff/wechatOAuth?json=1&redirect=/staff.html%23/login${cid}`)
     .then(res => res.json())
     .then(data => {
       if (data.code === 0 && data.data.oauth_url) {
-        location.href = data.data.oauth_url
+        window.location.href = data.data.oauth_url
       } else {
-        showToast(data.msg || '获取微信授权链接失败')
+        loading.value = false
+        showToast(data.msg || '获取微信授权链接失败', 4000)
       }
     })
-    .catch(() => showToast('网络请求失败'))
+    .catch(() => {
+      loading.value = false
+      showToast('网络请求失败', 4000)
+    })
 }
 
 async function doBind() {

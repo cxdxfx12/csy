@@ -55,7 +55,7 @@ class ManagerLogin extends BaseManager
         }
 
         $domain = WechatService::getOAuthDomain();
-        $callbackUrl = $domain . '/index.php/api/manager/wechatCallback';
+        $callbackUrl = $domain . '/index.php/manager/wechatCallback';
         $state = base64_encode(json_encode([
             'community_id' => $communityId,
             'redirect'     => $redirectTo,

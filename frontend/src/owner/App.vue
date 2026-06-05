@@ -3,13 +3,18 @@
     <router-view />
     <GlobalToast />
     <!-- 新消息弹窗 -->
-    <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
+    <div v-if="notifyShow" class="notify-popup show" @click="goNotify">
       <span class="notify-icon">🔔</span>
       <div class="notify-body">
         <strong>{{ notifyTitle }}</strong>
         <small>{{ notifyText }}</small>
       </div>
       <button class="notify-close" @click.stop="notifyShow=false">✕</button>
+    </div>
+    <!-- 右上角通知小字 -->
+    <div v-if="pillarShow" class="pillar-popup show" @click="goPillar">
+      <span>📬</span><span>{{ pillarMsg }}</span>
+      <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
     </div>
     <nav class="tab-bar" v-if="$route.path !== '/login' && $route.path !== '/register'">
       <router-link to="/home" class="tab"><span>🏠</span><em>首页</em></router-link>
@@ -28,6 +33,7 @@
 import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
+import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -56,26 +62,52 @@ async function fetchBadges() {
     const seen = JSON.parse(localStorage.getItem('badge_seen') || '{}')
     keys.forEach(k => { badges[k] = Math.max(0, (d[k] || 0) - (seen[k] || 0)) })
 
+    // 收集增长项
+    const growth = []
     if (lastBadges) {
-      const growth = []
       if (d.bill   > (lastBadges.bill   || 0)) growth.push({ key: 'bill',   title: '新账单',   text: d.last_bill   ? `¥${d.last_bill.total_amount || 0}` : `+${d.bill - lastBadges.bill} 条待缴`,    route: '/bill' })
       if (d.repair > (lastBadges.repair || 0)) growth.push({ key: 'repair', title: '报修进度', text: d.last_repair ? (d.last_repair.title || '') : `+${d.repair - lastBadges.repair} 条处理中`, route: '/repair' })
       if (d.notice > (lastBadges.notice || 0)) growth.push({ key: 'notice', title: '新公告',   text: d.last_notice ? (d.last_notice.title || '') : `+${d.notice - lastBadges.notice} 条新公告`,    route: '/notice' })
       if (d.complaint > (lastBadges.complaint || 0)) growth.push({ key: 'complaint', title: '投诉更新', text: d.last_complaint ? (d.last_complaint.content || '').substring(0,30) : `+${d.complaint - lastBadges.complaint} 条处理中`, route: '/complaint' })
       if (d.vote > (lastBadges.vote || 0)) growth.push({ key: 'vote', title: '新投票', text: d.last_vote ? d.last_vote.title : `+${d.vote - lastBadges.vote} 个待投`, route: '/vote' })
       if (d.activity > (lastBadges.activity || 0)) growth.push({ key: 'activity', title: '新活动', text: d.last_activity ? d.last_activity.title : `+${d.activity - lastBadges.activity} 个可报名`, route: '/activity' })
-      if (growth.length > 0) {
-        const g = growth[0]
-        notifyTitle.value = g.title
-        notifyText.value = g.text
-        notifyRoute.value = g.route
-        notifyShow.value = true
-        setTimeout(() => { notifyShow.value = false }, 5000)
-      }
+    } else {
+      // 首次加载：所有非零项都视为"待处理"
+      if (d.bill   > 0) growth.push({ key: 'bill',   title: '待缴账单', text: d.last_bill   ? `¥${d.last_bill.total_amount || 0}` : `${d.bill} 条待缴`,      route: '/bill' })
+      if (d.repair > 0) growth.push({ key: 'repair', title: '处理中报修', text: d.last_repair ? (d.last_repair.title || '') : `${d.repair} 条处理中`,   route: '/repair' })
+      if (d.notice > 0) growth.push({ key: 'notice', title: '新公告',    text: d.last_notice ? (d.last_notice.title || '') : `${d.notice} 条新公告`,     route: '/notice' })
+      if (d.complaint > 0) growth.push({ key: 'complaint', title: '处理中投诉', text: d.last_complaint ? (d.last_complaint.content || '').substring(0,30) : `${d.complaint} 条处理中`, route: '/complaint' })
+      if (d.vote    > 0) growth.push({ key: 'vote',    title: '待投票',    text: d.last_vote    ? d.last_vote.title    : `${d.vote} 个待投`,        route: '/vote' })
+      if (d.activity > 0) growth.push({ key: 'activity', title: '可报名活动', text: d.last_activity ? d.last_activity.title : `${d.activity} 个可报名`,   route: '/activity' })
+    }
+
+    if (growth.length > 0) {
+      // 弹窗：展示第一条
+      const g = growth[0]
+      notifyTitle.value = g.title
+      notifyText.value = g.text
+      notifyRoute.value = g.route
+      notifyShow.value = true
+      setTimeout(() => { notifyShow.value = false }, 5000)
+
+      // 🔔 播放声音
+      playNotificationSound()
+
+      // 右上角小字：显示总数
+      showPillar(`您有 ${growth.length} 条待处理提醒`, growth[0].route)
     }
 
     lastBadges = { ...d }
   } catch (e) { /* 静默 */ }
+}
+
+function goPillar() {
+  if (pillarRoute.value) {
+    const key = pillarRoute.value.substring(1)
+    if (['bill','repair','notice','complaint','vote','activity'].includes(key)) dismissBadge(key)
+    router.push(pillarRoute.value)
+  }
+  hidePillar()
 }
 
 function goNotify() {
@@ -135,4 +167,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .notify-body strong{display:block;font-size:14px;margin-bottom:2px}
 .notify-body small{display:block;font-size:12px;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .notify-close{position:absolute;top:10px;right:12px;background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:0;line-height:1}
+/* 右上角通知小字 */
+.pillar-popup{position:fixed;top:16px;right:12px;background:#2563eb;color:#fff;border-radius:20px;padding:8px 36px 8px 14px;font-size:12px;z-index:1000;display:flex;align-items:center;gap:6px;opacity:0;transform:translateX(20px);transition:opacity .3s,transform .3s;cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.4);max-width:85vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pillar-popup.show{opacity:1;transform:translateX(0)}
+.pillar-close{position:absolute;top:50%;right:10px;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;padding:0;line-height:1}
 </style>

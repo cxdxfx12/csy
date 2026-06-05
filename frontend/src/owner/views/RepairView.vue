@@ -3,7 +3,7 @@
     <header>
       <button class="back" @click="$router.back()">←</button>
       <h1>报事报修</h1>
-      <button class="btn-sm" @click="showForm=!showForm">{{ showForm?'取消':'报修' }}</button>
+      <button type="button" class="btn-sm" @click.prevent="showForm=!showForm">{{ showForm?'取消':'报修' }}</button>
     </header>
     <!-- Create Form -->
     <div v-if="showForm" class="form-card">

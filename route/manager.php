@@ -3,7 +3,13 @@
 use think\facade\Route;
 
 Route::group('manager', function () {
+    // 认证
     Route::post('login', 'manager/ManagerLogin/login');
+    // 微信 OAuth
+    Route::get('wechatOAuth', 'manager/ManagerLogin/wechatOAuth');
+    Route::get('wechatCallback', 'manager/ManagerLogin/wechatCallback');
+    Route::post('wechatLogin', 'manager/ManagerLogin/wechatLogin');
+    Route::post('wechatRegister', 'manager/ManagerLogin/wechatRegister');
 
     // 驾驶舱首页
     Route::get('dashboard/statistics', 'manager/Dashboard/statistics');

@@ -18,7 +18,7 @@
         </button>
         <div class="divider"><span>或</span></div>
         <button class="btn-wechat" @click="doWechatLogin" :disabled="loading">
-          <span class="wx-icon">💬</span> 微信一键登录
+          <span class="wx-icon">💬</span> {{ loading ? '跳转中...' : '微信一键登录' }}
         </button>
       </div>
 
@@ -98,6 +98,7 @@ async function doLogin() {
 }
 
 function doWechatLogin() {
+  loading.value = true
   // 跳转微信 OAuth，后端自动检测小区（前端先获取 OAuth URL 再直接跳转，避免 302 跨域问题）
   const baseUrl = `${window.location.origin}/index.php/api/manager/wechatOAuth`
   const cid = communityId.value ? `&community_id=${communityId.value}` : ''
@@ -106,12 +107,16 @@ function doWechatLogin() {
     .then(res => res.json())
     .then(data => {
       if (data.code === 0 && data.data.oauth_url) {
-        location.href = data.data.oauth_url
+        window.location.href = data.data.oauth_url
       } else {
-        showToast(data.msg || '获取微信授权链接失败')
+        loading.value = false
+        showToast(data.msg || '获取微信授权链接失败', 4000)
       }
     })
-    .catch(() => showToast('网络请求失败'))
+    .catch(() => {
+      loading.value = false
+      showToast('网络请求失败', 4000)
+    })
 }
 
 async function doRegister() {

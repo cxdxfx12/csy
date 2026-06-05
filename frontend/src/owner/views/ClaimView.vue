@@ -55,13 +55,16 @@ async function doClaim() {
       body: JSON.stringify({ phone: v })
     })
     if (res.code === 0) {
-      showToast(res.msg || '认领成功')
-      setTimeout(() => router.replace('/home'), 1200)
+      showToast(res.msg || '认领成功', 2500)
+      setTimeout(() => router.replace('/home'), 1500)
+    } else if (res.code === 401) {
+      showToast('登录已过期，请重新登录', 2500)
+      setTimeout(() => router.replace('/login'), 1500)
     } else {
-      showToast(res.msg || '认领失败')
+      showToast(res.msg || '认领失败', 3000)
     }
   } catch (e) {
-    showToast('网络请求失败')
+    showToast('网络异常，请检查连接后重试', 3000)
   } finally {
     loading.value = false
   }

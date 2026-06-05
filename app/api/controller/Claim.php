@@ -17,10 +17,10 @@ class Claim extends BaseApi
     {
         $phone = request()->param('phone', '');
         if (empty($phone)) {
-            return json(['code' => 1, 'msg' => '请输入手机号']);
+            return $this->error('请输入手机号');
         }
         if (!preg_match('/^1[3-9]\d{9}$/', $phone)) {
-            return json(['code' => 1, 'msg' => '手机号格式不正确']);
+            return $this->error('手机号格式不正确');
         }
 
         $ownerId    = $this->ownerId;                        // 当前微信用户
@@ -30,49 +30,49 @@ class Claim extends BaseApi
         // 是否已经绑定过房产
         $myRoomCount = Db::name('owner_room')
             ->where('owner_id', $ownerId)
-            ->where('delete_time', null)
+            ->whereNull('delete_time')
             ->count();
         if ($myRoomCount > 0) {
-            return json(['code' => 1, 'msg' => '您已有绑定房产，无需重复认领']);
+            return $this->error('您已有绑定房产，无需重复认领');
         }
 
         // 当前微信用户的手机号不能和目标一致（占位手机号除外）
         $myPhone = $ownerInfo['phone'] ?? '';
         if ($myPhone === $phone) {
-            return json(['code' => 1, 'msg' => '该手机号已是您当前账号']);
+            return $this->error('该手机号已是您当前账号');
         }
 
         // 查找目标业主（同小区、相同手机号、未删除）
         $target = Db::name('owner')
             ->where('phone', $phone)
             ->where('community_id', $communityId)
-            ->where('delete_time', 0)
+            ->whereNull('delete_time')
             ->find();
 
         if (!$target) {
-            return json(['code' => 1, 'msg' => '未找到该手机号对应的业主信息，请联系物业管理人员核实']);
+            return $this->error('未找到该手机号对应的业主信息，请联系物业管理人员核实');
         }
 
         if ($target['id'] == $ownerId) {
-            return json(['code' => 1, 'msg' => '该手机号已是您当前账号']);
+            return $this->error('该手机号已是您当前账号');
         }
 
         // 目标业主已经绑定了其他微信，不允许抢绑
         if (!empty($target['openid']) && $target['openid'] !== $ownerInfo['openid']) {
-            return json(['code' => 1, 'msg' => '该手机号已绑定其他微信账号']);
+            return $this->error('该手机号已绑定其他微信账号');
         }
 
         // 查询目标业主的房产
         $rooms = Db::name('owner_room')
             ->where('owner_id', $target['id'])
-            ->where('delete_time', null)
+            ->whereNull('delete_time')
             ->select();
 
         if (empty($rooms)) {
-            return json(['code' => 1, 'msg' => '该手机号对应的业主暂无登记房产，请联系物业']);
+            return $this->error('该手机号对应的业主暂无登记房产，请联系物业');
         }
 
-        Db::startTrans();
+        Db::name('owner')->getPdo()->beginTransaction();
         try {
             // 将目标业主的房产归属转移到当前微信用户
             foreach ($rooms as $room) {
@@ -80,7 +80,7 @@ class Claim extends BaseApi
                 $exists = Db::name('owner_room')
                     ->where('owner_id', $ownerId)
                     ->where('room_id', $room['room_id'])
-                    ->where('delete_time', null)
+                    ->whereNull('delete_time')
                     ->find();
                 if (!$exists) {
                     Db::name('owner_room')
@@ -96,6 +96,13 @@ class Claim extends BaseApi
                 }
             }
 
+            // 先将目标业主标记为已归档（释放手机号唯一约束）
+            Db::name('owner')->where('id', $target['id'])->update([
+                'phone'  => 'ARCHIVED_' . $target['id'],
+                'openid' => '',
+                'status' => 0,
+            ]);
+
             // 更新当前微信用户为真实手机号和真实姓名
             $updateData = ['phone' => $phone];
             if (!empty($target['realname']) && $target['realname'] !== '微信用户') {
@@ -103,47 +110,41 @@ class Claim extends BaseApi
             }
             Db::name('owner')->where('id', $ownerId)->update($updateData);
 
-            // 将目标业主标记为已归档（避免重复认领）
-            Db::name('owner')->where('id', $target['id'])->update([
-                'phone'  => 'ARCHIVED_' . $target['id'],
-                'openid' => '',
-                'status' => 0,
-            ]);
-
             // 转移账单
             Db::name('bill')
                 ->where('owner_id', $target['id'])
-                ->where('delete_time', null)
+                ->whereNull('delete_time')
                 ->update(['owner_id' => $ownerId]);
 
             // 转移报修
             Db::name('repair_order')
                 ->where('owner_id', $target['id'])
-                ->where('delete_time', null)
+                ->whereNull('delete_time')
                 ->update(['owner_id' => $ownerId]);
 
             // 转移投诉
             Db::name('complaint')
                 ->where('owner_id', $target['id'])
-                ->where('delete_time', null)
+                ->whereNull('delete_time')
                 ->update(['owner_id' => $ownerId]);
 
             // 转移车辆
             Db::name('vehicle')
                 ->where('owner_id', $target['id'])
-                ->where('delete_time', null)
+                ->whereNull('delete_time')
                 ->update(['owner_id' => $ownerId]);
 
-            Db::commit();
+            Db::name('owner')->getPdo()->commit();
 
-            return json([
-                'code' => 0,
-                'msg'  => '认领成功！已绑定 ' . count($rooms) . ' 套房产',
-                'data' => ['room_count' => count($rooms), 'realname' => $updateData['realname'] ?? '微信用户'],
-            ]);
+            return $this->success([
+                'room_count' => count($rooms),
+                'realname'   => $updateData['realname'] ?? '微信用户',
+            ], '认领成功！已绑定 ' . count($rooms) . ' 套房产');
         } catch (\Exception $e) {
-            Db::rollback();
-            return json(['code' => 1, 'msg' => '系统异常，请稍后重试']);
+            Db::name('owner')->getPdo()->rollBack();
+            // 调试日志，生产环境可写文件
+            error_log('[Claim] ' . $e->getMessage() . ' line:' . $e->getLine());
+            return $this->error('认领失败，请稍后重试或联系物业');
         }
     }
 }

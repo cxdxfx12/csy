@@ -38,7 +38,7 @@ const router = createRouter({ history: createWebHashHistory(), routes })
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('owner_token')
   const publicPages = ['/login', '/register']
-  if (!publicPages.includes(to.path) && !token) next('/login')
+  if (!publicPages.includes(to.path) && !token) next({ path: '/login', query: to.query })
   else next()
 })
 

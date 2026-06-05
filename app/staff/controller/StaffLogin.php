@@ -48,13 +48,14 @@ class StaffLogin extends BaseStaff
     public function wechatOAuth()
     {
         $communityId = intval($this->request->param('community_id', 0));
-        $redirectTo = $this->request->param('redirect', '/staff.html');
+        $redirectTo = $this->request->param('redirect', '/staff.html#/login');
 
         // 未传小区ID时，自动查找第一个已配置微信的小区
         if ($communityId <= 0) {
             $config = Db::name('community_wechat_config')
                 ->where('status', 1)
                 ->where('app_id', '<>', '')
+                ->where('app_secret', '<>', '')
                 ->order('id asc')
                 ->find();
             if ($config) {
@@ -71,7 +72,7 @@ class StaffLogin extends BaseStaff
         }
 
         $domain = WechatService::getOAuthDomain();
-        $callbackUrl = $domain . '/index.php/api/staff/wechatCallback';
+        $callbackUrl = $domain . '/index.php/staff/wechatCallback';
         $state = base64_encode(json_encode([
             'community_id' => $communityId,
             'redirect'     => $redirectTo,
@@ -102,7 +103,7 @@ class StaffLogin extends BaseStaff
             if ($decoded) $state = $decoded;
         }
         $communityId = intval($state['community_id'] ?? 0);
-        $redirectTo = $state['redirect'] ?? '/staff.html';
+        $redirectTo = $state['redirect'] ?? '/staff.html#/login';
 
         if ($communityId <= 0) return $this->error('参数错误：社区ID缺失');
 

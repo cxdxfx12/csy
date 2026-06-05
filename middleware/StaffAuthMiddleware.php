@@ -15,7 +15,7 @@ class StaffAuthMiddleware
         }
 
         $path = $request->pathinfo();
-        $ignorePaths = ['staff/login', 'manager/login'];
+        $ignorePaths = ['staff/login', 'staff/wechatOAuth', 'staff/wechatCallback', 'staff/wechatBind', 'manager/login', 'manager/wechatOAuth', 'manager/wechatCallback', 'manager/wechatLogin', 'manager/wechatRegister'];
 
         foreach ($ignorePaths as $ignore) {
             if (strpos($path, $ignore) !== false) {

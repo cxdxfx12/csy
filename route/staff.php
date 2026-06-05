@@ -7,6 +7,10 @@ Route::group('staff', function () {
     Route::post('login', 'staff/StaffLogin/login');
     Route::post('logout', 'staff/StaffLogin/logout');
     Route::post('password', 'staff/StaffLogin/password');
+    // 微信 OAuth
+    Route::get('wechatOAuth', 'staff/StaffLogin/wechatOAuth');
+    Route::get('wechatCallback', 'staff/StaffLogin/wechatCallback');
+    Route::post('wechatBind', 'staff/StaffLogin/wechatBind');
 
     // 报修处理
     Route::get('repair/list', 'staff/StaffRepair/lists');
