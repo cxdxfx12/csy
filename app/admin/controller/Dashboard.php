@@ -168,8 +168,9 @@ class Dashboard extends BaseAdmin
         $roleInfo = Db::name('role')->where('id', $roleId)->find();
         $roleCode = $roleInfo['code'] ?? '';
 
-        // 权限控制：仅超管(role_id=1) 和 小区物管经理(code=manager) 可访问
-        if ($roleId != 1 && $roleCode != 'manager') {
+        // 权限控制：超管(role_id=1)、管理员(code=admin)、小区物管经理(code=manager) 可访问
+        $allowedRoles = ['admin', 'manager'];
+        if ($roleId != 1 && !in_array($roleCode, $allowedRoles)) {
             return $this->error('无权限访问数据大屏', 403);
         }
 

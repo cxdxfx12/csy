@@ -81,7 +81,7 @@ function resetQuery() { Object.assign(query, { keyword: '', supplier_id: undefin
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Contract/lists', { ...query })
+    const res = await apiGet('/admin/contract/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -98,19 +98,19 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Contract/edit' : '/admin/Contract/add'
+    const url = form.id ? '/admin/contract/edit' : '/admin/contract/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false; loadData()
   } finally { submitting.value = false }
 }
 
-async function handleExpire(id: number) { await apiPost('/admin/Contract/expire', { id }); ElMessage.success('已终止'); loadData() }
+async function handleExpire(id: number) { await apiPost('/admin/contract/expire', { id }); ElMessage.success('已终止'); loadData() }
 
-async function handleDelete(id: number) { await apiPost('/admin/Contract/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/contract/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

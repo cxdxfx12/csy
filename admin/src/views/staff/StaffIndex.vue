@@ -111,7 +111,7 @@ function resetQuery() { Object.assign(query, { keyword: '', community_id: undefi
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Staff/lists', { ...query })
+    const res = await apiGet('/admin/staff/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -128,7 +128,7 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Staff/edit' : '/admin/Staff/add'
+    const url = form.id ? '/admin/staff/edit' : '/admin/staff/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false
@@ -136,16 +136,16 @@ async function submitForm() {
   } finally { submitting.value = false }
 }
 
-async function handleDelete(id: number) { await apiPost('/admin/Staff/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/staff/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 async function viewDetail(row: any) {
-  const res = await apiGet('/admin/Staff/detail', { id: row.id })
+  const res = await apiGet('/admin/staff/detail', { id: row.id })
   detail.value = res.data
   detailVisible.value = true
 }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Community/lists', { page: 1, limit: 500 }); communities.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/community/list', { page: 1, limit: 500 }); communities.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

@@ -1,0 +1,8 @@
+option batch abort
+option confirm off
+open sftp://root:cxdxfx12@211.149.181.178:22/ -hostkey="*"
+put "e:\ds\public\staff.html" /www/wwwroot/www.hbdxm.com/public/
+put "e:\ds\public\assets\staff-Czm6jK1P.js" /www/wwwroot/www.hbdxm.com/public/assets/
+put "e:\ds\public\assets\staff-0tWMjREl.css" /www/wwwroot/www.hbdxm.com/public/assets/
+put "e:\ds\app\staff\controller\StaffLogin.php" /www/wwwroot/www.hbdxm.com/app/staff/controller/
+exit

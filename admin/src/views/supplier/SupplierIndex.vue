@@ -96,7 +96,7 @@ function resetQuery() { Object.assign(query, { keyword: '', category: '', status
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Supplier/lists', { ...query })
+    const res = await apiGet('/admin/supplier/lists', { ...query })
     const raw = res.data.list || res.data
     const data = Array.isArray(raw) ? raw : []
     list.value = data.map((item: any) => ({ ...item, rating: Number(item.rating) || 0 }))
@@ -115,17 +115,17 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Supplier/edit' : '/admin/Supplier/add'
+    const url = form.id ? '/admin/supplier/edit' : '/admin/supplier/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false; loadData()
   } finally { submitting.value = false }
 }
 
-async function handleDelete(id: number) { await apiPost('/admin/Supplier/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/supplier/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 async function viewDetail(row: any) {
-  const res = await apiGet('/admin/Supplier/detail', { id: row.id })
+  const res = await apiGet('/admin/supplier/detail', { id: row.id })
   const d = res.data
   if (d) { d.avg_rating = Number(d.avg_rating) || 0; d.rating = Number(d.rating) || 0 }
   detail.value = d

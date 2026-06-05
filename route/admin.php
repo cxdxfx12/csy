@@ -462,6 +462,7 @@ Route::group('admin', function () {
     Route::post('admin/notice/notificationAdd', 'admin/Notification/add');
     Route::post('admin/notice/notificationEdit', 'admin/Notification/edit');
     Route::post('admin/notice/notificationDelete', 'admin/Notification/delete');
+    Route::get('admin/notice/notificationCreateTable', 'admin/Notification/createTable');
 
     // 推送设备
     Route::get('admin/system/pushDeviceList', 'admin/PushDevice/lists');

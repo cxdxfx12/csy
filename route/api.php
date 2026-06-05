@@ -395,6 +395,7 @@ Route::group('api/admin', function () {
     Route::get('dashboard/incomeChart', 'admin/Dashboard/incomeChart');
     Route::get('dashboard/repairChart', 'admin/Dashboard/repairChart');
     Route::get('dashboard/pieChart', 'admin/Dashboard/pieChart');
+    Route::get('dashboard/bigscreen', 'admin/Dashboard/bigscreen');
 
     // 公共接口
     Route::get('upload/image', 'admin/Upload/image');

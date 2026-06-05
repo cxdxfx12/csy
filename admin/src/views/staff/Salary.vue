@@ -111,13 +111,13 @@ function onCommunityChange() { loadStaffList(); loadData() }
 async function loadStaffList() {
   const params: any = { page: 1, limit: 500 }
   if (query.community_id) params.community_id = query.community_id
-  try { const r = await apiGet('/admin/Staff/lists', params); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', params); staffList.value = r.data.list || r.data } catch {}
 }
 
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Salary/lists', { ...query })
+    const res = await apiGet('/admin/salary/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -134,23 +134,23 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Salary/edit' : '/admin/Salary/add'
+    const url = form.id ? '/admin/salary/edit' : '/admin/salary/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false; loadData()
   } finally { submitting.value = false }
 }
 
-async function handlePay(id: number) { await apiPost('/admin/Salary/pay', { id }); ElMessage.success('已发放'); loadData() }
+async function handlePay(id: number) { await apiPost('/admin/salary/pay', { id }); ElMessage.success('已发放'); loadData() }
 
-async function handleDelete(id: number) { await apiPost('/admin/Salary/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/salary/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 function batchGenerate() { batchMonth.value = ''; batchVisible.value = true }
 
 async function submitBatchGenerate() {
   if (!batchMonth.value) { ElMessage.warning('请输入月份'); return }
   submitting.value = true
-  try { await apiPost('/admin/Salary/batchGenerate', { salary_month: batchMonth.value }); ElMessage.success('批量生成成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
+  try { await apiPost('/admin/salary/batchGenerate', { salary_month: batchMonth.value }); ElMessage.success('批量生成成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
 }
 
 function getSummaries(param: any) {
@@ -167,8 +167,8 @@ function getSummaries(param: any) {
 }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Community/lists', {}); communities.value = r.data.list || r.data } catch {}
-  try { const r = await apiGet('/admin/Staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/community/list', {}); communities.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

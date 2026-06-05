@@ -99,13 +99,13 @@ function onCommunityChange() {
 async function loadStaffList() {
   const params: any = { page: 1, limit: 500 }
   if (query.community_id) params.community_id = query.community_id
-  try { const r = await apiGet('/admin/Staff/lists', params); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', params); staffList.value = r.data.list || r.data } catch {}
 }
 
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Attendance/lists', { ...query })
+    const res = await apiGet('/admin/attendance/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -122,7 +122,7 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Attendance/edit' : '/admin/Attendance/add'
+    const url = form.id ? '/admin/attendance/edit' : '/admin/attendance/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false; loadData()
@@ -135,14 +135,14 @@ async function submitBatch() {
   if (!batchForm.staff_ids.length) { ElMessage.warning('请选择员工'); return }
   if (!batchForm.attendance_date) { ElMessage.warning('请选择日期'); return }
   submitting.value = true
-  try { await apiPost('/admin/Attendance/batch', { ...batchForm }); ElMessage.success('批量打卡成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
+  try { await apiPost('/admin/attendance/batch', { ...batchForm }); ElMessage.success('批量打卡成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
 }
 
-async function handleDelete(id: number) { await apiPost('/admin/Attendance/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/attendance/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Community/lists', {}); communities.value = r.data.list || r.data } catch {}
-  try { const r = await apiGet('/admin/Staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/community/list', {}); communities.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

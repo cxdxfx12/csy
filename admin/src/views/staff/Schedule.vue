@@ -97,13 +97,13 @@ function onCommunityChange() { loadStaffList(); loadData() }
 async function loadStaffList() {
   const params: any = { page: 1, limit: 500 }
   if (query.community_id) params.community_id = query.community_id
-  try { const r = await apiGet('/admin/Staff/lists', params); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', params); staffList.value = r.data.list || r.data } catch {}
 }
 
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Schedule/lists', { ...query })
+    const res = await apiGet('/admin/schedule/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -120,7 +120,7 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Schedule/edit' : '/admin/Schedule/add'
+    const url = form.id ? '/admin/schedule/edit' : '/admin/schedule/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false; loadData()
@@ -133,14 +133,14 @@ async function submitBatch() {
   if (!batchForm.staff_ids.length) { ElMessage.warning('请选择员工'); return }
   if (!batchForm.date_start || !batchForm.date_end) { ElMessage.warning('请选择日期范围'); return }
   submitting.value = true
-  try { await apiPost('/admin/Schedule/batch', { ...batchForm }); ElMessage.success('批量排班成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
+  try { await apiPost('/admin/schedule/batch', { ...batchForm }); ElMessage.success('批量排班成功'); batchVisible.value = false; loadData() } finally { submitting.value = false }
 }
 
-async function handleDelete(id: number) { await apiPost('/admin/Schedule/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/schedule/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Community/lists', {}); communities.value = r.data.list || r.data } catch {}
-  try { const r = await apiGet('/admin/Staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/community/list', {}); communities.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/staff/lists', { page: 1, limit: 500 }); staffList.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

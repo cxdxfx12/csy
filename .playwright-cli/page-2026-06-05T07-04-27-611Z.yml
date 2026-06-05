@@ -1,0 +1,61 @@
+- generic [ref=e3]:
+  - generic [ref=e25]:
+    - banner [ref=e26]:
+      - button "← 返回" [ref=e27] [cursor=pointer]
+      - heading "认领房产" [level=2] [ref=e28]
+    - generic [ref=e29]:
+      - generic [ref=e30]: 🏠
+      - heading "绑定您的房产" [level=3] [ref=e31]
+      - paragraph [ref=e32]: 输入您在物业登记的手机号，系统将自动匹配您的房产信息并完成绑定。
+    - generic [ref=e33]:
+      - generic [ref=e34]: 登记手机号
+      - textbox "请输入物业登记的手机号" [ref=e35]
+      - button "立即认领" [disabled] [ref=e36] [cursor=pointer]
+    - generic [ref=e37]:
+      - paragraph [ref=e38]: 📌 认领成功后，该手机号对应的房产、账单、报修等信息将自动关联到您的微信账号。
+      - paragraph [ref=e39]: 💡 如手机号有变更，请联系物业管理处更新登记信息。
+  - generic [ref=e18] [cursor=pointer]:
+    - generic [ref=e19]: 🔔
+    - generic [ref=e20]:
+      - strong
+    - button "✕" [ref=e21]
+  - generic [ref=e22] [cursor=pointer]:
+    - generic [ref=e23]: 📬
+    - button "✕" [ref=e24]
+  - navigation [ref=e40]:
+    - link "🏠 首页" [ref=e41] [cursor=pointer]:
+      - /url: "#/home"
+      - generic [ref=e42]: 🏠
+      - emphasis [ref=e43]: 首页
+    - link "🏢 房产" [ref=e44] [cursor=pointer]:
+      - /url: "#/room"
+      - generic [ref=e45]: 🏢
+      - emphasis [ref=e46]: 房产
+    - link "💰 账单" [ref=e47] [cursor=pointer]:
+      - /url: "#/bill"
+      - generic [ref=e48]: 💰
+      - emphasis [ref=e49]: 账单
+    - link "🔧 报修" [ref=e50] [cursor=pointer]:
+      - /url: "#/repair"
+      - generic [ref=e51]: 🔧
+      - emphasis [ref=e52]: 报修
+    - link "📝 投诉" [ref=e53] [cursor=pointer]:
+      - /url: "#/complaint"
+      - generic [ref=e54]: 📝
+      - emphasis [ref=e55]: 投诉
+    - link "📢 公告" [ref=e56] [cursor=pointer]:
+      - /url: "#/notice"
+      - generic [ref=e57]: 📢
+      - emphasis [ref=e58]: 公告
+    - link "🚗 车辆" [ref=e59] [cursor=pointer]:
+      - /url: "#/vehicle"
+      - generic [ref=e60]: 🚗
+      - emphasis [ref=e61]: 车辆
+    - link "🗳 投票" [ref=e62] [cursor=pointer]:
+      - /url: "#/vote"
+      - generic [ref=e63]: 🗳
+      - emphasis [ref=e64]: 投票
+    - link "🎉 活动" [ref=e65] [cursor=pointer]:
+      - /url: "#/activity"
+      - generic [ref=e66]: 🎉
+      - emphasis [ref=e67]: 活动

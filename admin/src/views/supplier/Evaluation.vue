@@ -64,7 +64,7 @@ function resetQuery() { Object.assign(query, { keyword: '', supplier_id: undefin
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Evaluation/lists', { ...query })
+    const res = await apiGet('/admin/evaluation/lists', { ...query })
     const raw = res.data.list || res.data
     const data = Array.isArray(raw) ? raw : []
     list.value = data.map((item: any) => ({ ...item, rating: Number(item.rating) || 0 }))
@@ -84,17 +84,17 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Evaluation/edit' : '/admin/Evaluation/add'
+    const url = form.id ? '/admin/evaluation/edit' : '/admin/evaluation/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '评价成功')
     dialogVisible.value = false; loadData()
   } finally { submitting.value = false }
 }
 
-async function handleDelete(id: number) { await apiPost('/admin/Evaluation/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/evaluation/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>

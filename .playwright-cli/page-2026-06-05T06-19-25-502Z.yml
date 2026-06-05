@@ -1,0 +1,27 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [ref=e6]: 🐒
+    - heading "物业员工端" [level=1] [ref=e7]
+    - paragraph [ref=e8]: 大圣智慧物业管理平台
+    - combobox [ref=e9] [cursor=pointer]:
+      - option "请选择小区（可选）" [selected]
+      - option "阳光花园"
+      - option "翠苑新城"
+      - option "怡丰城"
+      - option "新龙城"
+      - option "杭州喵喵至家网络有限公司"
+    - textbox "请输入用户名" [ref=e10]
+    - textbox "请输入密码" [ref=e11]
+    - button "登 录" [ref=e12] [cursor=pointer]
+    - generic [ref=e14]: 或
+    - button "💬 微信一键登录" [ref=e15] [cursor=pointer]:
+      - generic [ref=e16]: 💬
+      - text: 微信一键登录
+  - generic [ref=e17] [cursor=pointer]:
+    - generic [ref=e18]: 🔔
+    - generic [ref=e19]:
+      - strong
+    - button "✕" [ref=e20]
+  - generic [ref=e21] [cursor=pointer]:
+    - generic [ref=e22]: 📬
+    - button "✕" [ref=e23]

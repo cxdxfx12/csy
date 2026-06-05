@@ -124,7 +124,14 @@
         <el-row :gutter="16">
           <el-col :span="12">
             <el-form-item label="目标人群">
-              <el-input v-model="form.target" placeholder="如：全部业主" />
+              <el-select v-model="form.target" style="width:100%" placeholder="选择目标人群">
+                <el-option label="全部业主" value="全部业主" />
+                <el-option label="全部住户" value="全部住户" />
+                <el-option label="业主" value="业主" />
+                <el-option label="家属" value="家属" />
+                <el-option label="租户" value="租户" />
+                <el-option label="指定人员" value="指定人员" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">

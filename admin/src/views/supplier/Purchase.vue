@@ -75,7 +75,7 @@ function resetQuery() { Object.assign(query, { keyword: '', supplier_id: undefin
 async function loadData() {
   loading.value = true
   try {
-    const res = await apiGet('/admin/Purchase/lists', { ...query })
+    const res = await apiGet('/admin/purchase/lists', { ...query })
     list.value = res.data.list || res.data
     total.value = res.data.total || list.value.length
   } catch { list.value = []; total.value = 0 } finally { loading.value = false }
@@ -92,21 +92,21 @@ async function submitForm() {
   if (!valid) return
   submitting.value = true
   try {
-    const url = form.id ? '/admin/Purchase/edit' : '/admin/Purchase/add'
+    const url = form.id ? '/admin/purchase/edit' : '/admin/purchase/add'
     await apiPost(url, { ...form })
     ElMessage.success(form.id ? '修改成功' : '创建成功')
     dialogVisible.value = false; loadData()
   } finally { submitting.value = false }
 }
 
-async function handleApprove(id: number) { await apiPost('/admin/Purchase/approve', { id }); ElMessage.success('审批通过'); loadData() }
+async function handleApprove(id: number) { await apiPost('/admin/purchase/approve', { id }); ElMessage.success('审批通过'); loadData() }
 
-async function handleComplete(id: number) { await apiPost('/admin/Purchase/complete', { id }); ElMessage.success('已完结'); loadData() }
+async function handleComplete(id: number) { await apiPost('/admin/purchase/complete', { id }); ElMessage.success('已完结'); loadData() }
 
-async function handleDelete(id: number) { await apiPost('/admin/Purchase/delete', { id }); ElMessage.success('删除成功'); loadData() }
+async function handleDelete(id: number) { await apiPost('/admin/purchase/delete', { id }); ElMessage.success('删除成功'); loadData() }
 
 onMounted(async () => {
-  try { const r = await apiGet('/admin/Supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
+  try { const r = await apiGet('/admin/supplier/lists', { page: 1, limit: 500 }); suppliers.value = r.data.list || r.data } catch {}
   loadData()
 })
 </script>
