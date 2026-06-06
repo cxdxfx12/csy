@@ -1,0 +1,65 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e9]:
+      - generic:
+        - menubar
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - button [ref=e13] [cursor=pointer]:
+          - img [ref=e15]
+        - navigation "面包屑" [ref=e17]:
+          - generic [ref=e18]:
+            - link "工作台" [ref=e19]
+            - text: /
+          - link "控制台" [ref=e21]
+      - button "数据大屏" [ref=e23] [cursor=pointer]:
+        - img [ref=e25]
+        - generic [ref=e27]: 数据大屏
+      - generic [ref=e28]:
+        - button [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+        - button "管理员" [ref=e37] [cursor=pointer]:
+          - img [ref=e40]
+          - generic [ref=e42]: 管理员
+    - generic [ref=e44]:
+      - tablist [ref=e48]:
+        - tab "📊 控制台" [selected] [ref=e49]
+      - generic [ref=e50]:
+        - tabpanel "📊 控制台"
+    - main [ref=e51]:
+      - generic [ref=e57]:
+        - heading "控制台" [level=1] [ref=e58]
+        - paragraph [ref=e59]:
+          - generic [ref=e60]: 工作台
+          - generic [ref=e61]: /
+          - generic [ref=e62]: 控制台
+      - generic [ref=e67]:
+        - heading "📊 数据概览" [level=2] [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: 🏘️
+            - generic [ref=e74]:
+              - generic [ref=e75]: 管理小区
+              - generic [ref=e76]: "0"
+          - generic [ref=e79]:
+            - generic [ref=e80]: 👤
+            - generic [ref=e81]:
+              - generic [ref=e82]: 业主总数
+              - generic [ref=e83]: "0"
+          - generic [ref=e86]:
+            - generic [ref=e87]: 💰
+            - generic [ref=e88]:
+              - generic [ref=e89]: 本月收费
+              - generic [ref=e90]: ¥0.00
+          - generic [ref=e93]:
+            - generic [ref=e94]: 📋
+            - generic [ref=e95]:
+              - generic [ref=e96]: 待缴费总额
+              - generic [ref=e97]: ¥0.00
+          - generic [ref=e100]:
+            - generic [ref=e101]: 🔧
+            - generic [ref=e102]:
+              - generic [ref=e103]: 待处理工单
+              - generic [ref=e104]: "0"

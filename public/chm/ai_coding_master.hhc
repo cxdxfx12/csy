@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="AI Coding Master">
+</HEAD>
+<BODY>
+<OBJECT type="text/site properties">
+    <param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="封面">
+        <param name="Local" value="index.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="引言：AI时代的编程革命">
+        <param name="Local" value="intro.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第1章：提问的艺术">
+        <param name="Local" value="ch1_asking.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第2章：AI驱动的架构设计">
+        <param name="Local" value="ch2_architecture.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第3章：高效编码实战">
+        <param name="Local" value="ch3_coding.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第4章：Bug终结者">
+        <param name="Local" value="ch4_debugging.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第5章：项目管理全流程">
+        <param name="Local" value="ch5_project.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="第6章：最佳实践与避坑指南">
+        <param name="Local" value="ch6_best.html">
+    </OBJECT>
+    <LI><OBJECT type="text/sitemap">
+        <param name="Name" value="FAQ 常见问题">
+        <param name="Local" value="faq.html">
+    </OBJECT>
+</UL>
+</BODY>
+</HTML>

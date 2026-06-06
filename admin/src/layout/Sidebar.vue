@@ -65,6 +65,8 @@ const iconMap: Record<string, string> = {
   // 补全模块图标
   dunning: 'WarningFilled', message: 'ChatLineSquare', sms_log: 'DocumentCopy',
   signup: 'List',
+  // 装修管理 (worker icon 复用上方 "worker: 'User'" 映射，无需重复)
+  decoration: 'SetUp', apply: 'Document', inspect: 'Van', violation: 'Warning',
 }
 
 function menuIcon(menu: MenuItem): string {

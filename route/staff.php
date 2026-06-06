@@ -57,4 +57,15 @@ Route::group('staff', function () {
     Route::get('attendance/lists', 'staff/StaffProfile/attendance');
     Route::get('schedule/lists', 'staff/StaffProfile/schedule');
     Route::get('salary/lists', 'staff/StaffProfile/salary');
+
+    // ========== 装修管理（移动端） ==========
+    // 装修申请
+    Route::get('decoration/applyList', 'staff/StaffDecoration/applyList');
+    Route::get('decoration/applyDetail', 'staff/StaffDecoration/applyDetail');
+    // 巡查
+    Route::get('decoration/inspectTodoList', 'staff/StaffDecoration/inspectTodoList');
+    Route::post('decoration/inspectSubmit', 'staff/StaffDecoration/inspectSubmit');
+    Route::get('decoration/inspectMyHistory', 'staff/StaffDecoration/inspectMyHistory');
+    // 违规上报
+    Route::post('decoration/violationReport', 'staff/StaffDecoration/violationReport');
 });

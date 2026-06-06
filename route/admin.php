@@ -489,4 +489,40 @@ Route::group('admin', function () {
     Route::post('admin/system/serviceVendorAdd', 'admin/ServiceVendor/add');
     Route::post('admin/system/serviceVendorEdit', 'admin/ServiceVendor/edit');
     Route::post('admin/system/serviceVendorDelete', 'admin/ServiceVendor/delete');
+
+    // ========== 装修管理 ==========
+    // 装修申请
+    Route::get('admin/decoration/applyList', 'admin/Decoration/applyList');
+    Route::post('admin/decoration/applyAdd', 'admin/Decoration/applyAdd');
+    Route::post('admin/decoration/applyEdit', 'admin/Decoration/applyEdit');
+    Route::post('admin/decoration/applyAudit', 'admin/Decoration/applyAudit');
+    Route::post('admin/decoration/applyCharge', 'admin/Decoration/applyCharge');
+    Route::post('admin/decoration/applyRequestAccept', 'admin/Decoration/applyRequestAccept');
+    Route::post('admin/decoration/applyAccept', 'admin/Decoration/applyAccept');
+    Route::post('admin/decoration/applyCancel', 'admin/Decoration/applyCancel');
+    Route::post('admin/decoration/applyRefund', 'admin/Decoration/applyRefund');
+    Route::get('admin/decoration/applyDetail', 'admin/Decoration/applyDetail');
+    Route::post('admin/decoration/applyDelete', 'admin/Decoration/applyDelete');
+
+    // 施工人员
+    Route::get('admin/decoration/workerList', 'admin/Decoration/workerList');
+    Route::post('admin/decoration/workerAdd', 'admin/Decoration/workerAdd');
+    Route::post('admin/decoration/workerEdit', 'admin/Decoration/workerEdit');
+    Route::post('admin/decoration/workerDelete', 'admin/Decoration/workerDelete');
+    Route::post('admin/decoration/workerIssueCard', 'admin/Decoration/workerIssueCard');
+
+    // 巡查记录
+    Route::get('admin/decoration/inspectList', 'admin/Decoration/inspectList');
+    Route::post('admin/decoration/inspectAdd', 'admin/Decoration/inspectAdd');
+    Route::post('admin/decoration/inspectDelete', 'admin/Decoration/inspectDelete');
+
+    // 违规记录
+    Route::get('admin/decoration/violationList', 'admin/Decoration/violationList');
+    Route::post('admin/decoration/violationAdd', 'admin/Decoration/violationAdd');
+    Route::post('admin/decoration/violationEdit', 'admin/Decoration/violationEdit');
+    Route::post('admin/decoration/violationRectify', 'admin/Decoration/violationRectify');
+    Route::post('admin/decoration/violationDelete', 'admin/Decoration/violationDelete');
+
+    // 统计
+    Route::get('admin/decoration/statistics', 'admin/Decoration/statistics');
 });

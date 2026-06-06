@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第2章 - AI驱动的架构设计</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 2</div>
+    <h2>AI 驱动的架构设计：从需求到技术蓝图</h2>
+    <p>架构是最难替代人的环节，但 AI 可以成为你最强的架构顾问</p>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🏛️</span> 架构设计的 5 层金字塔</h3>
+    <div class="model-grid">
+        <div class="model-card" style="border-top-color:#ef4444;">
+            <div class="emoji">📋</div>
+            <h4>第1层：需求分析</h4>
+            <p>用AI拆解需求文档，生成用例图和功能清单</p>
+        </div>
+        <div class="model-card" style="border-top-color:#f59e0b;">
+            <div class="emoji">🗄️</div>
+            <h4>第2层：数据建模</h4>
+            <p>从需求自动推导ER图、表结构、索引策略</p>
+        </div>
+        <div class="model-card" style="border-top-color:#3b82f6;">
+            <div class="emoji">🔌</div>
+            <h4>第3层：接口设计</h4>
+            <p>RESTful API + 数据流 + 状态机设计</p>
+        </div>
+        <div class="model-card" style="border-top-color:#10b981;">
+            <div class="emoji">🧩</div>
+            <h4>第4层：模块划分</h4>
+            <p>微服务拆分 / 目录结构 / 依赖关系</p>
+        </div>
+        <div class="model-card" style="border-top-color:#8b5cf6;">
+            <div class="emoji">🚀</div>
+            <h4>第5层：部署方案</h4>
+            <p>Docker编排、CI/CD、监控日志</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">📝</span> 第1层：用 AI 做需求分析</h3>
+    <p>把产品文档或用户故事交给 AI，让它帮你输出结构化需求。</p>
+    
+    <h4 style="margin-top:14px;">Prompt 模板：</h4>
+    <div class="code-block">
+我有一段产品需求描述，请帮我做系统分析：
+
+<span style="color:#6b7280;">【需求原文】</span>
+[粘贴需求文档]
+
+<span style="color:#6b7280;">【请输出】</span>
+1. 功能模块清单（一级模块 + 二级功能点）
+2. 用户角色矩阵（每个角色的权限范围）
+3. 核心业务流程（用Mermaid格式画流程图）
+4. 潜在的技术难点和风险点
+5. 建议的技术栈选型（前端 + 后端 + 数据库 + 部署）
+    </div>
+
+    <div class="tip-box success">
+        <strong>实战效果</strong>
+        一个 50 页的产品 PRD 扔进去，AI 能在 2 分钟内给你提炼出结构化的技术分析报告，这是传统方式 1~2 天的工作量。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">🗄️</span> 第2层：数据建模 — 从需求到 SQL</h3>
+    <p>把功能清单转化为数据库设计是 AI 最擅长的结构化任务之一。</p>
+
+    <h4 style="margin-top:14px;">Prompt 模板：</h4>
+    <div class="code-block">
+基于以下功能需求，请设计 <span style="color:#7dd3fc;">MySQL 8.0</span> 数据库：
+
+<span style="color:#6b7280;">【业务需求】</span>
+- 用户分为：超级管理员、普通管理员、财务、员工
+- 支持多小区管理，每个小区有独立的楼栋、单元、房间
+- 业主可以绑定多个房间，通过微信小程序缴费
+- 报修流程：业主提交→客服派单→维修员接单→完成→评价
+- 停车位管理：绑定车牌号，按月/按次收费
+
+<span style="color:#6b7280;">【请输出】</span>
+1. 完整ER图（Mermaid格式）
+2. 每张表的完整DDL（字段名、类型、长度、默认值、注释）
+3. 索引建议（主键、唯一索引、联合索引）
+4. 表之间的外键关系
+5. 预估数据量及分库分表建议
+    </div>
+
+    <div class="tip-box info">
+        <strong>AI 的数据建模优势</strong>
+        AI 读过成千上万的项目，知道物业系统的标准范式。它生成的表结构通常涵盖了 90% 你需要的字段，你只需要补充 10% 的业务特有字段。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card purple">
+    <h3><span class="icon">🔌</span> 第3层：API 接口设计</h3>
+    <p>基于数据模型，让 AI 生成符合 RESTful 规范的完整接口文档。</p>
+
+    <h4 style="margin-top:14px;">Prompt 模板：</h4>
+    <div class="code-block">
+基于以上数据库设计，请生成 RESTful API 接口文档：
+
+<span style="color:#6b7280;">【要求】</span>
+- 遵循 RESTful 命名规范
+- URL: /api/v1/资源名[/资源ID]/动作
+- 每个接口包含：Method、URL、Request Body、Response
+- 列出所有需要分页、筛选、排序的接口
+- 标注需要鉴权的接口（Admin / Staff / Owner 三种角色）
+- 统一错误码定义（业务错误码 + HTTP状态码）
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card teal">
+    <h3><span class="icon">🧩</span> 第4层：项目目录结构</h3>
+    <p>让 AI 帮你设计清晰、可维护的项目结构，这是很多新手最容易掉坑的地方。</p>
+
+    <h4 style="margin-top:14px;">后端（ThinkPHP 为例）：</h4>
+    <div class="code-block">
+app/
+├── admin/controller/    <span style="color:#6b7280;">← 后台管理接口</span>
+├── api/controller/      <span style="color:#6b7280;">← 小程序/App接口</span>
+├── staff/controller/    <span style="color:#6b7280;">← 员工端接口</span>
+├── common/              <span style="color:#6b7280;">← 公共模型/服务/工具</span>
+├── middleware/           <span style="color:#6b7280;">← 鉴权/限流/日志中间件</span>
+└── config/               <span style="color:#6b7280;">← 配置文件</span>
+    </div>
+
+    <h4 style="margin-top:14px;">前端（Vue 3 为例）：</h4>
+    <div class="code-block">
+src/
+├── views/       <span style="color:#6b7280;">← 页面组件（按模块分组）</span>
+├── components/  <span style="color:#6b7280;">← 通用组件</span>
+├── stores/      <span style="color:#6b7280;">← Pinia 状态管理</span>
+├── api/         <span style="color:#6b7280;">← 接口封装（按模块）</span>
+├── router/      <span style="color:#6b7280;">← 路由 + 守卫</span>
+└── utils/       <span style="color:#6b7280;">← 工具函数 / 全局指令</span>
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🔄</span> 架构迭代工作流</h3>
+    <ol class="step-list">
+        <li><strong>投喂需求</strong> → AI 输出功能清单</li>
+        <li><strong>确认功能清单</strong> → 你和AI对齐理解，修正偏差</li>
+        <li><strong>生成数据模型</strong> → AI 输出ER图+DDL，你审核合理性</li>
+        <li><strong>生成接口文档</strong> → AI 输出 API 文档，前后端对齐</li>
+        <li><strong>生成项目框架</strong> → AI 生成目录结构+脚手架代码</li>
+        <li><strong>逐模块开发</strong> → 每个模块遵循「架构→编码→测试」循环</li>
+    </ol>
+    <div class="tip-box warning">
+        <strong>⚠️ 架构不能全靠AI</strong>
+        AI 善于生成常见范式，但不了解你的具体业务约束（合规要求、遗留系统、团队能力）。架构方案需要你审核、裁剪、拍板。
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="ch1_asking.html">← 第1章：提问的艺术</a>
+    <a href="ch3_coding.html">第3章：高效编码 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>

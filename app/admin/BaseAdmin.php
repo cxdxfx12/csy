@@ -185,22 +185,24 @@ class BaseAdmin extends BaseController
                 'PushDevice', 'SseEvent', 'ServiceVendor',
                 'WechatConfig', 'WechatUser', 'WechatMpFan', 'WechatMpTemplate', 'WechatTemplate',
                 'BillDunning', 'Message', 'SmsLog', 'CommunityPaymentConfig', 'CommunityWechatConfig',
+                'Decoration',
             ]),
             'service'   => array_merge($common, [
-                'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building',
+                'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building', 'Decoration',
             ]),
             'finance'   => array_merge($common, [
                 'Bill', 'Payment', 'PaymentConfig', 'ChargeItem', 'Meter', 'Arrears', 'Finance',
                 'Owner', 'Room', 'Building',
                 'Equipment', 'EquipmentMaintain', 'Device', 'DeviceEvent', 'Elevator', 'ElevatorFault', 'ElevatorInspection',
+                'Decoration',
             ]),
             'security'  => array_merge($common, [
                 'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace', 'Vehicle',
-                'Owner', 'Room', 'Building',
+                'Owner', 'Room', 'Building', 'Decoration',
             ]),
             'engineer'  => array_merge($common, [
                 'Equipment', 'EquipmentMaintain', 'Purchase', 'Supplier', 'Contract',
-                'Owner', 'Room', 'Building',
+                'Owner', 'Room', 'Building', 'Decoration',
             ]),
         ];
 
@@ -366,6 +368,11 @@ class BaseAdmin extends BaseController
             // 数据概览
             'dashboard'              => 'Dashboard',
             'dashboard:index'        => 'Dashboard',
+            // 装修管理
+            'decoration:apply'       => 'Decoration',
+            'decoration:inspect'     => 'Decoration',
+            'decoration:violation'   => 'Decoration',
+            'decoration:worker'      => 'Decoration',
         ];
     }
 }

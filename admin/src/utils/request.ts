@@ -17,7 +17,7 @@ service.interceptors.response.use(
   (res) => {
     if (res.data.code === 0) return res.data
     // code !== 0 一律视为错误
-    ElMessage.error(res.data.msg || '操作失败')
+    ElMessage.error(res.data.msg || `操作失败 (code:${res.data.code})`)
     return Promise.reject(res.data)
   },
   (err) => {

@@ -38,6 +38,10 @@ function config($key, $default = null) {
     return $val;
 }
 
+// 禁止输出 PHP 错误到浏览器（防止 JSON 响应被污染）
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 // CORS
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS');
@@ -257,7 +261,7 @@ try {
 
 } catch (\think\exception\HttpResponseException $e) {
     $e->getResponse()->send();
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     header('Content-Type: application/json; charset=utf-8');
     $msg = $e->getMessage();
     // 友好化常见数据库错误
@@ -266,5 +270,8 @@ try {
     } elseif (strpos($msg, 'Integrity constraint violation') !== false) {
         $msg = '数据冲突，请检查输入';
     }
+    // 记录未捕获异常到日志
+    $logMsg = date('Y-m-d H:i:s') . ' [' . get_class($e) . '] ' . $msg . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n";
+    file_put_contents(RUNTIME_PATH . 'log/error.log', $logMsg, FILE_APPEND);
     echo json_encode(['code' => 1, 'msg' => $msg], JSON_UNESCAPED_UNICODE);
 }

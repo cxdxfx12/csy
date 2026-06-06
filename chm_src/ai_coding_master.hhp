@@ -1,0 +1,27 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=ai_coding_master.chm
+Contents file=ai_coding_master.hhc
+Default Window=main
+Default topic=index.html
+Display compile progress=Yes
+Full-text search=Yes
+Language=0x804
+Title=AI Biancheng Dashi Ke
+
+[FILES]
+index.html
+intro.html
+ch1_asking.html
+ch2_architecture.html
+ch3_coding.html
+ch4_debugging.html
+ch5_project.html
+ch6_best.html
+faq.html
+style.css
+
+[WINDOWS]
+main="AI Biancheng Dashi Ke","ai_coding_master.hhc",,"index.html","index.html",,,,,0x20,150,0x104E,[0,0,1000,700],,,,,,,0
+
+[INFOTYPES]

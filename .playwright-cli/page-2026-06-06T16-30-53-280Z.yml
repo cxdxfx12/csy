@@ -1,0 +1,130 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: 🏢 大圣物业
+    - generic [ref=e9]:
+      - generic:
+        - menubar
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - button [ref=e13] [cursor=pointer]:
+          - img [ref=e15]
+        - navigation "面包屑" [ref=e17]:
+          - generic [ref=e18]:
+            - link "工作台" [ref=e19]
+            - text: /
+          - link "装修申请" [ref=e21]
+      - button "数据大屏" [ref=e23] [cursor=pointer]:
+        - img [ref=e25]
+        - generic [ref=e27]: 数据大屏
+      - generic [ref=e28]:
+        - button [ref=e30] [cursor=pointer]:
+          - img [ref=e32]
+        - button "管理员" [ref=e37] [cursor=pointer]:
+          - img [ref=e40]
+          - generic [ref=e42]: 管理员
+    - generic [ref=e44]:
+      - tablist [ref=e48]:
+        - tab "📊 控制台" [ref=e49]
+        - tab "装修申请" [selected] [ref=e50]:
+          - text: 装修申请
+          - img [ref=e52]
+      - generic [ref=e54]:
+        - tabpanel "装修申请"
+    - main [ref=e55]:
+      - generic [ref=e61]:
+        - heading "装修申请" [level=1] [ref=e62]
+        - paragraph [ref=e63]:
+          - generic [ref=e64]: 工作台
+          - generic [ref=e65]: /
+          - generic [ref=e66]: 装修申请
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e74]: "0"
+            - generic [ref=e75]: 待审核
+          - generic [ref=e76]:
+            - generic [ref=e77]: "0"
+            - generic [ref=e78]: 待缴费
+          - generic [ref=e79]:
+            - generic [ref=e80]: "0"
+            - generic [ref=e81]: 施工中
+          - generic [ref=e82]:
+            - generic [ref=e83]: "0"
+            - generic [ref=e84]: 待验收
+          - generic [ref=e85]:
+            - generic [ref=e86]: "0"
+            - generic [ref=e87]: 已完成
+          - generic [ref=e88]:
+            - generic [ref=e89]: "0"
+            - generic [ref=e90]: 待整改违规
+        - generic [ref=e92]:
+          - textbox "编号/房号/业主/公司" [ref=e97]
+          - generic [ref=e102] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e104]
+              - generic [ref=e105]: 小区
+            - img [ref=e108]
+          - generic [ref=e113] [cursor=pointer]:
+            - generic:
+              - combobox [ref=e115]
+              - generic [ref=e116]: 状态
+            - img [ref=e119]
+          - generic [ref=e122]:
+            - button "搜索" [ref=e123] [cursor=pointer]:
+              - generic [ref=e124]: 搜索
+            - button "重置" [ref=e125] [cursor=pointer]:
+              - generic [ref=e126]: 重置
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - button "新增申请" [ref=e130] [cursor=pointer]:
+              - generic [ref=e131]: 新增申请
+            - button "刷新统计" [ref=e132] [cursor=pointer]:
+              - generic [ref=e133]: 刷新统计
+          - generic [ref=e135]:
+            - table [ref=e137]:
+              - rowgroup [ref=e151]:
+                - row "# 申请编号 小区 房间号 业主 装修公司 负责人 状态 费用合计 开工日期 竣工日期 操作" [ref=e152]:
+                  - columnheader "#" [ref=e153]:
+                    - generic [ref=e154]: "#"
+                  - columnheader "申请编号" [ref=e155]:
+                    - generic [ref=e156]: 申请编号
+                  - columnheader "小区" [ref=e157]:
+                    - generic [ref=e158]: 小区
+                  - columnheader "房间号" [ref=e159]:
+                    - generic [ref=e160]: 房间号
+                  - columnheader "业主" [ref=e161]:
+                    - generic [ref=e162]: 业主
+                  - columnheader "装修公司" [ref=e163]:
+                    - generic [ref=e164]: 装修公司
+                  - columnheader "负责人" [ref=e165]:
+                    - generic [ref=e166]: 负责人
+                  - columnheader "状态" [ref=e167]:
+                    - generic [ref=e168]: 状态
+                  - columnheader "费用合计" [ref=e169]:
+                    - generic [ref=e170]: 费用合计
+                  - columnheader "开工日期" [ref=e171]:
+                    - generic [ref=e172]: 开工日期
+                  - columnheader "竣工日期" [ref=e173]:
+                    - generic [ref=e174]: 竣工日期
+                  - columnheader "操作" [ref=e175]:
+                    - generic [ref=e176]: 操作
+            - generic [ref=e180]:
+              - table:
+                - rowgroup
+              - generic [ref=e182]: 暂无数据
+          - generic [ref=e185]:
+            - generic [ref=e186]: 共 0 条
+            - generic [ref=e189] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e191]
+                - generic [ref=e192]: 15条/页
+              - img [ref=e195]
+            - button "上一页" [disabled] [ref=e197]:
+              - generic:
+                - img
+            - list [ref=e198]:
+              - listitem "第 1 页" [ref=e199]: "1"
+            - button "下一页" [disabled] [ref=e200]:
+              - generic:
+                - img

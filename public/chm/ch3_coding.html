@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第3章 - 高效编码实战</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 3</div>
+    <h2>高效编码：从脚手架到生产级代码</h2>
+    <p>掌握让 AI 输出"拿来就能用"的代码的完整套路</p>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🚀</span> 脚手架搭建：3分钟完成项目初始化</h3>
+    <p>AI 最擅长生成模板代码。一个完整的项目脚手架，传统方式需要半天到一天，AI 只需几分钟。</p>
+    
+    <h4 style="margin-top:14px;">实战 Prompt：</h4>
+    <div class="code-block">
+请帮我搭建一个 <span style="color:#7dd3fc;">Vue 3 + Vite + TypeScript</span> 的管理后台项目脚手架：
+
+<span style="color:#6b7280;">【必须包含】</span>
+1. Vite 配置（路径别名 @ → src, 代理 /api → http://127.0.0.1:8787）
+2. Vue Router：路由表 + 路由守卫（未登录重定向/login）
+3. Pinia：user store（登录状态+角色权限）
+4. Axios 封装：baseURL + 请求拦截器（自动加Token）+ 响应拦截器（401跳转登录）
+5. 登录页面（用户名+密码+验证码图片）
+6. 主布局（侧边栏菜单 + 顶部导航 + 内容区）
+7. 全局样式 reset
+8. .env 文件区分开发/生产环境
+
+<span style="color:#6b7280;">【风格要求】</span>
+- 每个文件用 // comments 标明职责
+- 导出命名规范
+- TypeScript 类型尽量完备
+    </div>
+
+    <div class="tip-box success">
+        <strong>效率秘诀</strong>
+        拿到脚手架后，立即用 <code>npm install &amp;&amp; npm run dev</code> 验证能否跑通。跑通后第一时间 git init + commit，这就是你的项目起点。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">📦</span> CRUD 工业化生产：模块模板</h3>
+    <p>后台系统中 80% 的页面都是列表+表单的 CRUD。让 AI 理解你的模板，批量生产。</p>
+
+    <h4 style="margin-top:14px;">第一步：教 AI 认识你的模板</h4>
+    <div class="code-block">
+以下是我项目中「用户管理」模块的完整代码，它使用了：
+- 前端：Vue 3 + Element Plus + 封装的 useTable hook
+- 后端：ThinkPHP 6 + 我封装的 BaseController
+
+<span style="color:#6b7280;">【前端文件】</span>
+[粘贴 views/user/index.vue 完整代码]
+[粘贴 api/user.ts 完整代码]
+
+<span style="color:#6b7280;">【后端文件】</span>
+[粘贴 app/admin/controller/User.php 完整代码]
+[粘贴 app/common/model/User.php 完整代码]
+
+请记住这个模板模式，接下来我会让你基于它生成其他模块。
+    </div>
+
+    <h4 style="margin-top:14px;">第二步：批量生成</h4>
+    <div class="code-block">
+基于上面的模板，请帮我生成以下模块的完整前后端代码：
+1. <span style="color:#7dd3fc;">楼栋管理 Building</span>：字段 name, community_id, floors, sort
+2. <span style="color:#7dd3fc;">房间管理 Room</span>：字段 building_id, unit, floor, room_no, area, owner_id
+3. <span style="color:#7dd3fc;">停车位 ParkingSpace</span>：字段 no, type(地上/地下), status(空闲/已租), price
+
+每个模块都要包含：列表页+搜索+分页+新增/编辑弹窗+删除确认
+    </div>
+
+    <div class="tip-box info">
+        <strong>关键技巧</strong>
+        先让 AI 学习你的一个标准模块，再让它批量复制模式。这样生成的代码风格一致、质量可控，而不是每次都从零描述。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">🧩</span> 复杂业务逻辑的分步策略</h3>
+    <p>对于复杂功能（如缴费匹配、工单派单算法），不要一次要求 AI 写全部。用"分治法"。</p>
+
+    <h4 style="margin-top:14px;">案例：物业费自动匹配算法</h4>
+    <ol class="step-list">
+        <li><strong>数据流梳理</strong>"用户扫码支付1000元 → 系统需要判断这笔钱分给哪几笔待缴费账单 → 请画出处理流程图"</li>
+        <li><strong>核心算法</strong>"基于上面的流程，请用PHP实现 matchPayment() 函数：输入支付金额和待缴费列表，输出匹配结果数组"</li>
+        <li><strong>边界处理</strong>"现在补充边界情况：超额支付、部分支付、欠款已过期、多币种"</li>
+        <li><strong>完整封装</strong>"将以上逻辑封装成 PaymentMatcher 类，包含单元测试"</li>
+    </ol>
+
+    <div class="tip-box success">
+        <strong>Why This Works</strong>
+        把大问题拆成小步骤，每步让 AI 专注一件事。这样每一步的输出质量都很高，不会顾此失彼。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card purple">
+    <h3><span class="icon">🔒</span> 安全编码：让 AI 帮你写出安全的代码</h3>
+    <p>明确要求 AI 遵循安全规范，它会在生成代码时自动考虑安全问题。</p>
+
+    <h4 style="margin-top:14px;">安全 Prompt 后缀：</h4>
+    <div class="code-block">
+<span style="color:#6b7280;">【安全要求（每次编码都要遵守）】</span>
+1. SQL 查询必须使用参数化（PDO prepared statements / ThinkPHP query builder），严禁字符串拼接
+2. 用户输入必须验证和过滤（类型校验 + 长度限制 + XSS 过滤）
+3. API 接口必须校验权限（从 Token 中获取用户ID，与资源归属比对）
+4. 密码必须 bcrypt 加密（cost ≥ 10）
+5. 敏感信息不在响应中返回（密码哈希、密钥等）
+6. 文件上传校验扩展名+MIME类型+文件大小
+7. 错误消息不暴露内部实现细节
+8. 防止 Mass Assignment（用 allowField 白名单）
+    </div>
+
+    <div class="tip-box warning">
+        <strong>⚠️ 安全不能全靠 AI</strong>
+        AI 会遵循你的安全要求，但它不会主动发现你项目的特有安全漏洞。上线前必须做安全审计。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card teal">
+    <h3><span class="icon">📝</span> 代码审查：让 AI 当你的 Code Reviewer</h3>
+    <p>把写好的代码交给 AI 审查，它比你更容易发现逻辑漏洞和不良实践。</p>
+
+    <h4 style="margin-top:14px;">审查 Prompt：</h4>
+    <div class="code-block">
+请审查以下代码，从以下角度给出改进建议：
+1. <span style="color:#7dd3fc;">安全性</span>：SQL注入、XSS、权限校验、敏感信息泄露
+2. <span style="color:#7dd3fc;">性能</span>：N+1查询、缺少索引、重复计算、缓存机会
+3. <span style="color:#7dd3fc;">可维护性</span>：命名清晰度、函数职责单一、魔法数字
+4. <span style="color:#7dd3fc;">错误处理</span>：异常捕获是否完整、边界条件是否覆盖
+5. <span style="color:#7dd3fc;">代码风格</span>：是否符合 [PSR-12 / 团队规范]
+
+<span style="color:#6b7280;">【代码】</span>
+[粘贴要审查的代码]
+
+请逐条列出问题，优先级高中低，并给出修改建议。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🧪</span> 测试驱动：用 AI 写单元测试</h3>
+    <p>AI 写测试的能力甚至比写业务代码更强，因为测试是高度结构化的。</p>
+
+    <h4 style="margin-top:14px;">单测 Prompt：</h4>
+    <div class="code-block">
+请为以下 <span style="color:#7dd3fc;">PHP</span> 函数编写 <span style="color:#7dd3fc;">PHPUnit</span> 单元测试：
+
+<span style="color:#6b7280;">【被测函数】</span>
+[粘贴完整代码]
+
+<span style="color:#6b7280;">【请覆盖以下场景】</span>
+1. 正常输入的正常输出
+2. 边界值（空数组、最大值、最小值）
+3. 异常输入（null、类型错误、超长字符串）
+4. 数据库相关用 Mock
+5. 每个测试方法命名清晰，注释说明测试意图
+6. 使用 @dataProvider 减少重复
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="ch2_architecture.html">← 第2章：架构设计</a>
+    <a href="ch4_debugging.html">第4章：Bug终结者 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>

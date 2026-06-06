@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第5章 - 项目管理全流程</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 5</div>
+    <h2>项目管理：从需求到上线的 AI 全流程</h2>
+    <p>AI 不仅是编码助手，更是你的项目管理搭档</p>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🗺️</span> AI 辅助项目全生命周期</h3>
+    <table class="styled-table">
+        <tr><th>阶段</th><th>AI 能做什么</th><th>你做什么</th></tr>
+        <tr>
+            <td>📋 需求分析</td>
+            <td>将PRD转为功能清单、画流程图、识别技术风险</td>
+            <td>确认业务逻辑、排优先级</td>
+        </tr>
+        <tr>
+            <td>🏗️ 技术设计</td>
+            <td>数据库设计、API设计、技术选型建议</td>
+            <td>审核方案、拍板决策</td>
+        </tr>
+        <tr>
+            <td>💻 开发阶段</td>
+            <td>生成脚手架、CRUD代码、单元测试、修复Bug</td>
+            <td>Review代码、集成调试</td>
+        </tr>
+        <tr>
+            <td>🧪 测试阶段</td>
+            <td>生成测试用例、E2E测试脚本、Bug分析</td>
+            <td>执行测试、验收确认</td>
+        </tr>
+        <tr>
+            <td>🚀 部署上线</td>
+            <td>生成部署脚本、Dockerfile、Nginx配置、CI/CD</td>
+            <td>执行部署、监控验证</td>
+        </tr>
+        <tr>
+            <td>📝 文档维护</td>
+            <td>API文档、README、变更日志、运维手册</td>
+            <td>审核补充、版本管理</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">📅</span> 项目启动：让 AI 帮你做计划</h3>
+    <h4 style="margin-top:12px;">Prompt 模板：</h4>
+    <div class="code-block">
+我要启动一个 <span style="color:#7dd3fc;">[项目名称]</span> 项目：
+
+<span style="color:#6b7280;">【项目概况】</span>
+- 目标用户：[描述]
+- 核心功能：[列举]
+- 技术栈：[前端 / 后端 / 数据库 / 部署]
+- 团队规模：[X人]
+- 时间要求：[X周/月]
+
+<span style="color:#6b7280;">【请帮我输出】</span>
+1. 开发阶段划分（Phase 1 / 2 / 3，每个Phase的具体任务）
+2. 每个Phase的预估工时
+3. 技术风险清单和应对方案
+4. 推荐的协作流程（分支策略、Code Review规范）
+5. 第一周的工作计划（具体到每天）
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">📊</span> 进度管理：用 AI 写周报和追踪进度</h3>
+    <p>把每天的开发日志喂给 AI，让它自动生成周报。</p>
+
+    <div class="code-block">
+根据以下本周开发日志，生成一份周报：
+
+<span style="color:#6b7280;">【本周日志】</span>
+- 周一：完成登录注册模块，修复了Token刷新bug
+- 周二：开发业主管理CRUD，遇到手机号重复校验问题
+- 周三：解决手机号重复bug + 完成楼栋管理模块
+- 周四：前后端联调，修复了5个API参数不一致问题
+- 周五：部署测试环境，发现跨域问题并解决
+
+<span style="color:#6b7280;">【周报格式】</span>
+- 本周完成、进行中、下周计划、风险与阻塞
+- 每个任务标注完成百分比
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card teal">
+    <h3><span class="icon">🔧</span> DevOps：AI 生成部署配置</h3>
+    <h4 style="margin-top:12px;">Dockerfile 生成：</h4>
+    <div class="code-block">
+请为我的 <span style="color:#7dd3fc;">PHP 8.1 + Nginx</span> 项目生成 Dockerfile：
+- 使用 php:8.1-fpm-alpine 基础镜像
+- 安装 pdo_mysql、redis、gd、zip 扩展
+- 用 composer install --no-dev 安装依赖
+- 暴露 9000 端口
+- 多阶段构建优化镜像大小
+    </div>
+
+    <h4 style="margin-top:14px;">Nginx 配置生成：</h4>
+    <div class="code-block">
+请为此项目生成 Nginx 配置：
+- 域名：admin.example.com
+- 前端静态目录：/var/www/public/
+- PHP 请求转发到 php-fpm:9000
+- SPA 模式（所有非文件请求回退到 index.html）
+- 开启 gzip、设置缓存策略
+- 安全头（X-Frame-Options、CSP等）
+    </div>
+
+    <h4 style="margin-top:14px;">CI/CD 配置：</h4>
+    <div class="code-block">
+请为 GitHub Actions 生成 CI/CD 配置：
+- 代码 push 到 master 时触发
+- 步骤：checkout → composer install → phpunit → 构建前端 → SCP部署到服务器
+- 部署前发送钉钉通知，部署后发送结果通知
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card purple">
+    <h3><span class="icon">📖</span> 文档自动化</h3>
+    <p>AI 最擅长"读代码写文档"。把你写完的代码给它，一键生成：</p>
+
+    <div class="model-grid">
+        <div class="model-card" style="border-top-color:#3b82f6;">
+            <div class="emoji">📘</div>
+            <h4>API 文档</h4>
+            <p>"基于这些 Controller 代码生成 OpenAPI 3.0 接口文档"</p>
+        </div>
+        <div class="model-card" style="border-top-color:#10b981;">
+            <div class="emoji">📦</div>
+            <h4>README.md</h4>
+            <p>"扫描项目结构，生成包含安装、部署、目录说明的README"</p>
+        </div>
+        <div class="model-card" style="border-top-color:#f59e0b;">
+            <div class="emoji">📝</div>
+            <h4>变更日志</h4>
+            <p>"基于 git log 最近30条提交，生成 CHANGELOG.md"</p>
+        </div>
+        <div class="model-card" style="border-top-color:#8b5cf6;">
+            <div class="emoji">🛠️</div>
+            <h4>运维手册</h4>
+            <p>"基于部署配置生成服务器运维文档"</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🚀</span> 上线 CheckList（让AI帮你检查）</h3>
+    <div class="code-block">
+我即将上线项目，请帮我生成一份上线检查清单，覆盖：
+
+<span style="color:#6b7280;">【安全】</span>
+- 是否关闭了 debug 模式
+- 数据库密码是否使用环境变量
+- 敏感接口是否有鉴权
+- HTTPS是否配置
+
+<span style="color:#6b7280;">【性能】</span>
+- 是否开启了 OPcache
+- 静态资源是否配置CDN
+- 数据库慢查询是否优化
+
+<span style="color:#6b7280;">【可靠性】</span>
+- 是否有健康检查端点
+- 日志轮转是否配置
+- 备份策略是否到位
+- 回滚方案是否准备
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="ch4_debugging.html">← 第4章：Bug终结者</a>
+    <a href="ch6_best.html">第6章：最佳实践 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>

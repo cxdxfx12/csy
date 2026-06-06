@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "basic-ftp": "^6.0.1",
+    "iconv-lite": "^0.7.2",
+    "lzx": "^1.0.0",
     "mysql2": "^3.22.5",
     "node-ssh": "^13.2.1"
   },

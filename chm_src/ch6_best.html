@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第6章 - 最佳实践与避坑指南</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 6</div>
+    <h2>最佳实践 &amp; 避坑指南</h2>
+    <p>数十个项目实战总结出的黄金法则，让你少走弯路</p>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">✅</span> AI 编程十大黄金法则</h3>
+    <ol class="step-list">
+        <li><strong>上下文是第一生产力</strong> — 给 AI 的信息越多，结果越精准。需要什么技术栈、什么约束，全都讲清楚</li>
+        <li><strong>一次只做一件事</strong> — 不要在一个 Prompt 里要登录+注册+权限+菜单。拆开，逐个击破</li>
+        <li><strong>先教再要</strong> — 让 AI 学习你的代码风格和项目模板后，再让它批量生产</li>
+        <li><strong>验证每一个输出</strong> — AI 生成的代码必须跑通才算数。不跑通的代码 = 废代码</li>
+        <li><strong>保持对话上下文干净</strong> — 一个任务一个对话窗口，别把十个任务混在一个会话里</li>
+        <li><strong>用版本控制保护每一次进展</strong> — AI 改代码前先 git commit，改坏了随时回退</li>
+        <li><strong>代码审查不可省略</strong> — AI 写的代码也一样要 Review，它可能写出逻辑正确但不符你架构的代码</li>
+        <li><strong>善用「请解释」</strong> — 看不懂 AI 的代码就让它解释，学技术的同时保证质量</li>
+        <li><strong>安全要求写进 Prompt 模板</strong> — 形成自己的安全 Checklist，每次编码都带上</li>
+        <li><strong>持续迭代 Prompt 库</strong> — 好用的 Prompt 存起来，形成个人 Prompt 武器库</li>
+    </ol>
+</div>
+
+<!-- ==================== -->
+<div class="card red">
+    <h3><span class="icon">⚠️</span> 十大常见陷阱</h3>
+
+    <table class="styled-table">
+        <tr><th>#</th><th>陷阱</th><th>后果</th><th>正确做法</th></tr>
+        <tr>
+            <td>1</td>
+            <td><strong>过度信任AI</strong>，不验证直接上线</td>
+            <td>安全漏洞、逻辑错误</td>
+            <td>AI写的代码 = 初稿，必须Review+测试</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td><strong>一个Prompt想要全部</strong></td>
+            <td>AI输出混乱，质量低下</td>
+            <td>分步骤、分模块，逐个击破</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td><strong>不提供技术栈信息</strong></td>
+            <td>生成代码不兼容</td>
+            <td>Always specify 语言+框架+版本</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td><strong>把AI当搜索引擎用</strong></td>
+            <td>信息可能过时或虚构</td>
+            <td>API用法查官方文档，AI辅助编码</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td><strong>不管理上下文窗口</strong></td>
+            <td>AI「忘记」前面的约定</td>
+            <td>大任务新开会话，关键约束每次重申</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td><strong>粘贴敏感信息</strong>（密钥、密码）</td>
+            <td>信息泄露风险</td>
+            <td>用占位符替代，或用 .env 引用</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td><strong>不管理git就大改代码</strong></td>
+            <td>改坏了回不去</td>
+            <td>每轮AI改代码前 commit，小步快跑</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td><strong>AI给了错误答案就放弃</strong></td>
+            <td>错失高效工具</td>
+            <td>改进提问方式，给更多上下文</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td><strong>忽略AI的知识截止日期</strong></td>
+            <td>用到已废弃的API</td>
+            <td>新框架/新版本 + 官方文档交叉验证</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td><strong>把AI当魔法，不思考底层原理</strong></td>
+            <td>技术成长停滞</td>
+            <td>不理解就追问AI，借机学习</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">📦</span> 个人 Prompt 武器库建设</h3>
+    <p>把高频好用的 Prompt 整理成模板，随取随用。以下是建议分类：</p>
+
+    <h4 style="margin-top:14px;">🗂️ 推荐分类结构：</h4>
+    <div class="code-block">
+prompts/
+├── 01-项目初始化/
+│   ├── 脚手架搭建.md
+│   ├── 数据库设计.md
+│   └── 技术选型咨询.md
+├── 02-日常编码/
+│   ├── CRUD模板.md
+│   ├── 复杂业务逻辑.md
+│   ├── 重构代码.md
+│   └── 写注释文档.md
+├── 03-测试调试/
+│   ├── Bug报告模板.md
+│   ├── 单元测试生成.md
+│   └── 代码审查.md
+├── 04-部署运维/
+│   ├── Docker配置.md
+│   ├── Nginx配置.md
+│   ├── CI_CD配置.md
+│   └── 上线CheckList.md
+└── 05-通用后缀/
+    ├── 安全要求后缀.md
+    └── 代码风格要求.md
+    </div>
+
+    <div class="tip-box success">
+        <strong>建设秘诀</strong>
+        每遇到一个新场景、写出一个好 Prompt，就存起来。三个月后你的 Prompt 库就是一套完整的 AI 编程方法论。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card purple">
+    <h3><span class="icon">🧠</span> AI 时代程序员的思维转变</h3>
+
+    <table class="styled-table">
+        <tr><th>旧思维</th><th>新思维</th></tr>
+        <tr><td>"我得记住所有API用法"</td><td>"我知道去哪里找，AI能帮我快速写出"</td></tr>
+        <tr><td>"写代码是我的核心价值"</td><td>"设计解决方案才是核心价值，写代码是执行"</td></tr>
+        <tr><td>"比别人更懂语法 = 更强"</td><td>"比别人更懂架构 + 更会用AI = 更强"</td></tr>
+        <tr><td>"加班拼代码量"</td><td>"用AI提升10倍效率，把时间花在思考上"</td></tr>
+        <tr><td>"调试靠经验和直觉"</td><td>"建立系统化调试流程，AI辅助诊断"</td></tr>
+        <tr><td>"一个人扛所有事情"</td><td>"AI是我的24小时随叫随到的搭档"</td></tr>
+    </table>
+</div>
+
+<!-- ==================== -->
+<div class="card teal">
+    <h3><span class="icon">🔄</span> 持续进化的学习路径</h3>
+    <ol class="step-list">
+        <li><strong>第1周：适应期</strong> — 用AI写简单的工具函数、格式化代码、加注释，建立信任和手感</li>
+        <li><strong>第2~4周：编码期</strong> — 用AI写CRUD、生成测试、修复Bug，形成自己的Prompt模板库</li>
+        <li><strong>第2~3月：架构期</strong> — 让AI参与技术选型、数据库设计、系统架构，你做最终决策</li>
+        <li><strong>第4~6月：融合期</strong> — AI成为你工作流的默认组成部分，编码+审查+文档+部署全链路AI化</li>
+        <li><strong>6个月后：赋能期</strong> — 把AI工作流教给团队，制定团队AI编码规范，放大整个团队的生产力</li>
+    </ol>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">💎</span> 最后的忠告</h3>
+    
+    <div class="tip-box info">
+        <strong>AI 是杠杆，你是支点</strong>
+        阿基米德说"给我一个支点，我能撬动地球"。AI就是那根杠杆，而你的技术判断力、业务理解力、架构决策力——就是支点。支点越稳，杠杆越长，你的能力边界就越广。
+    </div>
+
+    <div class="tip-box warning">
+        <strong>不要停止学习底层原理</strong>
+        AI 可以帮你写代码，但不能替你理解为什么这样设计。数据库索引为什么用B+树？JWT为什么是无状态的？这些底层知识才是你不可替代的核心竞争力。
+    </div>
+
+    <div class="tip-box success">
+        <strong>拥抱变化，保持好奇</strong>
+        AI编程工具每三个月就有一次大版本更新。保持开放心态，持续尝试新工具、新方法。今天的"最佳实践"，明天可能就是"过时方案"。永远在学习路上的程序员，才不会被淘汰。
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="ch5_project.html">← 第5章：项目管理</a>
+    <a href="faq.html">FAQ 常见问题 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>

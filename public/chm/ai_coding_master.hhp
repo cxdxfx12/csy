@@ -1,0 +1,25 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=../AI编程大师课.chm
+Contents file=ai_coding_master.hhc
+Default Window=main
+Default topic=index.html
+Display compile progress=No
+Full-text search=Yes
+Language=0x804 中文(中国)
+Title=AI 编程大师课
+
+[WINDOWS]
+main="AI 编程大师课","ai_coding_master.hhc",,"index.html","index.html",,,,,0x63520,,0x3006,,,,,,,,0
+
+[FILES]
+index.html
+intro.html
+ch1_asking.html
+ch2_architecture.html
+ch3_coding.html
+ch4_debugging.html
+ch5_project.html
+ch6_best.html
+faq.html
+style.css

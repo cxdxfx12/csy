@@ -92,6 +92,12 @@ const router = createRouter({
         { path: 'notice/message', name: 'MessageIndex', component: () => import('@/views/notice/Message.vue'), meta: { title: '消息记录' } },
         { path: 'sms/log', name: 'SmsLogIndex', component: () => import('@/views/sms/SmsLog.vue'), meta: { title: '短信发送日志' } },
         { path: 'owner/signup', name: 'ActivitySignupIndex', component: () => import('@/views/owner/ActivitySignup.vue'), meta: { title: '活动报名' } },
+
+        // ====== 装修管理 ======
+        { path: 'decoration/apply', name: 'DecorationApply', component: () => import('@/views/decoration/DecorationApply.vue'), meta: { title: '装修申请' } },
+        { path: 'decoration/inspect', name: 'DecorationInspect', component: () => import('@/views/decoration/DecorationInspect.vue'), meta: { title: '施工巡查' } },
+        { path: 'decoration/violation', name: 'DecorationViolation', component: () => import('@/views/decoration/DecorationViolation.vue'), meta: { title: '违规记录' } },
+        { path: 'decoration/worker', name: 'DecorationWorker', component: () => import('@/views/decoration/DecorationWorker.vue'), meta: { title: '施工人员' } },
       ],
     },
 

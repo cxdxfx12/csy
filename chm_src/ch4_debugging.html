@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第4章 - Bug终结者</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 4</div>
+    <h2>Bug 终结者：系统化调试方法论</h2>
+    <p>告别瞎猜式调试，建立科学的 Bug 定位-修复-预防体系</p>
+</div>
+
+<!-- ==================== -->
+<div class="card red">
+    <h3><span class="icon">🔍</span> Bug 调试的 5 步心法</h3>
+    <ol class="step-list">
+        <li><strong>精准复现</strong> — 找到稳定的触发条件，记录完整操作序列</li>
+        <li><strong>划定范围</strong> — 用二分法/日志插桩缩小可能出错的代码区域</li>
+        <li><strong>构建假设</strong> — 基于代码逻辑推断可能的原因，列出2~3个假设</li>
+        <li><strong>验证假设</strong> — 逐个验证，不是猜对了就停，要确认没有其他原因</li>
+        <li><strong>根治 + 预防</strong> — 修改代码后补测试用例，防止回退</li>
+    </ol>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">📋</span> Bug 报告模板：喂给 AI 的最佳格式</h3>
+    <p>模糊描述 = 模糊答案。给 AI 的信息越精确，诊断越快。</p>
+
+    <h4 style="margin-top:14px;">标准 Bug 报告模板：</h4>
+    <div class="code-block">
+<span style="color:#6b7280;">【Bug 标题】</span>一句话描述现象
+<span style="color:#6b7280;">【环境信息】</span>
+- OS: Windows 11 / CentOS 7.9
+- PHP: 8.1.12 / Node: 20.11.0
+- Framework: ThinkPHP 6.1 / Vue 3.4
+- MySQL: 8.0.35
+- Browser: Chrome 124
+
+<span style="color:#6b7280;">【复现步骤】</span>
+1. 登录 admin 账号
+2. 进入「业主管理」→ 点击「新增」
+3. 填写手机号 138xxxx → 点击保存
+4. 观察：页面弹窗报错
+
+<span style="color:#6b7280;">【期望行为】</span>保存成功后关闭弹窗，列表刷新
+<span style="color:#6b7280;">【实际行为】</span>弹窗提示「保存失败」，但未说明原因
+
+<span style="color:#6b7280;">【错误日志】</span>
+[2026-06-06 21:30:15] ERROR: SQLSTATE[23000]: Duplicate entry '138xxxx' 
+for key 'phone' in /app/admin/controller/Owner.php:82
+
+<span style="color:#6b7280;">【相关代码】</span>
+[粘贴 Owner.php 第 70~100 行]
+
+<span style="color:#6b7280;">【已尝试】</span>
+1. 检查数据库确认该手机号已经存在 ✓
+2. 在前端加了手机号唯一校验 ✗ 仍然报错
+    </div>
+
+    <div class="tip-box success">
+        <strong>为什么这个模板有效</strong>
+        AI 一眼就能看到：错误类型（Duplicate entry）、出错位置（Owner.php:82）、已尝试方案（前端校验无效）。诊断几乎瞬间完成。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">🎯</span> 常见Bug类型与AI调试策略</h3>
+
+    <h4 style="margin-top:12px;">1️⃣ 空指针 / Undefined</h4>
+    <table class="styled-table">
+        <tr><th>症状</th><th>AI诊断Prompt</th><th>常用修复</th></tr>
+        <tr>
+            <td>Cannot read property 'xxx' of undefined</td>
+            <td>"这段代码中 result.data 可能为 undefined，请分析哪些情况下会触发，并提供防御性代码"</td>
+            <td>可选链 ?. 、默认值 || []、类型守卫</td>
+        </tr>
+        <tr>
+            <td>Call to a member function on null</td>
+            <td>"find() 返回 null 时后续代码会崩溃，请帮我改成先判空再处理"</td>
+            <td>if($obj) {} 提前return</td>
+        </tr>
+    </table>
+
+    <h4 style="margin-top:16px;">2️⃣ 异步时序问题（前端高频）</h4>
+    <table class="styled-table">
+        <tr><th>症状</th><th>诊断</th><th>修复</th></tr>
+        <tr>
+            <td>数据还没返回就渲染了</td>
+            <td>忘记 await 或 Promise 未处理</td>
+            <td>加 await / 用 Suspense / 加 loading 状态</td>
+        </tr>
+        <tr>
+            <td>先渲染了旧数据才更新</td>
+            <td>watch 的 immediate/flush 配置不对</td>
+            <td>检查 watch 选项 / 改用 computed</td>
+        </tr>
+    </table>
+
+    <h4 style="margin-top:16px;">3️⃣ 数据库相关 Bug</h4>
+    <table class="styled-table">
+        <tr><th>症状</th><th>诊断方式</th><th>AI 辅助</th></tr>
+        <tr>
+            <td>查询慢（N+1）</td><td>开启 SQL 日志，看重复查询</td><td>"这段代码有N+1查询问题，请用 with() 预加载优化"</td>
+        </tr>
+        <tr>
+            <td>死锁</td><td>SHOW ENGINE INNODB STATUS</td><td>"多表更新操作，请分析死锁风险并给出加锁顺序"</td>
+        </tr>
+        <tr>
+            <td>数据不一致</td><td>检查是否忘了事务</td><td>"给这段代码加上事务处理，确保原子性"</td>
+        </tr>
+    </table>
+
+    <h4 style="margin-top:16px;">4️⃣ 权限 / 安全类 Bug</h4>
+    <table class="styled-table">
+        <tr><th>症状</th><th>诊断</th><th>修复</th></tr>
+        <tr>
+            <td>普通用户能访问管理接口</td><td>中间件/路由守卫遗漏</td><td>"帮我检查这段路由配置是否有权限漏洞"</td>
+        </tr>
+        <tr>
+            <td>用户A能看到用户B的数据</td><td>查询未加 owner_id 过滤</td><td>"在这个查询中加入用户归属校验"</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">🩺</span> AI 诊断实战案例</h3>
+
+    <h4 style="margin-top:12px;">案例1：前端路由守卫失效</h4>
+    <div class="dialog">
+        <div class="msg msg-you">
+            <div class="avatar">你</div>
+            <div class="bubble">我的 Vue 3 项目路由守卫失效了：即使 Token 过期，用户仍然能访问需要登录的页面。这是我的 router/index.ts 代码：[粘贴]</div>
+        </div>
+        <div class="msg msg-ai">
+            <div class="avatar">AI</div>
+            <div class="bubble">
+                找到2个问题：<br>
+                1. <b>路径匹配不精确</b>：你的 meta.requiresAuth 只标记了部分路由，/admin/users 没有标记<br>
+                2. <b>Token过期检查缺失</b>：你只检查了Token是否存在，没有检查exp过期时间<br><br>
+                修复方案：用正则匹配所有 /admin/* 和 /staff/* 路径，统一校验；在路由守卫中解码JWT检查exp字段。
+            </div>
+        </div>
+    </div>
+
+    <h4 style="margin-top:20px;">案例2：生产环境 500 但本地正常</h4>
+    <div class="dialog">
+        <div class="msg msg-you">
+            <div class="avatar">你</div>
+            <div class="bubble">上线后「业主缴费」页面返回500，但本地一切正常。Nginx日志显示：FastCGI sent in stderr: "PHP message: PHP Fatal error..." 但没有完整信息。</div>
+        </div>
+        <div class="msg msg-ai">
+            <div class="avatar">AI</div>
+            <div class="bubble">
+                这是典型的「本地OK/线上炸」问题，排查清单：<br>
+                1. <b>PHP版本差异</b>：本地8.1，服务器可能是7.4 — 检查nullsafe ?-> 语法<br>
+                2. <b>Composer依赖版本</b>：生产环境可能缺少某扩展<br>
+                3. <b>.env 配置</b>：数据库连接/密钥是否正确<br>
+                4. <b>文件权限</b>：runtime/ 目录是否可写<br>
+                5. <b>中药方子：</b>在入口文件加 ini_set('display_errors',1); error_reporting(E_ALL); 看完整错误
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card purple">
+    <h3><span class="icon">🛡️</span> Bug 预防体系</h3>
+    <table class="styled-table">
+        <tr>
+            <th>阶段</th><th>措施</th><th>AI 能帮什么</th>
+        </tr>
+        <tr>
+            <td>编码时</td><td>TypeScript 严格模式、参数校验中间件</td>
+            <td>生成类型定义和校验代码</td>
+        </tr>
+        <tr>
+            <td>提交前</td><td>Lint + 单元测试 + 代码审查</td>
+            <td>写测试、审查代码</td>
+        </tr>
+        <tr>
+            <td>合并后</td><td>CI/CD 自动测试 + 构建检查</td>
+            <td>生成 CI 配置脚本</td>
+        </tr>
+        <tr>
+            <td>上线后</td><td>错误监控（Sentry）+ 日志告警</td>
+            <td>分析错误日志，定位根因</td>
+        </tr>
+    </table>
+</div>
+
+<div class="nav-bottom">
+    <a href="ch3_coding.html">← 第3章：高效编码</a>
+    <a href="ch5_project.html">第5章：项目管理 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>

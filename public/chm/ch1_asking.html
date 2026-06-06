@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第1章 - 提问的艺术</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-nav">
+    <div class="top-nav-inner">
+        <div class="logo-icon">🤖</div>
+        <h1>AI 编程大师课</h1>
+    </div>
+</div>
+
+<div class="main-container">
+
+<div class="chapter-header">
+    <div class="chapter-num">CHAPTER 1</div>
+    <h2>提问的艺术：如何让 AI 一次给出正确的代码</h2>
+    <p>80% 的「AI 不好用」问题，都源于不会提问。这一章将彻底改变你的提问方式。</p>
+</div>
+
+<!-- ==================== -->
+<div class="card red">
+    <h3><span class="icon">❌</span> 常见错误提问 vs 正确提问</h3>
+
+    <div class="compare-row">
+        <div class="compare-col bad">
+            <h4>❌ 糟糕的提问</h4>
+            <ul style="padding-left:18px;color:#991b1b;">
+                <li>"帮我写一个登录"</li>
+                <li>"这段代码有问题，帮我改"</li>
+                <li>"做一个商城系统"</li>
+                <li>"报错了，怎么办"</li>
+            </ul>
+        </div>
+        <div class="compare-col good">
+            <h4>✅ 优秀的提问</h4>
+            <ul style="padding-left:18px;color:#065f46;">
+                <li>"用 Node.js + MySQL 写一个 JWT 登录接口，包含注册、登录、刷新 Token"</li>
+                <li>"以下代码在并发请求时出现数据竞争，报错信息是..."</li>
+                <li>"请为我设计一个B2C电商系统的数据库ER图，核心模块包括..."</li>
+                <li>"MySQL 8.0 插入时报 Duplicate entry，这是我的表结构和SQL..."</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card">
+    <h3><span class="icon">📐</span> 黄金提问公式：CTFS 法则</h3>
+    <p>每一个高质量提问都应该包含以下四个要素：</p>
+    <br>
+    <table class="styled-table">
+        <tr>
+            <th style="width:60px;">要素</th><th>含义</th><th>示例</th>
+        </tr>
+        <tr>
+            <td><strong>C</strong></td>
+            <td><strong>Context（上下文）</strong> — 技术栈、环境、约束</td>
+            <td>"Node.js 18 + TypeScript + PostgreSQL"</td>
+        </tr>
+        <tr>
+            <td><strong>T</strong></td>
+            <td><strong>Task（任务）</strong> — 具体要做什么</td>
+            <td>"实现用户角色权限中间件"</td>
+        </tr>
+        <tr>
+            <td><strong>F</strong></td>
+            <td><strong>Format（格式）</strong> — 期望的输出形式</td>
+            <td>"请给出完整代码 + 单元测试"</td>
+        </tr>
+        <tr>
+            <td><strong>S</strong></td>
+            <td><strong>Scope（范围）</strong> — 边界和注意事项</td>
+            <td>"不考虑并发，Admin角色拥有所有权限"</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ==================== -->
+<div class="card orange">
+    <h3><span class="icon">🎯</span> 实战演示：从烂提问到好提问的进化</h3>
+
+    <h4 style="margin-top:12px;">Level 0 — 纯新手👶</h4>
+    <div class="code-block" style="color:#fca5a5;">
+"帮我写一个后台管理系统"
+    </div>
+    <p style="color:#64748b;font-size:13px;">→ AI 不知道语言、框架、功能、规模，只能给泛泛之谈</p>
+
+    <h4 style="margin-top:16px;">Level 1 — 有技术栈但不清晰🤔</h4>
+    <div class="code-block" style="color:#fbbf24;">
+"用 Vue 做一个后台管理系统，能管理用户和订单"
+    </div>
+    <p style="color:#64748b;font-size:13px;">→ 给了框架，但缺少细节：用什么 UI 库？路由怎么配？API 格式？</p>
+
+    <h4 style="margin-top:16px;">Level 2 — CTFS 完整提问 🔥</h4>
+    <div class="code-block">
+请帮我搭建一个 <span style="color:#7dd3fc;">Vue 3 + TypeScript</span> 的后台管理系统基础框架：
+
+<span style="color:#6b7280;">【技术栈】</span>
+- 前端：Vue 3 + TypeScript + Vite + Pinia + Vue Router
+- UI库：Element Plus
+- 后端已有 REST API（Base URL: /api/v1）
+
+<span style="color:#6b7280;">【需要实现】</span>
+1. 登录页面（用户名+密码+验证码）
+2. JWT Token 存储和自动刷新
+3. 路由守卫（未登录跳转登录页）
+4. 侧边栏菜单（根据角色动态显示）
+5. 用户列表页（分页+搜索+增删改查）
+6. 订单列表页（分页+筛选+导出Excel）
+
+<span style="color:#6b7280;">【要求】</span>
+- 项目结构清晰，组件可复用
+- 封装统一的 axios 请求实例（拦截器处理Token和错误）
+- 使用 Pinia 管理全局状态
+- 请输出完整的文件结构和每个文件的代码
+    </div>
+
+    <div class="tip-box success">
+        <strong>这就是 CTFS 的威力</strong>
+        当你把上下文、任务、格式、范围都说清楚了，AI 就能一次性输出可直接运行的完整项目代码，而不是让你来回追问 10 次。
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card green">
+    <h3><span class="icon">🔑</span> 不同场景的提问模板</h3>
+
+    <h4>🆕 新建功能</h4>
+    <div class="code-block">
+请用 [语言/框架] 实现 [功能名称]，要求：
+- 输入参数：[类型和说明]
+- 输出结果：[类型和说明]
+- 边界处理：[异常情况说明]
+- 请包含错误处理和日志记录
+    </div>
+
+    <h4>🔧 修改现有代码</h4>
+    <div class="code-block">
+以下是我当前的代码：
+[粘贴代码]
+我需要做以下修改：[描述修改点]
+注意保持其他逻辑不变，尤其是 [关键部分]
+    </div>
+
+    <h4>📖 技术咨询</h4>
+    <div class="code-block">
+我在做 [项目描述]，技术栈是 [技术栈]
+现在面临 [具体问题/场景]
+我考虑了以下方案：[A、B、C]
+请帮我分析各方案的优劣，并给出推荐
+    </div>
+
+    <h4>🐛 调试求助</h4>
+    <div class="code-block">
+环境：[OS + 语言版本 + 框架版本]
+复现步骤：[1. 2. 3.]
+期望行为：[应该怎样]
+实际行为：[实际怎样 + 完整报错信息]
+相关代码：[精简后的最小可复现代码]
+已尝试的解决方案：[A、B、C — 都无效]
+    </div>
+</div>
+
+<!-- ==================== -->
+<div class="card teal">
+    <h3><span class="icon">🧪</span> 进阶技巧：多轮对话策略</h3>
+    <div class="dialog">
+        <div class="msg msg-you">
+            <div class="avatar">你</div>
+            <div class="bubble">我想做一个小区物业管理系统，能帮我设计数据库吗？</div>
+        </div>
+        <div class="msg msg-ai">
+            <div class="avatar">AI</div>
+            <div class="bubble">好的！为了更好地设计，请告诉我：<br>1. 需要管理哪些核心业务（业主、缴费、报修？）<br>2. 是多小区还是单小区？<br>3. 是否有微信小程序端？</div>
+        </div>
+        <div class="msg msg-you">
+            <div class="avatar">你</div>
+            <div class="bubble">单小区模式，核心业务：业主管理、物业费收缴、报修工单、停车管理、门禁。有微信小程序端。</div>
+        </div>
+        <div class="msg msg-ai">
+            <div class="avatar">AI</div>
+            <div class="bubble">明确了！我来设计一套完整数据库方案，包含 15 张核心表...</div>
+        </div>
+    </div>
+    <div class="tip-box info">
+        <strong>策略要点</strong>
+        第一轮给出大方向让 AI 追问细节，第二轮补充完整，一次性拿到成熟方案。不要试图一句 Prompt 解决所有问题。
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <a href="intro.html">← 引言</a>
+    <a href="ch2_architecture.html">第 2 章：架构设计 →</a>
+</div>
+
+<div class="page-footer">AI 编程大师课 &copy; 2026 &nbsp;|&nbsp; 让 AI 成为你的超级搭档</div>
+
+</div>
+</body>
+</html>
