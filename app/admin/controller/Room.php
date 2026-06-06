@@ -135,19 +135,24 @@ class Room extends BaseAdmin
 
     public function select()
     {
-        $communityId = $this->request->param('community_id', 0);
-        $buildingId  = $this->request->param('building_id', 0);
-        $list = Db::name('room')->alias('r')
+        $communityId = intval($this->request->param('community_id', 0));
+        $buildingId  = intval($this->request->param('building_id', 0));
+
+        $query = Db::name('room')->alias('r')
             ->leftJoin('owner_room ocr', 'ocr.room_id = r.id AND ocr.delete_time IS NULL')
             ->leftJoin('owner o', 'o.id = ocr.owner_id AND o.delete_time IS NULL')
             ->whereNull('r.delete_time')
-            ->where(function($q) use ($communityId, $buildingId) {
-                if ($communityId) $q->where('r.community_id', '=', intval($communityId));
-                if ($buildingId)  $q->where('r.building_id', '=', intval($buildingId));
-            })
             ->field('r.id, r.room_number, r.building_name, r.unit, r.floor, r.area, o.realname as owner_name, ocr.owner_id')
-            ->group('r.id')
-            ->select();
+            ->group('r.id');
+
+        if ($communityId) {
+            $query->where('r.community_id', '=', $communityId);
+        }
+        if ($buildingId) {
+            $query->where('r.building_id', '=', $buildingId);
+        }
+
+        $list = $query->select();
         return $this->success($list);
     }
 }
