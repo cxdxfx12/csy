@@ -46,7 +46,9 @@ onMounted(() => {
   const q = route.query
   // 微信 OAuth 回调带回 token（自动注册或已有账号）
   if (q.wechat_token) {
-    localStorage.setItem('owner_token', q.wechat_token as string)
+    const token = q.wechat_token as string
+    router.replace({ query: {} })  // 清除 URL 中的 token
+    localStorage.setItem('owner_token', token)
     ElMessage.success('微信登录成功')
     router.replace('/mobile/owner/home')
   }

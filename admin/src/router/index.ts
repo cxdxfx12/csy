@@ -119,12 +119,34 @@ const router = createRouter({
 
 // 路由守卫 - 认证
 router.beforeEach((to, _from, next) => {
-  const token = localStorage.getItem('admin_token')
-  const isMobileLogin = to.path.startsWith('/mobile/')
-  // 移动端登录页和PC登录页不需要认证
-  if (isMobileLogin || to.path === '/login') return next()
-  // PC端其他页面需要token
-  if (!token) return next('/login')
+  const adminToken = localStorage.getItem('admin_token')
+  const staffToken = localStorage.getItem('staff_token')
+  const ownerToken = localStorage.getItem('owner_token')
+  const managerToken = localStorage.getItem('manager_token')
+
+  // PC端登录页不需要认证
+  if (to.path === '/login') return next()
+
+  // 移动端登录页不需要认证
+  const mobileLoginPaths = ['/mobile/staff/login', '/mobile/owner/login', '/mobile/manager/login']
+  if (mobileLoginPaths.includes(to.path)) return next()
+
+  // 移动端其他页面：需要各自端的 token
+  if (to.path.startsWith('/mobile/staff/')) {
+    if (!staffToken) return next('/mobile/staff/login')
+    return next()
+  }
+  if (to.path.startsWith('/mobile/owner/')) {
+    if (!ownerToken) return next('/mobile/owner/login')
+    return next()
+  }
+  if (to.path.startsWith('/mobile/manager/')) {
+    if (!managerToken) return next('/mobile/manager/dashboard')
+    return next()
+  }
+
+  // PC端其他页面需要 admin_token
+  if (!adminToken) return next('/login')
   next()
 })
 

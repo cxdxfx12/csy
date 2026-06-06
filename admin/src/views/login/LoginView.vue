@@ -104,7 +104,11 @@ onMounted(() => {
   const q = route.query
   // 已有绑定 → OAuth 回调带 token
   if (q.wechat_token) {
-    localStorage.setItem('admin_token', q.wechat_token as string)
+    const token = q.wechat_token as string
+    // 立即清除 URL 中的 token，防止泄露到浏览器历史/日志
+    router.replace({ query: {} })
+    // 存储 token 后立即跳转（后端接口会验证 token 有效性）
+    localStorage.setItem('admin_token', token)
     ElMessage.success('微信登录成功')
     router.replace('/')
     return

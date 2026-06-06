@@ -65,7 +65,9 @@ onMounted(() => {
   const q = route.query
   // 已绑定 → callback 带 token
   if (q.wechat_token) {
-    localStorage.setItem('staff_token', q.wechat_token as string)
+    const token = q.wechat_token as string
+    router.replace({ query: {} })  // 清除 URL 中的 token
+    localStorage.setItem('staff_token', token)
     ElMessage.success('微信登录成功')
     router.replace('/mobile/staff/home')
     return

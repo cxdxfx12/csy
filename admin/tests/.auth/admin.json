@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "PHPSESSID",
+      "value": "oah3kdv2oam0eha5446eouilmf",
+      "domain": "www.hbdxm.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://www.hbdxm.com",
+      "localStorage": [
+        {
+          "name": "admin_token",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkYXNoZW5nLXBtcyIsImF1ZCI6ImRhc2hlbmctcG1zLWNsaWVudCIsImlhdCI6MTc4MDc0OTc2NSwibmJmIjoxNzgwNzQ5NzY1LCJleHAiOjE3ODA4MzYxNjUsInN1YiI6MSwidHlwZSI6ImFkbWluIn0.ghbU1RzrNVpP9amZzKvEcUoMD2e9xvUddtzkbXUYOcA"
+        }
+      ]
+    }
+  ]
+}

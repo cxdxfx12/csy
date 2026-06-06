@@ -1,0 +1,7 @@
+# Playwright 测试产出
+test-results/
+tests/.auth/
+
+# 测试截图和录像
+*.png
+*.webm
