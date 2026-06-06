@@ -10,7 +10,7 @@
       <div class="denied-box">
         <div class="denied-icon">🔒</div>
         <h2>无权限访问</h2>
-        <p>只有系统超级管理员和小区物管经理可以查看数据大屏</p>
+        <p>您暂无绑定小区，请联系管理员分配</p>
         <button class="btn-back" @click="goBack">← 返回</button>
       </div>
     </div>

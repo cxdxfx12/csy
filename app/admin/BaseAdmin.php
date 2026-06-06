@@ -164,7 +164,8 @@ class BaseAdmin extends BaseController
     protected function getRolePermissions($code)
     {
         // 公共模块：所有角色通用（Login 提供 info/logout 等基础接口）
-        $common = ['Profile', 'Dashboard', 'Upload', 'Login'];
+        // Community 加入公共列表，其 add/edit/delete 内部已限制仅 role_id<=2，list 按绑定小区过滤
+        $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community'];
 
         $maps = [
             'admin'     => '*',
@@ -238,9 +239,9 @@ class BaseAdmin extends BaseController
             }
         }
 
-        // 安全屏障：小区管理仅限超级管理员和系统管理员，自定义角色即使分配了菜单也不允许
+        // 小区管理：安全保护已在 Community 控制器内部实现
+        // (add/edit/delete 仅限 role_id<=2，lists/listAll 按绑定小区过滤)
         $controllers = array_values(array_unique($controllers));
-        $controllers = array_values(array_diff($controllers, ['Community']));
 
         return $controllers;
     }

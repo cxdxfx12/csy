@@ -16,55 +16,50 @@ class Dashboard extends BaseAdmin
         $hasFilter = ($roleId != 1 && !empty($boundIds));
         $inIds = $hasFilter ? $boundIds : [];
 
-        // 基础统计
-        $communityCount = Db::name('community')->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('id', $inIds);
-            })->count();
-        $buildingCount  = Db::name('building')->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
-        $roomCount      = Db::name('room')->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
-        $ownerCount     = Db::name('owner')->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
-        $unpaidBillCount = Db::name('bill')->where('status', 1)->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
-        $pendingRepairCount = Db::name('repair_order')->whereIn('status', [1, 2, 3])->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
-        $pendingComplaintCount = Db::name('complaint')->whereIn('status', [1, 2])->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })->count();
+        // 基础统计 —— 用显式条件链，避免闭包 whereIn 在 count() 中失效
+        $cQ = Db::name('community')->where('delete_time', null);
+        if ($hasFilter) $cQ->whereIn('id', $inIds);
+        $communityCount = $cQ->count();
+
+        $bQ = Db::name('building')->where('delete_time', null);
+        if ($hasFilter) $bQ->whereIn('community_id', $inIds);
+        $buildingCount = $bQ->count();
+
+        $rQ = Db::name('room')->where('delete_time', null);
+        if ($hasFilter) $rQ->whereIn('community_id', $inIds);
+        $roomCount = $rQ->count();
+
+        $oQ = Db::name('owner')->where('delete_time', null);
+        if ($hasFilter) $oQ->whereIn('community_id', $inIds);
+        $ownerCount = $oQ->count();
+
+        $uBQ = Db::name('bill')->where('status', 1)->where('delete_time', null);
+        if ($hasFilter) $uBQ->whereIn('community_id', $inIds);
+        $unpaidBillCount = $uBQ->count();
+
+        $pRQ = Db::name('repair_order')->whereIn('status', [1, 2, 3])->where('delete_time', null);
+        if ($hasFilter) $pRQ->whereIn('community_id', $inIds);
+        $pendingRepairCount = $pRQ->count();
+
+        $pCQ = Db::name('complaint')->whereIn('status', [1, 2])->where('delete_time', null);
+        if ($hasFilter) $pCQ->whereIn('community_id', $inIds);
+        $pendingComplaintCount = $pCQ->count();
 
         // 当月收入
         $monthStart = date('Y-m-01 00:00:00');
         $monthEnd   = date('Y-m-t 23:59:59');
-        $monthIncome = Db::name('bill_payment')
+        $mIQ = Db::name('bill_payment')
             ->whereBetween('pay_time', [$monthStart, $monthEnd])
-            ->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })
-            ->sum('amount');
+            ->where('delete_time', null);
+        if ($hasFilter) $mIQ->whereIn('community_id', $inIds);
+        $monthIncome = $mIQ->sum('amount');
 
         // 待缴费总额
-        $unpaidTotal = Db::name('bill')
+        $uTQ = Db::name('bill')
             ->where('status', 1)
-            ->where('delete_time', null)
-            ->where(function($q) use ($hasFilter, $inIds) {
-                if ($hasFilter) $q->whereIn('community_id', $inIds);
-            })
-            ->sum('amount');
+            ->where('delete_time', null);
+        if ($hasFilter) $uTQ->whereIn('community_id', $inIds);
+        $unpaidTotal = $uTQ->sum('amount');
 
         // 返回前端期望的5卡片格式
         $statCards = [
@@ -158,7 +153,7 @@ class Dashboard extends BaseAdmin
 
     /**
      * 数字大屏全部数据（单次请求）
-     * 权限：超管看全部小区，物管经理看自己小区，其他人无权限
+     * 权限：超管/系统管理员看全部小区，其余角色看自己绑定的小区数据
      */
     public function bigscreen()
     {
@@ -168,24 +163,24 @@ class Dashboard extends BaseAdmin
         $roleInfo = Db::name('role')->where('id', $roleId)->find();
         $roleCode = $roleInfo['code'] ?? '';
 
-        // 权限控制：超管(role_id=1)、管理员(code=admin)、小区物管经理(code=manager) 可访问
-        $allowedRoles = ['admin', 'manager'];
-        if ($roleId != 1 && !in_array($roleCode, $allowedRoles)) {
-            return $this->error('无权限访问数据大屏', 403);
-        }
+        // 超管(role_id=1) 和 系统管理员(code=admin) 看全部小区
+        $isFullAccess = ($roleId == 1 || $roleCode == 'admin');
 
         // 获取社区过滤范围
         $communityIds = [];
         $communityName = '全部小区';
-        if ($roleCode == 'manager') {
+
+        if (!$isFullAccess) {
+            // 非超管/管理员：读取绑定的社区
             $communityIds = $this->request->boundCommunityIds ?? [];
             if (empty($communityIds)) {
                 $communityIds = array_filter(array_map('intval', explode(',', $adminInfo['community_ids'] ?? '')));
             }
-            if (!empty($communityIds)) {
-                $names = Db::name('community')->whereIn('id', $communityIds)->where('delete_time', null)->column('name');
-                $communityName = implode('、', $names) ?: '我的小区';
+            if (empty($communityIds)) {
+                return $this->error('无权限访问数据大屏（未绑定小区）', 403);
             }
+            $names = Db::name('community')->whereIn('id', $communityIds)->where('delete_time', null)->column('name');
+            $communityName = implode('、', $names) ?: '我的小区';
         }
 
         // 社区过滤辅助函数：对 Query 添加 community_id 过滤
