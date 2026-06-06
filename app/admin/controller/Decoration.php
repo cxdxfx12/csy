@@ -569,13 +569,16 @@ class Decoration extends BaseAdmin
         $data['inspect_time'] = date('Y-m-d H:i:s');
         $data['create_time'] = date('Y-m-d H:i:s');
 
+        // 移除不属于 decoration_inspect 表的字段
+        $autoViolation = intval($data['auto_violation'] ?? 0);
+        $violationType = $data['violation_type'] ?? '其他违规';
+        unset($data['auto_violation'], $data['violation_type'], $data['violation_desc']);
+
         Db::name('decoration_inspect')->insert($data);
 
         // 如果巡查发现异常(result=1)，可快速创建违规记录
-        $autoViolation = $this->request->post('auto_violation', 0);
         if ($autoViolation && intval($data['result']) === 1) {
-            $violationType = $this->request->post('violation_type', '其他违规');
-            $violationDesc = $this->request->post('violation_desc', $data['content'] ?? '巡查发现异常');
+            $violationDesc = $data['content'] ?? '巡查发现异常';
             Db::name('decoration_violation')->insert([
                 'apply_id' => $data['apply_id'],
                 'community_id' => $apply['community_id'],
