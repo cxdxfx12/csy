@@ -335,6 +335,8 @@ class BaseAdmin extends BaseController
             // 微信
             'wechat:user'            => 'WechatUser',
             'admin:wechat'           => 'WechatConfig',
+            // 数据概览
+            'dashboard'              => 'Dashboard',
         ];
     }
 }

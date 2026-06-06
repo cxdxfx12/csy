@@ -46,6 +46,13 @@ class BaseManager extends BaseController
             if (!$user) {
                 $this->error('用户不存在或已被禁用', 401);
             }
+
+            // 角色权限校验：经理端仅限超管(1)、系统管理员(2)、项目经理(3)
+            $roleId = $user['role_id'] ?? 0;
+            if (!in_array($roleId, [1, 2, 3])) {
+                $this->error('无权限访问经理端', 403);
+            }
+
             $this->managerId   = $user['id'];
             $this->managerInfo = $user;
 
