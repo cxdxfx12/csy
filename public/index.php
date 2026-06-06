@@ -238,6 +238,20 @@ try {
         }
     }
 
+    // SPA fallback：非 API 的 /admin/* /manager/* /staff/* 请求返回单页应用外壳
+    // 用户刷新页面或直接访问 Vue 路由时会走这里，需返回 index.html 让 Vue Router 接管
+    foreach (['admin', 'manager', 'staff'] as $spaBase) {
+        if (strpos($path, $spaBase . '/') === 0 || $path === $spaBase) {
+            $spaIndex = __DIR__ . '/' . $spaBase . '/index.html';
+            if (file_exists($spaIndex)) {
+                header('Content-Type: text/html; charset=utf-8');
+                readfile($spaIndex);
+                exit;
+            }
+            break;
+        }
+    }
+
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['code' => 404, 'msg' => '未找到该路由: ' . $path], JSON_UNESCAPED_UNICODE);
 

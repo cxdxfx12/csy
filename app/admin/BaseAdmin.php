@@ -203,9 +203,24 @@ class BaseAdmin extends BaseController
             ]),
         ];
 
-        if (isset($maps[$code])) return $maps[$code];
+        if (isset($maps[$code])) {
+            $base = $maps[$code];
+            // 预定义角色（role_id>2 且非 *）：也支持通过 UI/role_menu 表动态扩展权限
+            // 只做加法不做减法，硬编码的白名单始终保留
+            if ($base !== '*') {
+                $roleId = $this->adminInfo['role_id'] ?? 0;
+                if ($roleId > 2) {
+                    // 传入空 common，只获取 role_menu 表中实际分配的额外控制器
+                    $dynamic = $this->getCustomRolePermissions([]);
+                    if (!empty($dynamic)) {
+                        $base = array_values(array_unique(array_merge($base, $dynamic)));
+                    }
+                }
+            }
+            return $base;
+        }
 
-        // 自定义角色：根据 ds_role_menu + ds_menu.permission 推导控制器列表
+        // 自定义角色（code 不在预定义 maps 中）：完全由 ds_role_menu + ds_menu.permission 推导
         return $this->getCustomRolePermissions($common);
     }
 
@@ -293,6 +308,17 @@ class BaseAdmin extends BaseController
             'parking:space'          => 'ParkingSpace',
             'parking:vehicle'        => 'Vehicle',
             'parking:record'         => 'ParkingRecord',
+            'parking:rate'           => 'ParkingFeeRule',
+            'parking:payment'        => 'ParkingPayment',
+            // 短信
+            'sms:log'                => 'SmsLog',
+            // 收费
+            'charge:dunning'         => 'BillDunning',
+            // 公告/消息
+            'notice:message'         => 'Message',
+            'notice:notification'    => 'Notification',
+            // 微信（兼容 admin:wechat:config）
+            'admin:wechat:config'    => 'WechatConfig',
             // 公告
             'notice:index'           => 'Notice',
             // 设备管理
@@ -338,6 +364,7 @@ class BaseAdmin extends BaseController
             'admin:wechat'           => 'WechatConfig',
             // 数据概览
             'dashboard'              => 'Dashboard',
+            'dashboard:index'        => 'Dashboard',
         ];
     }
 }
