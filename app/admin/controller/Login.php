@@ -147,10 +147,25 @@ class Login extends BaseAdmin
             // 始终按控制器白名单过滤菜单（处理 role_menu 中可能包含的超管菜单）
             if ($allowedControllers !== '*') {
                 $permMap = $this->buildPermissionMap();
+                // 第一遍：过滤掉无权限的叶子菜单（父级目录保留，后续再清理空目录）
                 $menus = array_values(array_filter((array)$menus, function ($menu) use ($permMap, $allowedControllers) {
                     $perm = $menu['permission'] ?? '';
-                    if (empty($perm) || ($menu['parent_id'] ?? 0) == 0) return true; // 父级目录或顶级菜单保留
+                    if (empty($perm) || ($menu['parent_id'] ?? 0) == 0) return true;
                     return isset($permMap[$perm]) && in_array($permMap[$perm], $allowedControllers);
+                }));
+                // 第二遍：删除没有子节点的空父级目录
+                $childIds = [];
+                foreach ($menus as $m) {
+                    if (($m['parent_id'] ?? 0) > 0) {
+                        $childIds[$m['parent_id']] = true;
+                    }
+                }
+                $menus = array_values(array_filter($menus, function ($menu) use ($childIds) {
+                    if (($menu['parent_id'] ?? 0) == 0) {
+                        // 父级目录：只保留有子菜单的
+                        return isset($childIds[$menu['id']]);
+                    }
+                    return true;
                 }));
             }
         }
@@ -186,12 +201,17 @@ class Login extends BaseAdmin
                 'nickname'       => $adminInfo['nickname'],
                 'avatar'         => $adminInfo['avatar'],
                 'role'           => $role['name'] ?? '',
+                'role_code'      => $role['code'] ?? '',
                 'role_id'        => $roleId,
                 'community_ids'  => $communityIds,
                 'community_name' => $communityName,
             ],
             'menus'       => tree_list($menus),
             'permissions' => $permissions,
+            'debug'       => [
+                'allowedControllers' => is_array($allowedControllers) ? array_values($allowedControllers) : $allowedControllers,
+                'menuCount'          => count((array)$menus),
+            ],
         ]);
     }
 

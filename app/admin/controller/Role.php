@@ -50,9 +50,21 @@ class Role extends BaseAdmin
         $allMenus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
         $checkedMenuIds = Db::name('role_menu')->where('role_id', $roleId)->column('menu_id');
 
+        // 只返回叶子节点的选中ID，避免 el-tree setCheckedKeys 时
+        // 父节点被设为 checked 后自动选中所有子节点
+        $parentIds = [];
+        foreach ($allMenus as $menu) {
+            if ($menu['parent_id'] > 0) {
+                $parentIds[$menu['parent_id']] = true;
+            }
+        }
+        $leafCheckedIds = array_values(array_filter($checkedMenuIds, function ($id) use ($parentIds) {
+            return !isset($parentIds[$id]);
+        }));
+
         return $this->success([
             'menus'           => tree_list($allMenus),
-            'checkedMenuIds'  => $checkedMenuIds,
+            'checkedMenuIds'  => $leafCheckedIds,
         ]);
     }
 

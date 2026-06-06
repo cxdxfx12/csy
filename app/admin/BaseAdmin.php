@@ -169,7 +169,7 @@ class BaseAdmin extends BaseController
         $maps = [
             'admin'     => '*',
             'manager'   => array_merge($common, [
-                'Community', 'Building', 'Room',
+                'Building', 'Room',
                 'Owner', 'Family', 'Staff', 'Attendance', 'Schedule', 'Salary',
                 'ChargeItem', 'Bill', 'Payment', 'PaymentConfig', 'Meter', 'Arrears', 'Finance',
                 'Complaint', 'RepairOrder', 'RepairWorker',
@@ -186,18 +186,18 @@ class BaseAdmin extends BaseController
                 'BillDunning', 'Message', 'SmsLog', 'CommunityPaymentConfig', 'CommunityWechatConfig',
             ]),
             'service'   => array_merge($common, [
-                'Community', 'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building',
+                'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building',
             ]),
             'finance'   => array_merge($common, [
-                'Community', 'Bill', 'Payment', 'PaymentConfig', 'ChargeItem', 'Meter', 'Arrears', 'Finance',
+                'Bill', 'Payment', 'PaymentConfig', 'ChargeItem', 'Meter', 'Arrears', 'Finance',
                 'Owner', 'Room', 'Building',
             ]),
             'security'  => array_merge($common, [
-                'Community', 'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace', 'Vehicle',
+                'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace', 'Vehicle',
                 'Owner', 'Room', 'Building',
             ]),
             'engineer'  => array_merge($common, [
-                'Community', 'Equipment', 'EquipmentMaintain', 'Purchase', 'Supplier', 'Contract',
+                'Equipment', 'EquipmentMaintain', 'Purchase', 'Supplier', 'Contract',
                 'Owner', 'Room', 'Building',
             ]),
         ];
