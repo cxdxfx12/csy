@@ -74,6 +74,19 @@ class AdminUser extends BaseAdmin
             return $this->error('用户名已存在');
         }
 
+        // community_ids 一致性校验
+        $communityIds = $data['community_ids'] ?? '';
+        if (!empty($communityIds)) {
+            $communityIds = trim($communityIds, ', ');
+        }
+        if ($data['role_id'] <= 2 && !empty($communityIds)) {
+            return $this->error('超级管理员和系统管理员无需绑定小区');
+        }
+        if ($data['role_id'] >= 3 && empty($communityIds)) {
+            return $this->error('请为小区级角色绑定至少一个小区');
+        }
+        $data['community_ids'] = $communityIds;
+
         $data['password'] = encrypt_password($data['password']);
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('admin_user')->insert($data);
@@ -96,6 +109,19 @@ class AdminUser extends BaseAdmin
         // 用户名唯一性（排除自身）
         $dup = Db::name('admin_user')->where('username', $data['username'])->where('id', '<>', $id)->find();
         if ($dup) return $this->error('用户名已存在');
+
+        // community_ids 一致性校验
+        $communityIds = $data['community_ids'] ?? '';
+        if (!empty($communityIds)) {
+            $communityIds = trim($communityIds, ', ');
+        }
+        if ($data['role_id'] <= 2 && !empty($communityIds)) {
+            return $this->error('超级管理员和系统管理员无需绑定小区');
+        }
+        if ($data['role_id'] >= 3 && empty($communityIds)) {
+            return $this->error('请为小区级角色绑定至少一个小区');
+        }
+        $data['community_ids'] = $communityIds;
 
         // 密码处理
         if (isset($data['password']) && !empty($data['password'])) {

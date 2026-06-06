@@ -88,8 +88,8 @@ class BaseAdmin extends BaseController
             $this->throwError('无权限访问此模块 [controller=' . $controller . ' role=' . $roleInfo['code'] . ']');
         }
 
-        // 对于小区级角色（manager及以上），自动注入 community_id 范围
-        if ($roleId >= 2 && !empty($this->adminInfo['community_ids'])) {
+        // 对于小区级角色（role_id>2），自动注入 community_id 范围
+        if ($roleId > 2 && !empty($this->adminInfo['community_ids'])) {
             $this->request->boundCommunityIds = array_filter(array_map('intval', explode(',', $this->adminInfo['community_ids'])));
         }
     }
@@ -104,8 +104,8 @@ class BaseAdmin extends BaseController
         $roleId = $this->adminInfo['role_id'] ?? 0;
         $boundIds = $this->request->boundCommunityIds ?? null;
 
-        // 超管：不过滤
-        if ($roleId == 1 || empty($boundIds)) {
+        // 超管/系统管理员：不过滤
+        if ($roleId <= 2 || empty($boundIds)) {
             return [];
         }
 
@@ -123,8 +123,8 @@ class BaseAdmin extends BaseController
         $boundIds = $this->request->boundCommunityIds ?? null;
         $communityId = (int)$this->request->param('community_id', 0);
 
-        // 超管：传什么用什么
-        if ($roleId == 1) {
+        // 超管/系统管理员：传什么用什么
+        if ($roleId <= 2) {
             return $communityId > 0 ? $communityId : null;
         }
 
@@ -149,7 +149,7 @@ class BaseAdmin extends BaseController
         $communityId = intval($communityId);
         if ($communityId <= 0) return; // 未传 community_id 跳过（添加时前端必传）
         $roleId = $this->adminInfo['role_id'] ?? 0;
-        if ($roleId == 1) return; // 超管不受限
+        if ($roleId <= 2) return; // 超管/系统管理员不受限
         $boundIds = $this->request->boundCommunityIds ?? [];
         if (empty($boundIds)) return; // 未绑定小区则不过滤
         if (!in_array($communityId, $boundIds)) {
@@ -238,7 +238,11 @@ class BaseAdmin extends BaseController
             }
         }
 
-        return array_unique($controllers);
+        // 安全屏障：小区管理仅限超级管理员和系统管理员，自定义角色即使分配了菜单也不允许
+        $controllers = array_values(array_unique($controllers));
+        $controllers = array_values(array_diff($controllers, ['Community']));
+
+        return $controllers;
     }
 
     /**
