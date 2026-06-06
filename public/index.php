@@ -74,12 +74,12 @@ if (strpos($path, 'api/api/') === 0) {
     // 剥离前端误拼接的多余一层 api/，保留单层 api/
     $path = substr($path, 4);
 }
-// 兼容存量服务器旧缓存（admin/ 不含 api/ 前缀的格式）
+// 前端 axios baseURL='/api'，请求路径如 /api/admin/xxx
+// 路由缓存 key 为 admin/xxx（不含 api/ 前缀），需剥离 api/ 才能匹配
 if (strpos($path, 'api/') === 0) {
     $segments = explode('/', $path);
     if (count($segments) >= 2 && in_array($segments[1], $knownShowModules)) {
-        // 双保险：如果缓存里有 api/admin/xxx 就能匹配；没有的话剥离也匹配不了
-        // 不做额外剥离，保持原样
+        $path = substr($path, 4);
     }
 }
 $path = ltrim($path, '/');

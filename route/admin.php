@@ -234,6 +234,9 @@ Route::group('admin', function () {
     Route::get('admin/activity/signupList', 'admin/Activity/signupList');
     Route::post('admin/activity/cancelSignup', 'admin/Activity/cancelSignup');
 
+    // 后台角标计数
+    Route::get('admin/badge/counts', 'admin/AdminBadge/counts');
+
     // 数据概览
     Route::get('admin/dashboard/statistics', 'admin/Dashboard/statistics');
     Route::get('admin/dashboard/incomeChart', 'admin/Dashboard/incomeChart');

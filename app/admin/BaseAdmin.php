@@ -192,6 +192,7 @@ class BaseAdmin extends BaseController
             'finance'   => array_merge($common, [
                 'Bill', 'Payment', 'PaymentConfig', 'ChargeItem', 'Meter', 'Arrears', 'Finance',
                 'Owner', 'Room', 'Building',
+                'Equipment', 'EquipmentMaintain', 'Device', 'DeviceEvent', 'Elevator', 'ElevatorFault', 'ElevatorInspection',
             ]),
             'security'  => array_merge($common, [
                 'Visitor', 'PatrolRoute', 'PatrolRecord', 'AccessCard', 'ParkingRecord', 'ParkingSpace', 'Vehicle',
