@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客户案例 - 启航网络科技 | 合作企业IT运维成功案例</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="tailwind.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .nav-active { color: #576cbc; border-bottom: 2px solid #576cbc; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 15px 35px #00000015; }
+  </style>
+</head>
+<body class="font-inter text-gray-800 bg-light">
+
+<!-- 导航栏 -->
+<header class="fixed w-full top-0 z-50 bg-primary/95 text-white shadow-md">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold flex items-center gap-2">
+      <i class="fa fa-server text-accent"></i>
+      <span>启航网络科技</span>
+    </a>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="index.html" class="py-1 hover:text-accent transition">首页</a>
+      <a href="service.html" class="py-1 hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="py-1 hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="py-1 hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="nav-active py-1">客户案例</a>
+    </nav>
+    <button class="md:hidden text-xl" id="menuBtn"><i class="fa fa-bars"></i></button>
+  </div>
+  <div class="md:hidden hidden bg-primary/98 w-full" id="mobileMenu">
+    <div class="container mx-auto px-6 py-4 flex flex-col gap-4">
+      <a href="index.html" class="hover:text-accent transition">首页</a>
+      <a href="service.html" class="hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="text-accent">客户案例</a>
+    </div>
+  </div>
+</header>
+
+<!-- 页面横幅 -->
+<section class="pt-32 pb-16 bg-gradient-to-r from-primary to-secondary text-white">
+  <div class="container mx-auto px-6 text-center">
+    <h1 class="text-4xl font-bold">客户成功案例</h1>
+    <p class="mt-4 text-gray-200 max-w-2xl mx-auto">深耕IT运维服务多年，服务300+各行业企业，用专业技术为客户解决各类IT运维难题</p>
+  </div>
+</section>
+
+<!-- 案例统计数据 -->
+<section class="py-12 bg-white">
+  <div class="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">300+</div>
+      <p class="text-gray-500 mt-2">合作企业客户</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">100%</div>
+      <p class="text-gray-500 mt-2">客户服务满意度</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">50+</div>
+      <p class="text-gray-500 mt-2">长期托管企业</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">12+</div>
+      <p class="text-gray-500 mt-2">覆盖行业领域</p>
+    </div>
+  </div>
+</section>
+
+<!-- 客户案例列表 -->
+<section class="py-20 bg-light">
+  <div class="container mx-auto px-6">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <!-- 案例1：贸易电商企业 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-shopping-bag text-accent text-6xl"></i>
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">电商贸易行业</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">杭州某电商公司全包运维托管</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">客户为中小型电商企业，无专职IT人员，长期存在办公电脑卡顿、网络不稳定、订单系统偶尔掉线等问题。我方提供全年全包运维服务，定期设备巡检、网络优化、系统维护、数据备份，彻底解决网络卡顿、系统故障问题，保障电商订单系统24小时稳定运行。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">桌面运维</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">网络优化</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">数据备份</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 案例2：产业园区 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-building text-accent text-6xl"></i>
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">产业园区</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">临平产业园区整体IT运维项目</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">园区入驻企业多、网络设备繁杂，存在网络冲突、公共设备故障频繁、运维不及时等问题。我方承接园区整体IT运维工作，统一搭建规范化局域网、整改老旧网络线路、建立定期巡检机制，负责公共办公设备、网络设备全天维护，大幅降低园区设备故障发生率。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">园区网络整改</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">设备托管</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">定期巡检</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 案例3：科技公司 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-code text-accent text-6xl"></i>
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">科技互联网</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">软件开发公司服务器运维加固</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">客户为软件开发企业，有多台业务服务器，存在服务器漏洞多、无定期备份、安全防护薄弱、偶尔宕机等风险。我方提供服务器安全加固、漏洞修复、7×24小时运行监控、异地容灾备份、数据库优化服务，实现服务器零宕机、数据零丢失。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">服务器运维</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">安全加固</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">容灾备份</span>
+          </div>
+       
+      </div>
+
+      <!-- 案例4：连锁品牌 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-store text-accent text-6xl"&gt;&lt;/i&gt;
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">连锁品牌</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">全国连锁门店统一运维项目</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">客户拥有数十家线下门店，各门店网络、收银设备、系统独立运维，故障响应慢、数据不同步。我方搭建总部统一运维体系，实现所有门店设备远程管控、网络统一优化、故障极速响应，解决门店运维分散、低效难题。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">远程运维</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">设备管控</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">网络统一优化</span>
+          </div>
+        </div>
+
+      <!-- 案例5：财税企业 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-balance-scale text-accent text-6xl">&lt;/i&gt;
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">财税咨询</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">财税公司数据安全运维方案</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">财税企业数据保密性要求极高，原有系统存在数据泄露、病毒入侵风险。我方为客户部署全套安全防护策略，进行终端权限管控、漏洞定期扫描、数据加密备份、内网安全隔离，全方位保障客户财税数据安全。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">安全防护</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">数据加密</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">安全审计</span>
+          </div>
+        
+      </div>
+
+      <!-- 案例6：企业上云项目 -->
+      <div class="bg-white rounded-xl overflow-hidden card-hover">
+        <div class="h-48 bg-primary/10 flex items-center justify-center">
+          <i class="fa fa-cloud text-accent text-6xl">&lt;/i&gt;
+        </div>
+        <div class="p-8">
+          <span class="text-xs text-accent bg-accent/10 px-3 py-1 rounded-full">企业上云</span>
+          <h3 class="text-xl font-bold text-primary mt-4 mb-3">传统企业机房整体上云迁移</h3>
+          <p class="text-gray-600 text-sm leading-relaxed mb-4">客户原有本地老旧机房设备老化、运维成本高、扩展性差。我方提供一站式上云解决方案，完成服务器迁移、系统云端部署、域名与SSL配置、云资源优化，成功帮企业完成数字化上云转型，大幅降低运维成本。</p>
+          <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+            <span class="border border-gray-200 px-2 py-1 rounded">上云迁移</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">云运维</span>
+            <span class="border border-gray-200 px-2 py-1 rounded">成本优化</span>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 客户评价 -->
+<section class="py-20 bg-primary/5">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">客户真实评价</h2>
+    <p class="text-gray-500 mt-3">专业的技术、贴心的服务，收获众多企业客户认可</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8">
+    <div class="bg-white p-8 rounded-xl shadow-sm card-hover">
+      <div class="text-accent text-xl mb-4">★★★★★</div>
+      <p class="text-gray-600 text-sm italic">公司没有专职IT，交给启航运维后，网络、电脑、服务器再也没出过问题，响应速度快，服务很专业，省心又省钱。</p>
+      <p class="text-primary font-medium mt-4 text-sm">—— 某电商企业负责人</p>
+    </div>
+    <div class="bg-white p-8 rounded-xl shadow-sm card-hover">
+      <div class="text-accent text-xl mb-4">★★★★★</div>
+      <p class="text-gray-600 text-sm italic">园区网络整改后稳定性大幅提升，定期巡检非常到位，故障基本提前规避，运维服务高效靠谱，长期合作！</p>
+      <p class="text-primary font-medium mt-4 text-sm">—— 产业园区运维负责人</p>
+    </div>
+    <div class="bg-white p-8 rounded-xl shadow-sm card-hover">
+      <div class="text-accent text-xl mb-4">★★★★★</div>
+      <p class="text-gray-600 text-sm italic">服务器安全加固和数据备份做得很完善，再也不用担心数据丢失和服务器宕机，技术团队专业度很高。</p>
+      <p class="text-primary font-medium mt-4 text-sm">—— 科技公司技术总监</p>
+    </div>
+  </div>
+</section>
+
+<!-- 合作咨询 -->
+<section class="py-20 bg-primary text-white">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-3xl font-bold">想要同款定制IT运维方案？</h2>
+    <p class="mt-4 text-gray-200 max-w-2xl mx-auto">无论企业规模大小，均可为您量身定制专属运维方案，7×24小时全程保驾护航</p>
+    <a href="javascript:;" class="inline-block mt-8 bg-accent px-10 py-4 rounded-lg hover:shadow-lg transition font-medium">立即咨询合作</a>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="py-10 bg-dark text-white/70">
+  <div class="container mx-auto px-6 md:grid-cols-3 grid gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">启航网络科技</h3>
+      <p class="text-sm">专注企业级IT运维、网络安全、云服务托管，为企业数字化转型保驾护航。</p>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">快速链接</h3>
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="service.html" class="hover:text-accent transition">服务项目</a>
+        <a href="solution.html" class="hover:text-accent transition">行业解决方案</a>
+        <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+        <a href="case.html" class="text-accent">客户案例</a>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">联系我们</h3>
+      <p class="text-sm"><i class="fa fa-phone mr-2"></i>17771300068 / 19171045360</p>
+      <p class="text-sm mt-2"><i class="fa fa-map-marker mr-2"></i>杭州市临平区怡丰城12幢</p>
+      <p class="text-sm mt-2">运营主体：杭州喵喵至家网络有限公司</p>
+    </div>
+  </div>
+  <div class="container mx-auto px-6 mt-8 pt-6 border-t border-white/10 text-center text-sm">
+    © 2026 启航网络科技 版权所有 | 杭州喵喵至家网络有限公司
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.onclick = () => mobileMenu.classList.toggle('hidden');
+</script>
+</body>
+</html>

@@ -80,3 +80,15 @@ Thumbs.db
 /deploy.zip
 /deploy*.py
 /package-lock.json
+
+# 临时调试脚本和旧资源
+/_old_assets/
+/_check_*.js
+/_test_*.js
+/_clear_*.js
+/_debug_*.php
+/_upload_*.js
+/_deploy_*.js
+/_clean_*.js
+/_add_debug*.js
+/_build_*.txt

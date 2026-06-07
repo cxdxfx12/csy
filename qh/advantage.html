@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>技术优势 - 启航网络科技 | 专业IT运维技术团队</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="tailwind.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .nav-active { color: #576cbc; border-bottom: 2px solid #576cbc; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 15px 35px #00000015; }
+  </style>
+</head>
+<body class="font-inter text-gray-800 bg-light">
+
+<!-- 导航栏 -->
+<header class="fixed w-full top-0 z-50 bg-primary/95 text-white shadow-md">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold flex items-center gap-2">
+      <i class="fa fa-server text-accent"></i>
+      <span>启航网络科技</span>
+    </a>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="index.html" class="py-1 hover:text-accent transition">首页</a>
+      <a href="service.html" class="py-1 hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="py-1 hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="nav-active py-1">技术优势</a>
+      <a href="case.html" class="py-1 hover:text-accent transition">客户案例</a>
+    </nav>
+    <button class="md:hidden text-xl" id="menuBtn"><i class="fa fa-bars"></i></button>
+  </div>
+  <div class="md:hidden hidden bg-primary/98 w-full" id="mobileMenu">
+    <div class="container mx-auto px-6 py-4 flex flex-col gap-4">
+      <a href="index.html" class="hover:text-accent transition">首页</a>
+      <a href="service.html" class="hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="text-accent">技术优势</a>
+      <a href="case.html" class="hover:text-accent transition">客户案例</a>
+    </div>
+  </div>
+</header>
+
+<!-- 页面横幅 -->
+<section class="pt-32 pb-16 bg-gradient-to-r from-primary to-secondary text-white">
+  <div class="container mx-auto px-6 text-center">
+    <h1 class="text-4xl font-bold">技术优势</h1>
+    <p class="mt-4 text-gray-200 max-w-2xl mx-auto">8年深耕IT运维行业，以专业技术团队、标准化服务流程、智能化运维工具，构建企业级IT运维核心竞争力</p>
+  </div>
+</section>
+
+<!-- 核心优势 -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">为什么选择启航</h2>
+    <p class="text-gray-500 mt-3">六大核心优势，让企业IT运维更省心、更高效、更安全</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-users text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">资深技术团队</h3>
+      <p class="text-gray-600 leading-relaxed">团队核心成员均拥有5年以上IT运维实战经验，涵盖网络工程、服务器架构、信息安全、数据库管理等多个专业方向，持有华为HCIP、红帽RHCE、CISP等行业认证，技术实力有保障。</p>
+    </div>
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-bolt text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">极速响应机制</h3>
+      <p class="text-gray-600 leading-relaxed">建立远程+上门双通道响应体系，远程问题15分钟内响应，紧急故障2小时内上门，保障企业业务不中断。7×24小时技术热线全年无休，随时解决突发状况。</p>
+    </div>
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-sitemap text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">标准化服务流程</h3>
+      <p class="text-gray-600 leading-relaxed">建立从需求诊断、方案制定、实施部署到售后保障的全流程标准化管理体系，每个环节可追溯、可量化，确保服务质量始终如一，杜绝个人依赖。</p>
+    </div>
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-line-chart text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">智能化运维平台</h3>
+      <p class="text-gray-600 leading-relaxed">自研IT运维管理平台，实现设备资产全生命周期管理、故障自动预警、巡检报告自动生成、工单实时追踪，用技术驱动运维效率提升，让管理更透明。</p>
+    </div>
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-lock text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">安全防护体系</h3>
+      <p class="text-gray-600 leading-relaxed">构建"预防+监测+应急"三级安全防护体系，定期漏洞扫描与安全审计，实时入侵检测与威胁告警，遭遇攻击时快速隔离与恢复，全方位守护企业数据与网络安全。</p>
+    </div>
+    <div class="p-8 rounded-xl bg-light card-hover text-center">
+      <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-handshake-o text-accent text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-primary mb-3">按需灵活定制</h3>
+      <p class="text-gray-600 leading-relaxed">拒绝一刀切，根据企业规模、行业特性、IT现状量身定制运维方案。支持按月/季度/年度灵活签约，远程+上门混合服务模式，让企业只为所需买单。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 技术栈 -->
+<section class="py-20 bg-primary/5">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">专业技术能力覆盖</h2>
+    <p class="text-gray-500 mt-3">深度掌握主流IT技术栈，为企业提供全方位技术支撑</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-2 gap-8">
+    <div class="p-6 rounded-xl bg-white shadow">
+      <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2"><i class="fa fa-server text-accent"></i>服务器与系统</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Windows Server</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">CentOS / Ubuntu</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">VMware虚拟化</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Docker容器</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Nginx / Apache</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">IIS</span>
+      </div>
+    </div>
+    <div class="p-6 rounded-xl bg-white shadow">
+      <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2"><i class="fa fa-wifi text-accent"></i>网络与安全</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">华为 / H3C交换机</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">深信服VPN</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">防火墙策略</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">VLAN划分</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">入侵检测</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">渗透测试</span>
+      </div>
+    </div>
+    <div class="p-6 rounded-xl bg-white shadow">
+      <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2"><i class="fa fa-database text-accent"></i>数据库与存储</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">MySQL</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">SQL Server</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Redis</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">MongoDB</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">数据备份与恢复</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">主从集群</span>
+      </div>
+    </div>
+    <div class="p-6 rounded-xl bg-white shadow">
+      <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2"><i class="fa fa-cloud text-accent"></i>云平台与DevOps</h3>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">阿里云</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">腾讯云</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">华为云</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">CI/CD</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Jenkins</span>
+        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Git</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 服务承诺 -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">我们的服务承诺</h2>
+    <p class="text-gray-500 mt-3">用行动兑现承诺，用结果赢得信赖</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+    <div class="p-6">
+      <div class="text-5xl font-bold text-accent mb-3">15min</div>
+      <h4 class="font-bold text-primary">远程响应</h4>
+      <p class="text-gray-500 text-sm mt-2">远程问题15分钟内响应处理</p>
+    </div>
+    <div class="p-6">
+      <div class="text-5xl font-bold text-accent mb-3">2h</div>
+      <h4 class="font-bold text-primary">上门到达</h4>
+      <p class="text-gray-500 text-sm mt-2">紧急故障2小时内工程师上门</p>
+    </div>
+    <div class="p-6">
+      <div class="text-5xl font-bold text-accent mb-3">99.9%</div>
+      <h4 class="font-bold text-primary">稳定运行</h4>
+      <p class="text-gray-500 text-sm mt-2">保障设备与系统99.9%可用率</p>
+    </div>
+    <div class="p-6">
+      <div class="text-5xl font-bold text-accent mb-3">100%</div>
+      <h4 class="font-bold text-primary">满意度保障</h4>
+      <p class="text-gray-500 text-sm mt-2">不满意免费返工直至达标</p>
+    </div>
+  </div>
+</section>
+
+<!-- 品质保障 -->
+<section class="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold">品质保障体系</h2>
+    <p class="mt-3 text-gray-200">从人员到流程到工具，全方位保障服务质量</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8">
+    <div class="p-8 rounded-xl bg-white/10 backdrop-blur">
+      <i class="fa fa-id-card-o text-accent text-4xl mb-6"></i>
+      <h3 class="text-xl font-bold mb-3">人员保障</h3>
+      <ul class="text-gray-200 text-sm space-y-2 text-left">
+        <li><i class="fa fa-check text-accent mr-2"></i>全员持证上岗，定期技术考核</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>专项小组负责制，责任到人</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>AB角轮换机制，杜绝单点故障</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>持续技术培训，紧跟行业前沿</li>
+      </ul>
+    </div>
+    <div class="p-8 rounded-xl bg-white/10 backdrop-blur">
+      <i class="fa fa-clipboard text-accent text-4xl mb-6"></i>
+      <h3 class="text-xl font-bold mb-3">流程保障</h3>
+      <ul class="text-gray-200 text-sm space-y-2 text-left">
+        <li><i class="fa fa-check text-accent mr-2"></i>ITIL标准化运维管理流程</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>工单全生命周期追踪闭环</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>月度运维报告透明可查</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>定期服务评审与持续改进</li>
+      </ul>
+    </div>
+    <div class="p-8 rounded-xl bg-white/10 backdrop-blur">
+      <i class="fa fa-cogs text-accent text-4xl mb-6"></i>
+      <h3 class="text-xl font-bold mb-3">工具保障</h3>
+      <ul class="text-gray-200 text-sm space-y-2 text-left">
+        <li><i class="fa fa-check text-accent mr-2"></i>自研运维管理平台驱动效率</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>7×24小时监控自动告警</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>远程运维工具秒级接入</li>
+        <li><i class="fa fa-check text-accent mr-2"></i>知识库沉淀，问题快速复用</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 bg-light text-center">
+  <div class="container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-primary">选择启航，让IT运维成为企业竞争力</h2>
+    <p class="text-gray-500 mt-3 max-w-xl mx-auto">8年行业深耕，300+企业信赖之选，立即联系我们获取免费IT诊断方案</p>
+    <div class="mt-8 flex gap-4 justify-center flex-wrap">
+      <a href="tel:17771300068" class="bg-accent text-white px-8 py-3 rounded-lg hover:shadow-lg transition font-medium"><i class="fa fa-phone mr-2"></i>立即咨询</a>
+      <a href="case.html" class="border border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition font-medium">查看客户案例</a>
+    </div>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="py-10 bg-dark text-white/70">
+  <div class="container mx-auto px-6 md:grid-cols-3 grid gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">启航网络科技</h3>
+      <p class="text-sm">专注企业级IT运维、网络安全、云服务托管，为企业数字化转型保驾护航。</p>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">快速链接</h3>
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="service.html" class="hover:text-accent transition">服务项目</a>
+        <a href="solution.html" class="hover:text-accent transition">行业解决方案</a>
+        <a href="advantage.html" class="text-accent">技术优势</a>
+        <a href="case.html" class="hover:text-accent transition">客户案例</a>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">联系我们</h3>
+      <p class="text-sm"><i class="fa fa-phone mr-2"></i>17771300068 / 19171045360</p>
+      <p class="text-sm mt-2"><i class="fa fa-map-marker mr-2"></i>杭州市临平区怡丰城12幢</p>
+      <p class="text-sm mt-2">运营主体：杭州喵喵至家网络有限公司</p>
+    </div>
+  </div>
+  <div class="container mx-auto px-6 mt-8 pt-6 border-t border-white/10 text-center text-sm">
+    © 2026 启航网络科技 版权所有 | 杭州喵喵至家网络有限公司
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.onclick = () => mobileMenu.classList.toggle('hidden');
+</script>
+</body>
+</html>

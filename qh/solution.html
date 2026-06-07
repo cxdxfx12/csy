@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行业解决方案 - 启航网络科技 | 定制化IT运维方案</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="tailwind.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .nav-active { color: #576cbc; border-bottom: 2px solid #576cbc; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 15px 35px #00000015; }
+  </style>
+</head>
+<body class="font-inter text-gray-800 bg-light">
+
+<!-- 导航栏 -->
+<header class="fixed w-full top-0 z-50 bg-primary/95 text-white shadow-md">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold flex items-center gap-2">
+      <i class="fa fa-server text-accent"></i>
+      <span>启航网络科技</span>
+    </a>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="index.html" class="py-1 hover:text-accent transition">首页</a>
+      <a href="service.html" class="py-1 hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="nav-active py-1">解决方案</a>
+      <a href="advantage.html" class="py-1 hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="py-1 hover:text-accent transition">客户案例</a>
+    </nav>
+    <button class="md:hidden text-xl" id="menuBtn"><i class="fa fa-bars"></i></button>
+  </div>
+  <div class="md:hidden hidden bg-primary/98 w-full" id="mobileMenu">
+    <div class="container mx-auto px-6 py-4 flex flex-col gap-4">
+      <a href="index.html" class="hover:text-accent transition">首页</a>
+      <a href="service.html" class="hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="text-accent">解决方案</a>
+      <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="hover:text-accent transition">客户案例</a>
+    </div>
+  </div>
+</header>
+
+<!-- 页面横幅 -->
+<section class="pt-32 pb-16 bg-gradient-to-r from-primary to-secondary text-white">
+  <div class="container mx-auto px-6 text-center">
+    <h1 class="text-4xl font-bold">行业定制解决方案</h1>
+    <p class="mt-4 text-gray-200 max-w-2xl mx-auto">针对不同行业、不同规模企业的IT运维痛点，量身定制专属数字化运维解决方案</p>
+  </div>
+</section>
+
+<!-- 解决方案列表 -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-6">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/28/600/300" class="w-full h-48 object-cover" alt="中小企业办公运维方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">中小企业一站式运维方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">针对中小微企业IT人员短缺、设备杂乱、运维成本高的痛点，提供轻量化全包托管服务，涵盖办公设备、网络、基础服务器运维，低成本实现企业IT规范化管理。</p>
+          <div class="text-accent text-sm font-medium">适配：贸易、电商、服务、初创企业</div>
+        </div>
+      </div>
+
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/160/600/300" class="w-full h-48 object-cover" alt="写字楼园区运维方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">写字楼/产业园区运维方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">适配园区多企业、多设备、多网络场景，提供整体网络搭建、公共设备运维、企业入驻网络调试、园区安防网络维护、统一IT巡检托管服务。</p>
+          <div class="text-accent text-sm font-medium">适配：商务写字楼、产业园区、孵化器</div>
+        </div>
+      </div>
+
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/180/600/300" class="w-full h-48 object-cover" alt="互联网科技公司方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">互联网科技企业运维方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">针对科技公司服务器集群、网站系统、软件开发环境、数据库等高要求场景，提供7×24小时监控、性能优化、安全加固、容灾备份高端运维服务。</p>
+          <div class="text-accent text-sm font-medium">适配：科技、软件、互联网、AI企业</div>
+        </div>
+      </div>
+
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/119/600/300" class="w-full h-48 object-cover" alt="连锁品牌运维方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">连锁门店全国运维方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">解决多门店网络卡顿、系统同步异常、设备运维分散难题，实现总部统一管控、门店远程运维、批量设备维护、故障快速响应。</p>
+          <div class="text-accent text-sm font-medium">适配：餐饮、零售、美业、连锁品牌</div>
+        </div>
+      </div>
+
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/0/600/300" class="w-full h-48 object-cover" alt="金融安全运维方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">金融行业安全运维方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">针对金融行业高安全、高保密、高稳定需求，提供专属安全策略、数据加密、多层防护、定期安全审计、零漏洞运维保障方案。</p>
+          <div class="text-accent text-sm font-medium">适配：金融、财税、咨询、涉密企业</div>
+        </div>
+      </div>
+
+      <div class="bg-light rounded-xl overflow-hidden card-hover">
+        <img src="https://picsum.photos/id/219/600/300" class="w-full h-48 object-cover" alt="云上运维方案">
+        <div class="p-8">
+          <h3 class="text-xl font-bold text-primary mb-3">企业上云整体解决方案</h3>
+          <p class="text-gray-600 leading-relaxed mb-4">提供企业传统机房上云、服务器迁移、系统云端部署、云资源优化、混合云运维、云端安全防护一站式上云服务。</p>
+          <div class="text-accent text-sm font-medium">适配：全行业企业上云转型</div>
+        </div&gt>
+      </div&gt>
+    </div>
+  </div>
+</section>
+
+<!-- 方案优势 -->
+<section class="py-20 bg-primary/5">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">定制化方案核心优势</h2>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8">
+    <div class="bg-white p-8 rounded-xl shadow-sm">
+      <h4 class="text-lg font-bold text-primary mb-3">按需定制</h4>
+      <p class="text-gray-600">根据企业规模、行业特性、设备情况量身定制，不套用通用模板，精准匹配企业需求。</p>
+    </div>
+    <div class="bg-white p-8 rounded-xl shadow-sm">
+      <h4 class="text-lg font-bold text-primary mb-3">降本增效</h4>
+      <p class="text-gray-600">替代专职IT人员，大幅降低企业人力成本，同时提升IT运维效率与设备稳定性。</p>
+    </div>
+    <div class="bg-white p-8 rounded-xl shadow-sm">
+      <h4 class="text-lg font-bold text-primary mb-3">持续迭代</h4>
+      <p class="text-gray-600">根据企业业务发展，实时优化运维方案，适配企业扩张、系统升级、设备更新需求。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="py-10 bg-dark text-white/70">
+  <div class="container mx-auto px-6 md:grid-cols-3 grid gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">启航网络科技</h3>
+      <p class="text-sm">专注企业级IT运维、网络安全、云服务托管，为企业数字化转型保驾护航。</p>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">快速链接</h3>
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="service.html" class="hover:text-accent transition">服务项目</a>
+        <a href="solution.html" class="text-accent">行业解决方案</a>
+        <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+        <a href="case.html" class="hover:text-accent transition">客户案例</a>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">联系我们</h3>
+      <p class="text-sm"><i class="fa fa-phone mr-2"></i>17771300068 / 19171045360</p>
+      <p class="text-sm mt-2"><i class="fa fa-map-marker mr-2"></i>杭州市临平区怡丰城12幢</p>
+      <p class="text-sm mt-2">运营主体：杭州喵喵至家网络有限公司</p>
+    </div>
+  </div>
+  <div class="container mx-auto px-6 mt-8 pt-6 border-t border-white/10 text-center text-sm">
+    © 2026 启航网络科技 版权所有 | 杭州喵喵至家网络有限公司
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.onclick = () => mobileMenu.classList.toggle('hidden');
+</script>
+</body>
+</html>

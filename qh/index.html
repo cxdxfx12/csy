@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>启航网络科技 - 专业企业IT运维服务 | 杭州喵喵至家网络有限公司</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="tailwind.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .nav-active { color: #576cbc; border-bottom: 2px solid #576cbc; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 15px 35px #00000015; }
+  </style>
+</head>
+<body class="font-inter text-gray-800 bg-light">
+
+<!-- 导航栏 -->
+<header class="fixed w-full top-0 z-50 bg-primary/95 text-white shadow-md">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold flex items-center gap-2">
+      <i class="fa fa-server text-accent"></i>
+      <span>启航网络科技</span>
+    </a>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="index.html" class="nav-active py-1">首页</a>
+      <a href="service.html" class="py-1 hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="py-1 hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="py-1 hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="py-1 hover:text-accent transition">客户案例</a>
+    </nav>
+    <button class="md:hidden text-xl" id="menuBtn"><i class="fa fa-bars"></i></button>
+  </div>
+  <!-- 移动端菜单 -->
+  <div class="md:hidden hidden bg-primary/98 w-full" id="mobileMenu">
+    <div class="container mx-auto px-6 py-4 flex flex-col gap-4">
+      <a href="index.html" class="text-accent">首页</a>
+      <a href="service.html" class="hover:text-accent transition">服务项目</a>
+      <a href="solution.html" class="hover:text-accent transition">解决方案</a>
+      <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+      <a href="case.html" class="hover:text-accent transition">客户案例</a>
+    </div>
+  </div>
+</header>
+
+<!-- 首屏Banner -->
+<section class="pt-32 pb-20 bg-gradient-to-br from-dark via-primary to-secondary text-white min-h-[90vh] flex items-center">
+  <div class="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+    <div class="animate-fade-in">
+      <span class="bg-accent/20 text-accent px-4 py-2 rounded-full text-sm">专业企业IT运维服务商</span>
+      <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mt-6">
+        赋能企业数字化<br><span class="text-accent">全栈IT运维保障</span>
+      </h1>
+      <p class="mt-6 text-lg text-gray-200 leading-relaxed">
+        启航网络科技（隶属于杭州喵喵至家网络有限公司），深耕IT运维行业多年，专注为中小微企业、产业园、写字楼、连锁品牌提供7×24小时一站式IT运维托管服务，解决企业网络、服务器、设备、安全、云服务全场景难题，让企业IT运维零负担。
+      </p>
+      <div class="mt-10 flex gap-4 flex-wrap">
+        <a href="service.html" class="bg-accent px-8 py-3 rounded-lg hover:shadow-lg transition font-medium">查看全部服务</a>
+        <a href="solution.html" class="border border-white px-8 py-3 rounded-lg hover:bg-white/10 transition font-medium">行业解决方案</a>
+      </div>
+    </div>
+    <div class="hidden md:block">
+      <img src="https://picsum.photos/id/180/800/550" class="rounded-xl shadow-2xl w-full" alt="IT运维科技">
+    </div>
+  </div>
+</section>
+
+<!-- 核心数据 -->
+<section class="py-12 bg-white">
+  <div class="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">8年+</div>
+      <p class="text-gray-500 mt-2">行业深耕经验</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">300+</div>
+      <p class="text-gray-500 mt-2">合作企业客户</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">99.9%</div>
+      <p class="text-gray-500 mt-2">设备稳定运行率</p>
+    </div>
+    <div class="p-6">
+      <div class="text-4xl font-bold text-accent">7×24h</div>
+      <p class="text-gray-500 mt-2">全天候技术支持</p>
+    </div>
+  </div>
+</section>
+
+<!-- 核心服务预览 -->
+<section class="py-20 bg-light">
+  <div class="container mx-auto px-6 text-center mb-12">
+    <h2 class="text-3xl font-bold text-primary">核心服务能力</h2>
+    <p class="text-gray-500 mt-3">全维度覆盖企业IT运维所有场景需求</p>
+  </div>
+  <div class="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="p-8 rounded-xl shadow bg-white card-hover">
+      <i class="fa fa-desktop text-accent text-3xl mb-4"></i>
+      <h3 class="text-lg font-bold text-primary">企业桌面运维</h3>
+      <p class="text-gray-600 mt-2">办公电脑、外设设备、软件系统、局域网故障快速排查修复</p>
+    </div>
+    <div class="p-8 rounded-xl shadow bg-white card-hover">
+      <i class="fa fa-server text-accent text-3xl mb-4"></i>
+      <h3 class="text-lg font-bold text-primary">服务器运维</h3>
+      <p class="text-gray-600 mt-2">服务器部署、安全加固、数据备份、性能优化、故障应急处理</p>
+    </div>
+    <div class="p-8 rounded-xl shadow bg-white card-hover">
+      <i class="fa fa-shield text-accent text-3xl mb-4"></i>
+      <h3 class="text-lg font-bold text-primary">网络安全运维</h3>
+      <p class="text-gray-600 mt-2">网络搭建、防火墙配置、漏洞扫描、病毒防护、网络优化</p>
+    </div>
+  </div>
+  <div class="text-center mt-12">
+    <a href="service.html" class="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition">查看全部服务</a>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="py-10 bg-dark text-white/70">
+  <div class="container mx-auto px-6 md:grid-cols-3 grid gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">启航网络科技</h3>
+      <p class="text-sm">专注企业级IT运维、网络安全、云服务托管，为企业数字化转型保驾护航。</p>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">快速链接</h3>
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="service.html" class="hover:text-accent transition">服务项目</a>
+        <a href="solution.html" class="hover:text-accent transition">行业解决方案</a>
+        <a href="advantage.html" class="hover:text-accent transition">技术优势</a>
+        <a href="case.html" class="hover:text-accent transition">客户案例</a>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">联系我们</h3>
+      <p class="text-sm"><i class="fa fa-phone mr-2"></i>17771300068 / 19171045360</p>
+      <p class="text-sm mt-2"><i class="fa fa-map-marker mr-2"></i>杭州市临平区怡丰城12幢</p>
+      <p class="text-sm mt-2">运营主体：杭州喵喵至家网络有限公司</p>
+    </div>
+  </div>
+  <div class="container mx-auto px-6 mt-8 pt-6 border-t border-white/10 text-center text-sm">
+    © 2026 启航网络科技 版权所有 | 杭州喵喵至家网络有限公司
+  </div>
+</footer>
+
+<script>
+  // 移动端菜单
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.onclick = () => mobileMenu.classList.toggle('hidden');
+</script>
+</body>
+</html>

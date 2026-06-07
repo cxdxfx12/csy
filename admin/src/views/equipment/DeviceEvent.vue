@@ -241,8 +241,11 @@ async function loadData() {
     if (query.community_id) params.community_id = query.community_id
     if (query.device_id) params.device_id = query.device_id
     if (query.event_type) params.event_type = query.event_type
-    const res = await apiGet('/admin/equipment/deviceEventList', { params })
-    if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
+    const res = await apiGet('/admin/equipment/deviceEventList', params)
+    if (res && res.code === 0) {
+      list.value = res.data?.list || res.data || []
+      total.value = res.count || res.data?.total || list.value.length
+    }
   } catch (_) { list.value = []; total.value = 0 } finally { loading.value = false }
 }
 
