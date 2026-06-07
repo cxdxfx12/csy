@@ -42,8 +42,21 @@ function config($key, $default = null) {
 ini_set('display_errors', '0');
 error_reporting(E_ALL & ~E_DEPRECATED);
 
-// CORS
-header('Access-Control-Allow-Origin: *');
+// CORS（根据配置动态设置，不允许多个域时回退到非宽松模式）
+$corsOrigin = '*';
+$corsConfig = config('cors');
+if (!empty($corsConfig['allow_origin'])) {
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if (in_array($origin, $corsConfig['allow_origin'], true)) {
+        $corsOrigin = $origin;
+    } elseif (in_array('*', $corsConfig['allow_origin'], true)) {
+        $corsOrigin = '*';
+    } else {
+        // 非白名单来源，拒绝 CORS 请求
+        $corsOrigin = $corsConfig['allow_origin'][0];
+    }
+}
+header('Access-Control-Allow-Origin: ' . $corsOrigin);
 header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type,Authorization');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
@@ -269,9 +282,22 @@ try {
         $msg = '数据已存在，请勿重复添加';
     } elseif (strpos($msg, 'Integrity constraint violation') !== false) {
         $msg = '数据冲突，请检查输入';
+    } elseif (
+        strpos($msg, 'SQLSTATE') !== false ||
+        strpos($msg, 'Column not found') !== false ||
+        strpos($msg, 'Unknown column') !== false ||
+        strpos($msg, 'Table ') !== false
+    ) {
+        $msg = '系统繁忙，请稍后重试';
+    }
+    // 生产环境隐藏详细错误信息
+    if (env('APP_DEBUG', 'false') !== 'true') {
+        if (strlen($msg) > 100 && !in_array($msg, ['数据已存在，请勿重复添加', '数据冲突，请检查输入', '系统繁忙，请稍后重试'])) {
+            $msg = '系统繁忙，请稍后重试';
+        }
     }
     // 记录未捕获异常到日志
-    $logMsg = date('Y-m-d H:i:s') . ' [' . get_class($e) . '] ' . $msg . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n";
+    $logMsg = date('Y-m-d H:i:s') . ' [' . get_class($e) . '] ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n";
     file_put_contents(RUNTIME_PATH . 'log/error.log', $logMsg, FILE_APPEND);
     echo json_encode(['code' => 1, 'msg' => $msg], JSON_UNESCAPED_UNICODE);
 }

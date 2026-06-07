@@ -15,7 +15,7 @@ class ApiAuthMiddleware
         }
 
         $path = $request->pathinfo();
-        $ignorePaths = ['api/login', 'api/register', 'api/sendSms', 'api/resetPassword'];
+        $ignorePaths = ['api/login', 'api/register', 'api/sendSms', 'api/resetPassword', 'api/bill/wechatNotify', 'api/bill/alipayNotify'];
 
         foreach ($ignorePaths as $ignore) {
             if ($path === $ignore || strpos($path, $ignore . '/') === 0) {

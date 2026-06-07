@@ -129,9 +129,8 @@ class Decoration extends BaseAdmin
             return $this->success(['id' => $applyId], '提交成功');
 
         } catch (\Throwable $e) {
-            $msg = '操作失败: [' . get_class($e) . '] ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine();
-            file_put_contents(__DIR__ . '/../../../runtime/log/deco_debug.log', date('Y-m-d H:i:s') . ' ' . $msg . "\n", FILE_APPEND);
-            return $this->error($msg);
+            $this->logError('applyAdd', $e);
+            return $this->error('提交失败，请稍后重试');
         }
     }
 
@@ -215,42 +214,54 @@ class Decoration extends BaseAdmin
         $id = $this->request->post('id', 0);
         $paidAmount = floatval($this->request->post('paid_amount', 0));
 
-        $record = Db::name('decoration_apply')->where('id', $id)->find();
-        if (!$record) return $this->error('记录不存在');
-        $this->validateCommunityAccess($record['community_id']);
+        if ($paidAmount < 0) return $this->error('金额不能为负数');
 
-        if ($record['status'] != 1) {
-            return $this->error('当前状态不可缴费(需审核通过)');
-        }
+        Db::startTrans();
+        try {
+            // 悲观行锁：防止并发重复缴费
+            $record = Db::name('decoration_apply')->where('id', $id)->lock(true)->find();
+            if (!$record) { Db::rollback(); return $this->error('记录不存在'); }
+            $this->validateCommunityAccess($record['community_id']);
 
-        Db::name('decoration_apply')->where('id', $id)->update([
-            'status' => 2,
-            'paid_amount' => $paidAmount > 0 ? $paidAmount : $record['total_fee'],
-            'paid_time' => date('Y-m-d H:i:s'),
-            'update_time' => date('Y-m-d H:i:s'),
-        ]);
+            if ($record['status'] != 1) {
+                Db::rollback();
+                return $this->error('当前状态不可缴费(需审核通过)');
+            }
 
-        // 如果配置了收费项目，自动生成缴费记录
-        // 这里记录到财务流水
-        if ($paidAmount > 0) {
-            Db::name('finance_flow')->insert([
-                'flow_no' => build_order_no('DSF'),
-                'community_id' => $record['community_id'],
-                'type' => 1, // 收入
-                'category' => '装修收费',
-                'amount' => $paidAmount,
-                'balance' => 0,
-                'source_type' => 'decoration',
-                'source_id' => $id,
-                'description' => '装修费用 - ' . $record['apply_no'],
-                'operator_id' => $this->adminId,
-                'operator_name' => $this->adminInfo['username'] ?? '',
-                'status' => 1,
-                'create_time' => date('Y-m-d H:i:s'),
+            $actualPaid = $paidAmount > 0 ? $paidAmount : floatval($record['total_fee'] ?? 0);
+
+            Db::name('decoration_apply')->where('id', $id)->update([
+                'status' => 2,
+                'paid_amount' => $actualPaid,
+                'paid_time' => date('Y-m-d H:i:s'),
+                'update_time' => date('Y-m-d H:i:s'),
             ]);
-        }
 
-        return $this->success([], '缴费确认成功，已转为施工中');
+            if ($paidAmount > 0) {
+                Db::name('finance_flow')->insert([
+                    'flow_no' => build_order_no('DSF'),
+                    'community_id' => $record['community_id'],
+                    'type' => 1,
+                    'category' => '装修收费',
+                    'amount' => $paidAmount,
+                    'balance' => 0,
+                    'source_type' => 'decoration',
+                    'source_id' => $id,
+                    'description' => '装修费用 - ' . $record['apply_no'],
+                    'operator_id' => $this->adminId,
+                    'operator_name' => $this->adminInfo['username'] ?? '',
+                    'status' => 1,
+                    'create_time' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            Db::commit();
+            return $this->success([], '缴费确认成功，已转为施工中');
+        } catch (\Throwable $e) {
+            Db::rollback();
+            $this->logError('applyCharge', $e);
+            return $this->error('操作失败，请重试');
+        }
     }
 
     /**
@@ -343,61 +354,71 @@ class Decoration extends BaseAdmin
         $refundMethod = $this->request->post('refund_method', '现金');
         $refundRemark = $this->request->post('refund_remark', '');
 
-        $record = Db::name('decoration_apply')->where('id', $id)->find();
-        if (!$record) return $this->error('记录不存在');
-        $this->validateCommunityAccess($record['community_id']);
+        Db::startTrans();
+        try {
+            // 悲观行锁：防止并发重复退款
+            $record = Db::name('decoration_apply')->where('id', $id)->lock(true)->find();
+            if (!$record) { Db::rollback(); return $this->error('记录不存在'); }
+            $this->validateCommunityAccess($record['community_id']);
 
-        if ($record['status'] != 4) {
-            return $this->error('只有已完成的申请可退押金');
+            if ($record['status'] != 4) {
+                Db::rollback();
+                return $this->error('只有已完成的申请可退押金');
+            }
+            $deposit = floatval($record['deposit_amount'] ?? 0);
+            if ($deposit <= 0) {
+                Db::rollback();
+                return $this->error('该申请无押金可退');
+            }
+            if (floatval($record['refund_amount'] ?? 0) > 0 || !empty($record['refund_time'])) {
+                Db::rollback();
+                return $this->error('押金已退还，不可重复操作');
+            }
+
+            // 违规扣款总额
+            $totalPenalty = floatval(Db::name('decoration_violation')
+                ->where('apply_id', $id)->where('status', 2)->sum('penalty_amount'));
+
+            $refundAmount = max(0, $deposit - $totalPenalty);
+
+            $desc = '装修押金退还 - ' . $record['apply_no'];
+            if ($totalPenalty > 0) {
+                $desc .= '（押金¥' . number_format($deposit, 2) . ' - 违规扣款¥' . number_format($totalPenalty, 2) . '）';
+            }
+            if ($refundMethod) $desc .= ' [' . $refundMethod . ']';
+            if ($refundRemark) $desc .= ' 备注：' . $refundRemark;
+
+            Db::name('finance_flow')->insert([
+                'flow_no' => build_order_no('DSF'),
+                'community_id' => $record['community_id'],
+                'type' => 3,
+                'category' => '装修押金退款',
+                'amount' => $refundAmount,
+                'balance' => 0,
+                'source_type' => 'decoration_refund',
+                'source_id' => $id,
+                'description' => $desc,
+                'operator_id' => $this->adminId,
+                'operator_name' => $this->adminInfo['username'] ?? '',
+                'status' => 1,
+                'create_time' => date('Y-m-d H:i:s'),
+            ]);
+
+            Db::name('decoration_apply')->where('id', $id)->update([
+                'refund_amount' => $refundAmount,
+                'refund_time' => date('Y-m-d H:i:s'),
+                'update_time' => date('Y-m-d H:i:s'),
+            ]);
+
+            Db::commit();
+            $msg = '押金 ¥' . number_format($refundAmount, 2) . ' 已退还';
+            if ($totalPenalty > 0) $msg .= '（已扣除违规罚金 ¥' . number_format($totalPenalty, 2) . '）';
+            return $this->success([], $msg);
+        } catch (\Throwable $e) {
+            Db::rollback();
+            $this->logError('applyRefund', $e);
+            return $this->error('操作失败，请重试');
         }
-        if (floatval($record['deposit_amount'] ?? 0) <= 0) {
-            return $this->error('该申请无押金可退');
-        }
-        if (floatval($record['refund_amount'] ?? 0) > 0 || !empty($record['refund_time'])) {
-            return $this->error('押金已退还，不可重复操作');
-        }
-
-        // 违规扣款总额
-        $totalPenalty = floatval(Db::name('decoration_violation')
-            ->where('apply_id', $id)->where('status', 2)->sum('penalty_amount'));
-
-        // 实际退款 = 押金 - 违规扣款
-        $refundAmount = max(0, floatval($record['deposit_amount']) - $totalPenalty);
-
-        $desc = '装修押金退还 - ' . $record['apply_no'];
-        if ($totalPenalty > 0) {
-            $desc .= '（押金¥' . number_format($record['deposit_amount'], 2) . ' - 违规扣款¥' . number_format($totalPenalty, 2) . '）';
-        }
-        if ($refundMethod) $desc .= ' [' . $refundMethod . ']';
-        if ($refundRemark) $desc .= ' 备注：' . $refundRemark;
-
-        // 记录财务流水 (退款)
-        Db::name('finance_flow')->insert([
-            'flow_no' => build_order_no('DSF'),
-            'community_id' => $record['community_id'],
-            'type' => 3, // 退款
-            'category' => '装修押金退款',
-            'amount' => $refundAmount,
-            'balance' => 0,
-            'source_type' => 'decoration_refund',
-            'source_id' => $id,
-            'description' => $desc,
-            'operator_id' => $this->adminId,
-            'operator_name' => $this->adminInfo['username'] ?? '',
-            'status' => 1,
-            'create_time' => date('Y-m-d H:i:s'),
-        ]);
-
-        // 更新申请记录
-        Db::name('decoration_apply')->where('id', $id)->update([
-            'refund_amount' => $refundAmount,
-            'refund_time' => date('Y-m-d H:i:s'),
-            'update_time' => date('Y-m-d H:i:s'),
-        ]);
-
-        $msg = '押金 ¥' . number_format($refundAmount, 2) . ' 已退还';
-        if ($totalPenalty > 0) $msg .= '（已扣除违规罚金 ¥' . number_format($totalPenalty, 2) . '）';
-        return $this->success([], $msg);
     }
 
     public function applyDetail()
@@ -469,6 +490,7 @@ class Decoration extends BaseAdmin
         // 验证申请存在
         $apply = Db::name('decoration_apply')->where('id', $data['apply_id'])->find();
         if (!$apply) return $this->error('装修申请不存在');
+        $this->validateCommunityAccess($apply['community_id']);
 
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('decoration_worker')->insert($data);
@@ -484,6 +506,10 @@ class Decoration extends BaseAdmin
         $worker = Db::name('decoration_worker')->where('id', $id)->find();
         if (!$worker) return $this->error('记录不存在');
 
+        // 校验关联申请的社区权限
+        $apply = Db::name('decoration_apply')->where('id', $worker['apply_id'])->find();
+        if ($apply) $this->validateCommunityAccess($apply['community_id']);
+
         Db::name('decoration_worker')->where('id', $id)->update($data);
         return $this->success([], '修改成功');
     }
@@ -491,6 +517,11 @@ class Decoration extends BaseAdmin
     public function workerDelete()
     {
         $id = $this->request->post('id', 0);
+        $worker = Db::name('decoration_worker')->where('id', $id)->find();
+        if ($worker) {
+            $apply = Db::name('decoration_apply')->where('id', $worker['apply_id'])->find();
+            if ($apply) $this->validateCommunityAccess($apply['community_id']);
+        }
         Db::name('decoration_worker')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -504,9 +535,12 @@ class Decoration extends BaseAdmin
         $worker = Db::name('decoration_worker')->where('id', $id)->find();
         if (!$worker) return $this->error('施工人员不存在');
 
-        // 获取关联申请的竣工日期作为默认有效期
+        // 获取关联申请的竣工日期作为默认有效期，并校验权限
+        $apply = Db::name('decoration_apply')->where('id', $worker['apply_id'])->find();
+        if (!$apply) return $this->error('关联装修申请不存在');
+        $this->validateCommunityAccess($apply['community_id']);
+
         if (empty($expireDate)) {
-            $apply = Db::name('decoration_apply')->where('id', $worker['apply_id'])->find();
             $expireDate = $apply['end_date'] ?? date('Y-m-d', strtotime('+3 months'));
         }
 
@@ -597,6 +631,11 @@ class Decoration extends BaseAdmin
     public function inspectDelete()
     {
         $id = $this->request->post('id', 0);
+        $inspect = Db::name('decoration_inspect')->where('id', $id)->find();
+        if ($inspect) {
+            $apply = Db::name('decoration_apply')->where('id', $inspect['apply_id'])->find();
+            if ($apply) $this->validateCommunityAccess($apply['community_id']);
+        }
         Db::name('decoration_inspect')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -651,6 +690,7 @@ class Decoration extends BaseAdmin
 
         $apply = Db::name('decoration_apply')->where('id', $data['apply_id'])->find();
         if (!$apply) return $this->error('装修申请不存在');
+        $this->validateCommunityAccess($apply['community_id']);
 
         $data['community_id'] = $apply['community_id'];
         $data['create_admin_id'] = $this->adminId;
@@ -670,6 +710,10 @@ class Decoration extends BaseAdmin
         $record = Db::name('decoration_violation')->where('id', $id)->find();
         if (!$record) return $this->error('记录不存在');
 
+        // 校验关联申请的社区权限
+        $apply = Db::name('decoration_apply')->where('id', $record['apply_id'])->find();
+        if ($apply) $this->validateCommunityAccess($apply['community_id']);
+
         $data['update_time'] = date('Y-m-d H:i:s');
         Db::name('decoration_violation')->where('id', $id)->update($data);
         return $this->success([], '修改成功');
@@ -683,50 +727,76 @@ class Decoration extends BaseAdmin
         $id = $this->request->post('id', 0);
         $rectifyResult = $this->request->post('rectify_result', '');
         $penaltyAmount = floatval($this->request->post('penalty_amount', 0));
-        $doPenalty = $this->request->post('do_penalty', 0); // 是否扣款
+        $doPenalty = $this->request->post('do_penalty', 0);
+
+        if ($penaltyAmount < 0) return $this->error('罚金金额不能为负数');
 
         $record = Db::name('decoration_violation')->where('id', $id)->find();
         if (!$record) return $this->error('记录不存在');
 
-        $update = [
-            'rectify_result' => $rectifyResult,
-            'update_time' => date('Y-m-d H:i:s'),
-        ];
-
-        if ($doPenalty && $penaltyAmount > 0) {
-            $update['status'] = 2; // 已扣款
-            $update['penalty_amount'] = $penaltyAmount;
-
-            // 财务流水记录
-            $apply = Db::name('decoration_apply')->where('id', $record['apply_id'])->find();
-            if ($apply) {
-                Db::name('finance_flow')->insert([
-                    'flow_no' => build_order_no('DSF'),
-                    'community_id' => $apply['community_id'],
-                    'type' => 1, // 收入
-                    'category' => '装修罚金',
-                    'amount' => $penaltyAmount,
-                    'balance' => 0,
-                    'source_type' => 'decoration_violation',
-                    'source_id' => $id,
-                    'description' => "装修违规罚金 - {$record['violation_type']} - {$apply['apply_no']}",
-                    'operator_id' => $this->adminId,
-                    'operator_name' => $this->adminInfo['username'] ?? '',
-                    'status' => 1,
-                    'create_time' => date('Y-m-d H:i:s'),
-                ]);
-            }
-        } else {
-            $update['status'] = 1; // 已整改(不扣款)
+        // 幂等性：已处理过的违规不可再次操作
+        if ($record['status'] != 0) {
+            return $this->error('该违规已处理，不可重复操作');
         }
 
-        Db::name('decoration_violation')->where('id', $id)->update($update);
-        return $this->success([], '处理完成');
+        Db::startTrans();
+        try {
+            // 重新锁定读取，确保状态未变化
+            $record = Db::name('decoration_violation')->where('id', $id)->lock(true)->find();
+            if ($record['status'] != 0) {
+                Db::rollback();
+                return $this->error('该违规已处理，不可重复操作');
+            }
+
+            $update = [
+                'rectify_result' => $rectifyResult,
+                'update_time' => date('Y-m-d H:i:s'),
+            ];
+
+            if ($doPenalty && $penaltyAmount > 0) {
+                $update['status'] = 2;
+                $update['penalty_amount'] = $penaltyAmount;
+
+                $apply = Db::name('decoration_apply')->where('id', $record['apply_id'])->find();
+                if ($apply) {
+                    Db::name('finance_flow')->insert([
+                        'flow_no' => build_order_no('DSF'),
+                        'community_id' => $apply['community_id'],
+                        'type' => 1,
+                        'category' => '装修罚金',
+                        'amount' => $penaltyAmount,
+                        'balance' => 0,
+                        'source_type' => 'decoration_violation',
+                        'source_id' => $id,
+                        'description' => "装修违规罚金 - {$record['violation_type']} - {$apply['apply_no']}",
+                        'operator_id' => $this->adminId,
+                        'operator_name' => $this->adminInfo['username'] ?? '',
+                        'status' => 1,
+                        'create_time' => date('Y-m-d H:i:s'),
+                    ]);
+                }
+            } else {
+                $update['status'] = 1;
+            }
+
+            Db::name('decoration_violation')->where('id', $id)->update($update);
+            Db::commit();
+            return $this->success([], '处理完成');
+        } catch (\Throwable $e) {
+            Db::rollback();
+            $this->logError('violationRectify', $e);
+            return $this->error('操作失败，请重试');
+        }
     }
 
     public function violationDelete()
     {
         $id = $this->request->post('id', 0);
+        $violation = Db::name('decoration_violation')->where('id', $id)->find();
+        if ($violation) {
+            $apply = Db::name('decoration_apply')->where('id', $violation['apply_id'])->find();
+            if ($apply) $this->validateCommunityAccess($apply['community_id']);
+        }
         Db::name('decoration_violation')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -759,5 +829,15 @@ class Decoration extends BaseAdmin
         $stats['today_inspect'] = Db::name('decoration_inspect')->where($inspectWhere)->count();
 
         return $this->success($stats);
+    }
+
+    /**
+     * 记录异常到日志（不泄露敏感路径给前端）
+     */
+    private function logError(string $method, \Throwable $e): void
+    {
+        $msg = date('Y-m-d H:i:s') . ' [' . $method . '] [' . get_class($e) . '] ' . $e->getMessage()
+            . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n";
+        @file_put_contents(RUNTIME_PATH . 'log' . DIRECTORY_SEPARATOR . 'deco_debug.log', $msg, FILE_APPEND);
     }
 }

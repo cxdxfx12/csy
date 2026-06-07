@@ -41,6 +41,12 @@ class BaseAdmin extends BaseController
             $jwtConfig = config('jwt');
             $payload = \Firebase\JWT\JWT::decode($token, new \Firebase\JWT\Key($jwtConfig['key'], $jwtConfig['algorithm']));
             $payload = (array) $payload;
+
+            // 校验 token 类型，防止业主/员工端 token 越权访问后台
+            if (($payload['type'] ?? '') !== 'admin') {
+                $this->throwError('身份验证失败');
+            }
+
             $this->adminId = $payload['sub'] ?? 0;
             $this->adminInfo = Db::name('admin_user')->where('id', $this->adminId)->find();
 
