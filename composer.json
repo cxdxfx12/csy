@@ -21,6 +21,7 @@
         "psr-4": {
             "app\\": "app/",
             "middleware\\": "middleware/",
+            "service\\": "extend/service/",
             "think\\": "vendor/think/"
         },
         "files": [
