@@ -32,6 +32,31 @@
         </div>
         <router-view />
       </el-main>
+
+      <!-- 版权信息 -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <img :src="monkeyIco" alt="" class="footer-logo" />
+          <div class="footer-info">
+            <span class="footer-brand">
+              <strong>杭州喵喵至家网络有限公司</strong>
+            </span>
+            <span class="footer-sep">·</span>
+            <span>倾力打造</span>
+            <span class="footer-sep">·</span>
+            <strong class="footer-system">大圣智慧物业管理系统</strong>
+          </div>
+          <div class="footer-meta">
+            <span class="footer-phone">
+              客服电话：<a href="tel:17771300068">17771300068</a> / <a href="tel:19171045360">19171045360</a>
+            </span>
+            <span class="footer-sep">|</span>
+            <a href="https://www.hbdxm.com" target="_blank">www.hbdxm.com</a>
+            <span class="footer-sep">|</span>
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">鄂ICP备2025153909号</a>
+          </div>
+        </div>
+      </footer>
     </el-container>
   </el-container>
 </template>
@@ -44,6 +69,7 @@ import { useAppStore } from '@/stores/app'
 import Sidebar from './Sidebar.vue'
 import HeaderBar from './HeaderBar.vue'
 import TabsView from './TabsView.vue'
+import monkeyIco from '@/assets/images/monkey-ico.png'
 
 const userStore = useUserStore()
 const appStore = useAppStore()
@@ -62,10 +88,10 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.main-container { height: 100vh; }
+.main-container { min-height: 100vh; }
 .main-sidebar { background: #fff; border-right: 1px solid #e2e8f0; transition: width 0.3s; overflow: hidden; display: flex; flex-direction: column; }
 .main-header { position: fixed; top: 0; right: 0; height: 60px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; z-index: 100; transition: left 0.3s; }
-.main-content { margin-top: 60px; padding: 20px; background: #f0f2f5; min-height: calc(100vh - 60px); }
+.main-content { margin-top: 60px; padding: 20px; background: #f0f2f5; flex: 1; overflow: auto; }
 
 /* ===== 高档页面横幅 ===== */
 .premium-banner {
@@ -128,5 +154,67 @@ onMounted(async () => {
 @keyframes decoPulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+/* ===== 版权信息 ===== */
+.site-footer {
+  background: linear-gradient(135deg, #1a1f36 0%, #252b48 50%, #1a1f36 100%);
+  border-top: 2px solid rgba(99, 102, 241, 0.3);
+  padding: 16px 24px;
+  flex-shrink: 0;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+.footer-info {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.5px;
+}
+.footer-brand {
+  color: #a5b4fc;
+}
+.footer-system {
+  color: #c7d2fe;
+  text-shadow: 0 1px 6px rgba(129,140,248,0.35);
+}
+.footer-meta {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-sep {
+  opacity: 0.3;
+}
+.footer-phone a,
+.footer-meta a {
+  color: rgba(167, 139, 250, 0.85);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-phone a:hover,
+.footer-meta a:hover {
+  color: #c4b5fd;
+  text-decoration: underline;
 }
 </style>
