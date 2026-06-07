@@ -51,15 +51,21 @@ class Payment extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
-        unset($data['id']);
-        $this->validateCommunityAccess($data['community_id'] ?? 0);
-        if (empty($data['payment_no'])) {
-            $data['payment_no'] = 'PAY' . date('YmdHis') . rand(1000, 9999);
+        // 字段白名单
+        $allowFields = ['community_id', 'owner_id', 'room_id', 'bill_id', 'payment_no', 'amount', 'pay_method', 'trade_no', 'pay_time', 'pay_account', 'operator_id', 'operator_type', 'remark'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
         }
-        $data['create_time'] = date('Y-m-d H:i:s');
-        $data['update_time'] = date('Y-m-d H:i:s');
-        if (empty($data['pay_time'])) $data['pay_time'] = null;
-        Db::name($this->table)->insert($data);
+        unset($filtered['id']);
+        $this->validateCommunityAccess($filtered['community_id'] ?? 0);
+        if (empty($filtered['payment_no'])) {
+            $filtered['payment_no'] = 'PAY' . date('YmdHis') . rand(1000, 9999);
+        }
+        $filtered['create_time'] = date('Y-m-d H:i:s');
+        $filtered['update_time'] = date('Y-m-d H:i:s');
+        if (empty($filtered['pay_time'])) $filtered['pay_time'] = null;
+        Db::name($this->table)->insert($filtered);
         return $this->success([], '添加成功');
     }
 
@@ -72,10 +78,15 @@ class Payment extends BaseAdmin
         if ($record) {
             $this->validateCommunityAccess($record['community_id'] ?? 0);
         }
-        unset($data['id']);
-        $data['update_time'] = date('Y-m-d H:i:s');
-        if (empty($data['pay_time'])) $data['pay_time'] = null;
-        Db::name($this->table)->where('id', $id)->update($data);
+        // 字段白名单
+        $allowFields = ['community_id', 'owner_id', 'room_id', 'bill_id', 'payment_no', 'amount', 'pay_method', 'trade_no', 'pay_time', 'pay_account', 'operator_id', 'operator_type', 'remark'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        $filtered['update_time'] = date('Y-m-d H:i:s');
+        if (empty($filtered['pay_time'])) $filtered['pay_time'] = null;
+        Db::name($this->table)->where('id', $id)->update($filtered);
         return $this->success([], '修改成功');
     }
 

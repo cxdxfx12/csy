@@ -41,9 +41,16 @@ class Bill extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
-        $data['bill_no'] = build_order_no('DSB');
-        $data['create_time'] = date('Y-m-d H:i:s');
-        Db::name('bill')->insert($data);
+        // 字段白名单
+        $allowFields = ['community_id', 'owner_id', 'room_id', 'charge_item_id', 'charge_item_name', 'bill_period', 'bill_year', 'bill_month', 'amount', 'total_amount', 'paid_amount', 'status', 'due_date', 'remark'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        $this->validateCommunityAccess($filtered['community_id'] ?? 0);
+        $filtered['bill_no'] = build_order_no('DSB');
+        $filtered['create_time'] = date('Y-m-d H:i:s');
+        Db::name('bill')->insert($filtered);
         return $this->success([], '添加成功');
     }
 

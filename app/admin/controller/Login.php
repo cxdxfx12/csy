@@ -21,6 +21,13 @@ class Login extends BaseAdmin
             return $this->error('请输入用户名和密码');
         }
 
+        // 登录频率限制：同一IP 5分钟内最多10次尝试
+        $ip = $this->request->ip();
+        if (!login_rate_limit_check($ip, 10, 300)) {
+            return $this->error('登录尝试过于频繁，请5分钟后再试');
+        }
+        login_rate_limit_record($ip);
+
         // 验证码校验（必填）—— 使用 Session 存储，不依赖文件缓存
         if (empty($captchaKey) || empty($captcha)) {
             return $this->error('请输入验证码');

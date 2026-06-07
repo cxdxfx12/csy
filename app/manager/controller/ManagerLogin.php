@@ -16,6 +16,14 @@ class ManagerLogin extends BaseManager
     {
         $username = $this->request->post('username', '');
         $password = $this->request->post('password', '');
+
+        // 登录频率限制：同一IP 5分钟内最多10次尝试
+        $ip = request()->ip();
+        if (!login_rate_limit_check($ip, 10, 300)) {
+            return $this->error('登录尝试过于频繁，请5分钟后再试');
+        }
+        login_rate_limit_record($ip);
+
         $staff = Db::name('admin_user')->where('username', $username)->find();
         if (!$staff || !verify_password($password, $staff['password'])) {
             return $this->error('用户名或密码错误');
@@ -192,13 +200,13 @@ class ManagerLogin extends BaseManager
             'phone'          => $phone,
             'role_id'        => 3, // 小区物管经理角色
             'community_ids'  => (string)$communityId,
-            'status'         => 1, // 默认启用
+            'status'         => 0, // 待审核，管理员审核后启用
             'create_time'    => $now,
             'update_time'    => $now,
         ]);
 
         $manager = Db::name('admin_user')->where('id', $insertId)->find();
-        return $this->issueToken($manager, '注册成功，欢迎使用小区经理工作台');
+        return $this->success([], '注册成功，请等待管理员审核后登录');
     }
 
     // ========== 私有辅助 ==========

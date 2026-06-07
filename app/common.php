@@ -217,6 +217,66 @@ if (!function_exists('get_client_ip')) {
     }
 }
 
+if (!function_exists('login_rate_limit_check')) {
+    /**
+     * 登录频率限制检查（IP维度，文件存储）
+     * @param string $ip 客户端IP
+     * @param int $maxAttempts 最大尝试次数
+     * @param int $windowSeconds 时间窗口（秒）
+     * @return bool true=允许尝试, false=频率过高
+     */
+    function login_rate_limit_check(string $ip, int $maxAttempts = 10, int $windowSeconds = 300): bool
+    {
+        $dir = RUNTIME_PATH . 'cache' . DIRECTORY_SEPARATOR;
+        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+        $file = $dir . 'login_limit_' . md5($ip) . '.php';
+        $now = time();
+        
+        $attempts = [];
+        if (file_exists($file)) {
+            $data = @include $file;
+            if (is_array($data)) $attempts = $data;
+        }
+        
+        // 清理过期记录
+        $attempts = array_filter($attempts, function($t) use ($now, $windowSeconds) {
+            return $t > ($now - $windowSeconds);
+        });
+        
+        if (count($attempts) >= $maxAttempts) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * 记录一次登录尝试
+     * @param string $ip 客户端IP
+     */
+    function login_rate_limit_record(string $ip): void
+    {
+        $dir = RUNTIME_PATH . 'cache' . DIRECTORY_SEPARATOR;
+        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+        $file = $dir . 'login_limit_' . md5($ip) . '.php';
+        $now = time();
+        
+        $attempts = [];
+        if (file_exists($file)) {
+            $data = @include $file;
+            if (is_array($data)) $attempts = $data;
+        }
+        
+        // 只保留最近5分钟的记录
+        $attempts = array_filter($attempts, function($t) use ($now) {
+            return $t > ($now - 300);
+        });
+        $attempts[] = $now;
+        
+        @file_put_contents($file, '<?php return ' . var_export($attempts, true) . ';', LOCK_EX);
+    }
+}
+
 if (!function_exists('array_to_keyval')) {
     /**
      * 数组转键值对

@@ -31,8 +31,14 @@ class Community extends BaseAdmin
         $roleId = $this->adminInfo['role_id'] ?? 0;
         if ($roleId > 2) return $this->error('仅超级管理员/系统管理员可添加小区');
         $data = $this->request->post();
-        $data['create_time'] = date('Y-m-d H:i:s');
-        Db::name('community')->insert($data);
+        // 字段白名单
+        $allowFields = ['name', 'code', 'address', 'province', 'city', 'district', 'area', 'developer', 'property_company', 'contact', 'phone', 'description', 'sort', 'status'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        $filtered['create_time'] = date('Y-m-d H:i:s');
+        Db::name('community')->insert($filtered);
         return $this->success([], '添加成功');
     }
 
@@ -41,7 +47,14 @@ class Community extends BaseAdmin
         $roleId = $this->adminInfo['role_id'] ?? 0;
         if ($roleId > 2) return $this->error('仅超级管理员/系统管理员可修改小区');
         $data = $this->request->post();
-        Db::name('community')->where('id', $data['id'])->update($data);
+        // 字段白名单
+        $allowFields = ['id', 'name', 'code', 'address', 'province', 'city', 'district', 'area', 'developer', 'property_company', 'contact', 'phone', 'description', 'sort', 'status'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        if (empty($filtered['id'])) return $this->error('参数错误');
+        Db::name('community')->where('id', $filtered['id'])->update($filtered);
         return $this->success([], '修改成功');
     }
 

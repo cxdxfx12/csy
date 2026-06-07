@@ -141,7 +141,7 @@ class WechatService
         curl_setopt_array($ch, [
             CURLOPT_URL            => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
         ]);
@@ -170,7 +170,7 @@ class WechatService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => json_encode($body, JSON_UNESCAPED_UNICODE),
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_HTTPHEADER     => ['Content-Type: application/json; charset=utf-8'],
         ]);

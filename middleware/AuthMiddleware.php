@@ -43,6 +43,19 @@ class AuthMiddleware
             $config = config('jwt');
             $payload = JWT::decode($token, new Key($config['key'], $config['algorithm']));
             $payload = (array) $payload;
+            // 全局中间件：根据路由前缀校验 token type，防止跨端越权
+            $type = $payload['type'] ?? '';
+            $pathLower = strtolower($path);
+            if (strpos($pathLower, 'admin/') === 0 && $type !== 'admin') {
+                return json_error('身份验证失败', 401);
+            }
+            if (strpos($pathLower, 'api/') === 0 && $type !== 'owner') {
+                return json_error('身份验证失败', 401);
+            }
+            if ((strpos($pathLower, 'staff/') === 0 || strpos($pathLower, 'manager/') === 0)
+                && !in_array($type, ['staff', 'manager'])) {
+                return json_error('身份验证失败', 401);
+            }
             $request->jwtPayload = $payload;
             return $next($request);
         } catch (ExpiredException $e) {

@@ -22,15 +22,28 @@ class Role extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
-        $data['create_time'] = date('Y-m-d H:i:s');
-        $id = Db::name('role')->insertGetId($data);
+        // 字段白名单：防止注入非预期字段
+        $allowFields = ['name', 'code', 'description', 'sort', 'status'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        $filtered['create_time'] = date('Y-m-d H:i:s');
+        $id = Db::name('role')->insertGetId($filtered);
         return $this->success(['id' => $id], '添加成功');
     }
 
     public function edit()
     {
         $data = $this->request->post();
-        Db::name('role')->where('id', $data['id'])->update($data);
+        // 字段白名单：防止注入非预期字段
+        $allowFields = ['id', 'name', 'code', 'description', 'sort', 'status'];
+        $filtered = [];
+        foreach ($allowFields as $f) {
+            if (isset($data[$f])) $filtered[$f] = $data[$f];
+        }
+        if (empty($filtered['id'])) return $this->error('参数错误');
+        Db::name('role')->where('id', $filtered['id'])->update($filtered);
         return $this->success([], '修改成功');
     }
 

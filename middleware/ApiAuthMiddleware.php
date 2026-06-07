@@ -34,6 +34,10 @@ class ApiAuthMiddleware
             $config = config('jwt');
             $payload = JWT::decode($token, new Key($config['key'], $config['algorithm']));
             $payload = (array) $payload;
+            // 校验 token 类型：业主端只能使用 owner 类型的 token
+            if (($payload['type'] ?? '') !== 'owner') {
+                return json_error('身份验证失败', 401);
+            }
             $request->ownerId = $payload['sub'] ?? 0;
             $request->jwtPayload = $payload;
             return $next($request);

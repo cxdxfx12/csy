@@ -15,6 +15,13 @@ class StaffLogin extends BaseStaff
         $username = $this->request->post('username', '');
         $password = $this->request->post('password', '');
 
+        // 登录频率限制：同一IP 5分钟内最多10次尝试
+        $ip = request()->ip();
+        if (!login_rate_limit_check($ip, 10, 300)) {
+            return $this->error('登录尝试过于频繁，请5分钟后再试');
+        }
+        login_rate_limit_record($ip);
+
         $staff = Db::name('admin_user')->where('username', $username)->find();
         if (!$staff || !verify_password($password, $staff['password'])) {
             return $this->error('用户名或密码错误');

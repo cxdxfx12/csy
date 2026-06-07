@@ -34,6 +34,11 @@ class StaffAuthMiddleware
             $config = config('jwt');
             $payload = JWT::decode($token, new Key($config['key'], $config['algorithm']));
             $payload = (array) $payload;
+            // 校验 token 类型：员工/经理端只能使用 staff 或 manager 类型的 token
+            $type = $payload['type'] ?? '';
+            if (!in_array($type, ['staff', 'manager'])) {
+                return json_error('身份验证失败', 401);
+            }
             $request->jwtPayload = $payload;
             return $next($request);
         } catch (\Exception $e) {

@@ -16,7 +16,10 @@ class Config extends BaseAdmin
     public function save()
     {
         $data = $this->request->post('data', []);
+        // key 白名单：只允许修改配置表中已存在的 key
+        $existingKeys = Db::name('config')->column('key');
         foreach ($data as $key => $value) {
+            if (!in_array($key, $existingKeys, true)) continue;
             Db::name('config')->where("`key`", $key)->update(['value' => $value]);
         }
         return $this->success([], '保存成功');

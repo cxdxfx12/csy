@@ -56,6 +56,18 @@ class Upload extends BaseAdmin
         }
 
         try {
+            // 图片内容二次校验：防止恶意文件伪造 MIME 类型
+            $tmpPath = $file->getPathname();
+            $imgInfo = @getimagesize($tmpPath);
+            if (!$imgInfo) {
+                return $this->error('文件不是有效的图片');
+            }
+            // 校验实际图片类型是否与声明一致
+            $realMime = $imgInfo['mime'] ?? '';
+            if (!in_array($realMime, $this->imageMimeTypes)) {
+                return $this->error('图片内容类型不合法: ' . $realMime);
+            }
+
             $uploadPath = Filesystem::disk('public')->putFile('images', $file, function () {
                 return date('Ymd') . '/' . md5(uniqid() . mt_rand());
             });

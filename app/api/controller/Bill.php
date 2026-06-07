@@ -567,7 +567,7 @@ class Bill extends BaseApi
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $xml,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_HTTPHEADER     => ['Content-Type: text/xml'],
         ]);
