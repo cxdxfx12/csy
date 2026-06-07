@@ -80,7 +80,7 @@ const SEEN_KEY = 'admin_badge_seen'
 const notifyMeta: Record<string, { icon: string; label: string; route: string; badgeType: any }> = {
   bill:      { icon: '💰', label: '待缴账单',   route: '/charge/bill',      badgeType: 'danger' },
   repair:    { icon: '🔧', label: '待处理报修', route: '/repair/order',     badgeType: 'warning' },
-  complaint: { icon: '📝', label: '待处理投诉', route: '/complaint',         badgeType: 'danger' },
+  complaint: { icon: '📝', label: '待处理投诉', route: '/complaint/index',    badgeType: 'danger' },
   order:     { icon: '📋', label: '进行中工单', route: '/repair/order',     badgeType: 'primary' },
   vote:      { icon: '🗳', label: '进行中投票', route: '/owner/vote',        badgeType: 'success' },
   activity:  { icon: '🎉', label: '报名中活动', route: '/owner/activity',    badgeType: 'warning' },

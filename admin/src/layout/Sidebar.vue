@@ -46,7 +46,7 @@ const iconMap: Record<string, string> = {
   building: 'OfficeBuilding', room: 'House', owner: 'UserFilled', charge: 'Money',
   bill: 'List', payment: 'CreditCard', meter: 'DataBoard', finance: 'TrendCharts',
   item: 'PriceTag', repair: 'Tools', worker: 'User', order: 'Document',
-  security: 'Lock', visitor: 'User', patrol: 'Van', access_card: 'CreditCard',
+  security: 'Lock', visitor: 'User', patrol: 'Van', access_card: 'CreditCard', access_config: 'Setting', access_device: 'Connection',
   parking: 'TakeawayBox', space: 'TakeawayBox', vehicle: 'Van', record: 'List',
   notice: 'Bell', equipment: 'SetUp', maintain: 'Tools', complaint: 'Warning',
   print: 'Printer', receipt: 'List', arrears: 'Bell', index: 'DataAnalysis', profile: 'User',
@@ -67,6 +67,10 @@ const iconMap: Record<string, string> = {
   signup: 'List',
   // 装修管理 (worker icon 复用上方 "worker: 'User'" 映射，无需重复)
   decoration: 'SetUp', apply: 'Document', inspect: 'Van', violation: 'Warning',
+  // 道闸模块
+  gateConfig: 'Setting', gateDevice: 'Connection',
+  // 监控模块
+  surveillanceConfig: 'Monitor',
 }
 
 function menuIcon(menu: MenuItem): string {

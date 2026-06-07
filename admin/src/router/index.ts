@@ -78,6 +78,10 @@ const router = createRouter({
         { path: 'charge/UnifiedPayment', name: 'UnifiedPaymentIndex', component: () => import('@/views/charge/UnifiedPayment.vue'), meta: { title: '统一支付' } },
         { path: 'parking/ParkingFeeRule', name: 'ParkingFeeRuleIndex', component: () => import('@/views/parking/ParkingFeeRule.vue'), meta: { title: '停车费率' } },
         { path: 'parking/ParkingPayment', name: 'ParkingPaymentIndex', component: () => import('@/views/parking/ParkingPayment.vue'), meta: { title: '停车缴费' } },
+        { path: 'parking/gateConfig', name: 'GateConfigIndex', component: () => import('@/views/parking/GateConfig.vue'), meta: { title: '道闸配置' } },
+        { path: 'parking/gateDevice', name: 'GateDeviceIndex', component: () => import('@/views/parking/GateDevice.vue'), meta: { title: '道闸设备' } },
+        { path: 'security/accessConfig', name: 'AccessConfigIndex', component: () => import('@/views/security/AccessConfig.vue'), meta: { title: '门禁配置' } },
+        { path: 'security/accessDevice', name: 'AccessDeviceIndex', component: () => import('@/views/security/AccessDevice.vue'), meta: { title: '门禁设备' } },
         { path: 'print/PrintTemplate', name: 'PrintTemplateIndex', component: () => import('@/views/print/PrintTemplate.vue'), meta: { title: '打印模板' } },
         { path: 'print/PrintLog', name: 'PrintLogIndex', component: () => import('@/views/print/PrintLog.vue'), meta: { title: '打印日志' } },
         { path: 'notice/Notification', name: 'NotificationIndex', component: () => import('@/views/notice/Notification.vue'), meta: { title: '消息推送' } },
@@ -92,6 +96,9 @@ const router = createRouter({
         { path: 'notice/message', name: 'MessageIndex', component: () => import('@/views/notice/Message.vue'), meta: { title: '消息记录' } },
         { path: 'sms/log', name: 'SmsLogIndex', component: () => import('@/views/sms/SmsLog.vue'), meta: { title: '短信发送日志' } },
         { path: 'owner/signup', name: 'ActivitySignupIndex', component: () => import('@/views/owner/ActivitySignup.vue'), meta: { title: '活动报名' } },
+
+        // ====== 监控管理 ======
+        { path: 'monitoring/surveillanceConfig', name: 'SurveillanceConfigIndex', component: () => import('@/views/monitoring/SurveillanceConfig.vue'), meta: { title: '监控管理' } },
 
         // ====== 装修管理 ======
         { path: 'decoration/apply', name: 'DecorationApply', component: () => import('@/views/decoration/DecorationApply.vue'), meta: { title: '装修申请' } },

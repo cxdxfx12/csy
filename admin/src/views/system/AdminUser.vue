@@ -12,6 +12,9 @@
       <div class="table-toolbar"><el-button type="primary" @click="openForm()">✨ 添加管理员</el-button></div>
       <el-table :data="list" v-loading="loading" stripe border @sort-change="handleSort">
         <el-table-column prop="id" label="ID" width="60" sortable />
+        <el-table-column label="图标" width="50" align="center">
+          <template #default="{ row }"><RoleIcon :role-id="row.role_id" :size="28" /></template>
+        </el-table-column>
         <el-table-column prop="username" label="用户名" width="120" />
         <el-table-column prop="nickname" label="昵称" width="140" />
         <el-table-column prop="role_name" label="角色" width="120" />
@@ -70,6 +73,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
 import { formatTime } from '@/utils/format'
+import RoleIcon from '@/components/RoleIcon.vue'
 
 const list = ref<any[]>([])
 const total = ref(0)

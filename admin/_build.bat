@@ -1,5 +1,7 @@
 @echo off
-set PATH=C:\Program Files\nodejs;%PATH%
 cd /d e:\ds\admin
-call npm run build
-echo BUILD_DONE
+echo Building admin frontend...
+call "C:\Program Files\nodejs\npm.cmd" run build
+echo.
+echo Build complete! Check admin/dist/ for output.
+pause

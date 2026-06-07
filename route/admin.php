@@ -362,6 +362,12 @@ Route::group('admin', function () {
     Route::post('admin/equipment/deviceAdd', 'admin/Device/add');
     Route::post('admin/equipment/deviceEdit', 'admin/Device/edit');
     Route::post('admin/equipment/deviceDelete', 'admin/Device/delete');
+    // 设备协议操作
+    Route::get('admin/equipment/deviceTypes', 'admin/Device/types');
+    Route::get('admin/equipment/deviceActions', 'admin/Device/actions');
+    Route::post('admin/equipment/deviceTestConnection', 'admin/Device/testConnection');
+    Route::get('admin/equipment/deviceGetStatus', 'admin/Device/getStatus');
+    Route::post('admin/equipment/deviceRemoteAction', 'admin/Device/remoteAction');
 
     // 设备事件
     Route::get('admin/equipment/deviceEventList', 'admin/DeviceEvent/lists');
@@ -451,6 +457,44 @@ Route::group('admin', function () {
     Route::post('admin/parking/parkingPaymentEdit', 'admin/ParkingPayment/edit');
     Route::post('admin/parking/parkingPaymentDelete', 'admin/ParkingPayment/delete');
 
+    // 道闸配置 (按小区配置道闸品牌和接口)
+    Route::get('admin/parking/gateConfigList', 'admin/GateConfig/lists');
+    Route::get('admin/parking/gateConfigBrands', 'admin/GateConfig/brands');
+    Route::get('admin/parking/gateConfigByCommunity', 'admin/GateConfig/listByCommunity');
+    Route::post('admin/parking/gateConfigAdd', 'admin/GateConfig/add');
+    Route::post('admin/parking/gateConfigEdit', 'admin/GateConfig/edit');
+    Route::post('admin/parking/gateConfigDelete', 'admin/GateConfig/delete');
+    Route::post('admin/parking/gateConfigTest', 'admin/GateConfig/testConnection');
+    Route::post('admin/parking/gateConfigOpen', 'admin/GateConfig/remoteOpen');
+    Route::post('admin/parking/gateConfigSyncWhitelist', 'admin/GateConfig/syncWhitelist');
+
+    // 道闸设备管理
+    Route::get('admin/parking/gateDeviceList', 'admin/GateDevice/lists');
+    Route::post('admin/parking/gateDeviceAdd', 'admin/GateDevice/add');
+    Route::post('admin/parking/gateDeviceEdit', 'admin/GateDevice/edit');
+    Route::post('admin/parking/gateDeviceDelete', 'admin/GateDevice/delete');
+    Route::get('admin/parking/gateDeviceEvents', 'admin/GateDevice/events');
+    Route::get('admin/parking/gateDeviceTodayStats', 'admin/GateDevice/todayStats');
+
+    // 门禁配置 (按小区配置门禁品牌和接口)
+    Route::get('admin/security/accessConfigList', 'admin/AccessConfig/lists');
+    Route::get('admin/security/accessConfigBrands', 'admin/AccessConfig/brands');
+    Route::get('admin/security/accessConfigByCommunity', 'admin/AccessConfig/listByCommunity');
+    Route::post('admin/security/accessConfigAdd', 'admin/AccessConfig/add');
+    Route::post('admin/security/accessConfigEdit', 'admin/AccessConfig/edit');
+    Route::post('admin/security/accessConfigDelete', 'admin/AccessConfig/delete');
+    Route::post('admin/security/accessConfigTest', 'admin/AccessConfig/testConnection');
+    Route::post('admin/security/accessConfigOpen', 'admin/AccessConfig/remoteOpen');
+    Route::post('admin/security/accessConfigSyncWhitelist', 'admin/AccessConfig/syncWhitelist');
+
+    // 门禁设备管理
+    Route::get('admin/security/accessDeviceList', 'admin/AccessDevice/lists');
+    Route::post('admin/security/accessDeviceAdd', 'admin/AccessDevice/add');
+    Route::post('admin/security/accessDeviceEdit', 'admin/AccessDevice/edit');
+    Route::post('admin/security/accessDeviceDelete', 'admin/AccessDevice/delete');
+    Route::get('admin/security/accessDeviceEvents', 'admin/AccessDevice/events');
+    Route::get('admin/security/accessDeviceTodayStats', 'admin/AccessDevice/todayStats');
+
     // 打印模板
     Route::get('admin/print/printTemplateList', 'admin/PrintTemplate/lists');
     Route::post('admin/print/printTemplateAdd', 'admin/PrintTemplate/add');
@@ -525,4 +569,25 @@ Route::group('admin', function () {
 
     // 统计
     Route::get('admin/decoration/statistics', 'admin/Decoration/statistics');
+
+    // ========== 监控管理 ==========
+    // 录像机配置
+    Route::get('admin/monitoring/surveillanceConfigList', 'admin/SurveillanceConfig/lists');
+    Route::get('admin/monitoring/surveillanceBrands', 'admin/SurveillanceConfig/brands');
+    Route::get('admin/monitoring/surveillanceModels', 'admin/SurveillanceConfig/models');
+    Route::post('admin/monitoring/surveillanceConfigAdd', 'admin/SurveillanceConfig/add');
+    Route::post('admin/monitoring/surveillanceConfigEdit', 'admin/SurveillanceConfig/edit');
+    Route::post('admin/monitoring/surveillanceConfigDelete', 'admin/SurveillanceConfig/delete');
+    Route::post('admin/monitoring/surveillanceTestConn', 'admin/SurveillanceConfig/testConnection');
+    Route::get('admin/monitoring/surveillanceCameraStatus', 'admin/SurveillanceConfig/cameraStatus');
+    Route::get('admin/monitoring/surveillanceHddStatus', 'admin/SurveillanceConfig/hddStatus');
+    Route::get('admin/monitoring/surveillanceFetchAlarms', 'admin/SurveillanceConfig/fetchAlarms');
+    Route::post('admin/monitoring/surveillancePatrolAll', 'admin/SurveillanceConfig/patrolAll');
+    // 事件管理
+    Route::get('admin/monitoring/surveillanceEventList', 'admin/SurveillanceConfig/eventList');
+    Route::post('admin/monitoring/surveillanceHandleEvent', 'admin/SurveillanceConfig/handleEvent');
+    // 设备
+    Route::get('admin/monitoring/surveillanceDeviceList', 'admin/SurveillanceConfig/deviceList');
+    // 概览
+    Route::get('admin/monitoring/surveillanceTodayStats', 'admin/SurveillanceConfig/todayStats');
 });

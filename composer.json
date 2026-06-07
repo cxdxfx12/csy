@@ -20,7 +20,8 @@
     "autoload": {
         "psr-4": {
             "app\\": "app/",
-            "middleware\\": "middleware/"
+            "middleware\\": "middleware/",
+            "think\\": "vendor/think/"
         },
         "files": [
             "app/common.php"

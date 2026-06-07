@@ -11,7 +11,10 @@
               <span style="font-size:40px;">{{ (userInfo.nickname || 'A').charAt(0).toUpperCase() }}</span>
             </el-avatar>
             <h3 class="avatar-name">{{ userInfo.nickname || '管理员' }}</h3>
-            <el-tag type="primary" effect="plain" size="small">{{ userInfo.role || '超级管理员' }}</el-tag>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <RoleIcon :role-id="(userStore.userInfo?.role_id ?? 1)" :size="22" />
+              <el-tag type="primary" effect="plain" size="small">{{ userInfo.role || '超级管理员' }}</el-tag>
+            </div>
           </div>
           <el-divider />
           <div class="info-list">
@@ -121,6 +124,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { apiGet, apiPost } from '@/utils/request'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import RoleIcon from '@/components/RoleIcon.vue'
 
 const userStore = useUserStore()
 const activeTab = ref('info')

@@ -13,8 +13,10 @@
       <div class="table-toolbar"><el-button type="primary" @click="openForm()">添加角色</el-button></div>
       <el-table :data="list" v-loading="loading" stripe border>
         <el-table-column type="index" label="#" width="50" />
-        <el-table-column prop="id" label="ID" width="60" />
-        <el-table-column prop="name" label="角色名称" width="150" />
+        <el-table-column label="图标" width="64" align="center">
+          <template #default="{row}"><RoleIcon :role-id="row.id" :size="32" /></template>
+        </el-table-column>
+        <el-table-column prop="name" label="角色名称" width="140" />
         <el-table-column prop="code" label="编码" width="130" />
         <el-table-column prop="description" label="描述" show-overflow-tooltip />
         <el-table-column prop="status" label="状态" width="80"><template #default="{row}"><el-tag :type="row.status===1?'success':'danger'">{{ row.status===1?'正常':'禁用' }}</el-tag></template></el-table-column>
@@ -60,6 +62,7 @@
 import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { apiGet, apiPost } from '@/utils/request'
+import RoleIcon from '@/components/RoleIcon.vue'
 
 const list = ref<any[]>([])
 const total = ref(0)
