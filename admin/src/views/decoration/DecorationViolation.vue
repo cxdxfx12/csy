@@ -53,7 +53,7 @@
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="装修申请" prop="apply_id">
           <el-select v-model="form.apply_id" placeholder="选择装修申请" filterable style="width:100%;">
-            <el-option v-for="a in inProgressApplies" :key="a.id" :label="a.apply_no + ' - ' + a.room_number" :value="a.id" />
+            <el-option v-for="a in inProgressApplies" :key="a.id" :label="a.apply_no + ' - ' + a.room_number + ' [' + (a.status_name||'') + ']'" :value="a.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="违规类型" prop="violation_type">
@@ -122,7 +122,7 @@ async function loadData() {
 
 async function openAddForm() {
   try {
-    const r = await apiGet('/admin/decoration/applyList', {status:2, limit:999})
+    const r = await apiGet('/admin/decoration/applyList', {limit:999})
     inProgressApplies.value = r.data?.list || r.data || []
   } catch {}
   form.apply_id=''; form.violation_type='破坏承重结构'; form.description=''; form.rectify_deadline=''
