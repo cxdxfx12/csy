@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大圣物业管理系统 — 开发者手册</title>
+<style>
+  /* ========== Reset & Base ========== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;font-size:16px}
+  body{
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+    background:#f0f2f5;
+    color:#1f2937;
+    line-height:1.75;
+    min-height:100vh
+  }
+
+  /* ========== Hero ========== */
+  .hero{
+    background: linear-gradient(135deg,#0f2027 0%,#203a43 40%,#2c5364 100%);
+    color:#fff;
+    padding:80px 24px 64px;
+    text-align:center;
+    position:relative;
+    overflow:hidden
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events:none
+  }
+  .hero h1{
+    font-size:clamp(2rem,5vw,3.2rem);
+    font-weight:800;
+    letter-spacing:-0.5px;
+    position:relative
+  }
+  .hero .subtitle{
+    font-size:1.15rem;
+    margin-top:12px;
+    opacity:.85;
+    font-weight:300;
+    position:relative
+  }
+  .hero .badge-row{
+    margin-top:24px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    position:relative
+  }
+  .hero .badge{
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:999px;
+    padding:6px 18px;
+    font-size:.875rem;
+    font-weight:500
+  }
+
+  /* ========== Nav ========== */
+  .sticky-nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(15,32,39,.92);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,.1);
+    padding:0 24px;
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none
+  }
+  .sticky-nav::-webkit-scrollbar{display:none}
+  .sticky-nav a{
+    color:rgba(255,255,255,.75);
+    text-decoration:none;
+    padding:12px 16px;
+    font-size:.85rem;
+    font-weight:500;
+    white-space:nowrap;
+    border-bottom:2px solid transparent;
+    transition:all .2s
+  }
+  .sticky-nav a:hover,.sticky-nav a:focus{color:#fff;border-bottom-color:#38bdf8}
+
+  /* ========== Container & Sections ========== */
+  .container{max-width:1100px;margin:0 auto;padding:0 24px}
+  section{padding:64px 0}
+
+  .section-title{
+    font-size:1.75rem;
+    font-weight:700;
+    color:#0f2027;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:10px
+  }
+  .section-title .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;height:36px;
+    border-radius:8px;
+    background:linear-gradient(135deg,#203a43,#2c5364);
+    color:#fff;
+    font-size:.9rem;
+    font-weight:700;
+    flex-shrink:0
+  }
+  .section-desc{margin-bottom:32px;color:#6b7280;font-size:.95rem}
+
+  /* ========== Cards ========== */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .card{
+    background:#fff;
+    border-radius:12px;
+    padding:24px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    border:1px solid #e5e7eb;
+    transition:box-shadow .2s,transform .2s
+  }
+  .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);transform:translateY(-2px)}
+  .card h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:#1f2937}
+  .card p{font-size:.875rem;color:#6b7280;line-height:1.6}
+
+  /* ========== Tables ========== */
+  .table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  table{width:100%;border-collapse:collapse;min-width:600px}
+  thead{background:linear-gradient(135deg,#f8fafc,#f1f5f9)}
+  th{padding:12px 16px;text-align:left;font-weight:600;font-size:.84rem;color:#374151;border-bottom:2px solid #e5e7eb}
+  td{padding:10px 16px;font-size:.86rem;color:#4b5563;border-bottom:1px solid #f3f4f6}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#f8fafc}
+
+  /* ========== Code Blocks ========== */
+  .code-block{
+    background:#1e293b;
+    color:#e2e8f0;
+    border-radius:10px;
+    padding:20px 24px;
+    font-family:'JetBrains Mono','Fira Code','Cascadia Code','Consolas',monospace;
+    font-size:.82rem;
+    line-height:1.7;
+    overflow-x:auto;
+    margin:16px 0;
+    white-space:pre;
+    box-shadow:0 2px 8px rgba(0,0,0,.15)
+  }
+  .code-block .kw{color:#c084fc}
+  .code-block .str{color:#86efac}
+  .code-block .cmt{color:#94a3b8;font-style:italic}
+  .code-block .fn{color:#38bdf8}
+  .code-block .num{color:#fbbf24}
+
+  /* ========== Flow Box ========== */
+  .flow-box{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:24px 28px;
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:.8rem;
+    line-height:1.8;
+    overflow-x:auto;
+    white-space:pre;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+    color:#334155
+  }
+  .flow-box .arrow{color:#2c5364}
+  .flow-box .lbl{color:#7c3aed;font-weight:700}
+  .flow-box .key{color:#0369a1}
+
+  /* ========== Info Boxes ========== */
+  .info-box{
+    border-left:4px solid #38bdf8;
+    background:#f0f9ff;
+    padding:16px 20px;
+    border-radius:0 10px 10px 0;
+    margin:16px 0;
+    font-size:.9rem
+  }
+  .warn-box{
+    border-left:4px solid #f59e0b;
+    background:#fffbeb;
+    padding:16px 20px;
+    border-radius:0 10px 10px 0;
+    margin:16px 0;
+    font-size:.9rem
+  }
+  .tip-box{
+    border-left:4px solid #10b981;
+    background:#ecfdf5;
+    padding:16px 20px;
+    border-radius:0 10px 10px 0;
+    margin:16px 0;
+    font-size:.9rem
+  }
+
+  /* ========== Tag ========== */
+  .tag{
+    display:inline-block;
+    padding:2px 10px;
+    border-radius:999px;
+    font-size:.75rem;
+    font-weight:600;
+    margin:0 2px
+  }
+  .tag-blue{background:#dbeafe;color:#1d4ed8}
+  .tag-green{background:#d1fae5;color:#065f46}
+  .tag-purple{background:#ede9fe;color:#6b21a8}
+  .tag-orange{background:#ffedd5;color:#9a3412}
+  .tag-red{background:#fee2e2;color:#991b1b}
+
+  /* ========== Route List ========== */
+  .route-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:8px;
+    list-style:none
+  }
+  .route-list li{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    padding:8px 14px;
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:.78rem;
+    color:#4b5563;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:all .15s
+  }
+  .route-list li:hover{border-color:#38bdf8;color:#0f2027}
+  .route-list li .path{color:#7c3aed;font-weight:600;flex-shrink:0}
+  .route-list li .sep{color:#d1d5db}
+  .route-list li .desc{color:#6b7280;font-size:.75rem}
+
+  /* ========== Footer ========== */
+  .footer{
+    background:linear-gradient(135deg,#0f2027,#2c5364);
+    color:rgba(255,255,255,.7);
+    text-align:center;
+    padding:32px 24px;
+    font-size:.84rem;
+    margin-top:64px
+  }
+
+  /* ========== Responsive ========== */
+  @media(max-width:768px){
+    .hero{padding:48px 16px 40px}
+    section{padding:40px 0}
+    .container{padding:0 16px}
+    .card-grid{grid-template-columns:1fr}
+    .route-list{grid-template-columns:1fr}
+  }
+
+  /* ========== Print ========== */
+  @media print{
+    .sticky-nav,.footer{display:none}
+    .hero{padding:32px 0 24px}
+    body{background:#fff}
+    section{padding:24px 0;page-break-inside:avoid}
+    .card,.flow-box,.table-wrap{box-shadow:none;border:1px solid #d1d5db}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+  <h1>🔧 大圣物业管理系统</h1>
+  <p class="subtitle">开发者手册 v2.0 — 一文档看懂全部功能 / 架构 / 文件 / 组件</p>
+  <div class="badge-row">
+    <span class="badge">4 个前端</span>
+    <span class="badge">5 套 API</span>
+    <span class="badge">35 张数据表</span>
+    <span class="badge">90+ 控制器</span>
+    <span class="badge">100+ Vue 组件</span>
+    <span class="badge">2026-06-07</span>
+  </div>
+</header>
+
+<!-- ========== STICKY NAV ========== -->
+<nav class="sticky-nav">
+  <a href="#s1">全景</a>
+  <a href="#s2">目录结构</a>
+  <a href="#s3">后端架构</a>
+  <a href="#s4">功能模块</a>
+  <a href="#s5">前端架构</a>
+  <a href="#s6">数据库</a>
+  <a href="#s7">安全机制</a>
+  <a href="#s8">外部集成</a>
+  <a href="#s9">开发指南</a>
+</nav>
+
+<main>
+
+<!-- ========== 1. 项目全景 ========== -->
+<section id="s1">
+<div class="container">
+  <h2 class="section-title"><span class="num">1</span> 项目全景</h2>
+  <p class="section-desc">一图看清整个系统的前、后端、数据库关系。</p>
+
+  <div class="flow-box">
+┌──────────────────────────────────────────────────────────────────────┐
+│<span class="lbl">                    大圣物业管理系统 (Dasheng PMS)</span>                       │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐      │
+│  │  PC后台管理面板   │  │  移动端H5 (内嵌)  │  │  独立前端应用     │      │
+│  │  <span class="key">admin/src/</span>      │  │  <span class="key">admin/src/</span>     │  │  <span class="key">frontend/</span>      │      │
+│  │  Vue3+ElementPlus │  │  views/mobile/  │  │  Vue3+Vite多入口 │      │
+│  │  路由：/admin/*   │  │  路由：/mobile/* │  │  路由：/owner    │      │
+│  │  40+功能页面      │  │  15个移动端页面  │  │  /staff /manager│      │
+│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘      │
+│           └────────────────────┼────────────────────┘               │
+│                                │ <span class="arrow">axios baseURL='/api'</span>              │
+│                                ▼                                    │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │       <span class="lbl">PHP 后端 (TP6 风格自研轻量框架)</span>                     │    │
+│  │                                                               │    │
+│  │  <span class="arrow">入口：public/index.php  →  5套路由 → 5套中间件 → 控制器</span>     │    │
+│  │                                                               │    │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐ ┌─────┐ │    │
+│  │  │ <span class="key">admin/</span>   │ │ <span class="key">api/</span>     │ │ <span class="key">staff/</span>   │ │<span class="key">manager/</span>│ │<span class="key">dev/</span>│ │    │
+│  │  │ 后台管理 │ │ 业主API  │ │ 员工API  │ │经理API  │ │设备 │ │    │
+│  │  │ 84个控制 │ │ 15个控制 │ │ 11个控制 │ │4个控制  │ │2个 │ │    │
+│  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬────┘ └──┬──┘ │    │
+│  │       └────────────┴────────────┴────────────┴────────┘      │    │
+│  └──────────────────────────┬──────────────────────────────────┘    │
+│                             │                                       │
+│  ┌──────────────────────────▼──────────────────────────────────┐    │
+│  │              <span class="lbl">MySQL 8.0 (dasheng) — 35张表 ds_ 前缀</span>          │    │
+│  └──────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────┘
+  </div>
+</div>
+</section>
+
+<!-- ========== 2. 目录结构 ========== -->
+<section id="s2" style="background:#fff">
+<div class="container">
+  <h2 class="section-title"><span class="num">2</span> 目录结构速查</h2>
+  <p class="section-desc">核心目录 &amp; 文件的作用一览，快速定位你要改的代码。</p>
+
+  <div class="flow-box">
+e:\ds\
+│
+├── 📄 <span class="lbl">DEVELOPMENT.html</span>         ← 👈 你正在看的文档 (网页版)
+├── 📄 .env                     ← 环境变量 (数据库/JWT/微信key)
+│
+├── 📁 <span class="key">public/</span>                  ← Web根目录 (nginx root)
+│   ├── <span class="lbl">index.php</span>               ← ★ 入口文件 (SPA fallback / 路由分发)
+│   └── admin/                  ← admin前端构建输出 (Vite output)
+│       ├── index.html
+│       └── assets/             ← JS/CSS 打包产物
+│
+├── 📁 <span class="key">config/</span>                  ← 配置文件
+│   ├── app.php                 ← 应用名称 / 域名 / 时区
+│   ├── database.php            ← 数据库连接 / Redis
+│   ├── jwt.php                 ← JWT密钥 / 过期时间
+│   ├── cors.php                ← CORS跨域白名单
+│   ├── <span class="lbl">middleware.php</span>          ← ★ 中间件绑定 (哪个模块用哪些中间件)
+│   ├── route.php               ← 路由策略
+│   ├── cache.php               ← 缓存配置
+│   ├── log.php                 ← 日志配置
+│   ├── device.php              ← 设备密钥
+│   └── filesystem.php          ← 上传配置
+│
+├── 📁 <span class="key">route/</span>                   ← ★ 路由表 (6个文件)
+│   ├── admin.php / api.php / staff.php
+│   ├── manager.php / device.php / home.php
+│
+├── 📁 <span class="key">middleware/</span>               ← ★ 中间件 (6个)
+│   ├── <span class="lbl">AuthMiddleware.php</span>      ← JWT认证 + 登录频率限流
+│   ├── ApiAuthMiddleware.php   ← JWT认证(业主)
+│   ├── StaffAuthMiddleware.php ← JWT认证(员工/经理)
+│   ├── CorsMiddleware.php      ← CORS跨域
+│   ├── LogMiddleware.php       ← 操作日志
+│   └── DeviceAuthMiddleware.php← 设备密钥认证
+│
+├── 📁 <span class="key">app/</span>                     ← 应用代码
+│   ├── <span class="lbl">BaseController.php</span>      ← 抽象基类
+│   ├── common.php              ← 公共函数 (加密/限流/密码/IP等)
+│   ├── admin/                  ← 后台管理 84个控制器
+│   │   ├── <span class="lbl">BaseAdmin.php</span>       ← ★ Admin基类 (JWT/权限/小区隔离)
+│   │   └── controller/
+│   ├── api/controller/         ← 业主端API 15个
+│   ├── staff/controller/       ← 员工端 11个
+│   ├── manager/controller/     ← 经理端 4个
+│   └── device/controller/      ← 设备端 2个
+│
+├── 📁 <span class="key">extend/service/</span>
+│   └── WechatService.php       ← 微信SDK封装
+│
+├── 📁 <span class="key">admin/</span>                   ← ★ PC管理面板 Vue3 项目
+│   ├── vite.config.ts          ← Vite配置 (base='/admin/')
+│   └── src/
+│       ├── <span class="lbl">router/index.ts</span>     ← ★ 路由表
+│       ├── stores/             ← Pinia (user/app)
+│       ├── utils/request.ts    ← Axios封装
+│       └── views/              ← 业务组件 (~100个)
+│
+├── 📁 <span class="key">frontend/</span>                ← 独立前端应用
+│   └── src/ (owner/staff/manager)
+│
+└── 📁 <span class="key">database/</span> → dasheng.sql    ← 完整建表+初始数据
+  </div>
+</div>
+</section>
+
+<!-- ========== 3. 后端架构 ========== -->
+<section id="s3">
+<div class="container">
+  <h2 class="section-title"><span class="num">3</span> 后端架构</h2>
+  <p class="section-desc">请求如何被处理 —— 从浏览器到数据库的完整链路。</p>
+
+  <h3 style="margin-top:24px;margin-bottom:12px;color:#203a43">3.1 请求生命周期</h3>
+  <div class="flow-box">
+浏览器请求
+  │
+  ▼
+┌─────────────────────────────────────────────────┐
+│ <span class="lbl">public/index.php</span>                                 │
+│  1. 加载 .env → $_ENV                           │
+│  2. CORS头设置 (动态Origin白名单)                 │
+│  3. 创建 app\Request 对象                       │
+│  4. URL路由解析                                   │
+│     ├── 剥离 /index.php/ 或 /api.php/ 前缀        │
+│     ├── 处理双重 /api/api/ 前缀                   │
+│     ├── 路由缓存读取/刷新                         │
+│     └── Route::get() → 模块/控制器/方法            │
+│  5. 实例化控制器                                   │
+│     ├── 执行中间件链 (middleware.php)              │
+│     │   ├── CorsMiddleware (跨域)                 │
+│     │   ├── AuthMiddleware (JWT认证+频率限流)      │
+│     │   └── LogMiddleware (操作日志)              │
+│     ├── 控制器 initialize() → auth()              │
+│     └── 控制器 action()                           │
+│  6. 异常捕获 → 友好错误JSON                        │
+└─────────────────────────────────────────────────┘
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:12px;color:#203a43">3.2 中间件绑定关系</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>模块</th><th>URL前缀示例</th><th>中间件链</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-blue">admin</span></td><td><code>/admin/Login</code>, <code>/admin/Bill</code></td><td>AuthMiddleware → LogMiddleware</td></tr>
+        <tr><td><span class="tag tag-green">api</span></td><td><code>/api/login</code>, <code>/api/bill</code></td><td>ApiAuthMiddleware → CorsMiddleware</td></tr>
+        <tr><td><span class="tag tag-purple">staff</span></td><td><code>/staff/login</code>, <code>/staff/repair</code></td><td>StaffAuthMiddleware → CorsMiddleware</td></tr>
+        <tr><td><span class="tag tag-orange">manager</span></td><td><code>/manager/login</code></td><td>StaffAuthMiddleware → CorsMiddleware</td></tr>
+        <tr><td><span class="tag tag-red">device</span></td><td><code>/device/gateway</code></td><td>DeviceAuthMiddleware</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:12px;color:#203a43">3.3 JWT Token 结构</h3>
+  <div class="code-block">{
+  <span class="str">"iss"</span>: <span class="str">"ds_property_manager"</span>,
+  <span class="str">"iat"</span>: <span class="num">1717564800</span>,
+  <span class="str">"exp"</span>: <span class="num">1717651200</span>,
+  <span class="str">"sub"</span>: <span class="num">1</span>,
+  <span class="str">"type"</span>: <span class="str">"admin|owner|staff|manager"</span>
+}</div>
+  <div class="info-box">🔑 密钥：<code>ds_property_manager_jwt_key_2026</code> &nbsp;|&nbsp; 算法：HS256 &nbsp;|&nbsp; 有效期：签发后 24 小时</div>
+
+  <h3 style="margin-top:32px;margin-bottom:12px;color:#203a43">3.4 公共函数速查 (app/common.php)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>函数</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td><code>json_success($data)</code></td><td>成功 JSON <code>{code:0, msg, data}</code></td></tr>
+        <tr><td><code>json_error($msg)</code></td><td>错误 JSON <code>{code:1, msg}</code></td></tr>
+        <tr><td><code>json_table($list, $total)</code></td><td>表格数据 <code>{code:0, data:{list, total}}</code></td></tr>
+        <tr><td><code>encrypt_password($pwd)</code></td><td>bcrypt 加密 (cost=12)</td></tr>
+        <tr><td><code>verify_password($pwd, $hash)</code></td><td>密码验证 (兼容 bcrypt + 旧版MD5)</td></tr>
+        <tr><td><code>mask_phone($phone)</code></td><td>手机号脱敏 <code>138****1234</code></td></tr>
+        <tr><td><code>tree_list($data, $pid)</code></td><td>数据转树形结构</td></tr>
+        <tr><td><code>login_rate_limit_check($ip, $user)</code></td><td>登录频率校验 (5分钟 ≤10次)</td></tr>
+        <tr><td><code>get_client_ip()</code></td><td>获取客户端真实IP</td></tr>
+        <tr><td><code>build_order_no($prefix)</code></td><td>生成唯一订单号</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top:32px;margin-bottom:12px;color:#203a43">3.5 权限机制 (RBAC)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>role_id</th><th>code</th><th>权限范围</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-red">1</span></td><td>admin</td><td>全控 <code>*</code>，所有模块</td></tr>
+        <tr><td>2</td><td>super_admin</td><td>同全控</td></tr>
+        <tr><td><span class="tag tag-orange">3</span></td><td>manager</td><td>小区经理：房产/业主/收费/报修/安保/设备/打印/租赁/装修 (~60个)</td></tr>
+        <tr><td><span class="tag tag-blue">4</span></td><td>service</td><td>客服：投诉/报修/业主/房产/装修</td></tr>
+        <tr><td><span class="tag tag-green">5</span></td><td>finance</td><td>财务：账单/支付/收费项目/抄表/欠费/设备/装修</td></tr>
+        <tr><td><span class="tag tag-purple">6</span></td><td>security</td><td>安保：访客/巡更/门禁/停车/业主/装修</td></tr>
+        <tr><td>7</td><td>engineer</td><td>工程：设备台账/维保/采购/供应商/合同/装修</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ========== 4. 功能模块 ========== -->
+<section id="s4" style="background:#fff">
+<div class="container">
+  <h2 class="section-title"><span class="num">4</span> 完整功能模块速查</h2>
+  <p class="section-desc">后台管理 84 个控制器 + 业主端 15 个 + 员工端 11 个 + 经理端 4 个。</p>
+
+  <h3 style="color:#203a43;margin-bottom:12px">4.1 后台管理 Admin — 84 个控制器</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>分类</th><th>控制器</th><th>主要功能</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="9"><span class="tag tag-blue">系统管理</span></td><td>Login</td><td>PC登录(账号密码/验证码/微信OAuth/扫码)</td></tr>
+        <tr><td>AdminUser</td><td>管理员CRUD</td></tr>
+        <tr><td>Role</td><td>角色管理</td></tr>
+        <tr><td>Menu</td><td>菜单管理（树形）</td></tr>
+        <tr><td>Config</td><td>系统参数配置（键值对）</td></tr>
+        <tr><td>Profile</td><td>个人信息/改密码</td></tr>
+        <tr><td>Log</td><td>操作日志查看</td></tr>
+        <tr><td>PushDevice</td><td>推送设备注册</td></tr>
+        <tr><td>SseEvent</td><td>SSE实时推送事件</td></tr>
+        <tr><td rowspan="3"><span class="tag tag-green">房产管理</span></td><td>Community</td><td>小区CRUD（多小区数据隔离）</td></tr>
+        <tr><td>Building</td><td>楼栋</td></tr>
+        <tr><td>Room</td><td>房间</td></tr>
+        <tr><td rowspan="7"><span class="tag tag-purple">业主管理</span></td><td>Owner</td><td>业主档案</td></tr>
+        <tr><td>Family</td><td>家庭成员</td></tr>
+        <tr><td>Vote</td><td>业主投票</td></tr>
+        <tr><td>Activity</td><td>社区活动</td></tr>
+        <tr><td>Notice</td><td>公告通知</td></tr>
+        <tr><td>Complaint</td><td>投诉建议处理</td></tr>
+        <tr><td>Decoration</td><td>装修申请/审批/巡查/违规</td></tr>
+        <tr><td rowspan="11"><span class="tag tag-orange">收费管理</span></td><td>ChargeItem</td><td>收费项目</td></tr>
+        <tr><td>Bill</td><td>账单生成/发送</td></tr>
+        <tr><td>Payment</td><td>缴费记录</td></tr>
+        <tr><td>Meter</td><td>抄表管理（水/电/气）</td></tr>
+        <tr><td>Arrears</td><td>欠费管理</td></tr>
+        <tr><td>Finance</td><td>财务流水</td></tr>
+        <tr><td>Deposit</td><td>押金管理</td></tr>
+        <tr><td>Invoice</td><td>发票记录</td></tr>
+        <tr><td>InvoiceInfo</td><td>发票抬头</td></tr>
+        <tr><td>UnifiedPayment</td><td>统一支付入口</td></tr>
+        <tr><td>BillDunning</td><td>催缴记录</td></tr>
+        <tr><td rowspan="2">报修管理</td><td>RepairOrder</td><td>工单管理（派单/接单/完工/评价）</td></tr>
+        <tr><td>RepairWorker</td><td>维修人员管理</td></tr>
+        <tr><td rowspan="5">安保管理</td><td>Visitor</td><td>访客登记</td></tr>
+        <tr><td>PatrolRoute</td><td>巡更路线</td></tr>
+        <tr><td>PatrolRecord</td><td>巡更记录</td></tr>
+        <tr><td>AccessCard</td><td>门禁卡管理</td></tr>
+        <tr><td>Vehicle</td><td>车辆登记</td></tr>
+        <tr><td rowspan="4">停车管理</td><td>ParkingSpace</td><td>车位管理</td></tr>
+        <tr><td>ParkingRecord</td><td>停车记录</td></tr>
+        <tr><td>ParkingFeeRule</td><td>停车费率</td></tr>
+        <tr><td>ParkingPayment</td><td>停车缴费</td></tr>
+        <tr><td rowspan="7">设备管理</td><td>Equipment</td><td>设备台账</td></tr>
+        <tr><td>EquipmentMaintain</td><td>维保记录</td></tr>
+        <tr><td>Device</td><td>硬件设备(IoT)</td></tr>
+        <tr><td>DeviceEvent</td><td>设备事件</td></tr>
+        <tr><td>Elevator</td><td>电梯台账</td></tr>
+        <tr><td>ElevatorFault</td><td>电梯故障</td></tr>
+        <tr><td>ElevatorInspection</td><td>电梯巡检</td></tr>
+        <tr><td rowspan="4">物业人员</td><td>Staff</td><td>员工档案</td></tr>
+        <tr><td>Attendance</td><td>考勤管理</td></tr>
+        <tr><td>Schedule</td><td>排班管理</td></tr>
+        <tr><td>Salary</td><td>工资管理</td></tr>
+        <tr><td rowspan="4">供应商</td><td>Supplier</td><td>供应商名录</td></tr>
+        <tr><td>Purchase</td><td>采购订单</td></tr>
+        <tr><td>Contract</td><td>合同管理</td></tr>
+        <tr><td>Evaluation</td><td>供应商评价</td></tr>
+        <tr><td rowspan="5">租赁管理</td><td>LeaseProperty</td><td>可租赁房源</td></tr>
+        <tr><td>LeaseTenant</td><td>租客信息</td></tr>
+        <tr><td>LeaseContract</td><td>租赁合同</td></tr>
+        <tr><td>LeasePayment</td><td>租金支付</td></tr>
+        <tr><td>LeaseTermination</td><td>退租记录</td></tr>
+        <tr><td rowspan="3">打印中心</td><td>Print</td><td>打印功能入口</td></tr>
+        <tr><td>PrintTemplate</td><td>打印模板</td></tr>
+        <tr><td>PrintLog</td><td>打印日志</td></tr>
+        <tr><td rowspan="4">短信管理</td><td>Sms</td><td>短信服务入口</td></tr>
+        <tr><td>SmsTemplate</td><td>短信模板</td></tr>
+        <tr><td>SmsSend</td><td>短信发送</td></tr>
+        <tr><td>SmsLog</td><td>短信日志</td></tr>
+        <tr><td rowspan="2">支付配置</td><td>PaymentConfig</td><td>微信/支付宝支付参数</td></tr>
+        <tr><td>CommunityPaymentConfig</td><td>小区级支付配置</td></tr>
+        <tr><td rowspan="5">微信公众号</td><td>WechatConfig</td><td>公众号配置(appId/secret)</td></tr>
+        <tr><td>CommunityWechatConfig</td><td>小区级公众号配置</td></tr>
+        <tr><td>WechatUser</td><td>微信用户管理</td></tr>
+        <tr><td>WechatMpFan</td><td>公众号粉丝</td></tr>
+        <tr><td>WechatMpTemplate</td><td>模板消息</td></tr>
+        <tr><td rowspan="2">通用</td><td>Upload</td><td>文件上传</td></tr>
+        <tr><td>AdminBadge</td><td>后台角标（待办数量）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="color:#203a43;margin-top:32px;margin-bottom:12px">4.2 业主端 API — 15 个控制器</h3>
+  <div class="card-grid">
+    <div class="card"><h3>🔐 Login</h3><p>手机号登录/注册/改密/微信OAuth/绑定解绑</p></div>
+    <div class="card"><h3>🏠 Index</h3><p>首页Banner/公告/我的信息(房产+欠费+报修数)</p></div>
+    <div class="card"><h3>📌 Badge</h3><p>角标(未读消息+待处理+待缴费用)</p></div>
+    <div class="card"><h3>🏢 Room</h3><p>我的房产列表/详情</p></div>
+    <div class="card"><h3>💰 Bill</h3><p>账单列表/未缴/支付(微信/支付宝/线下)/支付回调</p></div>
+    <div class="card"><h3>🔧 Repair</h3><p>提交报修/列表/详情/评价</p></div>
+    <div class="card"><h3>📝 Complaint</h3><p>提交投诉/我的投诉</p></div>
+    <div class="card"><h3>📢 Notice</h3><p>公告列表/详情(阅读计数)</p></div>
+    <div class="card"><h3>🚶 Visitor</h3><p>预约访客/记录</p></div>
+    <div class="card"><h3>🚗 Vehicle</h3><p>车辆添加/列表</p></div>
+    <div class="card"><h3>🗳️ Vote</h3><p>投票列表/详情/提交(支持多选)</p></div>
+    <div class="card"><h3>🎉 Activity</h3><p>活动列表/报名/取消/我的报名</p></div>
+    <div class="card"><h3>🔗 Claim</h3><p>手机号认领房产(事务转移)</p></div>
+    <div class="card"><h3>👤 Profile</h3><p>个人信息/修改/改密码</p></div>
+    <div class="card"><h3>🤖 WechatServer</h3><p>公众号服务器回调(验证/消息/关注/取消关注)</p></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px">
+    <div>
+      <h3 style="color:#203a43;margin-bottom:12px">4.3 员工端 — 11 个控制器</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>控制器</th><th>功能</th></tr></thead>
+          <tbody>
+            <tr><td>StaffLogin</td><td>登录/微信OAuth/绑定已有账号</td></tr>
+            <tr><td>StaffRepair</td><td>维修工单接单/完工(上传照片)</td></tr>
+            <tr><td>StaffCharge</td><td>现场收费</td></tr>
+            <tr><td>StaffMeter</td><td>抄表录入</td></tr>
+            <tr><td>StaffPatrol</td><td>巡更打卡</td></tr>
+            <tr><td>StaffVisitor</td><td>访客登记/核销</td></tr>
+            <tr><td>StaffComplaint</td><td>投诉处理</td></tr>
+            <tr><td>StaffOrder</td><td>工单处理</td></tr>
+            <tr><td>StaffDecoration</td><td>装修巡查</td></tr>
+            <tr><td>StaffProfile</td><td>个人信息/改密码</td></tr>
+            <tr><td>StaffBadge</td><td>待办角标</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 style="color:#203a43;margin-bottom:12px">4.4 经理端 — 4 个控制器</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>控制器</th><th>功能</th></tr></thead>
+          <tbody>
+            <tr><td>ManagerLogin</td><td>登录/微信OAuth/注册(待审核)</td></tr>
+            <tr><td>Dashboard</td><td>驾驶舱：收入/欠费/报修/入住率</td></tr>
+            <tr><td>ManagerActivity</td><td>活动管理/审批报名</td></tr>
+            <tr><td>ManagerVote</td><td>投票管理/查看结果</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ========== 5. 前端架构 ========== -->
+<section id="s5">
+<div class="container">
+  <h2 class="section-title"><span class="num">5</span> 前端架构</h2>
+  <p class="section-desc">技术栈：Vue 3.4 + TypeScript 5.0 + Vite 5.0 + Element Plus 2.x + Pinia 2.x + ECharts 5.x</p>
+
+  <h3 style="color:#203a43;margin-bottom:12px">5.1 Admin 面板核心文件</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>文件</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td><code>vite.config.ts</code></td><td>base='/admin/', 代理 /api→127.0.0.1:8000, outDir=../public/admin</td></tr>
+        <tr><td><code>src/router/index.ts</code></td><td>★ 所有路由定义 (PC 70+ 页 + 移动端 15 页)</td></tr>
+        <tr><td><code>src/stores/user.ts</code></td><td>登录/Token/用户信息/菜单/权限</td></tr>
+        <tr><td><code>src/stores/app.ts</code></td><td>侧边栏折叠/标签页管理</td></tr>
+        <tr><td><code>src/utils/request.ts</code></td><td>Axios封装：baseURL='/api', Bearer token, 401跳转登录</td></tr>
+        <tr><td><code>src/layout/MainLayout.vue</code></td><td>PC主布局：左侧菜单+顶栏+标签页+内容区</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="color:#203a43;margin-top:32px;margin-bottom:12px">5.2 PC 管理页面路由 (70+ 条)</h3>
+  <div class="route-list">
+    <li><span class="path">/admin/login</span><span class="desc">登录页</span></li>
+    <li><span class="path">/admin/dashboard</span><span class="desc">控制台</span></li>
+    <li><span class="path">/admin/bigscreen</span><span class="desc">数据大屏</span></li>
+    <li><span class="path">/admin/profile</span><span class="desc">个人中心</span></li>
+    <li><span class="path">/admin/system/admin</span><span class="desc">用户管理</span></li>
+    <li><span class="path">/admin/system/role</span><span class="desc">角色管理</span></li>
+    <li><span class="path">/admin/system/menu</span><span class="desc">菜单管理</span></li>
+    <li><span class="path">/admin/system/config</span><span class="desc">系统配置</span></li>
+    <li><span class="path">/admin/system/log</span><span class="desc">操作日志</span></li>
+    <li><span class="path">/admin/property/community</span><span class="desc">小区管理</span></li>
+    <li><span class="path">/admin/property/building</span><span class="desc">楼栋管理</span></li>
+    <li><span class="path">/admin/property/room</span><span class="desc">房间管理</span></li>
+    <li><span class="path">/admin/owner/index</span><span class="desc">业主管理</span></li>
+    <li><span class="path">/admin/owner/family</span><span class="desc">家庭成员</span></li>
+    <li><span class="path">/admin/owner/vote</span><span class="desc">业主投票</span></li>
+    <li><span class="path">/admin/owner/activity</span><span class="desc">社区活动</span></li>
+    <li><span class="path">/admin/owner/notice</span><span class="desc">公告通知</span></li>
+    <li><span class="path">/admin/owner/complaint</span><span class="desc">投诉建议</span></li>
+    <li><span class="path">/admin/charge/item</span><span class="desc">收费项目</span></li>
+    <li><span class="path">/admin/charge/bill</span><span class="desc">账单管理</span></li>
+    <li><span class="path">/admin/charge/payment</span><span class="desc">缴费记录</span></li>
+    <li><span class="path">/admin/charge/meter</span><span class="desc">抄表管理</span></li>
+    <li><span class="path">/admin/charge/finance</span><span class="desc">财务流水</span></li>
+    <li><span class="path">/admin/charge/arrears</span><span class="desc">欠费管理</span></li>
+    <li><span class="path">/admin/charge/dunning</span><span class="desc">催缴记录</span></li>
+    <li><span class="path">/admin/repair/order</span><span class="desc">工单管理</span></li>
+    <li><span class="path">/admin/repair/worker</span><span class="desc">维修人员</span></li>
+    <li><span class="path">/admin/security/visitor</span><span class="desc">访客登记</span></li>
+    <li><span class="path">/admin/security/patrol</span><span class="desc">巡更记录</span></li>
+    <li><span class="path">/admin/security/access-card</span><span class="desc">门禁卡</span></li>
+    <li><span class="path">/admin/parking/space</span><span class="desc">车位管理</span></li>
+    <li><span class="path">/admin/parking/vehicle</span><span class="desc">车辆管理</span></li>
+    <li><span class="path">/admin/parking/record</span><span class="desc">停车记录</span></li>
+    <li><span class="path">/admin/equipment/index</span><span class="desc">设备台账</span></li>
+    <li><span class="path">/admin/equipment/maintain</span><span class="desc">维保记录</span></li>
+    <li><span class="path">/admin/equipment/Device</span><span class="desc">硬件设备</span></li>
+    <li><span class="path">/admin/staff/index</span><span class="desc">员工档案</span></li>
+    <li><span class="path">/admin/staff/attendance</span><span class="desc">考勤管理</span></li>
+    <li><span class="path">/admin/staff/schedule</span><span class="desc">排班管理</span></li>
+    <li><span class="path">/admin/staff/salary</span><span class="desc">工资管理</span></li>
+    <li><span class="path">/admin/supplier/index</span><span class="desc">供应商名录</span></li>
+    <li><span class="path">/admin/supplier/purchase</span><span class="desc">采购订单</span></li>
+    <li><span class="path">/admin/supplier/contract</span><span class="desc">合同管理</span></li>
+    <li><span class="path">/admin/supplier/evaluation</span><span class="desc">服务评价</span></li>
+    <li><span class="path">/admin/lease/LeaseProperty</span><span class="desc">可租赁房源</span></li>
+    <li><span class="path">/admin/lease/LeaseContract</span><span class="desc">租赁合同</span></li>
+    <li><span class="path">/admin/sms/config</span><span class="desc">短信服务商</span></li>
+    <li><span class="path">/admin/sms/template</span><span class="desc">短信模板</span></li>
+    <li><span class="path">/admin/sms/send</span><span class="desc">短信发送</span></li>
+    <li><span class="path">/admin/sms/log</span><span class="desc">短信日志</span></li>
+    <li><span class="path">/admin/payment/config</span><span class="desc">支付配置</span></li>
+    <li><span class="path">/admin/wechat/config</span><span class="desc">公众号配置</span></li>
+    <li><span class="path">/admin/wechat/user</span><span class="desc">微信用户</span></li>
+    <li><span class="path">/admin/decoration/apply</span><span class="desc">装修申请</span></li>
+    <li><span class="path">/admin/decoration/inspect</span><span class="desc">施工巡查</span></li>
+    <li><span class="path">/admin/decoration/violation</span><span class="desc">违规记录</span></li>
+    <li><span class="path">/admin/print/receipt</span><span class="desc">收据打印</span></li>
+  </div>
+
+  <h3 style="color:#203a43;margin-top:32px;margin-bottom:12px">5.3 独立前端应用 (frontend/) — 27 个页面</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3><span class="tag tag-blue">业主端</span> 15 页</h3>
+      <p>Login / Register / Home / Room / Bill / Repair / Complaint / Notice / Visitor / Vehicle / Vote / Activity / Claim / Profile</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-purple">员工端</span> 10 页</h3>
+      <p>Login / Home / Repair / Meter / Charge / Patrol / Visitor / Order / Complaint / Profile</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag tag-orange">经理端</span> 2 页</h3>
+      <p>Login / DashboardView (41KB 最复杂视图)</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ========== 6. 数据库 ========== -->
+<section id="s6" style="background:#fff">
+<div class="container">
+  <h2 class="section-title"><span class="num">6</span> 数据库设计</h2>
+  <p class="section-desc">MySQL 8.0，数据库名 <code>dasheng</code>，表前缀 <code>ds_</code>，共 35 张表。</p>
+
+  <h3 style="color:#203a43;margin-bottom:12px">6.1 系统管理 (8 张)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>表名</th><th>说明</th><th>关键字段</th></tr></thead>
+      <tbody>
+        <tr><td><code>ds_admin_user</code></td><td>后台管理员</td><td>username, password(bcrypt), openid, role_id, community_ids</td></tr>
+        <tr><td><code>ds_role</code></td><td>角色</td><td>name, code, status</td></tr>
+        <tr><td><code>ds_menu</code></td><td>菜单</td><td>parent_id, title, icon, path, permission, sort</td></tr>
+        <tr><td><code>ds_role_menu</code></td><td>角色-菜单关联</td><td>role_id, menu_id</td></tr>
+        <tr><td><code>ds_config</code></td><td>系统配置</td><td>key, value, description</td></tr>
+        <tr><td><code>ds_system_log</code></td><td>操作日志</td><td>admin_id, action, method, url, ip</td></tr>
+        <tr><td><code>ds_push_device</code></td><td>推送设备</td><td>user_type, user_id, platform, token</td></tr>
+        <tr><td><code>ds_sse_event</code></td><td>SSE实时事件</td><td>event, data</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="color:#203a43;margin-top:24px;margin-bottom:12px">6.2 业务表分类速览</h3>
+  <div class="card-grid">
+    <div class="card"><h3>🏢 房产资源 (3)</h3><p><code>ds_community</code> / <code>ds_building</code> / <code>ds_room</code></p></div>
+    <div class="card"><h3>👨‍👩‍👧 业主管理 (3)</h3><p><code>ds_owner</code> / <code>ds_owner_family</code> / <code>ds_owner_room</code></p></div>
+    <div class="card"><h3>💰 收费管理 (7)</h3><p><code>ds_charge_item</code> / <code>ds_bill</code> / <code>ds_bill_payment</code> / <code>ds_meter_reading</code> / <code>ds_finance_flow</code> / <code>ds_deposit</code> / <code>ds_bill_dunning</code></p></div>
+    <div class="card"><h3>🔧 报修管理 (2)</h3><p><code>ds_repair_order</code> / <code>ds_repair_worker</code></p></div>
+    <div class="card"><h3>🛡️ 安保管理 (4)</h3><p><code>ds_visitor</code> / <code>ds_patrol_route</code> / <code>ds_patrol_record</code> / <code>ds_access_card</code></p></div>
+    <div class="card"><h3>🅿️ 停车管理 (3)</h3><p><code>ds_parking_space</code> / <code>ds_vehicle</code> / <code>ds_parking_record</code></p></div>
+    <div class="card"><h3>⚙️ 设备管理 (2)</h3><p><code>ds_equipment</code> / <code>ds_equipment_maintain</code></p></div>
+    <div class="card"><h3>👷 物业人员 (4)</h3><p><code>ds_staff</code> / <code>ds_staff_attendance</code> / <code>ds_staff_schedule</code> / <code>ds_staff_salary</code></p></div>
+    <div class="card"><h3>📦 供应商 (4)</h3><p><code>ds_supplier</code> / <code>ds_purchase_order</code> / <code>ds_contract</code> / <code>ds_supplier_evaluation</code></p></div>
+    <div class="card"><h3>📋 其他 (6)</h3><p><code>ds_notice</code> / <code>ds_complaint</code> / <code>ds_attachment</code> / <code>ds_sms_log</code> / <code>ds_message</code> / <code>ds_community_activity</code></p></div>
+  </div>
+</div>
+</section>
+
+<!-- ========== 7. 安全机制 ========== -->
+<section id="s7">
+<div class="container">
+  <h2 class="section-title"><span class="num">7</span> 安全机制</h2>
+  <p class="section-desc">12 层安全防护一览。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>层级</th><th>机制</th><th>实现位置</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-blue">传输</span></td><td>HTTPS + SSL 证书验证</td><td>WechatService.php</td></tr>
+        <tr><td><span class="tag tag-blue">认证</span></td><td>JWT (HS256, 24h过期) + Token type 校验</td><td>AuthMiddleware / StaffAuthMiddleware</td></tr>
+        <tr><td><span class="tag tag-red">跨端</span></td><td>admin token ≠ staff token ≠ owner token</td><td>各中间件的 type 校验</td></tr>
+        <tr><td><span class="tag tag-orange">频率</span></td><td>登录IP限流 (5分钟 ≤ 10次)</td><td>common.php → login_rate_limit_check()</td></tr>
+        <tr><td><span class="tag tag-green">密码</span></td><td>bcrypt (cost=12) + 兼容旧版MD5</td><td>encrypt_password / verify_password</td></tr>
+        <tr><td><span class="tag tag-purple">上传</span></td><td>类型白名单 / 大小限制 20MB</td><td>Upload.php + filesystem.php</td></tr>
+        <tr><td><span class="tag tag-blue">CORS</span></td><td>动态 Origin 白名单</td><td>CorsMiddleware.php</td></tr>
+        <tr><td><span class="tag tag-red">权限</span></td><td>基于角色的控制器访问控制 (RBAC)</td><td>BaseAdmin.php → checkPermission()</td></tr>
+        <tr><td><span class="tag tag-orange">数据</span></td><td>多小区角色只能操作绑定的小区</td><td>getCommunityFilter()</td></tr>
+        <tr><td><span class="tag tag-green">日志</span></td><td>操作日志记录 (脱敏密码/截断)</td><td>LogMiddleware.php</td></tr>
+        <tr><td><span class="tag tag-purple">SQL</span></td><td>PDO参数绑定 + 错误信息生产脱敏</td><td>ExceptionHandle</td></tr>
+        <tr><td><span class="tag tag-blue">注册</span></td><td>新注册经理 status=0 需审核</td><td>ManagerLogin</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ========== 8. 外部集成 ========== -->
+<section id="s8" style="background:#fff">
+<div class="container">
+  <h2 class="section-title"><span class="num">8</span> 外部集成</h2>
+  <p class="section-desc">微信生态 / SMS 短信 / IoT 设备接入。</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>💬 微信生态</h3>
+      <p>公众号 OAuth 登录 · 公众号消息回调 · JSAPI 微信支付 · 支付回调验签 · 支付宝支付 · 模板消息推送</p>
+    </div>
+    <div class="card">
+      <h3>📱 SMS 短信</h3>
+      <p>阿里云 / 腾讯云双通道 · 验证码发送 · 模板管理 · 发送日志记录</p>
+    </div>
+    <div class="card">
+      <h3>🔌 设备 IoT</h3>
+      <p>X-Device-Key + X-Device-Id 认证 · 设备心跳 · 数据上报 · 配置下发 · 摄像头识别回调</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ========== 9. 开发指南 ========== -->
+<section id="s9">
+<div class="container">
+  <h2 class="section-title"><span class="num">9</span> 开发指南</h2>
+
+  <h3 style="color:#203a43;margin-bottom:12px">9.1 本地开发启动</h3>
+  <div class="code-block"><span class="cmt"># 1. 启动 PHP 后端</span>
+cd e:\ds
+php -S 127.0.0.1:8000 public/index.php
+
+<span class="cmt"># 2. 启动 Admin 前端 (开发模式)</span>
+cd e:\ds\admin
+npm install
+npm run dev          <span class="cmt"># → http://localhost:3000/admin/</span>
+
+<span class="cmt"># 3. 启动独立前端应用</span>
+cd e:\ds\frontend
+npm install
+npm run dev
+
+<span class="cmt"># 4. 构建 Admin 前端</span>
+cd e:\ds\admin
+npm run build        <span class="cmt"># → 输出到 ../public/admin/</span>
+
+<span class="cmt"># 5. 数据库</span>
+mysql -u root -p &lt; database/dasheng.sql
+<span class="cmt"># 默认管理员: admin / password</span></div>
+
+  <h3 style="color:#203a43;margin-top:28px;margin-bottom:12px">9.2 添加新功能的标准流程</h3>
+  <div class="flow-box"><span class="lbl">1. 建表</span>
+   └── database/dasheng.sql 添加 CREATE TABLE (表前缀 ds_)
+
+<span class="lbl">2. 后端控制器</span>
+   └── app/admin/controller/NewFeature.php
+       extends app\admin\BaseAdmin
+       └── public function lists() → $this->table()
+       └── public function add() → $this->success()
+       └── public function edit() → $this->success()
+       └── public function delete() → $this->success()
+
+<span class="lbl">3. 注册路由</span>
+   └── route/admin.php 添加 Route 规则
+
+<span class="lbl">4. 权限配置</span>
+   └── ds_menu 表插入新菜单记录 (填写 permission 字段)
+   └── BaseAdmin.php → buildPermissionMap() 添加映射
+   └── BaseAdmin.php → getRolePermissions() 添加白名单
+
+<span class="lbl">5. 前端页面</span>
+   └── admin/src/views/newfeature/NewFeature.vue
+       ├── 搜索表单 + 数据表格 (Element Plus)
+       └── 增/改弹窗
+
+<span class="lbl">6. 注册路由</span>
+   └── admin/src/router/index.ts 添加路由配置
+
+<span class="lbl">7. 构建部署</span>
+   └── cd admin && npm run build</div>
+
+  <h3 style="color:#203a43;margin-top:28px;margin-bottom:12px">9.3 编码规范</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>规则</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>响应格式</td><td><code>{code:0, msg:'success', data:{...}}</code></td></tr>
+        <tr><td>分页格式</td><td><code>{code:0, msg:'success', data:{list:[...], total:100}}</code></td></tr>
+        <tr><td>控制器方法</td><td>lists() / add() / edit() / delete() / detail()</td></tr>
+        <tr><td>小区隔离</td><td>$this-&gt;getCommunityFilter()</td></tr>
+        <tr><td>小区权限</td><td>$this-&gt;validateCommunityAccess($communityId)</td></tr>
+        <tr><td>密码</td><td>encrypt_password() / verify_password()</td></tr>
+        <tr><td>错误返回</td><td>$this-&gt;throwError('错误信息')</td></tr>
+        <tr><td>前端API</td><td>apiGet / apiPost / apiTable</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="color:#203a43;margin-top:28px;margin-bottom:12px">9.4 部署路径说明</h3>
+  <div class="warn-box">
+    ⚠️ <strong>重要</strong>：Nginx root = <code>/www/wwwroot/www.hbdxm.com/public</code>，前端文件必须放在 <code>public/admin/</code> 下，不是 <code>admin/</code>！
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>路径</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/public/index.php</code></td><td>PHP 入口</td></tr>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/public/admin/</code></td><td>★ Admin 前端 (必须是 public/admin/)</td></tr>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/public/admin/assets/</code></td><td>JS/CSS 静态资源</td></tr>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/app/</code></td><td>PHP 控制器</td></tr>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/config/</code></td><td>配置文件</td></tr>
+        <tr><td><code>/www/wwwroot/www.hbdxm.com/route/</code></td><td>路由文件</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip-box" style="margin-top:24px">
+    💡 <strong>提示</strong>：本手册建议随代码一起维护。新增功能时同步更新对应章节。
+  </div>
+</div>
+</section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <p>大圣物业管理系统 (Dasheng PMS) · 开发者手册 · 生成于 2026-06-07</p>
+  <p style="margin-top:4px;opacity:.5">后台管理 → <code>http://127.0.0.1/admin/</code> · 账号 admin · 数据库 dasheng · 表前缀 ds_</p>
+</footer>
+
+</body>
+</html>
