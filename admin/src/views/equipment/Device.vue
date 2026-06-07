@@ -416,7 +416,7 @@ async function getActions(row: any): Promise<any[]> {
   if (actionsCache[row.device_type]) return actionsCache[row.device_type]
   // 按需加载单个类型
   try {
-    const res = await apiGet('/admin/equipment/deviceActions', { params: { type: row.device_type } })
+    const res = await apiGet('/admin/equipment/deviceActions', { type: row.device_type })
     if (res?.code === 0 && res.data?.actions) {
       actionsCache[row.device_type] = res.data.actions
       return res.data.actions
@@ -436,8 +436,8 @@ async function loadData() {
     if (query.keyword) params.keyword = query.keyword
     if (query.community_id) params.community_id = query.community_id
     if (query.device_type) params.device_type = query.device_type
-    if (query.status !== '') params.status = query.status
-    const res = await apiGet('/admin/equipment/deviceList', { params })
+    if (query.status !== '' && query.status != null) params.status = query.status
+    const res = await apiGet('/admin/equipment/deviceList', params)
     if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
   } catch (_) { list.value = []; total.value = 0 } finally { loading.value = false }
 }
@@ -525,7 +525,7 @@ async function handleRemoteAction(cmd: string, row: any) {
         res = await apiPost('/admin/equipment/deviceTestConnection', { id: row.id })
         break
       case 'get_status':
-        res = await apiGet('/admin/equipment/deviceGetStatus', { params: { id: row.id } })
+        res = await apiGet('/admin/equipment/deviceGetStatus', { id: row.id })
         break
       case 'remote':
         // 需要参数的操作弹出输入框

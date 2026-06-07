@@ -23,6 +23,7 @@ Route::group('admin', function () {
     Route::post('admin/user/delete', 'admin/AdminUser/delete');
     Route::post('admin/user/status', 'admin/AdminUser/status');
     Route::post('admin/user/changePassword', 'admin/AdminUser/changePassword');
+    Route::post('admin/user/unbindWechat', 'admin/AdminUser/unbindWechat');
 
     // 角色管理
     Route::get('admin/role/list', 'admin/Role/lists');
