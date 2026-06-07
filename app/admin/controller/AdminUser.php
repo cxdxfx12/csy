@@ -22,12 +22,12 @@ class AdminUser extends BaseAdmin
 
         $total = Db::name('admin_user')->where($where)->count();
         $list = Db::name('admin_user')->where($where)
-            ->field('id,username,nickname,avatar,email,phone,role_id,community_ids,status,last_login_time,last_login_ip,login_count,create_time')
+            ->field('id,username,nickname,avatar,email,phone,role_id,community_ids,status,last_login_time,last_login_ip,login_count,create_time,openid')
             ->page($page, $limit)->order('id', 'asc')->select();
 
         $roleNames = array_to_keyval(Db::name('role')->select());
         // 仅需要小区隔离的角色才查询小区名
-        $needCommunityRoles = [3, 4, 5, 6, 7]; // 项目经理、客服主管、财务专员、安保主管、工程主管
+        $needCommunityRoles = [3, 4, 5, 6, 7, 8]; // 物管经理、客服主管、财务专员、安保主管、工程主管、小区管理员
         $needCommunity = !empty(array_intersect(array_column($list, 'role_id'), $needCommunityRoles));
         $communityNames = [];
         if ($needCommunity) {
@@ -166,5 +166,24 @@ class AdminUser extends BaseAdmin
 
         Db::name('admin_user')->where('id', $id)->update(['password' => encrypt_password($password)]);
         return $this->success([], '密码修改成功');
+    }
+
+    public function unbindWechat()
+    {
+        $id = $this->request->post('id', 0);
+        if (empty($id)) return $this->error('参数错误');
+        if ($id == 1) return $this->error('不能解绑超级管理员的微信');
+
+        // 非超管只能解绑自己的微信
+        $currentUser = Db::name('admin_user')->where('id', $this->adminId)->find();
+        if ((int)$currentUser['role_id'] !== 1 && (int)$id !== (int)$this->adminId) {
+            return $this->error('无权限解绑他人微信');
+        }
+
+        Db::name('admin_user')->where('id', $id)->update([
+            'openid'      => '',
+            'update_time' => date('Y-m-d H:i:s'),
+        ]);
+        return $this->success([], '微信解绑成功');
     }
 }

@@ -194,7 +194,7 @@ class Login extends BaseAdmin
         // 补充小区信息（仅角色3-7需要）
         $communityIds = $adminInfo['community_ids'] ?? '';
         $communityName = '';
-        if (in_array($roleId, [3, 4, 5, 6, 7]) && !empty($communityIds)) {
+        if (in_array($roleId, [3, 4, 5, 6, 7, 8]) && !empty($communityIds)) {
             $ids = array_filter(explode(',', $communityIds));
             if (!empty($ids)) {
                 $communityName = Db::name('community')->where('id', intval($ids[0]))->value('name') ?? '';

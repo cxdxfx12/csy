@@ -20,7 +20,7 @@
         <el-table-column prop="role_name" label="角色" width="120" />
         <el-table-column label="所属小区" width="150">
           <template #default="{ row }">
-            <el-tag v-if="row.community_name && [3,4,5,6,7].includes(row.role_id)" type="warning" size="small">{{ row.community_name }}</el-tag>
+            <el-tag v-if="row.community_name && [3,4,5,6,7,8].includes(row.role_id)" type="warning" size="small">{{ row.community_name }}</el-tag>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -30,10 +30,17 @@
         </el-table-column>
         <el-table-column prop="last_login_time" label="最后登录" width="170" :formatter="(r:any)=>formatTime(r.last_login_time)" />
         <el-table-column prop="last_login_ip" label="登录IP" width="140" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="微信绑定" width="100" align="center">
+          <template #default="{ row }">
+            <el-tag v-if="row.openid" type="success" size="small">已绑定</el-tag>
+            <el-tag v-else type="info" size="small">未绑定</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <el-button size="small" @click="openForm(row)">编辑</el-button>
             <el-button size="small" type="warning" @click="changePwd(row)">改密</el-button>
+            <el-button v-if="row.openid && row.id!==1" size="small" type="info" @click="unbindWechat(row)">解绑微信</el-button>
             <el-button v-if="row.id!==1" :type="row.status===1?'danger':'success'" size="small" @click="toggleStatus(row)">{{ row.status===1?'禁用':'启用' }}</el-button>
           </template>
         </el-table-column>
@@ -90,7 +97,7 @@ const form = reactive<any>({ id: 0, username: '', nickname: '', phone: '', role_
 const rules = { username: [{ required: true, message: '请输入用户名', trigger: 'blur' }], nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }], role_id: [{ required: true, message: '请选择角色', trigger: 'change' }], password: [{ required: true, message: '请输入密码', trigger: 'blur' }] }
 
 // 需要绑定小区的角色ID
-const communityRoles = [3, 4, 5, 6, 7]
+const communityRoles = [3, 4, 5, 6, 7, 8]
 const showCommunitySelector = computed(() => communityRoles.includes(Number(form.role_id)))
 
 function onRoleChange(val: any) {
@@ -157,6 +164,14 @@ async function toggleStatus(row: any) {
   await apiPost('/admin/AdminUser/status', { id: row.id, status: newStatus })
   ElMessage.success('操作成功')
   loadData()
+}
+
+async function unbindWechat(row: any) {
+  ElMessageBox.confirm(`确定要解绑管理员「${row.nickname || row.username}」的微信吗？`, '提示', { type: 'warning' }).then(async () => {
+    await apiPost('/admin/AdminUser/unbindWechat', { id: row.id })
+    ElMessage.success('微信解绑成功')
+    loadData()
+  }).catch(() => {})
 }
 
 onMounted(async () => {
