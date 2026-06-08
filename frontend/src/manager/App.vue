@@ -134,7 +134,7 @@ onUnmounted(() => {
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#333;-webkit-tap-highlight-color:transparent}
 #manager-app{min-height:100vh}
 /* 新消息弹窗 */
 .notify-popup{position:fixed;top:-80px;left:12px;right:12px;background:#1f2937;color:#fff;border-radius:12px;padding:14px 44px 14px 16px;display:flex;align-items:center;gap:10px;z-index:999;transition:top .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}

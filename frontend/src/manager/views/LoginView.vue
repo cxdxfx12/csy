@@ -148,25 +148,25 @@ async function fetchCommunities() {
 </script>
 
 <style scoped>
-.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0f172a,#1e293b)}
-.login-card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:40px 32px;width:90%;max-width:380px;text-align:center}
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2)}
+.login-card{background:#fff;border-radius:16px;padding:40px 32px;width:90%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15)}
 .logo{font-size:56px;margin-bottom:8px}
-h1{font-size:20px;color:#f1f5f9;margin-bottom:4px}
-.sub{color:#64748b;font-size:13px;margin-bottom:20px}
-.comm-select{width:100%;height:48px;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:0 14px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;cursor:pointer;appearance:auto}
-.comm-select:focus{border-color:#10b981}
-.comm-select option{background:#0f172a;color:#e2e8f0}
-input{width:100%;height:48px;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;transition:border .2s}
-input:focus{border-color:#10b981}
-.btn-primary{width:100%;height:48px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+h1{font-size:20px;color:#1f2937;margin-bottom:4px}
+.sub{color:#9ca3af;font-size:13px;margin-bottom:20px}
+.comm-select{width:100%;height:48px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:0 14px;font-size:15px;margin-bottom:16px;outline:none;color:#333;cursor:pointer;appearance:auto}
+.comm-select:focus{border-color:#667eea}
+.comm-select option{background:#fff;color:#333}
+input{width:100%;height:48px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:#333;transition:border .2s}
+input:focus{border-color:#667eea}
+.btn-primary{width:100%;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
 .btn-primary:disabled{opacity:.6}
-.divider{display:flex;align-items:center;margin:20px 0;color:#475569;font-size:12px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#334155}
+.divider{display:flex;align-items:center;margin:20px 0;color:#9ca3af;font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e5e7eb}
 .divider span{padding:0 12px}
 .btn-wechat{width:100%;height:48px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-wechat:disabled{opacity:.6}
 .wx-icon{font-size:18px}
-.reg-title{color:#e2e8f0;font-size:15px;margin-bottom:16px;font-weight:600}
-.back-link{display:inline-block;margin-top:16px;color:#10b981;font-size:13px;cursor:pointer;text-decoration:none}
+.reg-title{color:#333;font-size:15px;margin-bottom:16px;font-weight:600}
+.back-link{display:inline-block;margin-top:16px;color:#667eea;font-size:13px;cursor:pointer;text-decoration:none}
 .back-link:hover{text-decoration:underline}
 </style>
