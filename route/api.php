@@ -91,6 +91,9 @@ Route::group('api', function () {
     Route::post('profile/edit', 'api/Profile/edit');
     Route::post('profile/password', 'api/Profile/password');
     Route::get('profile/info', 'api/Profile/info');
+
+    // 官网咨询提交（公开，无需认证）
+    Route::post('consultation/add', 'api/Consultation/add');
 });
 
 // =================================================================
@@ -362,6 +365,14 @@ Route::group('api/admin', function () {
     Route::post('complaint/handle', 'admin/Complaint/handle');
     Route::post('complaint/delete', 'admin/Complaint/delete');
     Route::get('complaint/detail', 'admin/Complaint/detail');
+
+    // 官网咨询管理
+    Route::get('consultation/list', 'admin/Consultation/lists');
+    Route::get('consultation/detail', 'admin/Consultation/detail');
+    Route::post('consultation/delete', 'admin/Consultation/delete');
+    Route::post('consultation/batchDelete', 'admin/Consultation/batchDelete');
+    Route::post('consultation/markRead', 'admin/Consultation/markRead');
+    Route::get('consultation/unreadCount', 'admin/Consultation/unreadCount');
 
     // 业主投票
     Route::get('vote/list', 'admin/Vote/lists');

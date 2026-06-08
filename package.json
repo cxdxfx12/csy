@@ -16,6 +16,7 @@
     "lzx": "^1.0.0",
     "mysql2": "^3.22.5",
     "node-ssh": "^13.2.1",
+    "playwright": "^1.60.0",
     "postcss": "^8.5.15"
   },
   "repository": {

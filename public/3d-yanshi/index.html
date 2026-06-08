@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大圣智慧物业 · 数字孪生引擎</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>正在初始化数字孪生引擎...</p>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <!-- UI 信息面板 -->
+    <div id="info-panel">
+        <div class="info-item">
+            <span class="info-label">住宅楼栋</span>
+            <span class="info-value" id="building-count">14</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">总住户</span>
+            <span class="info-value" id="household-count">1,680</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">监控点位</span>
+            <span class="info-value" id="monitor-count">18</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">在线设备</span>
+            <span class="info-value online" id="device-count">320+</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">FPS</span>
+            <span class="info-value" id="fps-display">60</span>
+        </div>
+    </div>
+
+    <!-- 左侧公司信息面板 -->
+    <div id="company-panel">
+        <div class="company-logo">
+            <svg viewBox="0 0 48 48" width="36" height="36">
+                <rect x="4" y="20" width="8" height="24" rx="2" fill="#ff6b35"/>
+                <rect x="14" y="12" width="8" height="32" rx="2" fill="#ff8c42"/>
+                <rect x="24" y="4" width="8" height="40" rx="2" fill="#f7931e"/>
+                <rect x="34" y="16" width="8" height="28" rx="2" fill="#ffc107"/>
+            </svg>
+        </div>
+        <div class="company-name">杭州喵喵至家网络有限公司</div>
+        <div class="project-name">大圣智慧物业 · 数字孪生引擎</div>
+        <div class="project-desc" id="project-desc">翡翠名苑 | 14栋高层 · 1680户 · 全场景数字孪生</div>
+    </div>
+
+    <!-- 小区选择面板 -->
+    <div id="community-selector">
+        <div class="selector-title">选择小区</div>
+        <div class="community-list">
+            <div class="community-option active" data-community="feicui">
+                <span class="community-icon">🏢</span>
+                <span class="community-info">
+                    <span class="community-name">翡翠名苑</span>
+                    <span class="community-tag">经典高层住宅</span>
+                </span>
+            </div>
+            <div class="community-option" data-community="yunqi">
+                <span class="community-icon">🏡</span>
+                <span class="community-info">
+                    <span class="community-name">云栖别墅</span>
+                    <span class="community-tag">高端花园别墅区</span>
+                </span>
+            </div>
+            <div class="community-option" data-community="zhongliang">
+                <span class="community-icon">🏙️</span>
+                <span class="community-info">
+                    <span class="community-name">中粮壹号</span>
+                    <span class="community-tag">城市地标豪宅</span>
+                </span>
+            </div>
+            <div class="community-option" data-community="shanshui">
+                <span class="community-icon">🏞️</span>
+                <span class="community-info">
+                    <span class="community-name">山水居</span>
+                    <span class="community-tag">新中式园林社区</span>
+                </span>
+            </div>
+            <div class="community-option" data-community="yifeng">
+                <span class="community-icon">🏬</span>
+                <span class="community-info">
+                    <span class="community-name">怡丰城</span>
+                    <span class="community-tag">城市综合体·临平</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图例 -->
+    <div id="legend">
+        <div class="legend-item"><span class="dot" style="background:#d4c5b2;"></span> 高层住宅</div>
+        <div class="legend-item"><span class="dot" style="background:#4a7c59;"></span> 绿化园林</div>
+        <div class="legend-item"><span class="dot" style="background:#ffb74d;"></span> 社区配套</div>
+        <div class="legend-item"><span class="dot" style="background:#e57373;"></span> 智能监控</div>
+        <div class="legend-shortcuts">
+            <span>🖱 拖拽旋转 · 滚轮缩放</span>
+            <span>⌨ R重置 F/G/1/2视角 3-6切换小区</span>
+        </div>
+    </div>
+
+    <!-- 右侧底部联系方式面板 -->
+    <div id="contact-panel">
+        <div class="contact-title">联系我们</div>
+        <div class="contact-item-bottom">
+            <span class="contact-icon">📞</span>
+            <a href="tel:17771300068" class="contact-text">17771300068</a>
+        </div>
+        <div class="contact-item-bottom">
+            <span class="contact-icon">📞</span>
+            <a href="tel:19171045360" class="contact-text">19171045360</a>
+        </div>
+        <div class="contact-item-bottom">
+            <span class="contact-icon">📧</span>
+            <a href="mailto:mmzj@miaomiaozj.com" class="contact-text">mmzj@miaomiaozj.com</a>
+        </div>
+        <div class="contact-item-bottom">
+            <span class="contact-icon">📍</span>
+            <span class="contact-text">杭州市临平区怡丰城12幢</span>
+        </div>
+        <div class="contact-item-bottom">
+            <span class="contact-icon">🌐</span>
+            <a href="/" class="contact-text">www.hbdxm.com</a>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
