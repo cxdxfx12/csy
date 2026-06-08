@@ -208,8 +208,8 @@ class AiRepair extends BaseController
             'create_time'    => date('Y-m-d H:i:s'),
         ];
 
-        // 关联维修类型工人（尝试自动派单）
-        $worker = Db::name('repair_worker')->where('status', 1)->order('RAND()')->find();
+        // 关联维修类型工人（按工单类型智能匹配）
+        $worker = $this->assignWorkerByType($aiType);
         if ($worker) {
             $orderData['assignee_id'] = $worker['id'];
             $orderData['status'] = 2; // 自动派单
@@ -430,7 +430,7 @@ class AiRepair extends BaseController
         $aiTypeLower = mb_strtolower($aiType);
         $msgLower = mb_strtolower($msg);
 
-        // 水电需要细分：电相关关键词 → 2(电)，否则 → 1(水)
+        // 水电细分：电相关关键词→2(电)，否则→1(水)
         if ($aiTypeLower === '水电') {
             $electricKw = ['跳闸', '停电', '灯泡', '灯', '开关', '插座', '电线', '短路', '电路', '电表', '电', '不亮', '没电'];
             foreach ($electricKw as $kw) {
@@ -440,18 +440,58 @@ class AiRepair extends BaseController
         }
 
         $map = [
-            '空调' => 6,
+            '空调' => 6,   // 家电
             '门窗' => 4,
             '燃气' => 3,
-            '墙面' => 8,
+            '墙面' => 5,  // 管道类（墙面渗漏等）
+            '电梯' => 4,  // 归入门窗（建筑结构）
             '安保' => 8,
             '卫生' => 8,
             '停车' => 8,
-            '电梯' => 8,
             '其他' => 8,
         ];
 
         return $map[$aiTypeLower] ?? 8;
+    }
+
+    // AI类型 → 工人表type字段关键词映射（用于智能派单）
+    private function aiTypeToWorkerTypes($aiType)
+    {
+        $map = [
+            '水电'  => ['水电'],
+            '空调'  => ['家电'],
+            '门窗'  => ['门窗'],
+            '墙面'  => [],       // 无专门墙面工，走兜底
+            '燃气'  => [],       // 无专门燃气工，走兜底
+            '电梯'  => [],       // 走兜底
+            '安保'  => [],       // 走兜底
+            '卫生'  => [],       // 走兜底
+            '停车'  => [],       // 走兜底
+            '其他'  => [],
+        ];
+        return $map[$aiType] ?? [];
+    }
+
+    // 按报修类型智能分配维修工人
+    private function assignWorkerByType($aiType)
+    {
+        $keywords = $this->aiTypeToWorkerTypes($aiType);
+
+        // 优先按类型匹配工人
+        foreach ($keywords as $kw) {
+            $worker = Db::name('repair_worker')
+                ->where('status', 1)
+                ->where('type', 'like', '%' . $kw . '%')
+                ->orderRaw('order_count ASC, RAND()')
+                ->find();
+            if ($worker) return $worker;
+        }
+
+        // 兜底：随机选一个在线工人
+        return Db::name('repair_worker')
+            ->where('status', 1)
+            ->orderRaw('order_count ASC, RAND()')
+            ->find();
     }
 
     // 通过手机号反查业主和房产信息

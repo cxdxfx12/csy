@@ -9,58 +9,79 @@ const AI_API = '/api/ai/';
     let chatHistory = [];
     let pendingRepair = null;
     let isOpen = false;
-    let awaitingPhone = false;  // 是否在等待用户输入手机号
 
-    // 获取业主登录token（如果在同域下登录过）
-    function getOwnerToken() {
-        return localStorage.getItem('owner_token') || '';
-    }
+    function getOwnerToken() { return localStorage.getItem('owner_token') || ''; }
 
-    // 构建请求头
     function makeHeaders() {
         const headers = { 'Content-Type': 'application/json' };
-        const token = getOwnerToken();
+        var token = getOwnerToken();
         if (token) headers['Authorization'] = 'Bearer ' + token;
         return headers;
     }
 
+    // 弹出确认提交框（含手机号输入）
+    function showConfirmDialog() {
+        if (!pendingRepair) return;
+        var hasToken = !!getOwnerToken();
+        var urgentTag = pendingRepair.isUrgent ? '【紧急】' : '';
+        var locTag = pendingRepair.location ? '(' + pendingRepair.location + ')' : '';
+
+        document.body.insertAdjacentHTML('beforeend',
+            '<div id="ai-confirm-overlay">' +
+                '<div id="ai-confirm-box">' +
+                    '<h3>确认报修信息</h3>' +
+                    '<div class="confirm-info">' +
+                        '<div class="cf-row"><span class="cf-label">类型：</span><span class="cf-value">' + urgentTag + pendingRepair.repairType + '维修</span></div>' +
+                        '<div class="cf-row"><span class="cf-label">位置：</span><span class="cf-value">' + (pendingRepair.location || '待确认') + '</span></div>' +
+                        '<div class="cf-row"><span class="cf-label">描述：</span><span class="cf-value">' + pendingRepair.title + '</span></div>' +
+                    '</div>' +
+                    '<div class="cf-phone-row"><label>联系电话：</label><input type="tel" id="ai-phone-input" placeholder="' + (hasToken ? '已登录可不填' : '请输入11位手机号') + '" maxlength="13" />' + (hasToken ? '<small class="cf-hint">已登录可不填</small>' : '') + '</div>' +
+                    '<div class="cf-buttons"><button id="ai-confirm-cancel" class="cf-btn">取消</button><button id="ai-confirm-ok" class="cf-btn primary">确认提交</button></div>' +
+                '</div></div>'
+        );
+
+        var overlay = document.getElementById('ai-confirm-overlay');
+        var phoneInput = document.getElementById('ai-phone-input');
+
+        document.getElementById('ai-confirm-cancel').addEventListener('click', function() {
+            overlay.remove();
+            addMsg('ai', '已取消。如需修改请重新描述问题。');
+            pendingRepair = null;
+        });
+
+        document.getElementById('ai-confirm-ok').addEventListener('click', async function() {
+            var phone = phoneInput.value.replace(/\s/g, '');
+            if (!hasToken && !phone) { phoneInput.style.borderColor = '#e74c3c'; phoneInput.focus(); return; }
+            if (phone && !/^1[3-9]\d{9}$/.test(phone)) { phoneInput.style.borderColor = '#e74c3c'; phoneInput.focus(); return; }
+            pendingRepair.phone = phone;
+            overlay.remove();
+            addMsg('user', '确认提交');
+            showTyping();
+            await submitRepair();
+        });
+
+        phoneInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('ai-confirm-ok').click(); });
+        setTimeout(function() { phoneInput.focus(); }, 100);
+    }
+
     function createWidget() {
-        const html = `
-<div id="ai-chat-widget">
-    <button id="ai-chat-btn" title="AI智能报修助手">
-        🤖
-        <span class="pulse-dot"></span>
-    </button>
-    <div id="ai-chat-panel">
-        <div class="chat-header">
-            <span>🤖 AI 智能报修助手</span>
-            <span class="close-btn" id="chat-close">✕</span>
-        </div>
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="quick-types" id="quick-types"></div>
-        <div class="typing-indicator" id="typing">
-            <span></span><span></span><span></span>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="描述您遇到的问题..." />
-            <button id="chat-send" title="发送">▶</button>
-        </div>
-    </div>
-</div>`;
+        var html =
+'<div id="ai-chat-widget">'+
+    '<button id="ai-chat-btn" title="AI智能报修助手">\n        🤖\n        <span class="pulse-dot"></span>\n    </button>\n    <div id="ai-chat-panel">\n        <div class="chat-header">\n            <span>🤖 AI 智能报修助手</span>\n            <span class="close-btn" id="chat-close">✕</span>\n        </div>\n        <div class="chat-messages" id="chat-messages"></div>\n        <div class="quick-types" id="quick-types"></div>\n        <div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>\n        <div class="chat-input-area">\n            <input type="text" id="chat-input" placeholder="描述您遇到的问题..." />\n            <button id="chat-send" title="发送">▶</button>\n        </div>\n    </div>\n</div>';
         document.body.insertAdjacentHTML('beforeend', html);
         bindEvents();
         loadQuickTypes();
-        addMsg('ai', '您好！我是大圣智慧物业的AI报修助手 🤖\n请直接告诉我您遇到的问题，比如：\n• "厨房水龙头漏水"\n• "客厅空调不制冷"\n我会自动帮您生成报修单！');
+        addMsg('ai', '您好！我是大圣智慧物业的AI报修助手\n请直接告诉我您遇到的问题，比如：\n- "厨房水龙头漏水"\n- "客厅空调不制冷"\n我会自动帮您生成报修单！');
     }
 
     function bindEvents() {
         document.getElementById('ai-chat-btn').addEventListener('click', toggleChat);
-        document.getElementById('chat-close').addEventListener('click', () => {
+        document.getElementById('chat-close').addEventListener('click', function() {
             document.getElementById('ai-chat-panel').classList.remove('show');
             isOpen = false;
         });
         document.getElementById('chat-send').addEventListener('click', sendMessage);
-        document.getElementById('chat-input').addEventListener('keydown', e => {
+        document.getElementById('chat-input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') sendMessage();
         });
     }
@@ -68,49 +89,17 @@ const AI_API = '/api/ai/';
     function toggleChat() {
         isOpen = !isOpen;
         document.getElementById('ai-chat-panel').classList.toggle('show', isOpen);
-        if (isOpen) {
-            document.getElementById('chat-input').focus();
-            scrollBottom();
-        }
+        if (isOpen) { document.getElementById('chat-input').focus(); scrollBottom(); }
     }
 
     async function sendMessage() {
-        const input = document.getElementById('chat-input');
-        const msg = input.value.trim();
+        var input = document.getElementById('chat-input');
+        var msg = input.value.trim();
         if (!msg) return;
 
-        // 如果正在等待手机号，把用户输入当手机号处理
-        if (awaitingPhone) {
-            input.value = '';
-            const phone = msg.replace(/\s/g, ''); // 去掉空格
-            // 简单校验：全是数字且8-15位，或带+号开头
-            if (/^\+?\d{8,15}$/.test(phone) || /^1[3-9]\d{9}$/.test(phone)) {
-                addMsg('user', phone);
-                pendingRepair.phone = phone;
-                awaitingPhone = false;
-                showTyping();
-                await submitRepair();
-            } else {
-                addMsg('user', msg);
-                addMsg('ai', '请输入正确的手机号码（11位数字），例如：13800138000');
-            }
-            return;
-        }
-
         if (msg === '确认' && pendingRepair) {
-            // 检查是否有token或有手机号
-            if (!getOwnerToken() && !pendingRepair.phone) {
-                // 无登录且未提供手机号，先询问
-                input.value = '';
-                addMsg('user', '确认');
-                addMsg('ai', '📱 请提供您的联系电话，方便我们联系您：\n（输入11位手机号即可）');
-                awaitingPhone = true;
-                return;
-            }
             input.value = '';
-            addMsg('user', '确认提交');
-            showTyping();
-            await submitRepair();
+            showConfirmDialog();
             return;
         }
 
@@ -123,12 +112,12 @@ const AI_API = '/api/ai/';
 
     async function chatWithAI(message) {
         try {
-            const resp = await fetch(AI_API + 'chat', {
+            var resp = await fetch(AI_API + 'chat', {
                 method: 'POST',
                 headers: makeHeaders(),
-                body: JSON.stringify({ message, history: chatHistory })
+                body: JSON.stringify({ message: message, history: chatHistory })
             });
-            const data = await resp.json();
+            var data = await resp.json();
             hideTyping();
 
             if (data.code === 0 && data.data) {
@@ -155,7 +144,7 @@ const AI_API = '/api/ai/';
     async function submitRepair() {
         if (!pendingRepair) return;
         try {
-            const resp = await fetch(AI_API + 'submit', {
+            var resp = await fetch(AI_API + 'submit', {
                 method: 'POST',
                 headers: makeHeaders(),
                 body: JSON.stringify({
@@ -167,7 +156,7 @@ const AI_API = '/api/ai/';
                     phone: pendingRepair.phone || ''
                 })
             });
-            const data = await resp.json();
+            var data = await resp.json();
             hideTyping();
 
             if (data.code === 0 && data.data) {
@@ -184,52 +173,43 @@ const AI_API = '/api/ai/';
 
     async function loadQuickTypes() {
         try {
-            const resp = await fetch(AI_API + 'quickTypes');
-            const data = await resp.json();
+            var resp = await fetch(AI_API + 'quickTypes');
+            var data = await resp.json();
             if (data.code === 0 && data.data) {
-                const container = document.getElementById('quick-types');
-                data.data.forEach(t => {
-                    const btn = document.createElement('span');
+                var container = document.getElementById('quick-types');
+                data.data.forEach(function(t) {
+                    var btn = document.createElement('span');
                     btn.className = 'quick-btn';
                     btn.textContent = t.icon + ' ' + t.name;
                     btn.title = t.examples;
-                    btn.addEventListener('click', () => {
+                    btn.addEventListener('click', function() {
                         document.getElementById('chat-input').value = t.examples.split('、')[0];
                         sendMessage();
                     });
                     container.appendChild(btn);
                 });
             }
-        } catch (e) { /* silent */ }
+        } catch (e) {}
     }
 
     function addMsg(type, text) {
-        const container = document.getElementById('chat-messages');
-        const div = document.createElement('div');
+        var container = document.getElementById('chat-messages');
+        var div = document.createElement('div');
         div.className = 'msg-bubble msg-' + type;
         div.textContent = text;
         container.appendChild(div);
         scrollBottom();
     }
 
-    function showTyping() {
-        document.getElementById('typing').classList.add('show');
-        scrollBottom();
-    }
-
-    function hideTyping() {
-        document.getElementById('typing').classList.remove('show');
-    }
-
+    function showTyping() { document.getElementById('typing').classList.add('show'); scrollBottom(); }
+    function hideTyping() { document.getElementById('typing').classList.remove('show'); }
     function scrollBottom() {
-        const container = document.getElementById('chat-messages');
-        setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
+        var c = document.getElementById('chat-messages');
+        setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
     }
 
     // Init
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createWidget);
-    } else {
-        createWidget();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', createWidget);
+    else createWidget();
+
 })();
