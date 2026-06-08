@@ -200,6 +200,15 @@ class AiRepair extends BaseController
         // 映射AI报修类型到数据库数字ID（1水 2电 3气 4门窗 5管道 6家电 7网络 8其他）
         $typeId = $this->mapRepairType($aiType, $title);
 
+        // 如果有房产数据，拼接完整地址：楼栋+单元+房号
+        if ($roomData && empty($location)) {
+            $addrParts = [];
+            if (!empty($roomData['building_name'])) { $addrParts[] = trim($roomData['building_name']); }
+            if (!empty($roomData['unit'])) { $addrParts[] = trim($roomData['unit']) . '单元'; }
+            if (!empty($roomData['room_number'])) { $addrParts[] = trim($roomData['room_number']); }
+            $location = implode(' ', $addrParts);
+        }
+
         $orderData = [
             'order_no'       => build_order_no('DSR'),
             'title'          => $title,
@@ -228,6 +237,7 @@ class AiRepair extends BaseController
             '📋 工单号：' . $orderData['order_no'] . "\n" .
             '📝 标题：' . $title . "\n" .
             '🔧 类型：' . $aiType . '维修' . "\n" .
+            ($location ? '📍 位置：' . $location . "\n" : '') .
             ($roomData ? '🏠 房号：' . ($roomData['room_number'] ?? $roomData['name'] ?? '') . "\n" : '') .
             ($isUrgent ? '⚠️ 紧急标记已生效' . "\n" : '') .
             ($worker ? '👷 已自动派单给维修师傅，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
