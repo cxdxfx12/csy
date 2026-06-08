@@ -5,6 +5,8 @@ namespace app\api\controller;
 use app\BaseController;
 use think\facade\Db;
 use service\PushService;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class AiRepair extends BaseController
 {
@@ -386,15 +388,21 @@ class AiRepair extends BaseController
         return $this->success(['reply' => $reply, 'action' => 'no_orders']);
     }
 
-    // 从token获取owner_id
+    // 从JWT token获取owner_id（与BaseApi::auth保持一致）
     private function getOwnerIdFromToken()
     {
         $ownerId = 0;
         $token = $this->request->header('Authorization', '');
         if ($token) {
             $token = str_replace('Bearer ', '', $token);
-            $owner = Db::name('owner')->where('token', $token)->find();
-            if ($owner) $ownerId = (int)$owner['id'];
+            try {
+                $jwtConfig = config('jwt');
+                $payload = JWT::decode($token, new Key($jwtConfig['key'], $jwtConfig['algorithm']));
+                $payload = (array)$payload;
+                $ownerId = (int)($payload['sub'] ?? 0);
+            } catch (\Exception $e) {
+                // token无效，返回0
+            }
         }
         return $ownerId;
     }
