@@ -344,8 +344,11 @@ class AiRepair extends BaseController
         }
 
         $workerName = '';
+        $workerPhone = '';
         if ($order['assignee_id']) {
-            $workerName = Db::name('repair_worker')->where('id', $order['assignee_id'])->value('name') ?? '';
+            $wInfo = Db::name('repair_worker')->where('id', $order['assignee_id'])->field('name,phone')->find();
+            $workerName = $wInfo['name'] ?? '';
+            $workerPhone = $wInfo['phone'] ?? '';
         }
         $statusText = $this->statusLabels[$order['status']] ?? '未知';
 
@@ -362,7 +365,7 @@ class AiRepair extends BaseController
                . '📝 标题：' . ($order['title'] ?? '') . "\n"
                . '📊 状态：' . $statusText . "\n"
                . '➡️ 进度：' . $bar . "\n"
-               . ($workerName ? '👷 维修师傅：' . $workerName . "\n" : '')
+               . ($workerName ? '👷 维修师傅：' . $workerName . (!empty($workerPhone) ? '（' . $workerPhone . '）' : '') . "\n" : '')
                . '🕐 提交时间：' . $order['create_time'] . "\n"
                . ($order['finish_time'] ? '✅ 完成时间：' . $order['finish_time'] . "\n" : '');
 
