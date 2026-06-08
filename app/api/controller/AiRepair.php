@@ -179,7 +179,6 @@ class AiRepair extends BaseController
                 // 自动提取业主绑定的房产信息
                 $roomData = Db::name('room')
                     ->where('owner_id', $ownerId)
-                    ->where('status', 1)
                     ->whereNull('delete_time')
                     ->find();
             }
@@ -544,7 +543,6 @@ class AiRepair extends BaseController
 
         $room = Db::name('room')
             ->where('owner_id', $owner['id'])
-            ->where('status', 1)
             ->whereNull('delete_time')
             ->find();
 
