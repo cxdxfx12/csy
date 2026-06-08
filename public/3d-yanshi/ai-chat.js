@@ -9,6 +9,7 @@ const AI_API = '/api/ai/';
     let chatHistory = [];
     let pendingRepair = null;
     let isOpen = false;
+    let awaitingPhone = false;  // 是否在等待用户输入手机号
 
     // 获取业主登录token（如果在同域下登录过）
     function getOwnerToken() {
@@ -78,7 +79,34 @@ const AI_API = '/api/ai/';
         const msg = input.value.trim();
         if (!msg) return;
 
+        // 如果正在等待手机号，把用户输入当手机号处理
+        if (awaitingPhone) {
+            input.value = '';
+            const phone = msg.replace(/\s/g, ''); // 去掉空格
+            // 简单校验：全是数字且8-15位，或带+号开头
+            if (/^\+?\d{8,15}$/.test(phone) || /^1[3-9]\d{9}$/.test(phone)) {
+                addMsg('user', phone);
+                pendingRepair.phone = phone;
+                awaitingPhone = false;
+                showTyping();
+                await submitRepair();
+            } else {
+                addMsg('user', msg);
+                addMsg('ai', '请输入正确的手机号码（11位数字），例如：13800138000');
+            }
+            return;
+        }
+
         if (msg === '确认' && pendingRepair) {
+            // 检查是否有token或有手机号
+            if (!getOwnerToken() && !pendingRepair.phone) {
+                // 无登录且未提供手机号，先询问
+                input.value = '';
+                addMsg('user', '确认');
+                addMsg('ai', '📱 请提供您的联系电话，方便我们联系您：\n（输入11位手机号即可）');
+                awaitingPhone = true;
+                return;
+            }
             input.value = '';
             addMsg('user', '确认提交');
             showTyping();
@@ -135,7 +163,8 @@ const AI_API = '/api/ai/';
                     content: 'AI智能报修：' + pendingRepair.title,
                     repair_type: pendingRepair.repairType,
                     is_urgent: pendingRepair.isUrgent,
-                    location: pendingRepair.location
+                    location: pendingRepair.location,
+                    phone: pendingRepair.phone || ''
                 })
             });
             const data = await resp.json();

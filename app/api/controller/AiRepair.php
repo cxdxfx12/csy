@@ -146,7 +146,7 @@ class AiRepair extends BaseController
     {
         $title    = $this->request->post('title', '');
         $content  = $this->request->post('content', '');
-        $type     = $this->request->post('repair_type', '其他');
+        $aiType   = $this->request->post('repair_type', '其他');
         $isUrgent = $this->request->post('is_urgent', false);
         $location = $this->request->post('location', '');
         $phone    = $this->request->post('phone', '');
@@ -178,6 +178,21 @@ class AiRepair extends BaseController
             }
         }
 
+        // 如果无token但提供了手机号，尝试反查业主和房产
+        if ($ownerId == 0 && !empty($phone)) {
+            $lookupResult = $this->findOwnerByPhone($phone);
+            if ($lookupResult) {
+                $ownerData = $lookupResult['owner'];
+                $ownerId = $ownerData['id'];
+                $name = $ownerData['realname'] ?: $name;
+                $phone = $lookupResult['owner']['phone'] ?? $phone;
+                $roomData = $lookupResult['room'];
+            }
+        }
+
+        // 映射AI报修类型到数据库数字ID（1水 2电 3气 4门窗 5管道 6家电 7网络 8其他）
+        $typeId = $this->mapRepairType($aiType, $title);
+
         $orderData = [
             'order_no'       => build_order_no('DSR'),
             'title'          => $title,
@@ -187,6 +202,7 @@ class AiRepair extends BaseController
             'room_id'        => $roomData['id'] ?? 0,
             'reporter'       => $name,
             'reporter_phone' => $phone ?: '未提供',
+            'type'           => $typeId,
             'source'         => 3, // 3=AI智能报修
             'status'         => 1,
             'create_time'    => date('Y-m-d H:i:s'),
@@ -204,14 +220,15 @@ class AiRepair extends BaseController
         $reply = '🎉 报修单已生成！' . "\n" .
             '📋 工单号：' . $orderData['order_no'] . "\n" .
             '📝 标题：' . $title . "\n" .
-            '🔧 类型：' . $type . '维修' . "\n" .
+            '🔧 类型：' . $aiType . '维修' . "\n" .
+            ($roomData ? '🏠 房号：' . ($roomData['room_number'] ?? $roomData['name'] ?? '') . "\n" : '') .
             ($isUrgent ? '⚠️ 紧急标记已生效' . "\n" : '') .
             ($worker ? '👷 已自动派单给维修师傅，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
             "\n💡 下次输入工单号或「查进度」即可跟踪处理状态，您也可以在「报修」页面查看全部工单。";
 
 
         // 记录提交日志
-        $this->saveLog($title, $reply, 'submit', $type);
+        $this->saveLog($title, $reply, 'submit', $aiType);
 
         // 触发多渠道推送
         $pushOrderData = array_merge($orderData, [
@@ -405,6 +422,56 @@ class AiRepair extends BaseController
             }
         }
         return $ownerId;
+    }
+
+    // 映射AI报修类型字符串到数据库数字ID（1水 2电 3气 4门窗 5管道 6家电 7网络 8其他）
+    private function mapRepairType($aiType, $msg)
+    {
+        $aiTypeLower = mb_strtolower($aiType);
+        $msgLower = mb_strtolower($msg);
+
+        // 水电需要细分：电相关关键词 → 2(电)，否则 → 1(水)
+        if ($aiTypeLower === '水电') {
+            $electricKw = ['跳闸', '停电', '灯泡', '灯', '开关', '插座', '电线', '短路', '电路', '电表', '电', '不亮', '没电'];
+            foreach ($electricKw as $kw) {
+                if (mb_strpos($msgLower, $kw) !== false) return 2;
+            }
+            return 1; // 默认水
+        }
+
+        $map = [
+            '空调' => 6,
+            '门窗' => 4,
+            '燃气' => 3,
+            '墙面' => 8,
+            '安保' => 8,
+            '卫生' => 8,
+            '停车' => 8,
+            '电梯' => 8,
+            '其他' => 8,
+        ];
+
+        return $map[$aiTypeLower] ?? 8;
+    }
+
+    // 通过手机号反查业主和房产信息
+    private function findOwnerByPhone($phone)
+    {
+        if (empty($phone)) return null;
+
+        $owner = Db::name('owner')->where('phone', $phone)->find();
+        if (!$owner) return null;
+
+        $room = Db::name('room')
+            ->where('owner_id', $owner['id'])
+            ->where('status', 1)
+            ->whereNull('delete_time')
+            ->find();
+
+        return [
+            'owner' => $owner,
+            'room'  => $room,
+        ];
     }
 
     // 保存对话记录
