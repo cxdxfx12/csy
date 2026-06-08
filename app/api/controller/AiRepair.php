@@ -477,20 +477,20 @@ class AiRepair extends BaseController
     {
         $keywords = $this->aiTypeToWorkerTypes($aiType);
 
-        // 优先按类型匹配工人
+        // 优先按类型匹配工人（优先派给接单少的）
         foreach ($keywords as $kw) {
             $worker = Db::name('repair_worker')
                 ->where('status', 1)
                 ->where('type', 'like', '%' . $kw . '%')
-                ->orderRaw('order_count ASC, RAND()')
+                ->order(Db::raw('order_count ASC, RAND()'))
                 ->find();
             if ($worker) return $worker;
         }
 
-        // 兜底：随机选一个在线工人
+        // 兜底：随机选一个在线工人（优先接单少的）
         return Db::name('repair_worker')
             ->where('status', 1)
-            ->orderRaw('order_count ASC, RAND()')
+            ->order(Db::raw('order_count ASC, RAND()'))
             ->find();
     }
 
