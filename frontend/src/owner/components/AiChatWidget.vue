@@ -13,8 +13,16 @@
         <div v-for="(m, i) in messages" :key="i" class="msg-bubble" :class="'msg-' + m.type">{{ m.text }}</div>
         <div v-if="typing" class="typing-indicator"><span></span><span></span><span></span></div>
       </div>
-      <div class="quick-row" v-if="quickTypes.length">
+      <div class="quick-row" v-if="quickTypes.length && !pendingRepair">
         <span v-for="t in quickTypes" :key="t.type" class="quick-tag" @click="quickSend(t)">{{ t.icon }} {{ t.name }}</span>
+      </div>
+      <!-- 确认提交按钮 -->
+      <div class="confirm-bar" v-if="pendingRepair">
+        <button class="btn-confirm" @click="doConfirm" :disabled="loading">
+          <span v-if="!loading">✅ 确认提交报修单</span>
+          <span v-else>提交中...</span>
+        </button>
+        <button class="btn-cancel" @click="cancelConfirm" :disabled="loading">取消</button>
       </div>
       <div class="ai-input">
         <input v-model="inputText" placeholder="描述您遇到的问题..." @keydown.enter="send" />
@@ -78,6 +86,20 @@ async function send() {
   loading.value = true
   typing.value = true
   await doChat(msg)
+}
+
+async function doConfirm() {
+  if (!pendingRepair || loading.value) return
+  inputText.value = ''
+  addMsg('user', '确认提交')
+  loading.value = true
+  typing.value = true
+  await doSubmit()
+}
+
+function cancelConfirm() {
+  pendingRepair = null
+  addMsg('ai', '已取消报修提交。您可以继续描述其他问题。')
 }
 
 async function doChat(msg) {
@@ -345,6 +367,44 @@ watch(isOpen, v => {
   justify-content: center;
 }
 .ai-input button:disabled { opacity: 0.45; }
+
+/* 确认提交栏 */
+.confirm-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px 4px;
+  flex-shrink: 0;
+}
+.btn-confirm {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+.btn-confirm:active { transform: scale(0.97); }
+.btn-confirm:disabled { opacity: 0.6; }
+.btn-cancel {
+  padding: 9px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #aaa;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cancel:active { background: rgba(255,255,255,0.15); }
+.btn-cancel:disabled { opacity: 0.5; }
 
 .typing-indicator {
   align-self: flex-start;
