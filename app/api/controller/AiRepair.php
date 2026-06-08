@@ -479,19 +479,27 @@ class AiRepair extends BaseController
 
         // 优先按类型匹配工人（优先派给接单少的）
         foreach ($keywords as $kw) {
-            $worker = Db::name('repair_worker')
+            $workers = Db::name('repair_worker')
                 ->where('status', 1)
                 ->where('type', 'like', '%' . $kw . '%')
-                ->order(Db::raw('order_count ASC, RAND()'))
-                ->find();
-            if ($worker) return $worker;
+                ->order('order_count asc')
+                ->select()
+                ->toArray();
+            if (!empty($workers)) {
+                return $workers[array_rand($workers)];
+            }
         }
 
         // 兜底：随机选一个在线工人（优先接单少的）
-        return Db::name('repair_worker')
+        $workers = Db::name('repair_worker')
             ->where('status', 1)
-            ->order(Db::raw('order_count ASC, RAND()'))
-            ->find();
+            ->order('order_count asc')
+            ->select()
+            ->toArray();
+        if (!empty($workers)) {
+            return $workers[array_rand($workers)];
+        }
+        return null;
     }
 
     // 通过手机号反查业主和房产信息
