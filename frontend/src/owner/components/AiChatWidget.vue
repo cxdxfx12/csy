@@ -47,6 +47,7 @@
       </div>
       <!-- 快捷操作 -->
       <div class="quick-row" v-if="trackedOrder">
+        <span class="quick-tag qq" @click="startNewRepair">📝 我要报修</span>
         <span class="quick-tag qq" @click="queryProgress">📊 查进度</span>
         <a class="quick-tag qq" href="#/repair">📋 报修记录</a>
       </div>
@@ -259,6 +260,21 @@ async function doSubmit() {
     loading.value = false
     addMsg('ai', '提交失败，请稍后重试。')
   }
+}
+
+// 发起新报修（引导用户描述问题）
+function startNewRepair() {
+  if (loading.value) return
+  inputText.value = ''
+  // 滚动到底部聚焦输入框
+  setTimeout(() => {
+    const input = document.querySelector('.ai-input-row input')
+    if (input) input.focus()
+  }, 100)
+  addMsg('ai', '👋 请描述您遇到的问题，例如：\n\n' +
+    '• 「厨房水龙头漏水」\n' +
+    '• 「卧室灯不亮」\n' +
+    '• 「空调打不开」\n\n💡 描述越详细，AI 越能准确分类并快速派单！')
 }
 
 // 查询最近工单进度
