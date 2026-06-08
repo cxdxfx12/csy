@@ -33,6 +33,11 @@ Thumbs.db
 # 图片截图
 *.png
 *.jpg
+# 但保留qh目录的图片
+!qh/images/*.png
+!qh/images/*.jpg
+!public/qh/images/*.png
+!public/qh/images/*.jpg
 
 # 临时调试脚本
 /_check_*.php
