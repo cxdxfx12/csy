@@ -134,7 +134,7 @@ onUnmounted(() => {
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#333;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0c1a;color:#cbd5e1;-webkit-tap-highlight-color:transparent;background-image:radial-gradient(ellipse at 20% 0%,#1e1b4b20 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,#312e8120 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,#0a0c1a 0%,#0f0f24 100%)}
 #manager-app{min-height:100vh}
 /* 新消息弹窗 */
 .notify-popup{position:fixed;top:-80px;left:12px;right:12px;background:#1f2937;color:#fff;border-radius:12px;padding:14px 44px 14px 16px;display:flex;align-items:center;gap:10px;z-index:999;transition:top .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}
@@ -145,7 +145,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .notify-body small{display:block;font-size:12px;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .notify-close{position:absolute;top:10px;right:12px;background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:0;line-height:1}
 /* 右上角通知小字 */
-.pillar-popup{position:fixed;top:16px;right:12px;background:#2563eb;color:#fff;border-radius:20px;padding:8px 36px 8px 14px;font-size:12px;z-index:1000;display:flex;align-items:center;gap:6px;opacity:0;transform:translateX(20px);transition:opacity .3s,transform .3s;cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.4);max-width:85vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pillar-popup{position:fixed;top:16px;right:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-radius:20px;padding:8px 36px 8px 14px;font-size:12px;z-index:1000;display:flex;align-items:center;gap:6px;opacity:0;transform:translateX(20px);transition:opacity .3s,transform .3s;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,.4);max-width:85vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pillar-popup.show{opacity:1;transform:translateX(0)}
 .pillar-close{position:absolute;top:50%;right:10px;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;padding:0;line-height:1}
 </style>
