@@ -188,7 +188,7 @@ class BaseAdmin extends BaseController
                 'Vehicle', 'Deposit', 'Invoice', 'InvoiceInfo', 'UnifiedPayment',
                 'ParkingFeeRule', 'ParkingPayment', 'Notification',
                 'LeaseProperty', 'LeaseTenant', 'LeaseContract', 'LeasePayment', 'LeaseTermination',
-                'PushDevice', 'SseEvent', 'ServiceVendor',
+                'PushDevice', 'SseEvent', 'ServiceVendor', 'PushConfig',
                 'WechatConfig', 'WechatUser', 'WechatMpFan', 'WechatMpTemplate', 'WechatTemplate',
                 'BillDunning', 'Message', 'SmsLog', 'CommunityPaymentConfig', 'CommunityWechatConfig',
                 'Decoration',
@@ -285,6 +285,7 @@ class BaseAdmin extends BaseController
             'system:log'             => 'Log',
             'system:pushDevice'      => 'PushDevice',
             'system:sseEvent'        => 'SseEvent',
+            'system:pushConfig'      => 'PushConfig',
             'system:serviceVendor'   => 'ServiceVendor',
             // 房产管理
             'property:community'     => 'Community',

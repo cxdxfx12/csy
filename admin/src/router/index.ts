@@ -87,6 +87,7 @@ const router = createRouter({
         { path: 'notice/Notification', name: 'NotificationIndex', component: () => import('@/views/notice/Notification.vue'), meta: { title: '消息推送' } },
         { path: 'system/PushDevice', name: 'PushDeviceIndex', component: () => import('@/views/system/PushDevice.vue'), meta: { title: '推送设备' } },
         { path: 'system/SseEvent', name: 'SseEventIndex', component: () => import('@/views/system/SseEvent.vue'), meta: { title: 'SSE事件' } },
+        { path: 'system/pushConfig', name: 'PushConfigIndex', component: () => import('@/views/system/PushConfig.vue'), meta: { title: '推送配置' } },
         { path: 'system/ServiceVendor', name: 'ServiceVendorIndex', component: () => import('@/views/system/ServiceVendor.vue'), meta: { title: '服务商联系' } },
         { path: 'sms/template', name: 'SmsTemplateIndex', component: () => import('@/views/sms/SmsTemplate.vue'), meta: { title: '短信模板' } },
         { path: 'sms/send', name: 'SmsSendIndex', component: () => import('@/views/sms/SmsSend.vue'), meta: { title: '短信发送' } },

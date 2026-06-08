@@ -65,6 +65,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
 import { apiGet } from '@/utils/request'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
@@ -75,6 +76,8 @@ const appStore = useAppStore()
 const badgeCounts = ref<Record<string, number>>({ bill: 0, repair: 0, complaint: 0, order: 0, vote: 0, activity: 0 })
 const badgeRaw = ref<Record<string, number>>({ bill: 0, repair: 0, complaint: 0, order: 0, vote: 0, activity: 0 })
 let timer: any = null
+let sseConnection: EventSource | null = null
+let sseReconnectTimer: any = null
 const SEEN_KEY = 'admin_badge_seen'
 
 const notifyMeta: Record<string, { icon: string; label: string; route: string; badgeType: any }> = {
@@ -151,11 +154,71 @@ function handleLogout() {
 onMounted(() => {
   fetchBadges()
   timer = setInterval(fetchBadges, 30000)
+  connectSSE()
 })
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
+  disconnectSSE()
 })
+
+// ===== SSE 实时推送 =====
+function connectSSE() {
+  const token = localStorage.getItem('admin_token') || localStorage.getItem('token')
+  if (!token) return
+
+  try {
+    const baseUrl = import.meta.env?.VITE_API_BASE || window.location.origin
+    const url = `${baseUrl}/api/admin/sse/stream?token=${encodeURIComponent(token)}`
+    sseConnection = new EventSource(url)
+
+    sseConnection.addEventListener('connected', () => {
+      console.log('[Admin SSE] 实时推送已连接')
+      if (sseReconnectTimer) { clearTimeout(sseReconnectTimer); sseReconnectTimer = null }
+    })
+
+    sseConnection.addEventListener('repair_new', (e: any) => {
+      try {
+        const data = JSON.parse(e.data)
+        console.log('[Admin SSE] 新报修:', data)
+        fetchBadges()
+        ElMessage.info({ message: `🔧 ${data.title}: ${data.content}`, duration: 5000, showClose: true })
+      } catch (_) {}
+    })
+
+    sseConnection.addEventListener('repair_assign', (e: any) => {
+      try {
+        const data = JSON.parse(e.data)
+        console.log('[Admin SSE] 派单通知:', data)
+        fetchBadges()
+      } catch (_) {}
+    })
+
+    sseConnection.addEventListener('heartbeat', () => {})
+
+    sseConnection.addEventListener('timeout', () => {
+      console.log('[Admin SSE] 连接刷新')
+      sseConnection?.close()
+    })
+
+    sseConnection.addEventListener('error', () => {
+      console.warn('[Admin SSE] 连接断开')
+      sseConnection?.close()
+    })
+
+    sseConnection.onerror = () => {
+      sseConnection?.close()
+      sseReconnectTimer = setTimeout(connectSSE, 3000)
+    }
+  } catch (e) {
+    console.warn('[Admin SSE] 连接失败，使用轮询模式')
+  }
+}
+
+function disconnectSSE() {
+  if (sseConnection) { sseConnection.close(); sseConnection = null }
+  if (sseReconnectTimer) { clearTimeout(sseReconnectTimer); sseReconnectTimer = null }
+}
 </script>
 
 <style scoped>

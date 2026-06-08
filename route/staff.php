@@ -49,6 +49,9 @@ Route::group('staff', function () {
     // 角标 & 消息提醒
     Route::get('badge/counts', 'staff/StaffBadge/counts');
 
+    // SSE 实时推送
+    Route::get('sse/stream', 'staff/StaffSse/stream');
+
     // 个人中心
     Route::post('profile/edit', 'staff/StaffProfile/edit');
     Route::get('profile/info', 'staff/StaffProfile/info');

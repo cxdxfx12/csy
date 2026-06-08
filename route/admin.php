@@ -520,6 +520,14 @@ Route::group('admin', function () {
 
     // SSE事件
     Route::get('admin/system/sseEventList', 'admin/SseEvent/lists');
+    Route::get('admin/sse/stream', 'admin/AdminSse/stream');
+
+    // 推送配置
+    Route::get('admin/system/pushConfigList', 'admin/PushConfig/lists');
+    Route::get('admin/system/pushConfigDetail', 'admin/PushConfig/detail');
+    Route::post('admin/system/pushConfigSavePush', 'admin/PushConfig/savePush');
+    Route::post('admin/system/pushConfigSaveSms', 'admin/PushConfig/saveSms');
+    Route::get('admin/system/pushConfigTestSms', 'admin/PushConfig/testSms');
 
     // 短信模板
     Route::get('admin/sms/smsTemplateList', 'admin/SmsTemplate/lists');

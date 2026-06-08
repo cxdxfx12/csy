@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\BaseController;
 use think\facade\Db;
+use service\PushService;
 
 class AiRepair extends BaseController
 {
@@ -33,7 +34,9 @@ class AiRepair extends BaseController
         $history = $this->request->post('history', []);
 
         if (empty(trim($msg))) {
-            return $this->success(['reply' => '您好！请描述您遇到的问题，我会帮您快速报修。比如："我家厨房水龙头漏水了"', 'action' => 'greet']);
+            $reply = '您好！请描述您遇到的问题，我会帮您快速报修。比如："我家厨房水龙头漏水了"';
+            $this->saveLog($msg, $reply, 'greet', '');
+            return $this->success(['reply' => $reply, 'action' => 'greet']);
         }
 
         $msgLower = mb_strtolower($msg);
@@ -42,8 +45,10 @@ class AiRepair extends BaseController
         $greetings = ['你好', '您好', 'hi', 'hello', '在吗', '在不在'];
         foreach ($greetings as $g) {
             if (mb_strpos($msgLower, $g) !== false) {
+                $reply = '您好！我是大圣智慧物业的AI报修助手 🤖\n请直接告诉我您遇到的问题，比如：\n• "厨房水龙头漏水"\n• "客厅空调不制冷"\n• "门锁打不开了"\n\n我会自动帮您生成报修单！';
+                $this->saveLog($msg, $reply, 'greet', '');
                 return $this->success([
-                    'reply' => '您好！我是大圣智慧物业的AI报修助手 🤖\n请直接告诉我您遇到的问题，比如：\n• "厨房水龙头漏水"\n• "客厅空调不制冷"\n• "门锁打不开了"\n\n我会自动帮您生成报修单！',
+                    'reply' => $reply,
                     'action' => 'greet'
                 ]);
             }
@@ -79,21 +84,28 @@ class AiRepair extends BaseController
             $locTag = $location ? '（' . $location . '）' : '';
             $typeHint = $repairType !== '其他' ? ' → 归类为【' . $repairType . '维修】' : '';
 
+            $reply = '✅ 已识别您的报修需求：' . "\n" .
+                '📋 类型：' . $urgentTag . $repairType . '维修' . $typeHint . "\n" .
+                '📍 ' . ($location ?: '待确认') . "\n" .
+                ($isUrgent ? '⚠️ 已标记为紧急工单，将优先处理！' . "\n" : '') .
+                "\n" . '确认提交报修单吗？回复「确认」即可提交，或补充更多信息。';
+
+            $this->saveLog($msg, $reply, 'confirm', $repairType);
+
             return $this->success([
-                'reply' => '✅ 已识别您的报修需求：' . "\n" .
-                    '📋 类型：' . $urgentTag . $repairType . '维修' . $typeHint . "\n" .
-                    '📍 ' . ($location ?: '待确认') . "\n" .
-                    ($isUrgent ? '⚠️ 已标记为紧急工单，将优先处理！' . "\n" : '') .
-                    "\n" . '确认提交报修单吗？回复「确认」即可提交，或补充更多信息。',
-                'action'    => 'confirm',
-                'repairType'=> $repairType,
-                'isUrgent'  => $isUrgent,
-                'location'  => $location,
+                'reply'      => $reply,
+                'action'     => 'confirm',
+                'repairType' => $repairType,
+                'isUrgent'   => $isUrgent,
+                'location'   => $location,
             ]);
         }
 
+        $reply = '我理解您遇到了问题。请再详细描述一下：\n• 哪里出了问题？（厨房/卫生间/客厅…）\n• 什么表现？（漏水/不亮/打不开…）\n• 紧急吗？\n\n描述越详细，我帮您处理越快！';
+        $this->saveLog($msg, $reply, 'askMore', '');
+
         return $this->success([
-            'reply' => '我理解您遇到了问题。请再详细描述一下：\n• 哪里出了问题？（厨房/卫生间/客厅…）\n• 什么表现？（漏水/不亮/打不开…）\n• 紧急吗？\n\n描述越详细，我帮您处理越快！',
+            'reply' => $reply,
             'action' => 'askMore',
         ]);
     }
@@ -152,6 +164,16 @@ class AiRepair extends BaseController
             ($worker ? '👷 已自动派单给维修师傅，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
             "\n💡 您可以凭工单号随时查询处理进度。";
 
+        // 记录提交日志
+        $this->saveLog($title, $reply, 'submit', $type);
+
+        // 触发多渠道推送
+        $pushOrderData = array_merge($orderData, [
+            'is_urgent'    => $isUrgent,
+            'worker_name'  => $worker['name'] ?? null,
+        ]);
+        PushService::pushNewRepair($orderId, $pushOrderData, $worker['id'] ?? 0, $communityId);
+
         return $this->success([
             'reply'      => $reply,
             'order_no'   => $orderData['order_no'],
@@ -175,5 +197,30 @@ class AiRepair extends BaseController
             ['id' => '卫生', 'name' => '卫生保洁', 'icon' => '🧹', 'examples' => '垃圾堆积、异味'],
             ['id' => '停车', 'name' => '停车问题', 'icon' => '🅿️', 'examples' => '车位被占、道闸故障'],
         ]);
+    }
+
+    // 保存对话记录
+    private function saveLog($message, $reply, $action = 'chat', $repairType = '')
+    {
+        try {
+            $ownerId = 0;
+            // API场景下session可能未初始化，通过request获取
+            $token = $this->request->header('Authorization', '');
+            if ($token) {
+                $token = str_replace('Bearer ', '', $token);
+                $owner = Db::name('owner')->where('token', $token)->find();
+                if ($owner) $ownerId = $owner['id'];
+            }
+            Db::name('ai_chat_log')->insert([
+                'owner_id'    => $ownerId,
+                'message'     => trim($message),
+                'reply'       => $reply,
+                'action'      => $action,
+                'repair_type' => $repairType,
+                'create_time' => date('Y-m-d H:i:s'),
+            ]);
+        } catch (\Exception $e) {
+            // 记录失败不阻断主流程
+        }
     }
 }

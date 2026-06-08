@@ -49,6 +49,77 @@ const notifyText = ref('')
 const notifyRoute = ref('')
 let lastBadges = null // 记录上一次的角标快照，用于对比
 let timer = null
+let sseConnection = null
+let sseReconnectTimer = null
+
+// SSE 实时推送连接
+function connectSSE() {
+  const token = localStorage.getItem('staff_token')
+  if (!token) return
+
+  try {
+    const baseUrl = import.meta.env?.VITE_API_BASE || window.location.origin
+    const url = `${baseUrl}/api/staff/sse/stream?token=${encodeURIComponent(token)}`
+    sseConnection = new EventSource(url)
+
+    sseConnection.addEventListener('connected', () => {
+      console.log('[SSE] 实时推送已连接')
+      // 清除重连定时器
+      if (sseReconnectTimer) { clearTimeout(sseReconnectTimer); sseReconnectTimer = null }
+    })
+
+    sseConnection.addEventListener('repair_assign', (e) => {
+      try {
+        const data = JSON.parse(e.data)
+        console.log('[SSE] 新派单:', data)
+        // 刷新角标
+        fetchBadges()
+        // 弹窗提醒
+        notifyTitle.value = data.title || '新派单工单'
+        notifyText.value = data.content || ''
+        notifyRoute.value = '/repair'
+        notifyShow.value = true
+        setTimeout(() => { notifyShow.value = false }, 5000)
+        playNotificationSound()
+        showPillar(data.title || '您有新的派单', '/repair')
+      } catch (_) {}
+    })
+
+    sseConnection.addEventListener('heartbeat', () => {
+      // 心跳，保持连接无需操作
+    })
+
+    sseConnection.addEventListener('timeout', () => {
+      console.log('[SSE] 连接刷新，即将重连...')
+      sseConnection?.close()
+    })
+
+    sseConnection.addEventListener('error', (e) => {
+      console.warn('[SSE] 连接断开，3秒后重连...')
+      sseConnection?.close()
+    })
+
+    sseConnection.onerror = () => {
+      sseConnection?.close()
+      // 3秒后重连
+      sseReconnectTimer = setTimeout(connectSSE, 3000)
+    }
+
+  } catch (e) {
+    console.warn('[SSE] 连接失败，将使用轮询模式')
+  }
+}
+
+function disconnectSSE() {
+  if (sseConnection) {
+    sseConnection.close()
+    sseConnection = null
+  }
+  if (sseReconnectTimer) {
+    clearTimeout(sseReconnectTimer)
+    sseReconnectTimer = null
+  }
+}
 
 // 轮询角标
 async function fetchBadges() {
@@ -133,15 +204,17 @@ function dismissBadge(key) {
 
 onBeforeMount(() => {
   if (localStorage.getItem('staff_token') && route.path === '/login') router.replace('/home')
-  // 首次加载立即获取，之后每 30 秒轮询
   if (localStorage.getItem('staff_token')) {
     fetchBadges()
     timer = setInterval(fetchBadges, 30000)
+    // 同时建立 SSE 实时推送连接（即时通知，轮询做兜底）
+    connectSSE()
   }
 })
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
+  disconnectSSE()
 })
 </script>
 <style>

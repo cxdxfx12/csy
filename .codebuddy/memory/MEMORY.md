@@ -19,7 +19,10 @@
 
 ## 服务器
 - IP 211.149.181.178，SSH 端口 22000，用户名 root，密码 cxdxfx12
-- 部署路径 /www/wwwroot/www.hbdxm.com/public/
+- nginx root: /www/wwwroot/www.hbdxm.com/public/（= /home/wwwroot/www.hbdxm.com/public/，/www → /home 软链接）
+- **PHP 应用根目录**: /home/wwwroot/www.hbdxm.com/（不是 public/！）
+- 前端文件: 部署到 /home/wwwroot/www.hbdxm.com/public/admin/
+- PHP 文件: 部署到 /home/wwwroot/www.hbdxm.com/（route/、app/、extend/、config/ 等）
 
 ## Nginx 缓存配置 (2026-06-08)
 - /admin/index.html: no-cache, no-store, must-revalidate（确保用户获取最新版本）

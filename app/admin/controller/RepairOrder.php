@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\admin\BaseAdmin;
 use think\facade\Db;
+use service\PushService;
 
 class RepairOrder extends BaseAdmin
 {
@@ -62,6 +63,10 @@ class RepairOrder extends BaseAdmin
             'status' => 2,
         ]);
         Db::name('repair_worker')->where('id', $workerId)->inc('order_count')->update();
+
+        // 触发推送通知
+        PushService::pushRepairAssign($id, $workerId, $record, $record['community_id'] ?? 0);
+
         return $this->success([], '派单成功');
     }
 
