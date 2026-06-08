@@ -228,9 +228,7 @@ async function doSubmit() {
         content: 'AI智能报修：' + pendingRepair.title,
         repair_type: pendingRepair.repairType,
         is_urgent: pendingRepair.isUrgent,
-        location: pendingRepair.location,
-        name: '业主',
-        phone: ''
+        location: pendingRepair.location
       })
     })
     const d = await r.json()

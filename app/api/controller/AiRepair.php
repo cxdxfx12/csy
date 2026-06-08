@@ -157,15 +157,22 @@ class AiRepair extends BaseController
         // 查找怡丰城小区（默认社区ID=1）
         $communityId = Db::name('community')->where('status', 1)->value('id') ?? 1;
 
-        // 尝试关联登录业主
+        // 尝试关联登录业主，自动提取房产信息
         $ownerId = $this->getOwnerIdFromToken();
         $ownerData = [];
+        $roomData = null;
         if ($ownerId > 0) {
             $owner = Db::name('owner')->where('id', $ownerId)->find();
             if ($owner) {
                 $ownerData = $owner;
                 $name = $owner['realname'] ?: $name;
                 $phone = $phone ?: $owner['phone'] ?? '';
+                // 自动提取业主绑定的房产信息
+                $roomData = Db::name('room')
+                    ->where('owner_id', $ownerId)
+                    ->where('status', 1)
+                    ->whereNull('delete_time')
+                    ->find();
             }
         }
 
@@ -175,19 +182,13 @@ class AiRepair extends BaseController
             'content'        => $content . ($location ? ' [位置: ' . $location . ']' : ''),
             'community_id'   => $ownerId > 0 ? ($ownerData['community_id'] ?? $communityId) : $communityId,
             'owner_id'       => $ownerId,
+            'room_id'        => $roomData['id'] ?? 0,
             'reporter'       => $name,
             'reporter_phone' => $phone ?: '未提供',
             'source'         => 3, // 3=AI智能报修
             'status'         => 1,
             'create_time'    => date('Y-m-d H:i:s'),
         ];
-
-        // 尝试匹配房间
-        if ($location) {
-            $room = Db::name('room')->where('room_number', 'like', '%' . $location . '%')
-                ->where('community_id', $communityId)->find();
-            if ($room) $orderData['room_id'] = $room['id'];
-        }
 
         // 关联维修类型工人（尝试自动派单）
         $worker = Db::name('repair_worker')->where('status', 1)->order('RAND()')->find();
