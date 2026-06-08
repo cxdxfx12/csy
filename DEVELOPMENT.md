@@ -1,8 +1,8 @@
-# 🔧 大圣物业管理系统 — 开发者手册 v2.0
+# 🔧 大圣物业管理系统 — 开发者手册 v3.0
 
 > **阅读对象**：后端/前端程序员、架构师、运维人员  
 > **目标**：一文档看懂全部功能、架构、文件、组件，快速上手开发  
-> **生成日期**：2026-06-07
+> **生成日期**：2026-06-07 · **最后更新**：2026-06-08
 
 ---
 
@@ -12,35 +12,29 @@
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    大圣物业管理系统 (Dasheng PMS)                       │
 ├──────────────────────────────────────────────────────────────────────┤
-│  4个前端 + 5个API端 + 35张表 + 90+控制器 + 100+Vue组件                  │
+│  5个前端 + 5个API端 + 40+张表 + 116个控制器 + 100+Vue组件               │
 ├──────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐      │
-│  │  PC后台管理面板   │  │  移动端H5 (内嵌)  │  │  独立前端应用    │      │
-│  │  admin/src/      │  │  admin/src/     │  │  frontend/      │      │
-│  │  Vue3+ElementPlus│  │  views/mobile/  │  │  Vue3+Vite多入口 │      │
-│  │  路由：/admin/*   │  │  路由：/mobile/* │  │  路由：/owner    │      │
-│  │  40+功能页面      │  │  15个移动端页面  │  │  /staff /manager│      │
-│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘      │
-│           │                    │                    │               │
-│           └────────────────────┼────────────────────┘               │
-│                                │ axios baseURL='/api'               │
-│                                ▼                                    │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │PC管理后台 │ │移动端H5  │ │独立前端  │ │ 3D孪生   │ │ 产品官网  │  │
+│  │admin/src/│ │admin/src/│ │frontend/ │ │3d-yanshi/│ │ wg/      │  │
+│  │70+页面   │ │15+页面   │ │27个页面  │ │5个小区   │ │4个页面   │  │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘  │
+│       └─────────────┴────────────┼────────────┴─────────────┘       │
+│                                  │ REST API (JSON)                   │
+│                                  ▼                                   │
 │  ┌─────────────────────────────────────────────────────────────┐    │
 │  │       PHP 后端 (ThinkPHP6风格 自研轻量框架)                    │    │
-│  │                                                               │    │
-│  │  入口：public/index.php  →  5套路由 → 5套中间件 → 控制器        │    │
-│  │                                                               │    │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐ ┌─────┐ │    │
-│  │  │ admin/   │ │ api/     │ │ staff/   │ │manager/ │ │dev/ │ │    │
-│  │  │ 后台管理 │ │ 业主API  │ │ 员工API  │ │经理API  │ │设备  │ │    │
-│  │  │ 84个控制 │ │ 15个控制 │ │ 11个控制 │ │4个控制  │ │2个  │ │    │
-│  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬────┘ └──┬──┘ │    │
-│  │       └────────────┴────────────┴────────────┴────────┘      │    │
+│  │  入口：public/index.php → 5套路由 → 5套中间件 → 控制器         │    │
+│  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐   │    │
+│  │  │ admin/ │ │ api/   │ │ staff/ │ │manager/│ │ device/│   │    │
+│  │  │ 85控制 │ │ 16控制 │ │ 11控制 │ │ 4控制  │ │ 2控制  │   │    │
+│  │  └────┬───┘ └───┬────┘ └───┬────┘ └───┬────┘ └───┬────┘   │    │
+│  │       └──────────┴──────────┴──────────┴──────────┘         │    │
 │  └──────────────────────────┬──────────────────────────────────┘    │
 │                             │                                       │
 │  ┌──────────────────────────▼──────────────────────────────────┐    │
-│  │              MySQL 8.0 (dasheng) — 35张表 ds_ 前缀             │    │
+│  │           MySQL 8.0 (dasheng) — 40+ 张表 ds_ 前缀             │    │
 │  └──────────────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
@@ -57,9 +51,17 @@ e:\ds\
 │
 ├── 📁 public/                  ← Web根目录 (nginx root)
 │   ├── index.php               ← ★ 入口文件 (SPA fallback / 路由分发)
-│   └── admin/                  ← admin前端构建输出 (Vite output)
-│       ├── index.html
-│       └── assets/             ← JS/CSS 打包产物
+│   ├── admin/                  ← admin前端构建输出 (Vite output)
+│   │   ├── index.html
+│   │   └── assets/             ← JS/CSS 打包产物
+│   ├── 3d-yanshi/ 🆕          ← 数字孪生大屏
+│   │   ├── index.html
+│   │   ├── main.js             ← Three.js 5小区场景 (~1700行)
+│   │   └── ai-chat.js/css      ← AI助手浮窗组件
+│   ├── wg/ 🆕                  ← 产品官网
+│   │   ├── index.html
+│   │   └── css/ js/ images/
+│   └── owner.html/staff.html   ← 独立前端构建输出
 │
 ├── 📁 config/                  ← 配置文件
 │   ├── app.php                 ← 应用名称 / 域名 / 时区
@@ -293,7 +295,7 @@ checkPermission() 权限流程：
 
 ## 🎮 四、完整功能模块速查
 
-### 4.1 后台管理 Admin (app/admin/controller/) — 84个控制器
+### 4.1 后台管理 Admin (app/admin/controller/) — 85个控制器
 
 | 分类 | 控制器文件 | 主要功能 |
 |------|-----------|----------|
@@ -374,11 +376,13 @@ checkPermission() 权限流程：
 | | WechatMpFan | 公众号粉丝 |
 | | WechatMpTemplate | 模板消息 |
 | | WechatTemplate | 消息模板 |
+| **IoT+AI** | Iot | IoT设备管理（设备CRUD/类型/协议/实时数据）+ 与3D场景数据联动 |
+| | AiAssistant | AI报修助手配置（关键词/欢迎语）+ 对话记录 + 统计图表 |
 | **装修管理** | Decoration | 装修申请/审批/巡查/违规 |
 | **通用** | Upload | 文件上传 |
 | | AdminBadge | 后台角标（待办数量） |
 
-### 4.2 业主端 API (app/api/controller/) — 15个控制器
+### 4.2 业主端 API (app/api/controller/) — 16个控制器
 
 | 控制器 | 用户操作 |
 |--------|----------|
@@ -396,6 +400,9 @@ checkPermission() 权限流程：
 | Activity | 活动列表/报名/取消/我的报名 |
 | Claim | 手机号认领房产(事务转移) |
 | Profile | 个人信息/修改/改密码 |
+| AiRepair | ★ AI智能报修：chat(对话识别) / submit(提交工单自动派单) / quickTypes |
+| IotData | ★ 数字孪生IoT：getDevices(按小区读设备+实时数据) |
+| Consultation | ★ 官网留言：add(公开提交/手机校验/IP记录) |
 | WechatServer | 公众号服务器回调(验证/消息/关注/取消关注) |
 
 ### 4.3 员工端 (app/staff/controller/) — 11个控制器
@@ -551,6 +558,9 @@ checkPermission() 权限流程：
 /admin/decoration/inspect          → 施工巡查
 /admin/decoration/violation        → 违规记录
 /admin/decoration/worker           → 施工人员
+
+/admin/iot/device                  → IoT设备管理 (4Tab:设备/类型/协议/数据)
+/admin/ai/assistant                → AI助手管理 (3Tab:配置/对话/统计)
 ```
 
 **移动端 H5 路由 (内嵌在 admin 项目内)**：
@@ -599,6 +609,7 @@ checkPermission() 权限流程：
 | 投票 | VoteView.vue |
 | 社区活动 | ActivityView.vue |
 | 房产认领 | ClaimView.vue |
+| AI助手 🆕 | AiChatWidget.vue (全局浮窗组件，登录后所有页面显示) |
 
 **员工端 (staff) — 10个页面**：
 
@@ -624,7 +635,105 @@ checkPermission() 权限流程：
 
 ---
 
-## 🗄️ 六、数据库设计 (35张表)
+## 🏙️ 五.5、3D数字孪生 + IoT + AI 架构 🆕
+
+### 5.5.1 整体数据流
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  3D数字孪生大屏 (public/3d-yanshi/)                          │
+│  main.js (67KB) · Three.js 0.160 · 5小区实时渲染             │
+│                                                               │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                  │
+│  │ buildIot  │  │ AI Chat   │  │ Community │                 │
+│  │ Layer()   │  │ Widget    │  │ Switch    │                 │
+│  │ 5s poll   │  │ 右下浮窗   │  │ 5 keys    │                 │
+│  └─────┬─────┘  └─────┬─────┘  └──────────┘                  │
+│        │              │                                       │
+└────────┼──────────────┼───────────────────────────────────────┘
+         │              │
+         ▼              ▼
+  GET /api/iot/devices  POST /api/ai/chat
+  ?community=feicui     POST /api/ai/submit
+         │              │
+         ▼              ▼
+  ┌──────────────────────────────────────────────────┐
+  │          PHP 后端                                  │
+  │  IotData::getDevices()    AiRepair::chat()        │
+  │    ↓ 读这4张表              ↓ 词库匹配              │
+  │  ds_iot_device              ai_type_keywords      │
+  │  ds_iot_device_type         ai_urgent_keywords    │
+  │  ds_iot_protocol          → 自动派单 RANDOM()      │
+  │  ds_iot_device_data       → ds_repair_order       │
+  └──────────────────────────────────────────────────┘
+         ▲
+         │ 管理端 CRUD (同一数据源)
+  ┌──────┴───────────────────────────────────────────┐
+  │  PC管理后台 Iot.vue / AiAssistant.vue              │
+  │  Iot::deviceAdd/Edit/Delete                       │
+  │  AiAssistant::config/chatHistory/stats            │
+  └──────────────────────────────────────────────────┘
+```
+
+### 5.5.2 3D 数字孪生技术细节
+
+**场景配置** (`main.js` 第24行 `communities` 对象)：
+
+| 场景ID | 名称 | 建筑 | 户型 | 渲染函数 | 行号 |
+|--------|------|------|------|----------|------|
+| `feicui` | 翡翠名苑 | 14栋26-33层 | 高层住宅 | `buildFeicui()` | ~400 |
+| `yunqi` | 云栖别墅 | 48栋3层 | 独栋别墅 | `buildYunqi()` | ~600 |
+| `zhongliang` | 中粮壹号 | 6栋42-55层 | 超高层 | `buildZhongliang()` | ~800 |
+| `shanshui` | 山水居 | 12栋3层 | 花园洋房 | `buildShanshui()` | ~1000 |
+| `yifeng` | 怡丰城 | 9栋8-12层 | 商业住宅 | `buildYifeng()` | ~1200 |
+
+**IoT 设备层** (第1115行起)：
+- 设备坐标：x/z (平面位置) + y (高度，来自 device 表或 device_type.y_height)
+- 发光球体：0.2~0.3 半径，颜色根据 device_status 变化
+- 轮询机制：`setInterval(buildIotLayer, 5000)` — 每5秒拉取一次
+- 场景切换：`clearScene()` → `stopIotPolling()` → 重建 → `buildIotLayer()`
+
+**AI 助手** (`3d-yanshi/ai-chat.js` + `ai-chat.css`)：
+- 右下角浮动按钮 (🤖图标)
+- 展开聊天面板：欢迎语 → 快速类型按钮 → 打字动画
+- 对话流程：用户输入 → `POST /api/ai/chat` → 后端识别 → 返回确认 → 用户确认 → `POST /api/ai/submit` 提交工单
+
+### 5.5.3 小区编码映射
+
+| 3D场景 | 数据库 ds_community.code | 备注 |
+|--------|--------------------------|------|
+| `feicui` | YG001 | 与怡丰城共用小区 |
+| `yunqi` | CY001 | |
+| `zhongliang` | 0004 | |
+| `shanshui` | 001 | |
+| `yifeng` | YG001 | 与翡翠名苑共用小区 |
+
+> ⚠️ `feicui` 和 `yifeng` 映射到同一个数据库小区(YG001)，因此 IoT 设备数据一致
+
+### 5.5.4 AI 关键词配置
+
+**报修类型词库** (`ds_config.value`，key=`ai_type_keywords`)：
+```json
+{
+  "水电": ["漏水","水管","水龙头","下水道","马桶","堵塞","停水","跳闸","停电","灯泡","灯","开关","插座"],
+  "空调": ["空调","制冷","不热","不冷","暖风","通风","出风口"],
+  "门窗": ["门","窗","门锁","把手","钥匙","门禁","窗户","玻璃"],
+  "墙面": ["墙","裂缝","漏水","发霉","起皮","掉皮","墙纸"],
+  "燃气": ["煤气","天然气","燃气","灶","打不着","漏气"],
+  "电梯": ["电梯","困人","停运","抖动","异响"],
+  "安保": ["监控","摄像头","门禁","可视","对讲","报警","消防"],
+  "卫生": ["垃圾","清扫","保洁","卫生","异味","蟑螂","老鼠"],
+  "停车": ["车位","停车","车库","道闸","车牌","充电桩"]
+}
+```
+
+**紧急关键词** (`ai_urgent_keywords`)：`紧急 马上 立刻 赶紧 快 爆 着火 漏气 触电 困人 坍塌 危机 严重`
+
+**派单逻辑**：`AiRepair::submit()` → 插入 `ds_repair_order` → 如果有紧急关键词设置 `is_urgent=1` → `RAND()` 随机匹配在线维修工 → 自动分配 `worker_id`
+
+---
+
+
 
 ### 6.1 系统管理 (8张)
 
@@ -740,6 +849,26 @@ checkPermission() 权限流程：
 | `ds_sms_log` | 短信发送记录 |
 | `ds_message` | 消息推送记录 |
 | `ds_community_activity` | 社区活动 (投票/报名) |
+
+### 6.14 IoT 设备管理 (4张) 🆕
+
+| 表名 | 说明 | 关键字段 |
+|------|------|----------|
+| `ds_iot_device_type` | 设备类型 | id, name, code, category, unit, y_height, sort, status |
+| `ds_iot_protocol` | 通信协议 | id, name, code, type, transport, port, frequency_band, data_rate, range, sort, status |
+| `ds_iot_device` | 设备台账 | id, community_id, device_type_id, protocol_id, code, name, x, y, z, install_location, floor, building, battery_level, firmware_ver, status, last_online, install_date, delete_time |
+| `ds_iot_device_data` | 实时数据 | id, device_id, raw_value, unit, is_online, device_status(normal/warning/alarm), alarm_msg, data_time |
+
+> **数据联动**：3D 场景通过 `IotData::getDevices()` 读取这 4 张表 → 5 秒轮询刷新 → 管理端 `Iot::deviceAdd/Edit/Delete` 直接写入，两者共享同一数据源
+
+### 6.15 AI 助手 + 官网 (2张) 🆕
+
+| 表名 | 说明 | 关键字段 |
+|------|------|----------|
+| `ds_ai_chat_log` | AI 对话记录 | id, owner_id, message, reply, action, repair_type, create_time |
+| `ds_consultation` | 官网咨询留言 | id, name, phone, type, content, ip, user_agent, status(read/unread), create_time |
+
+> **AI配置**：存在 `ds_config` 表中 (key=ai_type_keywords / ai_urgent_keywords / ai_greeting / ai_welcome_tips)
 
 ---
 
@@ -876,6 +1005,8 @@ mysql -u root -p <database/dasheng.sql
 | `/www/wwwroot/www.hbdxm.com/public/index.php` | PHP入口 |
 | `/www/wwwroot/www.hbdxm.com/public/admin/` | ★ Admin前端 (必须是 public/admin/!) |
 | `/www/wwwroot/www.hbdxm.com/public/admin/assets/` | JS/CSS 静态资源 |
+| `/www/wwwroot/www.hbdxm.com/public/3d-yanshi/` | 🆕 数字孪生大屏 (index.html + main.js + ai-chat.js + style.css) |
+| `/www/wwwroot/www.hbdxm.com/public/wg/` | 🆕 产品官网 (index.html + system.html + scene.html + contact.html) |
 | `/www/wwwroot/www.hbdxm.com/app/` | PHP控制器 |
 | `/www/wwwroot/www.hbdxm.com/config/` | 配置文件 |
 | `/www/wwwroot/www.hbdxm.com/route/` | 路由文件 |
@@ -901,6 +1032,8 @@ mysql -u root -p <database/dasheng.sql
 
 | 日期 | 内容 |
 |------|------|
+| 2026-06-08 | 🆕 新增 3D数字孪生(5小区) · IoT设备管理 · AI报修助手 · 产品官网 · 官网留言 · 数据联动打通 |
+| 2026-06-08 | 侧边栏菜单系统 · 端到端测试数据 · Request::isPost()修复 |
 | 2026-06-07 | 深度安全修复：Token校验/字段白名单/频率限制/SSL/CORS/上传/日志截断 |
 | 2026-06-07 | 权限修复：BaseAdmin + 菜单permission + 角色分配 |
 | 2026-06-07 | 生成本开发者手册 |

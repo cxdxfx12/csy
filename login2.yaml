@@ -1,0 +1,26 @@
+- generic [ref=e4]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: 🐵
+    - paragraph [ref=e8]: 杭州喵喵至家网络有限公司 · 智慧社区物业管理平台
+  - generic [ref=e9]:
+    - heading "欢迎回来" [level=2] [ref=e10]
+    - paragraph [ref=e11]: 请登录您的管理账户
+    - generic [ref=e12]:
+      - combobox [ref=e14] [cursor=pointer]:
+        - option "请选择小区（可选）" [selected]
+        - option "阳光花园"
+        - option "翠苑新城"
+        - option "怡丰城"
+        - option "新龙城"
+        - option "杭州喵喵至家网络有限公司"
+        - option "深港小区"
+      - textbox "管理员账号" [ref=e16]
+      - textbox "登录密码" [ref=e18]
+      - generic [ref=e19]:
+        - textbox "验证码" [ref=e20]
+        - img "点击刷新" [ref=e27] [cursor=pointer]
+      - button "🚀 登 录" [ref=e22] [cursor=pointer]
+    - generic [ref=e24]: 或
+    - button "💬 微信一键登录" [ref=e25] [cursor=pointer]:
+      - generic [ref=e26]: 💬
+      - text: 微信一键登录

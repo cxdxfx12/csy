@@ -94,6 +94,14 @@ Route::group('api', function () {
 
     // 官网咨询提交（公开，无需认证）
     Route::post('consultation/add', 'api/Consultation/add');
+
+    // 数字孪生 IoT 设备数据（公开）
+    Route::get('iot/devices', 'api/IotData/getDevices');
+
+    // AI 智能报修助手（公开）
+    Route::post('ai/chat', 'api/AiRepair/chat');
+    Route::post('ai/submit', 'api/AiRepair/submit');
+    Route::get('ai/quickTypes', 'api/AiRepair/quickTypes');
 });
 
 // =================================================================
@@ -574,4 +582,31 @@ Route::group('api/admin', function () {
     Route::post('lease/leaseTerminationAdd', 'admin/LeaseTermination/add');
     Route::post('lease/leaseTerminationEdit', 'admin/LeaseTermination/edit');
     Route::post('lease/leaseTerminationDelete', 'admin/LeaseTermination/delete');
+
+    // IoT 设备管理（连接3D数字孪生）
+    Route::get('iot/deviceList', 'admin/Iot/deviceList');
+    Route::post('iot/deviceAdd', 'admin/Iot/deviceAdd');
+    Route::post('iot/deviceEdit', 'admin/Iot/deviceEdit');
+    Route::post('iot/deviceDelete', 'admin/Iot/deviceDelete');
+    Route::get('iot/stats', 'admin/Iot/stats');
+    // IoT 设备类型
+    Route::get('iot/typeList', 'admin/Iot/typeList');
+    Route::get('iot/typeAll', 'admin/Iot/typeAll');
+    Route::post('iot/typeAdd', 'admin/Iot/typeAdd');
+    Route::post('iot/typeEdit', 'admin/Iot/typeEdit');
+    Route::post('iot/typeDelete', 'admin/Iot/typeDelete');
+    // IoT 协议
+    Route::get('iot/protocolList', 'admin/Iot/protocolList');
+    Route::get('iot/protocolAll', 'admin/Iot/protocolAll');
+    Route::post('iot/protocolAdd', 'admin/Iot/protocolAdd');
+    Route::post('iot/protocolEdit', 'admin/Iot/protocolEdit');
+    Route::post('iot/protocolDelete', 'admin/Iot/protocolDelete');
+    // IoT 数据查看
+    Route::get('iot/dataList', 'admin/Iot/dataList');
+
+    // AI 助手管理
+    Route::get('aiAssistant/config', 'admin/AiAssistant/config');
+    Route::post('aiAssistant/config', 'admin/AiAssistant/config');
+    Route::get('aiAssistant/chatHistory', 'admin/AiAssistant/chatHistory');
+    Route::get('aiAssistant/stats', 'admin/AiAssistant/stats');
 });

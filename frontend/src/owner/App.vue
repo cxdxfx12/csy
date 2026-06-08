@@ -16,6 +16,7 @@
       <span>📬</span><span>{{ pillarMsg }}</span>
       <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
     </div>
+    <AiChatWidget v-if="$route.path !== '/login' && $route.path !== '/register'" />
     <nav class="tab-bar" v-if="$route.path !== '/login' && $route.path !== '/register'">
       <router-link to="/home" class="tab"><span>🏠</span><em>首页</em></router-link>
       <router-link to="/room" class="tab"><span>🏢</span><em>房产</em></router-link>
@@ -34,6 +35,7 @@ import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
 import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
+import AiChatWidget from './components/AiChatWidget.vue'
 
 const route = useRoute()
 const router = useRouter()

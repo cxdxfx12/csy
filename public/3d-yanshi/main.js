@@ -1096,6 +1096,7 @@ function buildPavilion(x, z) {
 
 // ==================== 场景切换 ====================
 function clearScene() {
+    stopIotPolling();
     dynamicObjects.forEach(obj => {
         if (obj && obj.parent) obj.parent.remove(obj);
         if (obj && obj.geometry) obj.geometry.dispose();
@@ -1109,6 +1110,83 @@ function clearScene() {
     cars = [];
     particles = [];
     allBuildings = [];
+}
+
+// ==================== IoT 设备数据层 ====================
+let iotMarkers = [];
+let iotPollTimer = null;
+const IOT_API = '/api/iot/devices';
+const IOT_POLL_INTERVAL = 5000;
+
+const DEVICE_COLORS = {
+    normal: 0x00e676, warning: 0xffc107, alarm: 0xff1744, offline: 0x666666
+};
+const DEVICE_ICONS = {
+    smoke: '🔥', access: '🚪', meter_w: '💧', meter_e: '⚡', camera: '📷', env: '🌡️'
+};
+
+function buildIotLayer() {
+    const apiUrl = IOT_API + '?community=' + currentCommunity;
+    fetch(apiUrl).then(r => r.json()).then(d => {
+        if (d.code !== 0 || !d.data || !d.data.devices) return;
+        clearIotMarkers();
+        d.data.devices.forEach(dev => {
+            const color = DEVICE_COLORS[dev.status] || 0xffffff;
+            const size = dev.type === 'camera' ? 0.3 : 0.2;
+            const geo = new THREE.SphereGeometry(size, 8, 8);
+            const mat = new THREE.MeshStandardMaterial({
+                color, emissive: color, emissiveIntensity: dev.status === 'alarm' ? 1.2 : dev.status === 'warning' ? 0.6 : 0.15,
+                roughness: 0.2, metalness: 0.3
+            });
+            const marker = new THREE.Mesh(geo, mat);
+            marker.position.set(dev.x, dev.y, dev.z);
+            marker.castShadow = true;
+            marker.userData = { dev, baseY: dev.y, pulse: Math.random() * Math.PI * 2 };
+            scene.add(marker);
+            iotMarkers.push(marker);
+
+            // 设备标签
+            const lbl = document.createElement('div');
+            lbl.innerHTML = '<span style="font-size:9px;font-weight:bold;color:' +
+                (dev.status === 'alarm' ? '#ff4444' : dev.status === 'warning' ? '#ffaa00' : '#88ff88') + '">' +
+                (DEVICE_ICONS[dev.type] || '●') + ' ' + dev.typeName + '</span>' +
+                '<br><span style="font-size:8px;color:#aaa">' + (dev.value || '') + '</span>';
+            lbl.style.cssText = 'background:rgba(0,0,0,0.75);padding:2px 6px;border-radius:6px;white-space:nowrap;cursor:pointer;pointer-events:auto;';
+            lbl.title = (dev.alarm || '') + '\n更新: ' + dev.updated;
+            if (dev.status === 'alarm') lbl.style.border = '1px solid #ff4444';
+            const label = new CSS2DObject(lbl);
+            label.position.set(dev.x, dev.y + 0.8 + (dev.type === 'camera' ? 0.5 : 0), dev.z);
+            label.userData = { dev };
+            scene.add(label);
+            iotMarkers.push(label); // store both mesh and label for cleanup
+        });
+
+        // 更新设备统计
+        if (d.data.online !== undefined) {
+            document.getElementById('device-count').textContent = d.data.online + '/' + d.data.total;
+            document.getElementById('device-count').className = 'info-value ' + (d.data.alarm > 0 ? 'alarm' : 'online');
+        }
+    }).catch(() => {});
+}
+
+function clearIotMarkers() {
+    iotMarkers.forEach(obj => {
+        if (obj && obj.parent) obj.parent.remove(obj);
+        if (obj && obj.geometry) obj.geometry.dispose();
+        if (obj && obj.material) obj.material.dispose();
+    });
+    iotMarkers = [];
+}
+
+function startIotPolling() {
+    stopIotPolling();
+    buildIotLayer();
+    iotPollTimer = setInterval(buildIotLayer, IOT_POLL_INTERVAL);
+}
+
+function stopIotPolling() {
+    if (iotPollTimer) { clearInterval(iotPollTimer); iotPollTimer = null; }
+    clearIotMarkers();
 }
 
 function switchCommunity(id) {
@@ -1131,6 +1209,9 @@ function switchCommunity(id) {
         case 'shanshui': buildShanshui(cfg); break;
         case 'yifeng': buildYifeng(cfg); break;
     }
+
+    // 重建 IoT 设备层
+    buildIotLayer();
 
     // 更新UI
     updateUI(cfg);
@@ -1199,6 +1280,14 @@ function animate() {
     if (pond) { pond.material.opacity = 0.55 + Math.sin(elapsed * 1.5) * 0.1; }
     const pool = scene.getObjectByName('pool');
     if (pool) { pool.material.opacity = 0.7 + Math.sin(elapsed * 2) * 0.1; }
+
+    // IoT 设备脉冲动画
+    iotMarkers.forEach(obj => {
+        if (obj.userData && obj.userData.dev) {
+            const dev = obj.userData.dev;
+            obj.position.y = dev.y + Math.sin(elapsed * 3 + obj.userData.pulse) * (dev.status === 'alarm' ? 0.4 : 0.12);
+        }
+    });
 
     // 车辆
     cars.forEach(car => {
@@ -1275,6 +1364,9 @@ function init() {
     buildFeicui(cfg);
 
     updateUI(cfg);
+
+    // 启动 IoT 设备数据轮询
+    startIotPolling();
 
     setTimeout(() => hideLoading(), 800);
     animate();

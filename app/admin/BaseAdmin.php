@@ -192,6 +192,7 @@ class BaseAdmin extends BaseController
                 'WechatConfig', 'WechatUser', 'WechatMpFan', 'WechatMpTemplate', 'WechatTemplate',
                 'BillDunning', 'Message', 'SmsLog', 'CommunityPaymentConfig', 'CommunityWechatConfig',
                 'Decoration',
+                'Iot', 'AiAssistant',
             ]),
             'service'   => array_merge($common, [
                 'Complaint', 'RepairOrder', 'RepairWorker', 'Owner', 'Room', 'Building', 'Decoration',
@@ -379,6 +380,10 @@ class BaseAdmin extends BaseController
             'decoration:inspect'     => 'Decoration',
             'decoration:violation'   => 'Decoration',
             'decoration:worker'      => 'Decoration',
+            // IoT 设备管理
+            'iot:device'             => 'Iot',
+            // AI 助手管理
+            'ai:assistant'           => 'AiAssistant',
         ];
     }
 }

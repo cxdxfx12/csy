@@ -105,6 +105,12 @@ const router = createRouter({
         { path: 'decoration/inspect', name: 'DecorationInspect', component: () => import('@/views/decoration/DecorationInspect.vue'), meta: { title: '施工巡查' } },
         { path: 'decoration/violation', name: 'DecorationViolation', component: () => import('@/views/decoration/DecorationViolation.vue'), meta: { title: '违规记录' } },
         { path: 'decoration/worker', name: 'DecorationWorker', component: () => import('@/views/decoration/DecorationWorker.vue'), meta: { title: '施工人员' } },
+
+        // ====== IoT 设备管理（连接3D数字孪生）=======
+        { path: 'iot/device', name: 'IotDevice', component: () => import('@/views/iot/IotDevice.vue'), meta: { title: 'IoT设备管理' } },
+
+        // ====== AI 助手管理 ======
+        { path: 'ai/assistant', name: 'AiAssistant', component: () => import('@/views/ai/AiAssistant.vue'), meta: { title: 'AI助手管理' } },
       ],
     },
 

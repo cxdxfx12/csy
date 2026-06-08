@@ -87,6 +87,11 @@ class Request {
     public function action($convert = false) { return $this->data['currentAction'] ?? ''; }
     public function time() { return $_SERVER['REQUEST_TIME'] ?? time(); }
     public function method() { return $_SERVER['REQUEST_METHOD']; }
+    public function isPost() { return $this->method() === 'POST'; }
+    public function isGet() { return $this->method() === 'GET'; }
+    public function isAjax() {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
     public function pathinfo() { return trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'); }
 
     public function __get($name) { return $this->data[$name] ?? null; }

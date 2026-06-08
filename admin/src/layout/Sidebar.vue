@@ -71,6 +71,8 @@ const iconMap: Record<string, string> = {
   gateConfig: 'Setting', gateDevice: 'Connection',
   // 监控模块
   surveillanceConfig: 'Monitor',
+  // IoT + AI
+  iot: 'Monitor', assistant: 'MagicStick',
 }
 
 function menuIcon(menu: MenuItem): string {
