@@ -10,6 +10,19 @@ const AI_API = '/api/ai/';
     let pendingRepair = null;
     let isOpen = false;
 
+    // 获取业主登录token（如果在同域下登录过）
+    function getOwnerToken() {
+        return localStorage.getItem('owner_token') || '';
+    }
+
+    // 构建请求头
+    function makeHeaders() {
+        const headers = { 'Content-Type': 'application/json' };
+        const token = getOwnerToken();
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+        return headers;
+    }
+
     function createWidget() {
         const html = `
 <div id="ai-chat-widget">
@@ -84,7 +97,7 @@ const AI_API = '/api/ai/';
         try {
             const resp = await fetch(AI_API + 'chat', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: makeHeaders(),
                 body: JSON.stringify({ message, history: chatHistory })
             });
             const data = await resp.json();
@@ -116,15 +129,13 @@ const AI_API = '/api/ai/';
         try {
             const resp = await fetch(AI_API + 'submit', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: makeHeaders(),
                 body: JSON.stringify({
                     title: pendingRepair.title,
                     content: 'AI智能报修：' + pendingRepair.title,
                     repair_type: pendingRepair.repairType,
                     is_urgent: pendingRepair.isUrgent,
-                    location: pendingRepair.location,
-                    name: 'AI报修用户',
-                    phone: ''
+                    location: pendingRepair.location
                 })
             });
             const data = await resp.json();
