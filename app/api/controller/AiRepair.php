@@ -163,6 +163,13 @@ class AiRepair extends BaseController
         $ownerId = $this->getOwnerIdFromToken();
         $ownerData = [];
         $roomData = null;
+
+        // 记录调试日志：token 和 phone 状态
+        $tokenDebug = [
+            'raw_token' => substr($this->request->header('Authorization', ''), 0, 30) . '...',
+            'decoded_owner_id' => $ownerId,
+            'post_phone' => $phone,
+        ];
         if ($ownerId > 0) {
             $owner = Db::name('owner')->where('id', $ownerId)->find();
             if ($owner) {

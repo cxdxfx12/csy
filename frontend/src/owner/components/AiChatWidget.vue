@@ -52,11 +52,17 @@
       </div>
       <!-- 确认提交按钮 -->
       <div class="confirm-bar" v-if="pendingRepair">
-        <button class="btn-confirm" @click="doConfirm" :disabled="loading">
-          <span v-if="!loading">✅ 确认提交报修单</span>
-          <span v-else>提交中...</span>
-        </button>
-        <button class="btn-cancel" @click="cancelConfirm" :disabled="loading">取消</button>
+        <div class="cf-phone-row">
+          <label>📱 手机号</label>
+          <input v-model="submitPhone" placeholder="已登录可留空" maxlength="11" />
+        </div>
+        <div class="cf-buttons">
+          <button class="btn-confirm" @click="doConfirm" :disabled="loading">
+            <span v-if="!loading">✅ 确认提交报修单</span>
+            <span v-else>提交中...</span>
+          </button>
+          <button class="btn-cancel" @click="cancelConfirm" :disabled="loading">取消</button>
+        </div>
       </div>
       <div class="ai-input">
         <input v-model="inputText" placeholder="描述问题或输入工单号查进度..." @keydown.enter="send" />
@@ -73,6 +79,7 @@ const AI_BASE = '/api/ai/'
 
 const isOpen = ref(false)
 const inputText = ref('')
+const submitPhone = ref('')
 const loading = ref(false)
 const typing = ref(false)
 const messages = reactive([])
@@ -166,6 +173,7 @@ async function doConfirm() {
 
 function cancelConfirm() {
   pendingRepair = null
+  submitPhone.value = ''
   addMsg('ai', '已取消报修提交。您可以继续描述其他问题。')
 }
 
@@ -228,7 +236,8 @@ async function doSubmit() {
         content: 'AI智能报修：' + pendingRepair.title,
         repair_type: pendingRepair.repairType,
         is_urgent: pendingRepair.isUrgent,
-        location: pendingRepair.location
+        location: pendingRepair.location,
+        phone: submitPhone.value || ''
       })
     })
     const d = await r.json()
@@ -237,6 +246,7 @@ async function doSubmit() {
     if (d.code === 0 && d.data) {
       addMsg('ai', d.data.reply)
       pendingRepair = null
+      submitPhone.value = ''
       // 保存工单追踪信息
       if (d.data.order_no) {
         saveLastOrder(d.data.order_no, pendingRepair?.title || '')
@@ -554,9 +564,37 @@ watch(isOpen, v => {
 
 .confirm-bar {
   display: flex;
+  flex-direction: column;
   gap: 8px;
   padding: 8px 10px 4px;
   flex-shrink: 0;
+}
+.cf-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cf-phone-row label {
+  font-size: 12px;
+  color: #aaa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cf-phone-row input {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 7px 10px;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+.cf-phone-row input:focus { border-color: rgba(102,126,234,0.5); }
+.cf-phone-row input::placeholder { color: #555; }
+.cf-buttons {
+  display: flex;
+  gap: 8px;
 }
 .btn-confirm {
   flex: 1;
