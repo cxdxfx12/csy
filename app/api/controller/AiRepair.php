@@ -483,8 +483,8 @@ class AiRepair extends BaseController
                 ->where('status', 1)
                 ->where('type', 'like', '%' . $kw . '%')
                 ->order('order_count asc')
-                ->select()
-                ->toArray();
+                ->limit(20)
+                ->select();
             if (!empty($workers)) {
                 return $workers[array_rand($workers)];
             }
@@ -494,8 +494,8 @@ class AiRepair extends BaseController
         $workers = Db::name('repair_worker')
             ->where('status', 1)
             ->order('order_count asc')
-            ->select()
-            ->toArray();
+            ->limit(20)
+            ->select();
         if (!empty($workers)) {
             return $workers[array_rand($workers)];
         }
