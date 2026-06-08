@@ -25,7 +25,10 @@
                 <span class="tc-label">{{ s }}</span>
               </div>
             </div>
-            <div class="tc-worker" v-if="m.tracked.worker_name">👷 维修师傅：{{ m.tracked.worker_name }}</div>
+            <div class="tc-worker" v-if="m.tracked.worker_name">
+              👷 维修师傅：{{ m.tracked.worker_name }}
+              <a v-if="m.tracked.worker_phone" class="tc-phone" :href="'tel:'+m.tracked.worker_phone">📞 {{ m.tracked.worker_phone }}</a>
+            </div>
             <div class="tc-actions" v-if="m.tracked.status >= 4">
               <a class="tc-link" href="#/repair">去评价</a>
             </div>
@@ -246,6 +249,10 @@ async function doSubmit() {
     loading.value = false
     if (d.code === 0 && d.data) {
       addMsg('ai', d.data.reply)
+      // 如果返回了追踪数据，显示工单卡片
+      if (d.data.tracked) {
+        addMsg('ai', '', { tracked: d.data.tracked })
+      }
       pendingRepair = null
       submitPhone.value = ''
       // 保存工单追踪信息
@@ -489,7 +496,9 @@ watch(isOpen, v => {
 .tc-label { font-size: 9px; color: #666; white-space: nowrap; }
 .tc-step.done .tc-label { color: #10b981; }
 .tc-step.active .tc-label { color: #3b82f6; }
-.tc-worker { font-size: 12px; color: #bbb; }
+.tc-worker { font-size: 12px; color: #bbb; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tc-phone { color: #7eb8ff; text-decoration: none; font-size: 12px; }
+.tc-phone:active { color: #a0cfff; }
 .tc-actions { margin-top: 6px; }
 .tc-link { color: #667eea; font-size: 12px; text-decoration: none; }
 .tc-link:hover { text-decoration: underline; }

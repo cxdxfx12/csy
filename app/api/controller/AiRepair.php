@@ -240,7 +240,8 @@ class AiRepair extends BaseController
             ($location ? '📍 位置：' . $location . "\n" : '') .
             ($roomData ? '🏠 房号：' . ($roomData['room_number'] ?? $roomData['name'] ?? '') . "\n" : '') .
             ($isUrgent ? '⚠️ 紧急标记已生效' . "\n" : '') .
-            ($worker ? '👷 已自动派单给维修师傅，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
+            ($worker ? ('👷 维修师傅：' . ($worker['name'] ?? '') . (!empty($worker['phone']) ? '（' . $worker['phone'] . '）' : '') . "\n") : '') .
+            ($worker ? '已自动派单，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
             "\n💡 下次输入工单号或「查进度」即可跟踪处理状态，您也可以在「报修」页面查看全部工单。";
 
 
@@ -260,6 +261,16 @@ class AiRepair extends BaseController
             'order_id'   => $orderId,
             'status'     => $worker ? '已派单' : '待处理',
             'worker'     => $worker['name'] ?? null,
+            'worker_phone' => $worker['phone'] ?? null,
+            'action'     => 'submit_ok',
+            'tracked'    => [
+                'order_no'      => $orderData['order_no'],
+                'title'         => $title,
+                'status'        => $orderData['status'],
+                'status_text'   => $worker ? '已派单' : '待处理',
+                'worker_name'   => $worker['name'] ?? null,
+                'worker_phone'  => $worker['phone'] ?? null,
+            ],
         ]);
     }
 
@@ -300,8 +311,11 @@ class AiRepair extends BaseController
         }
 
         $workerName = '';
+        $workerPhone = '';
         if ($order['assignee_id']) {
-            $workerName = Db::name('repair_worker')->where('id', $order['assignee_id'])->value('name') ?? '';
+            $wInfo = Db::name('repair_worker')->where('id', $order['assignee_id'])->field('name,phone')->find();
+            $workerName = $wInfo['name'] ?? '';
+            $workerPhone = $wInfo['phone'] ?? '';
         }
 
         return $this->success([
@@ -364,11 +378,12 @@ class AiRepair extends BaseController
             'reply'   => $reply,
             'action'  => 'query_result',
             'tracked' => [
-                'order_no'    => $order['order_no'],
-                'title'       => $order['title'] ?? '',
-                'status'      => $order['status'],
-                'status_text' => $statusText,
-                'worker_name' => $workerName,
+                'order_no'      => $order['order_no'],
+                'title'         => $order['title'] ?? '',
+                'status'        => $order['status'],
+                'status_text'   => $statusText,
+                'worker_name'   => $workerName,
+                'worker_phone'  => $workerPhone,
             ]
         ]);
     }
