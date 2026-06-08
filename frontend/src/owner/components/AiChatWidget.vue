@@ -10,11 +10,45 @@
         <span class="ai-close" @click="isOpen = false">✕</span>
       </div>
       <div class="ai-messages" ref="msgContainer">
-        <div v-for="(m, i) in messages" :key="i" class="msg-bubble" :class="'msg-' + m.type">{{ m.text }}</div>
+        <div v-for="(m, i) in messages" :key="i">
+          <div class="msg-bubble" :class="'msg-' + m.type" v-if="!m.tracked">{{ m.text }}</div>
+          <!-- 工单追踪卡片 -->
+          <div v-if="m.tracked" class="tracked-card">
+            <div class="tc-header">
+              <span class="tc-no">📋 {{ m.tracked.order_no }}</span>
+              <span class="tc-status" :style="{ background: statusColor(m.tracked.status) }">{{ m.tracked.status_text }}</span>
+            </div>
+            <div class="tc-title">{{ m.tracked.title }}</div>
+            <div class="tc-progress">
+              <div v-for="(s, si) in progressSteps" :key="si" class="tc-step" :class="stepClass(m.tracked.status, si)">
+                <span class="tc-dot"></span>
+                <span class="tc-label">{{ s }}</span>
+              </div>
+            </div>
+            <div class="tc-worker" v-if="m.tracked.worker_name">👷 维修师傅：{{ m.tracked.worker_name }}</div>
+            <div class="tc-actions" v-if="m.tracked.status >= 4">
+              <a class="tc-link" href="#/repair">去评价</a>
+            </div>
+          </div>
+          <!-- 多工单列表 -->
+          <div v-if="m.orders" class="orders-list">
+            <div v-for="o in m.orders" :key="o.order_no" class="order-row" @click="inputText = o.order_no; send()">
+              <span class="or-dot" :style="{ background: statusColor(o.status) }"></span>
+              <span class="or-title">{{ o.title }}</span>
+              <span class="or-status" :style="{ color: statusColor(o.status) }">{{ o.status_text }}</span>
+              <span class="or-arrow">›</span>
+            </div>
+          </div>
+        </div>
         <div v-if="typing" class="typing-indicator"><span></span><span></span><span></span></div>
       </div>
-      <div class="quick-row" v-if="quickTypes.length && !pendingRepair">
+      <div class="quick-row" v-if="quickTypes.length && !pendingRepair && !trackedOrder">
         <span v-for="t in quickTypes" :key="t.type" class="quick-tag" @click="quickSend(t)">{{ t.icon }} {{ t.name }}</span>
+      </div>
+      <!-- 快捷操作 -->
+      <div class="quick-row" v-if="trackedOrder">
+        <span class="quick-tag qq" @click="queryProgress">📊 查进度</span>
+        <a class="quick-tag qq" href="#/repair">📋 报修记录</a>
       </div>
       <!-- 确认提交按钮 -->
       <div class="confirm-bar" v-if="pendingRepair">
@@ -25,7 +59,7 @@
         <button class="btn-cancel" @click="cancelConfirm" :disabled="loading">取消</button>
       </div>
       <div class="ai-input">
-        <input v-model="inputText" placeholder="描述您遇到的问题..." @keydown.enter="send" />
+        <input v-model="inputText" placeholder="描述问题或输入工单号查进度..." @keydown.enter="send" />
         <button :disabled="!inputText.trim() || loading" @click="send">▶</button>
       </div>
     </div>
@@ -48,6 +82,39 @@ const msgContainer = ref(null)
 let pendingRepair = null
 let localHistory = []
 
+// 最近提交的工单号（存储在localStorage，用于快速查进度）
+const trackedOrder = ref(loadLastOrder())
+
+// 进度步骤
+const progressSteps = ['待派单', '待接单', '处理中', '待验收', '已完成']
+
+// 状态颜色
+function statusColor(st) {
+  const map = { 1: '#f59e0b', 2: '#8b5cf6', 3: '#3b82f6', 4: '#10b981', 5: '#10b981', 6: '#6b7280' }
+  return map[st] || '#999'
+}
+
+function stepClass(status, idx) {
+  const cur = Math.max(0, Math.min(4, (status || 1) - 1))
+  if (idx < cur) return 'done'
+  if (idx === cur) return 'active'
+  return ''
+}
+
+function loadLastOrder() {
+  try {
+    const d = JSON.parse(localStorage.getItem('ai_repair_track') || '{}')
+    if (d.order_no && d.expire > Date.now()) return d
+  } catch { /* skip */ }
+  return null
+}
+
+function saveLastOrder(orderNo, title) {
+  const d = { order_no: orderNo, title: title, expire: Date.now() + 30 * 24 * 3600 * 1000 }
+  localStorage.setItem('ai_repair_track', JSON.stringify(d))
+  trackedOrder.value = d
+}
+
 function toggle() {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
@@ -61,8 +128,8 @@ function scrollBottom() {
   })
 }
 
-function addMsg(type, text) {
-  messages.push({ type, text })
+function addMsg(type, text, extra = {}) {
+  messages.push({ type, text, ...extra })
   scrollBottom()
 }
 
@@ -114,7 +181,14 @@ async function doChat(msg) {
     loading.value = false
 
     if (d.code === 0 && d.data) {
-      addMsg('ai', d.data.reply)
+      // 根据 action 决定如何展示
+      if (d.data.action === 'query_result' && d.data.tracked) {
+        addMsg('ai', d.data.reply, { tracked: d.data.tracked })
+      } else if (d.data.action === 'my_orders' && d.data.orders?.length) {
+        addMsg('ai', d.data.reply, { orders: d.data.orders })
+      } else {
+        addMsg('ai', d.data.reply)
+      }
       localHistory.push({ role: 'assistant', content: d.data.reply })
       if (d.data.action === 'confirm') {
         pendingRepair = {
@@ -141,9 +215,14 @@ async function doSubmit() {
     return
   }
   try {
+    // 携带登录token（如果存在）
+    const headers = { 'Content-Type': 'application/json' }
+    const token = localStorage.getItem('owner_token')
+    if (token) headers['Authorization'] = 'Bearer ' + token
+
     const r = await fetch(AI_BASE + 'submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         title: pendingRepair.title,
         content: 'AI智能报修：' + pendingRepair.title,
@@ -160,6 +239,10 @@ async function doSubmit() {
     if (d.code === 0 && d.data) {
       addMsg('ai', d.data.reply)
       pendingRepair = null
+      // 保存工单追踪信息
+      if (d.data.order_no) {
+        saveLastOrder(d.data.order_no, pendingRepair?.title || '')
+      }
     } else {
       addMsg('ai', '提交失败：' + (d.msg || '未知错误'))
     }
@@ -168,6 +251,16 @@ async function doSubmit() {
     loading.value = false
     addMsg('ai', '提交失败，请稍后重试。')
   }
+}
+
+// 查询最近工单进度
+async function queryProgress() {
+  if (!trackedOrder.value?.order_no) {
+    addMsg('ai', '暂无报修记录，请先提交报修。')
+    return
+  }
+  inputText.value = trackedOrder.value.order_no
+  send()
 }
 
 async function loadQuickTypes() {
@@ -189,7 +282,8 @@ function quickSend(t) {
 
 onMounted(() => {
   loadQuickTypes()
-  addMsg('ai', '您好！我是大圣智慧物业的AI报修助手 🤖\n请直接告诉我您遇到的问题，比如：\n• "厨房水龙头漏水"\n• "客厅空调不制冷"\n我会自动帮您生成报修单！')
+  const hasTracked = trackedOrder.value?.order_no ? '\n\n💡 之前报修过？输入"查进度"查看工单状态。' : ''
+  addMsg('ai', '您好！我是大圣智慧物业的AI报修助手 🤖\n请直接告诉我您遇到的问题，比如：\n• "厨房水龙头漏水"\n• "客厅空调不制冷"\n我会自动帮您生成报修单！' + hasTracked)
 })
 
 watch(isOpen, v => {
@@ -205,7 +299,7 @@ watch(isOpen, v => {
 <style scoped>
 .ai-chat-widget {
   position: fixed;
-  bottom: 80px; /* 在 tab bar 上方 */
+  bottom: 80px;
   right: 16px;
   z-index: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -251,7 +345,7 @@ watch(isOpen, v => {
   right: 0;
   width: calc(100vw - 32px);
   max-width: 360px;
-  height: 420px;
+  height: 460px;
   background: rgba(22,24,30,0.97);
   border: 1px solid rgba(102,126,234,0.3);
   border-radius: 14px;
@@ -310,6 +404,96 @@ watch(isOpen, v => {
   border-bottom-right-radius: 3px;
 }
 
+/* 工单追踪卡片 */
+.tracked-card {
+  align-self: flex-start;
+  width: 92%;
+  background: rgba(102,126,234,0.12);
+  border: 1px solid rgba(102,126,234,0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  animation: mi 0.25s ease;
+}
+.tc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.tc-no { font-size: 12px; color: #a5b4fc; font-weight: 600; }
+.tc-status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 500;
+}
+.tc-title { font-size: 13px; color: #e0e0e0; margin-bottom: 8px; }
+.tc-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  position: relative;
+}
+.tc-progress::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  z-index: 0;
+}
+.tc-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  z-index: 1;
+  flex: 1;
+}
+.tc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.tc-step.done .tc-dot { background: #10b981; border-color: #10b981; }
+.tc-step.active .tc-dot { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 6px rgba(59,130,246,0.6); }
+.tc-label { font-size: 9px; color: #666; white-space: nowrap; }
+.tc-step.done .tc-label { color: #10b981; }
+.tc-step.active .tc-label { color: #3b82f6; }
+.tc-worker { font-size: 12px; color: #bbb; }
+.tc-actions { margin-top: 6px; }
+.tc-link { color: #667eea; font-size: 12px; text-decoration: none; }
+.tc-link:hover { text-decoration: underline; }
+
+/* 多工单列表 */
+.orders-list {
+  align-self: flex-start;
+  width: 92%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.order-row:active { background: rgba(102,126,234,0.15); }
+.or-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.or-title { flex: 1; font-size: 12px; color: #ddd; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-status { font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.or-arrow { font-size: 14px; color: #555; flex-shrink: 0; }
+
 .quick-row {
   display: flex;
   flex-wrap: wrap;
@@ -326,12 +510,14 @@ watch(isOpen, v => {
   font-size: 11px;
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none;
 }
 .quick-tag:active {
   background: rgba(102,126,234,0.3);
   border-color: rgba(102,126,234,0.5);
   color: #fff;
 }
+.quick-tag.qq { border-color: rgba(34,197,94,0.3); color: #4ade80; }
 
 .ai-input {
   padding: 10px;
@@ -368,7 +554,6 @@ watch(isOpen, v => {
 }
 .ai-input button:disabled { opacity: 0.45; }
 
-/* 确认提交栏 */
 .confirm-bar {
   display: flex;
   gap: 8px;

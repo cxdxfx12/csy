@@ -8,7 +8,7 @@ use service\PushService;
 
 class AiRepair extends BaseController
 {
-    protected $noAuth = ['chat', 'submit', 'quickTypes'];
+    protected $noAuth = ['chat', 'submit', 'quickTypes', 'query'];
 
     // 报修类型词库
     private $typeKeywords = [
@@ -27,6 +27,19 @@ class AiRepair extends BaseController
     // 紧急程度词库
     private $urgentKeywords = ['紧急', '马上', '立刻', '赶紧', '快', '爆', '着火', '漏气', '触电', '困人', '坍塌', '危机', '严重'];
 
+    // 工单状态标签
+    private $statusLabels = [
+        1 => '待派单',
+        2 => '待接单',
+        3 => '处理中',
+        4 => '待验收',
+        5 => '已完成',
+        6 => '已关闭',
+    ];
+
+    // 进度步骤（用于可视化）
+    private $progressSteps = ['待派单', '待接单', '处理中', '待验收', '已完成'];
+
     // 智能对话
     public function chat()
     {
@@ -34,12 +47,28 @@ class AiRepair extends BaseController
         $history = $this->request->post('history', []);
 
         if (empty(trim($msg))) {
-            $reply = '您好！请描述您遇到的问题，我会帮您快速报修。比如："我家厨房水龙头漏水了"';
+            $reply = '您好！请描述您遇到的问题，我会帮您快速报修。比如："我家厨房水龙头漏水了"\n\n💡 输入工单号（DSR...）可查询处理进度。';
             $this->saveLog($msg, $reply, 'greet', '');
             return $this->success(['reply' => $reply, 'action' => 'greet']);
         }
 
         $msgLower = mb_strtolower($msg);
+
+        // === 优先级1: 工单号查询（DSR开头） ===
+        if (preg_match('/DSR\d+/', $msg, $matches)) {
+            $orderNo = $matches[0];
+            return $this->queryByOrderNo($orderNo, $msg);
+        }
+
+        // === 优先级2: 进度查询意图 ===
+        $queryKeywords = ['查进度', '工单状态', '进度', '处理进度', '修好了吗', '怎么样了', '什么时候修', '报修进度', '我的报修', '工单查询', '查一下', '帮我查'];
+        $isProgressQuery = false;
+        foreach ($queryKeywords as $kw) {
+            if (mb_strpos($msgLower, $kw) !== false) { $isProgressQuery = true; break; }
+        }
+        if ($isProgressQuery) {
+            return $this->queryMyOrders($msg);
+        }
 
         // 问候/闲聊识别
         $greetings = ['你好', '您好', 'hi', 'hello', '在吗', '在不在'];
@@ -128,15 +157,28 @@ class AiRepair extends BaseController
         // 查找怡丰城小区（默认社区ID=1）
         $communityId = Db::name('community')->where('status', 1)->value('id') ?? 1;
 
+        // 尝试关联登录业主
+        $ownerId = $this->getOwnerIdFromToken();
+        $ownerData = [];
+        if ($ownerId > 0) {
+            $owner = Db::name('owner')->where('id', $ownerId)->find();
+            if ($owner) {
+                $ownerData = $owner;
+                $name = $owner['realname'] ?: $name;
+                $phone = $phone ?: $owner['phone'] ?? '';
+            }
+        }
+
         $orderData = [
             'order_no'       => build_order_no('DSR'),
             'title'          => $title,
             'content'        => $content . ($location ? ' [位置: ' . $location . ']' : ''),
-            'community_id'   => $communityId,
+            'community_id'   => $ownerId > 0 ? ($ownerData['community_id'] ?? $communityId) : $communityId,
+            'owner_id'       => $ownerId,
             'reporter'       => $name,
             'reporter_phone' => $phone ?: '未提供',
             'source'         => 3, // 3=AI智能报修
-            'status'         => $isUrgent ? 1 : 1, // 紧急也先=1待处理，但标记
+            'status'         => 1,
             'create_time'    => date('Y-m-d H:i:s'),
         ];
 
@@ -162,7 +204,8 @@ class AiRepair extends BaseController
             '🔧 类型：' . $type . '维修' . "\n" .
             ($isUrgent ? '⚠️ 紧急标记已生效' . "\n" : '') .
             ($worker ? '👷 已自动派单给维修师傅，请保持电话畅通！' : '📞 客服将尽快与您联系确认。') . "\n" .
-            "\n💡 您可以凭工单号随时查询处理进度。";
+            "\n💡 下次输入工单号或"查进度"即可跟踪处理状态，您也可以在"报修"页面查看全部工单。";
+
 
         // 记录提交日志
         $this->saveLog($title, $reply, 'submit', $type);
@@ -199,18 +242,167 @@ class AiRepair extends BaseController
         ]);
     }
 
+    // 查询工单进度（公开API）
+    public function query()
+    {
+        $orderNo = $this->request->param('order_no', '');
+        $phone   = $this->request->param('phone', '');
+
+        if (empty($orderNo)) {
+            return $this->error('请提供工单号');
+        }
+
+        $order = Db::name('repair_order')->where('order_no', $orderNo)->find();
+        if (!$order) {
+            return $this->error('工单不存在，请检查工单号');
+        }
+
+        // 可选：手机号验证归属
+        if ($phone && $order['reporter_phone'] !== $phone) {
+            return $this->error('手机号与工单不匹配');
+        }
+
+        $workerName = '';
+        if ($order['assignee_id']) {
+            $workerName = Db::name('repair_worker')->where('id', $order['assignee_id'])->value('name') ?? '';
+        }
+
+        return $this->success([
+            'id'          => $order['id'],
+            'order_no'    => $order['order_no'],
+            'title'       => $order['title'] ?? '',
+            'status'      => $order['status'],
+            'status_text' => $this->statusLabels[$order['status']] ?? '未知',
+            'worker_name' => $workerName,
+            'reporter'    => $order['reporter'],
+            'create_time' => $order['create_time'],
+            'accept_time' => $order['accept_time'],
+            'finish_time' => $order['finish_time'],
+            'rating'      => $order['rating'] ?? 0,
+            'content'     => $order['content'] ?? '',
+        ]);
+    }
+
+    // 通过工单号查询并返回聊天回复
+    private function queryByOrderNo($orderNo, $msg)
+    {
+        $order = Db::name('repair_order')->where('order_no', $orderNo)->find();
+        if (!$order) {
+            $reply = '❌ 未找到工单号 ' . $orderNo . '，请检查是否输入正确。' . "\n" . '💡 提示：工单号格式为 DSR...，提交成功时系统会自动生成。';
+            $this->saveLog($msg, $reply, 'query_notfound', '');
+            return $this->success(['reply' => $reply, 'action' => 'notfound']);
+        }
+
+        $workerName = '';
+        if ($order['assignee_id']) {
+            $workerName = Db::name('repair_worker')->where('id', $order['assignee_id'])->value('name') ?? '';
+        }
+        $statusText = $this->statusLabels[$order['status']] ?? '未知';
+
+        // 可视化进度条
+        $cur = max(0, min(4, (int)$order['status'] - 1));
+        $bar = '';
+        foreach ($this->progressSteps as $i => $s) {
+            if ($i < $cur) $bar .= '🟢';
+            elseif ($i == $cur) $bar .= '🔵';
+            else $bar .= '⚪';
+        }
+
+        $reply = '📋 工单号：' . $order['order_no'] . "\n"
+               . '📝 标题：' . ($order['title'] ?? '') . "\n"
+               . '📊 状态：' . $statusText . "\n"
+               . '➡️ 进度：' . $bar . "\n"
+               . ($workerName ? '👷 维修师傅：' . $workerName . "\n" : '')
+               . '🕐 提交时间：' . $order['create_time'] . "\n"
+               . ($order['finish_time'] ? '✅ 完成时间：' . $order['finish_time'] . "\n" : '');
+
+        if ((int)$order['status'] === 4) {
+            $reply .= "\n💬 维修已完成，请验收并评价服务。";
+        } elseif ((int)$order['status'] === 5) {
+            $reply .= "\n⭐ 您已评价，感谢反馈！";
+        }
+
+        $this->saveLog($msg, $reply, 'query_order', '');
+        return $this->success([
+            'reply'   => $reply,
+            'action'  => 'query_result',
+            'tracked' => [
+                'order_no'    => $order['order_no'],
+                'title'       => $order['title'] ?? '',
+                'status'      => $order['status'],
+                'status_text' => $statusText,
+                'worker_name' => $workerName,
+            ]
+        ]);
+    }
+
+    // 查询我的工单列表
+    private function queryMyOrders($msg)
+    {
+        $ownerId = $this->getOwnerIdFromToken();
+
+        if ($ownerId > 0) {
+            $orders = Db::name('repair_order')
+                ->where('owner_id', $ownerId)
+                ->whereNull('delete_time')
+                ->order('id', 'desc')
+                ->limit(5)
+                ->select()
+                ->toArray();
+
+            if (!empty($orders)) {
+                $reply = '📋 您最近的报修工单：' . "\n\n";
+                foreach ($orders as $o) {
+                    $st = $this->statusLabels[$o['status']] ?? '未知';
+                    $reply .= '🔹 ' . ($o['title'] ?? '无标题') . "\n"
+                            . '   单号：' . $o['order_no'] . "\n"
+                            . '   状态：' . $st . "\n"
+                            . '   时间：' . $o['create_time'] . "\n\n";
+                }
+                $reply .= '💡 输入工单号可查看详细进度。';
+                $this->saveLog($msg, $reply, 'my_orders', '');
+                return $this->success([
+                    'reply'  => $reply,
+                    'action' => 'my_orders',
+                    'orders' => array_map(function ($o) {
+                        return [
+                            'order_no'    => $o['order_no'],
+                            'title'       => $o['title'] ?? '',
+                            'status'      => $o['status'],
+                            'status_text' => $this->statusLabels[$o['status']] ?? '未知',
+                        ];
+                    }, $orders),
+                ]);
+            }
+        }
+
+        if ($ownerId > 0) {
+            $reply = '您目前没有报修记录。如需报修，请直接描述您遇到的问题，我会帮您生成报修单！';
+        } else {
+            $reply = '请提供您的工单号（如 DSR...），我帮您查询处理进度。' . "\n" . '💡 工单号在报修成功时会自动生成，您也可以登录后查看"我的报修"。';
+        }
+        $this->saveLog($msg, $reply, 'no_orders', '');
+        return $this->success(['reply' => $reply, 'action' => 'no_orders']);
+    }
+
+    // 从token获取owner_id
+    private function getOwnerIdFromToken()
+    {
+        $ownerId = 0;
+        $token = $this->request->header('Authorization', '');
+        if ($token) {
+            $token = str_replace('Bearer ', '', $token);
+            $owner = Db::name('owner')->where('token', $token)->find();
+            if ($owner) $ownerId = (int)$owner['id'];
+        }
+        return $ownerId;
+    }
+
     // 保存对话记录
     private function saveLog($message, $reply, $action = 'chat', $repairType = '')
     {
         try {
-            $ownerId = 0;
-            // API场景下session可能未初始化，通过request获取
-            $token = $this->request->header('Authorization', '');
-            if ($token) {
-                $token = str_replace('Bearer ', '', $token);
-                $owner = Db::name('owner')->where('token', $token)->find();
-                if ($owner) $ownerId = $owner['id'];
-            }
+            $ownerId = $this->getOwnerIdFromToken();
             Db::name('ai_chat_log')->insert([
                 'owner_id'    => $ownerId,
                 'message'     => trim($message),

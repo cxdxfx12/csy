@@ -102,6 +102,7 @@ Route::group('api', function () {
     Route::post('ai/chat', 'api/AiRepair/chat');
     Route::post('ai/submit', 'api/AiRepair/submit');
     Route::get('ai/quickTypes', 'api/AiRepair/quickTypes');
+    Route::get('ai/query', 'api/AiRepair/query');
 });
 
 // =================================================================
