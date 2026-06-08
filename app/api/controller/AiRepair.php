@@ -31,8 +31,8 @@ class AiRepair extends BaseController
 
     // 工单状态标签
     private $statusLabels = [
-        1 => '待派单',
-        2 => '待接单',
+        1 => '待处理',
+        2 => '已派单',
         3 => '处理中',
         4 => '待验收',
         5 => '已完成',
@@ -40,7 +40,7 @@ class AiRepair extends BaseController
     ];
 
     // 进度步骤（用于可视化）
-    private $progressSteps = ['待派单', '待接单', '处理中', '待验收', '已完成'];
+    private $progressSteps = ['待处理', '已派单', '处理中', '待验收', '已完成'];
 
     // 智能对话
     public function chat()
