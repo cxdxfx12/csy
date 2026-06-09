@@ -98,7 +98,7 @@ class Search extends BaseAdmin
                 'title'   => $item['realname'],
                 'subtitle'=> ($item['phone'] ? '电话: ' . $item['phone'] : '') .
                             ($item['community_name'] ? ' | ' . $item['community_name'] : ''),
-                'route'   => '/owner',
+                'route'   => '/owner/index',
                 'extra'   => ['owner_id' => $item['id']],
                 'icon'    => 'UserFilled',
                 'status'  => $item['status'],
@@ -134,7 +134,7 @@ class Search extends BaseAdmin
                 'subtitle'=> ($item['building_name'] ? $item['building_name'] . ' | ' : '') .
                             ($item['community_name'] ?? '') .
                             ($item['owner_name'] ? ' | 业主: ' . $item['owner_name'] : ' | 空置'),
-                'route'   => '/room',
+                'route'   => '/property/room',
                 'extra'   => ['room_id' => $item['id'], 'community_id' => $item['community_id']],
                 'icon'    => 'House',
                 'status'  => $item['status'],
@@ -166,7 +166,7 @@ class Search extends BaseAdmin
                 'title'   => $item['name'],
                 'subtitle'=> ($item['community_name'] ?? '') .
                             ($item['floor_count'] ? ' | ' . $item['floor_count'] . '层' : ''),
-                'route'   => '/building',
+                'route'   => '/property/building',
                 'extra'   => ['building_id' => $item['id']],
                 'icon'    => 'School',
             ];
@@ -189,7 +189,7 @@ class Search extends BaseAdmin
                 'id'      => $item['id'],
                 'title'   => $item['name'],
                 'subtitle'=> $item['address'] ?? '',
-                'route'   => '/community',
+                'route'   => '/property/community',
                 'extra'   => ['community_id' => $item['id']],
                 'icon'    => 'OfficeBuilding',
             ];
@@ -357,7 +357,7 @@ class Search extends BaseAdmin
                 'subtitle'=> ($item['department'] ? $item['department'] . ' | ' : '') .
                             ($item['position'] ? $item['position'] . ' | ' : '') .
                             ($item['phone'] ?? ''),
-                'route'   => '/staff',
+                'route'   => '/staff/index',
                 'extra'   => ['staff_id' => $item['id']],
                 'icon'    => 'User',
                 'status'  => $item['status'],
@@ -391,7 +391,7 @@ class Search extends BaseAdmin
                 'subtitle'=> ($typeMap[$item['type']] ?? '通知') .
                             ($item['community_name'] ? ' | ' . $item['community_name'] : '') .
                             ' | ' . date('Y-m-d', strtotime($item['create_time'])),
-                'route'   => '/notice',
+                'route'   => '/notice/index',
                 'extra'   => ['notice_id' => $item['id']],
                 'icon'    => 'Bell',
                 'status'  => $item['status'],
@@ -417,7 +417,7 @@ class Search extends BaseAdmin
                 'subtitle'=> ($item['category'] ? $item['category'] . ' | ' : '') .
                             ($item['contact_person'] ? '联系人: ' . $item['contact_person'] . ' | ' : '') .
                             ($item['contact_phone'] ?? ''),
-                'route'   => '/supplier',
+                'route'   => '/supplier/index',
                 'extra'   => ['supplier_id' => $item['id']],
                 'icon'    => 'Shop',
                 'status'  => $item['status'],
