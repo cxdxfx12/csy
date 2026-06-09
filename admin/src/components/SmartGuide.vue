@@ -137,16 +137,20 @@
               常见问题
             </div>
             <div class="sg-faq-list">
-              <div
-                class="sg-faq-item"
-                v-for="faq in faqList"
-                :key="faq.q"
-                @click="askQuestion(faq)"
-              >
-                <span class="sg-faq-q">{{ faq.q }}</span>
+                <div
+                  class="sg-faq-item"
+                  v-for="faq in faqList"
+                  :key="faq.q"
+                  @click="askQuestion(faq)"
+                >
+                  <span class="sg-faq-q">{{ faq.q }}</span>
+                  <el-icon><ArrowRight /></el-icon>
+                </div>
+              </div>
+              <div class="sg-faq-more" @click="window.open('/answer/', '_blank')">
+                <span>查看全部知识库</span>
                 <el-icon><ArrowRight /></el-icon>
               </div>
-            </div>
           </template>
         </div>
       </div>
@@ -329,9 +333,8 @@ function navigateToMenu(item: FlatMenu) {
 }
 
 function askQuestion(faq: { q: string; a: string }) {
-  searchQuery.value = faq.q
-  // 不触发搜索，只是展示知识库回答
-  // 实际可以通过输入框展示FAQ答案
+  // 打开知识库页面，通过 hash 传递搜索关键词
+  window.open('/answer/#q=' + encodeURIComponent(faq.q), '_blank')
 }
 
 function togglePanel() {
@@ -675,6 +678,17 @@ function closePanel() {
 .sg-faq-item:hover { background: var(--bg-table-hover); }
 .sg-faq-q { font-size: 13px; color: var(--text-2); }
 .sg-faq-item:hover .sg-faq-q { color: var(--accent); }
+
+.sg-faq-more {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 12px; margin-top: 8px;
+  border-radius: 10px; cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff; font-size: 13px; font-weight: 600;
+  transition: all 0.25s; border: none;
+}
+.sg-faq-more:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(139,94,60,0.3); }
+.sg-faq-more .el-icon { color: #fff; }
 .sg-faq-item .el-icon { color: var(--text-5); font-size: 12px; }
 
 /* 滚动条 */

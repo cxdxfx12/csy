@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大圣知识库 - 常见问题解答</title>
+  <link rel="icon" type="image/svg+xml" href="/admin/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/answer/style.css">
+</head>
+<body>
+
+  <div class="bg-decoration">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <a href="/admin/" class="nav-logo" title="返回后台">
+        <span class="nav-monkey">&#129418;</span>
+        <span class="nav-text">大圣物业管理</span>
+      </a>
+      <div class="nav-right"><span class="nav-subtitle">智能知识库</span></div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-avatar-wrap">
+        <img src="/admin/assets/monkey-guide.png" alt="大圣" class="hero-avatar" onerror="this.style.display='none'">
+        <div class="hero-glow"></div>
+      </div>
+      <h1 class="hero-title">大<span class="title-accent">圣</span>知识库</h1>
+      <p class="hero-desc">快速找到您需要的操作指南，提升工作效率</p>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num" id="totalFaq">0</span><span class="stat-label">常见问题</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">功能分类</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num">24h</span><span class="stat-label">随时查阅</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="搜索问题关键词，如：账单、业主、报修..." autocomplete="off">
+        <button class="search-clear" id="searchClear" style="display:none">&times;</button>
+      </div>
+      <div class="search-hints">
+        <span class="hint-tag" data-keyword="账单">&#128176; 账单</span>
+        <span class="hint-tag" data-keyword="业主">&#128100; 业主</span>
+        <span class="hint-tag" data-keyword="报修">&#128295; 报修</span>
+        <span class="hint-tag" data-keyword="门禁">&#128275; 门禁</span>
+        <span class="hint-tag" data-keyword="支付">&#128179; 支付</span>
+        <span class="hint-tag" data-keyword="停车">&#128663; 停车</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-section">
+    <div class="container">
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-tab active" data-category="all">全部问题</button>
+        <button class="cat-tab" data-category="charge">收费管理</button>
+        <button class="cat-tab" data-category="property">业主房产</button>
+        <button class="cat-tab" data-category="repair">报修工单</button>
+        <button class="cat-tab" data-category="security">安防门禁</button>
+        <button class="cat-tab" data-category="parking">停车管理</button>
+        <button class="cat-tab" data-category="other">其他操作</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="faq-main">
+    <div class="container" id="faqContainer"></div>
+    <div class="empty-result" id="emptyResult" style="display:none">
+      <div class="empty-icon">&#128269;</div><p>未找到匹配的问题</p>
+      <p class="empty-hint">试试其他关键词或换个分类看看</p>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="footer-inner">
+      <div class="footer-monkey">&#129422;</div>
+      <p>大圣导航助手 &middot; 智能知识库</p>
+      <p class="footer-hint">如有更多疑问，请联系系统管理员</p>
+    </div>
+  </footer>
+
+  <button class="back-top" id="backTop" title="回到顶部">
+    <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+  </button>
+  <script src="/answer/script.js"></script>
+</body>
+</html>
