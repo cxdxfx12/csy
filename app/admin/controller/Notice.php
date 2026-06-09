@@ -63,6 +63,7 @@ class Notice extends BaseAdmin
     public function publish()
     {
         $id = $this->request->post('id', 0);
+        $status = $this->request->post('status', 0);
         $notice = Db::name('notice')->where('id', $id)->find();
         if ($notice) $this->validateCommunityAccess($notice['community_id'] ?? 0);
         $publishTime = $status == 2 ? date('Y-m-d H:i:s') : null;
