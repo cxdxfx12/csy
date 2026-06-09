@@ -2,7 +2,7 @@
   <div id="manager-app">
     <router-view />
     <GlobalToast />
-    <SmartGuide />
+    <SmartGuide v-if="isLoggedIn" />
     <!-- 新消息弹窗 -->
     <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
       <span class="notify-icon">🔔</span>
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
+import { ref, reactive, computed, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
 import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
@@ -33,6 +33,9 @@ useTheme()
 const route = useRoute()
 const router = useRouter()
 const api = createApi('/api/manager', 'manager_token')
+
+// 登录状态下才显示大圣导航助手
+const isLoggedIn = computed(() => !!localStorage.getItem('manager_token') && route.path !== '/login')
 
 // 角标数字
 const badges = reactive({ repair: 0, bill: 0, owner: 0, complaint: 0, vote: 0, activity: 0 })

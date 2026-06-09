@@ -37,6 +37,13 @@ Route::group('manager', function () {
     Route::post('vote/close', 'manager/ManagerVote/close');
     Route::get('vote/result', 'manager/ManagerVote/result');
 
+    // 公告管理
+    Route::get('notice/list', 'manager/ManagerNotice/lists');
+    Route::post('notice/add', 'manager/ManagerNotice/add');
+    Route::post('notice/edit', 'manager/ManagerNotice/edit');
+    Route::post('notice/delete', 'manager/ManagerNotice/delete');
+    Route::post('notice/publish', 'manager/ManagerNotice/publish');
+
     // 全局搜索
     Route::get('search/global', 'manager/Search/global');
 

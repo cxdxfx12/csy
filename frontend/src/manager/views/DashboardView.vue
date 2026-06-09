@@ -254,6 +254,68 @@
       </div>
     </template>
 
+    <!-- Notice Tab -->
+    <template v-else-if="activeTab === 'notice'">
+      <div class="list-toolbar">
+        <button class="btn-search" @click="openNoticeForm()">+ 新增公告</button>
+        <select v-model="noticeStatusFilter" @change="loadNoticeList" class="toolbar-select">
+          <option value="0">全部状态</option>
+          <option value="1">草稿</option>
+          <option value="2">已发布</option>
+          <option value="3">已撤回</option>
+        </select>
+      </div>
+      <div class="list-table-wrap">
+        <table v-if="noticeList.length" class="list-table">
+          <thead><tr><th>ID</th><th>标题</th><th>类型</th><th>级别</th><th>置顶</th><th>状态</th><th>阅读</th><th>发布时间</th><th style="width:220px;">操作</th></tr></thead>
+          <tbody>
+            <tr v-for="n in noticeList" :key="n.id">
+              <td>{{ n.id }}</td>
+              <td class="text-ellipsis" style="max-width:200px;">{{ n.title }}</td>
+              <td><span class="tag">{{ noticeTypeMap[n.type] || '其他' }}</span></td>
+              <td><span :class="'tag tag-'+n.level">{{ noticeLevelMap[n.level] }}</span></td>
+              <td>{{ n.top_status == 1 ? '⭐' : '-' }}</td>
+              <td><span :class="'tag tag-'+n.status">{{ noticeStatusMap[n.status] }}</span></td>
+              <td>{{ n.read_count }}</td>
+              <td style="font-size:12px;">{{ n.publish_time ? n.publish_time.substring(0,10) : '-' }}</td>
+              <td class="action-btns">
+                <button v-if="n.status==1||n.status==3" class="btn-mini btn-green" @click="publishNotice(n.id,2)">发布</button>
+                <button v-if="n.status==2" class="btn-mini btn-warn" @click="publishNotice(n.id,3)">撤回</button>
+                <button class="btn-mini" @click="openNoticeForm(n)">编辑</button>
+                <button class="btn-mini btn-danger" @click="deleteNotice(n.id)">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="empty">暂无公告数据</div>
+      </div>
+      <!-- Notice Form Modal -->
+      <div class="modal-overlay" v-if="noticeFormVisible" @click.self="noticeFormVisible=false">
+        <div class="modal-box">
+          <h3>{{ noticeFormTitle }}</h3>
+          <div class="form-group"><label>标题</label><input v-model="noticeForm.title" class="input" placeholder="公告标题" /></div>
+          <div class="form-row">
+            <div class="form-group"><label>类型</label>
+              <select v-model.number="noticeForm.type" class="input" style="cursor:pointer;appearance:auto">
+                <option :value="1">小区公告</option><option :value="2">通知</option><option :value="3">温馨提示</option><option :value="4">活动</option><option :value="5">其他</option>
+              </select>
+            </div>
+            <div class="form-group"><label>紧急程度</label>
+              <select v-model.number="noticeForm.level" class="input" style="cursor:pointer;appearance:auto">
+                <option :value="1">普通</option><option :value="2">重要</option><option :value="3">紧急</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+            <label style="margin-bottom:0;">置顶</label>
+            <input type="checkbox" v-model="noticeForm.top_status" :true-value="1" :false-value="0" style="width:18px;height:18px;cursor:pointer;" />
+          </div>
+          <div class="form-group"><label>内容</label><textarea v-model="noticeForm.content" class="input" rows="5" placeholder="公告内容..."></textarea></div>
+          <div class="modal-actions"><button class="btn-cancel" @click="noticeFormVisible=false">取消</button><button class="btn-search" @click="submitNotice" :disabled="noticeSubmitting">{{ noticeSubmitting?'提交中...':'保存' }}</button></div>
+        </div>
+      </div>
+    </template>
+
     <!-- Lists -->
     <template v-else>
       <div class="list-toolbar" v-if="activeTab==='owner'">
@@ -385,6 +447,7 @@ const tabs = [
   { key: 'bill', label: '账单', icon: '💰' },
   { key: 'repair', label: '报修', icon: '🔧' },
   { key: 'complaint', label: '投诉', icon: '📢' },
+  { key: 'notice', label: '公告', icon: '📋' },
   { key: 'vote', label: '投票', icon: '🗳️' },
   { key: 'activity', label: '活动', icon: '🎉' },
 ]
@@ -620,6 +683,63 @@ async function cancelSignup(id) {
   if (res.code === 0) { loadSignupList(); loadActivityList() } else alert(res.msg)
 }
 
+// ===== 公告相关 =====
+const noticeList = ref([])
+const noticeStatusFilter = ref(0)
+const noticeFormVisible = ref(false)
+const noticeFormTitle = ref('新增公告')
+const noticeSubmitting = ref(false)
+const noticeForm = reactive({ id: 0, title: '', type: 1, level: 1, top_status: 0, content: '' })
+const noticeStatusMap = { 1: '草稿', 2: '已发布', 3: '已撤回' }
+const noticeTypeMap = { 1: '小区公告', 2: '通知', 3: '温馨提示', 4: '活动', 5: '其他' }
+const noticeLevelMap = { 1: '普通', 2: '重要', 3: '紧急' }
+
+function openNoticeForm(item) {
+  if (item) {
+    noticeFormTitle.value = '编辑公告'
+    noticeForm.id = item.id; noticeForm.title = item.title; noticeForm.type = item.type || 1
+    noticeForm.level = item.level || 1; noticeForm.top_status = item.top_status || 0
+    noticeForm.content = item.content || ''
+  } else {
+    noticeFormTitle.value = '新增公告'; noticeForm.id = 0
+    noticeForm.title = ''; noticeForm.type = 1; noticeForm.level = 1; noticeForm.top_status = 0; noticeForm.content = ''
+  }
+  noticeFormVisible.value = true
+}
+async function submitNotice() {
+  if (!noticeForm.title) return alert('请输入标题')
+  if (!noticeForm.content) return alert('请输入内容')
+  noticeSubmitting.value = true
+  const data = { title: noticeForm.title, type: noticeForm.type, level: noticeForm.level, top_status: noticeForm.top_status, content: noticeForm.content }
+  if (noticeForm.id) data.id = noticeForm.id
+  const url = noticeForm.id ? '/notice/edit' : '/notice/add'
+  try {
+    const res = await api(url, { method: 'POST', body: JSON.stringify(data) })
+    if (res.code === 0) { noticeFormVisible.value = false; loadNoticeList() }
+    else alert(res.msg || '操作失败')
+  } catch(e) { alert('操作失败: ' + e.message) }
+  noticeSubmitting.value = false
+}
+async function publishNotice(id, status) {
+  if (!confirm(status == 2 ? '确认发布该公告？' : '确认撤回该公告？')) return
+  const res = await api('/notice/publish', { method: 'POST', body: JSON.stringify({ id, status }) })
+  if (res.code === 0) loadNoticeList(); else alert(res.msg)
+}
+async function deleteNotice(id) {
+  if (!confirm('确认删除该公告？')) return
+  const res = await api('/notice/delete', { method: 'POST', body: JSON.stringify({ id }) })
+  if (res.code === 0) loadNoticeList(); else alert(res.msg)
+}
+async function loadNoticeList() {
+  const params = { page: 1, limit: 200 }
+  if (noticeStatusFilter.value) params.status = noticeStatusFilter.value
+  const query = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&')
+  try {
+    const res = await api('/notice/list?' + query)
+    noticeList.value = res.code === 0 ? (res.data?.list || res.data || []) : []
+  } catch { noticeList.value = [] }
+}
+
 onMounted(async () => {
   await loadCommunities()
   await loadAll()
@@ -675,6 +795,7 @@ async function loadTabData() {
   if (activeTab.value === 'dashboard') return loadAll()
   if (activeTab.value === 'vote') return loadVoteList()
   if (activeTab.value === 'activity') return loadActivityList()
+  if (activeTab.value === 'notice') return loadNoticeList()
   loading.value = true
   try {
     const params = { page: page.value, limit }
