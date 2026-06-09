@@ -16,6 +16,9 @@ Route::post('admin/wechatBind', 'admin/Login/wechatBind');
 
 // 系统管理
 Route::group('admin', function () {
+    // 全局搜索
+    Route::get('search/global', 'admin/Search/global');
+
     // 管理员管理
     Route::get('admin/user/list', 'admin/AdminUser/lists');
     Route::post('admin/user/add', 'admin/AdminUser/add');

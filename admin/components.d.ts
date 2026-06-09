@@ -69,6 +69,7 @@ declare module 'vue' {
     RoleIcon: typeof import('./src/components/RoleIcon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SmartGuide: typeof import('./src/components/SmartGuide.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

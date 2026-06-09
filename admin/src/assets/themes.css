@@ -367,6 +367,116 @@
   --el-mask-color: rgba(0,0,0,0.6);
 }
 
+/* ===== 表格深色主题强力修复 ===== */
+[data-theme="liquid-glass"] .el-table,
+[data-theme="dark-pro"] .el-table,
+[data-theme="aurora"] .el-table,
+[data-theme="sunset"] .el-table,
+[data-theme="liquid-glass"] .el-table__inner-wrapper,
+[data-theme="dark-pro"] .el-table__inner-wrapper,
+[data-theme="aurora"] .el-table__inner-wrapper,
+[data-theme="sunset"] .el-table__inner-wrapper {
+  background: transparent !important;
+}
+
+/* 表头 */
+[data-theme="liquid-glass"] .el-table__header-wrapper,
+[data-theme="dark-pro"] .el-table__header-wrapper,
+[data-theme="aurora"] .el-table__header-wrapper,
+[data-theme="sunset"] .el-table__header-wrapper {
+  background: var(--bg-table-header) !important;
+}
+[data-theme="liquid-glass"] .el-table__header th.el-table__cell,
+[data-theme="dark-pro"] .el-table__header th.el-table__cell,
+[data-theme="aurora"] .el-table__header th.el-table__cell,
+[data-theme="sunset"] .el-table__header th.el-table__cell {
+  background: transparent !important;
+  color: var(--text-1) !important;
+  font-weight: 600;
+}
+
+/* 表格行 - 用 !important 强制覆盖 Element Plus 默认白色 */
+[data-theme="liquid-glass"] .el-table .el-table__body tr,
+[data-theme="dark-pro"] .el-table .el-table__body tr,
+[data-theme="aurora"] .el-table .el-table__body tr,
+[data-theme="sunset"] .el-table .el-table__body tr {
+  background: var(--bg-card) !important;
+}
+[data-theme="liquid-glass"] .el-table .el-table__body tr td.el-table__cell,
+[data-theme="dark-pro"] .el-table .el-table__body tr td.el-table__cell,
+[data-theme="aurora"] .el-table .el-table__body tr td.el-table__cell,
+[data-theme="sunset"] .el-table .el-table__body tr td.el-table__cell {
+  background: transparent !important;
+  color: var(--text-2) !important;
+  border-bottom-color: var(--border-1) !important;
+}
+
+/* hover */
+[data-theme="liquid-glass"] .el-table .el-table__body tr:hover > td.el-table__cell,
+[data-theme="dark-pro"] .el-table .el-table__body tr:hover > td.el-table__cell,
+[data-theme="aurora"] .el-table .el-table__body tr:hover > td.el-table__cell,
+[data-theme="sunset"] .el-table .el-table__body tr:hover > td.el-table__cell {
+  background: var(--bg-table-hover) !important;
+}
+
+/* 斑马纹 */
+[data-theme="liquid-glass"] .el-table--striped .el-table__body tr.el-table__row--striped,
+[data-theme="dark-pro"] .el-table--striped .el-table__body tr.el-table__row--striped,
+[data-theme="aurora"] .el-table--striped .el-table__body tr.el-table__row--striped,
+[data-theme="sunset"] .el-table--striped .el-table__body tr.el-table__row--striped {
+  background: var(--bg-table-stripe) !important;
+}
+[data-theme="liquid-glass"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+[data-theme="dark-pro"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+[data-theme="aurora"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+[data-theme="sunset"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: transparent !important;
+}
+
+/* 空状态 */
+[data-theme="liquid-glass"] .el-table__empty-block,
+[data-theme="dark-pro"] .el-table__empty-block,
+[data-theme="aurora"] .el-table__empty-block,
+[data-theme="sunset"] .el-table__empty-block {
+  background: var(--bg-card) !important;
+}
+[data-theme="liquid-glass"] .el-table__empty-text,
+[data-theme="dark-pro"] .el-table__empty-text,
+[data-theme="aurora"] .el-table__empty-text,
+[data-theme="sunset"] .el-table__empty-text {
+  color: var(--text-4) !important;
+}
+
+/* 分页 */
+[data-theme="liquid-glass"] .el-pagination,
+[data-theme="dark-pro"] .el-pagination,
+[data-theme="aurora"] .el-pagination,
+[data-theme="sunset"] .el-pagination {
+  background: transparent !important;
+  --el-text-color-regular: var(--text-2);
+  --el-disabled-text-color: var(--text-5);
+}
+
+/* 当前行高亮 */
+[data-theme="liquid-glass"] .el-table__body tr.current-row > td.el-table__cell,
+[data-theme="dark-pro"] .el-table__body tr.current-row > td.el-table__cell,
+[data-theme="aurora"] .el-table__body tr.current-row > td.el-table__cell,
+[data-theme="sunset"] .el-table__body tr.current-row > td.el-table__cell {
+  background: var(--bg-table-hover) !important;
+}
+
+/* 表格内链接、按钮文字 */
+[data-theme="liquid-glass"] .el-table .el-button--text,
+[data-theme="dark-pro"] .el-table .el-button--text,
+[data-theme="aurora"] .el-table .el-button--text,
+[data-theme="sunset"] .el-table .el-button--text,
+[data-theme="liquid-glass"] .el-table .el-button.is-link,
+[data-theme="dark-pro"] .el-table .el-button.is-link,
+[data-theme="aurora"] .el-table .el-button.is-link,
+[data-theme="sunset"] .el-table .el-button.is-link {
+  color: var(--accent) !important;
+}
+
 /* 主题切换过渡 */
 body {
   background: var(--bg-body);

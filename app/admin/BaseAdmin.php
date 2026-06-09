@@ -171,7 +171,7 @@ class BaseAdmin extends BaseController
     {
         // 公共模块：所有角色通用（Login 提供 info/logout 等基础接口）
         // Community 加入公共列表，其 add/edit/delete 内部已限制仅 role_id<=2，list 按绑定小区过滤
-        $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community'];
+        $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community', 'Search'];
 
         $maps = [
             'admin'     => '*',

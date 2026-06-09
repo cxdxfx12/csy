@@ -58,6 +58,7 @@
         </div>
       </footer>
     </el-container>
+    <SmartGuide />
   </el-container>
 </template>
 
@@ -69,6 +70,7 @@ import { useAppStore } from '@/stores/app'
 import Sidebar from './Sidebar.vue'
 import HeaderBar from './HeaderBar.vue'
 import TabsView from './TabsView.vue'
+import SmartGuide from '@/components/SmartGuide.vue'
 import monkeyIco from '@/assets/images/monkey-ico.png'
 
 const userStore = useUserStore()
