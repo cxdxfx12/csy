@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>ThinkPHP + Vue3 全栈运行架构</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f8fafc;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:20px;display:flex;justify-content:center}
+.wrap{width:1480px;position:relative}
+h1{text-align:center;font:700 26px/1.4 "PingFang SC";color:#1e293b;margin-bottom:30px}
+
+/* 中心圆 */
+.c{position:absolute;left:50%;top:380px;transform:translate(-50%,-50%);width:190px;height:190px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;font-size:18px;font-weight:700;text-align:center;line-height:1.5;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(37,99,235,.35);z-index:10}
+
+/* 分支 */
+.br{position:absolute;padding:12px 20px;border-radius:10px;font-weight:700;font-size:15px;z-index:5;white-space:nowrap}
+.sn{position:absolute;background:#fff;border-radius:7px;padding:5px 12px;font-size:12.5px;color:#334155;border:1px solid #e2e8f0;white-space:nowrap;z-index:4;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+
+/* 连线 */
+.lh{position:absolute;height:2px;background:#94a3b8;z-index:2}
+.lv{position:absolute;width:2px;background:#94a3b8;z-index:2}
+
+/* 颜色方案 */
+.f1{background:#fef9c3;color:#854d0e;border-color:#fde68a}.f1::after{content:'';position:absolute;right:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #ca8a04;background:#fff;transform:translateY(-50%)}
+.f1s{border-color:#fde68a;color:#713f12}
+.f2{background:#dcfce7;color:#166534;border-color:#86efac}.f2::after{content:'';position:absolute;left:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #16a34a;background:#fff;transform:translateY(-50%)}
+.f2s{border-color:#bbf7d0;color:#14532d}
+.f3{background:#d1fae5;color:#065f46;border-color:#6ee7b7}.f3::after{content:'';position:absolute;left:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #059669;background:#fff;transform:translateY(-50%)}
+.f3s{border-color:#a7f3d0;color:#064e3b}
+.f4{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}.f4::after{content:'';position:absolute;left:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #7c3aed;background:#fff;transform:translateY(-50%)}
+.f4s{border-color:#ddd6fe;color:#4c1d95}
+.f5{background:#dbeafe;color:#1e40af;border-color:#93c5fd}.f5::after{content:'';position:absolute;right:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #2563eb;background:#fff;transform:translateY(-50%)}
+.f5s{border-color:#bfdbfe;color:#1e3a8a}
+.f6{background:#fce7f3;color:#9d174d;border-color:#f9a8d4}.f6::after{content:'';position:absolute;right:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #db2777;background:#fff;transform:translateY(-50%)}
+.f6s{border-color:#fecdd3;color:#881337}
+.f7{background:#ffe4e6;color:#881337;border-color:#fecdd3}.f7::after{content:'';position:absolute;right:-8px;top:50%;width:14px;height:14px;border-radius:50%;border:2.5px solid #e11d48;background:#fff;transform:translateY(-50%)}
+.f7s{border-color:#fecdd3;color:#9f1239}
+
+.arr{font-size:13px;color:#94a3b8;font-weight:600;z-index:20;position:absolute}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>ThinkPHP + Vue3 全栈系统运行架构图</h1>
+
+<!-- 中心 -->
+<div class="c">ThinkPHP + Vue3<br>全栈运行架构</div>
+
+<!-- ====== 1 前端Vue3 上方 ====== -->
+<div class="lh" style="left:430px;top:300px;width:320px"></div>
+<div class="br f1" style="left:200px;top:276px">前端 Vue3 框架</div>
+<!-- 子节点 -->
+<div class="sn f1s" style="left:15px;top:230px">setup / 生命周期钩子</div><div class="lh" style="left:135px;top:288px;width:70px"></div>
+<div class="sn f1s" style="left:15px;top:260px">模板与数据绑定 (ref/reactive)</div><div class="lh" style="left:120px;top:310px;width:85px"></div>
+<div class="sn f1s" style="left:15px;top:290px">页面加载 / Vue Router 路由跳转</div><div class="lh" style="left:110px;top:333px;width:95px"></div>
+<div class="sn f1s" style="left:15px;top:320px">用户点击按钮 / 表单提交</div><div class="lh" style="left:100px;top:355px;width:105px"></div>
+<div class="sn f1s" style="left:340px;top:250px">视图组件 → Pinia/VueX 状态管理</div><div class="lh" style="left:355px;top:290px;width:78px"></div>
+<div class="sn f1s" style="left:360px;top:280px">全局共享状态管理</div>
+
+
+<!-- ====== 2 Axios请求层 右上 ====== -->
+<div class="lv" style="left:750px;top:220px;height:80px"></div>
+<div class="lh" style="left:750px;top:220px;width:180px"></div>
+<div class="br f2" style="left:928px;top:196px">Axios 请求层</div>
+
+<div class="sn f2s" style="left:1130px;top:180px">通用Header处理 → 自动添加Token</div><div class="lh" style="left:1070px;top:210px;width:62px"></div>
+<div class="sn f2s" style="left:1130px;top:208px">请求拦截器 → 响应拦截器</div><div class="lh" style="left:1065px;top:236px;width:67px"></div>
+<div class="sn f2s" style="left:1130px;top:236px">数据解包与统一提示</div>
+<div class="sn f2s" style="left:1130px;top:264px">取消重复请求 / 跨组件通信</div><div class="lh" style="left:1055px;top:278px;width:77px"></div>
+<div class="sn f2s" style="left:1130px;top:292px">401自动跳转 / baseURL配置 / 超时</div>
+
+
+<!-- ====== 3 网络通信 右侧 ====== -->
+<div class="lh" style="left:750px;top:480px;width:200px"></div>
+<div class="br f3" style="left:948px;top:456px">网络通信层</div>
+
+<div class="sn f3s" style="left:1165px;top:438px">HTTP/HTTPS 协议</div><div class="lh" style="left:1100px;top:468px;width:67px"></div>
+<div class="sn f3s" style="left:1165px;top:466px">生产环境 / 开发环境切换</div>
+<div class="sn f3s" style="left:1165px;top:494px">跨域 CORS 处理</div><div class="lh" style="left:1100px;top:500px;width:67px"></div>
+<div class="sn f3s" style="left:1165px;top:522px">JSON 数据交换格式</div>
+<div class="sn f3s" style="left:1165px;top:550px">鉴权重定向</div>
+
+
+<!-- ====== 4 后端入口 右下 ====== -->
+<div class="lv" style="left:720px;top:480px;height:130px"></div>
+<div class="lh" style="left:650px;top:610px;width:230px"></div>
+<div class="br f4" style="left:878px;top:586px">后端入口</div>
+
+<div class="sn f4s" style="left:1120px;top:574px">public/index.php 入口文件</div><div class="lh" style="left:1065px;top:602px;width:58px"></div>
+<div class="sn f4s" style="left:1120px;top:602px">加载 Composer 自动加载</div><div class="lh" style="left:1050px;top:628px;width:73px"></div>
+<div class="sn f4s" style="left:1120px;top:630px">应用初始化 (加载配置/注册服务)</div><div class="lh" style="left:1045px;top:656px;width:78px"></div>
+<div class="sn f4s" style="left:1120px;top:658px">载入 .env 环境变量</div>
+<div class="sn f4s" style="left:1120px;top:686px">接收 Request 对象</div>
+<div class="sn f4s" style="left:1120px;top:714px">路由分发 → 调用 Service 业务层</div>
+
+
+<!-- ====== 5 后端核心 下方 ====== -->
+<div class="lv" style="left:600px;top:480px;height:160px"></div>
+<div class="lh" style="left:280px;top:640px;width:320px"></div>
+<div class="br f5" style="left:70px;top:616px">后端 ThinkPHP 核心层</div>
+
+<!-- 控制器 -->
+<div class="sn f5s" style="left:10px;top:674px">Controller 控制器</div><div class="lh" style="left:80px;top:692px;width:55px"></div>
+<div class="sn f5s" style="left:138px;top:690px;font-size:11.5px;color:#2563eb">数据库事务控制</div>
+
+<!-- Service -->
+<div class="sn f5s" style="left:10px;top:708px">Service 服务层</div><div class="lh" style="left:82px;top:726px;width:56px"></div>
+<div class="sn f5s" style="left:140px;top:724px;font-size:11.5px;color:#2563eb">复杂业务逻辑封装</div><div class="lh" style="left:260px;top:724px;width:45px"></div>
+<div class="sn f5s" style="left:308px;top:724px">第三方API调用</div>
+
+<!-- 中间件 -->
+<div class="sn f5s" style="left:10px;top:746px">Middleware 中间件</div><div class="lh" style="left:100px;top:764px;width:55px"></div>
+<div class="sn f5s" style="left:157px;top:762px;font-size:11.5px;color:#2563eb">调用验证器 Validate</div><div class="lh" style="left:270px;top:764px;width:48px"></div>
+<div class="sn f5s" style="left:318px;top:762px">返回统一响应格式</div>
+<div class="sn f5s" style="left:450px;top:762px">前后置处理钩子</div>
+
+<!-- Model -->
+<div class="sn f5s" style="left:10px;top:788px">Model 模型层</div><div class="lh" style="left:82px;top:806px;width:52px"></div>
+<div class="sn f5s" style="left:136px;top:804px;font-size:11.5px;color:#2563eb">ORM数据表映射</div><div class="lh" style="left:235px;top:806px;width:42px"></div>
+<div class="sn f5s" style="left:278px;top:804px">查询构建器</div>
+<div class="sn f5s" style="left:136px;top:828px;font-size:11.5px;color:#2563eb">获取器 / 修改器 / 模型事件</div>
+
+<!-- 底部辅助 -->
+<div class="sn f5s" style="left:10px;top:832px">Validate 验证器</div><div class="lh" style="left:95px;top:850px;width:42px"></div>
+<div class="sn f5s" style="left:139px;top:848px;font-size:11.5px;color:#2563eb">规则与场景定义 · 自动校验</div>
+<div class="sn f5s" style="left:290px;top:848px">Cache 缓存(Redis/Memcached)</div>
+<div class="sn f5s" style="left:440px;top:848px">Auth 认证 / 限流</div>
+<div class="sn f5s" style="left:560px;top:848px">CORS跨域 / 日志记录</div>
+
+
+<!-- ====== 6 路由层 左下 ====== -->
+<div class="lv" style="left:420px;top:480px;height:150px"></div>
+<div class="lh" style="left:120px;top:630px;width:300px"></div>
+<div class="br f6" style="left":-175px;top:606px">路由层 route/app.php</div>
+
+<div class="sn f6s" style="left:-400px;top:666px">api/v1 路由组定义</div><div class="lh" style="left:-365px;top:684px;width:195px"></div>
+<div class="sn f6s" style="left:"-400px;top:696px">路由规则注册 / RESTful资源路由</div><div class="lh" style="left":-370px;top:714px;width:198px"></div>
+<div class="sn f6s" style="left:"-400px;top:726px">设置 HTTP 状态码</div><div class="lh" style="left:360px;top:744px;width:188px"></div>
+<div class="sn f6s" style="left:-400px;top:756px">响应输出 code, data, msg 结构</div>
+
+
+<!-- ====== 7 前端响应接收 左侧 ====== -->
+<div class="lh" style="left:220px;top:370px;width:230px"></div>
+<div class="br f7" style="left:-5px;top:346px">前端响应接收处理</div>
+
+<div class="sn f7s" style="left":-240px;top:392px">响应拦截器处理 (错误码判断)</div><div class="lh" style="left":-200px;top:410px;width:198px"></div>
+<div class="sn f7s" style="left:"-240px;top:420px">Vue 视图响应式数据刷新</div><div class="lh" style="left":-195px;top:438px;width:193px"></div>
+<div class="sn f7s" style="left:"-240px;top:448px">数据更新到 Pinia / 组件局部状态</div><div class="lh" style="left":-185px;top:466px;width:183px"></div>
+<div class="sn f7s" style="left"-240px;top:476px">交互闭环完成 ✅ → UI更新</div>
+
+
+<!-- 流向箭头 -->
+<div class="arr" style="left:560px;top:330px;transform:rotate(-18deg)">↓ 发起 API 请求</div>
+<div class="arr" style="left:1020px;top:430px;transform:rotate(12deg)">↓ HTTP 传输</div>
+<div class="arr" style="left:850px;top:680px">↑ 返回 JSON 数据</div>
+<div class="arr" style="left:180px;top:520px;transform:rotate(18deg)">↑ 响应回调</div>
+
+</div>
+</body>
+</html>
