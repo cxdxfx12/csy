@@ -92,7 +92,7 @@ function handleSelect(index: string) {
 </script>
 
 <style scoped>
-.sidebar-logo { height: 52px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a5f, #2563eb, #4f46e5); flex-shrink: 0; position: relative; overflow: hidden; }
+.sidebar-logo { height: 52px; display: flex; align-items: center; justify-content: center; background: var(--sidebar-logo-gradient); flex-shrink: 0; position: relative; overflow: hidden; }
 .sidebar-logo::after { content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); }
 .logo-text { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; }
 .sidebar-menu-wrap { flex: 1; min-height: 0; }

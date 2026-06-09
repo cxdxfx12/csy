@@ -39,6 +39,18 @@
         </div>
       </div>
     </el-popover>
+    <!-- 主题切换器 -->
+    <div class="theme-switcher">
+      <button class="theme-trigger" @click.stop="themeOpen = !themeOpen" title="切换主题">🎨</button>
+      <div class="theme-panel" v-if="themeOpen" @click.stop>
+        <div class="theme-panel-title">选择主题</div>
+        <div v-for="t in themeList" :key="t.id" class="theme-item" :class="{active: currentTheme === t.id}" @click="switchTheme(t.id)">
+          <span class="theme-swatch" :style="{background: `linear-gradient(135deg, ${t.preview[0]}, ${t.preview[1]})`}"></span>
+          <span class="theme-name">{{ t.icon }} {{ t.name }}</span>
+          <span v-if="currentTheme === t.id" class="theme-check">✓</span>
+        </div>
+      </div>
+    </div>
     <el-dropdown trigger="click">
       <span class="user-info">
         <el-avatar :size="32" :src="userStore.userInfo?.avatar || undefined" icon="UserFilled" />
@@ -66,11 +78,23 @@ import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
 import { apiGet } from '@/utils/request'
 import { ElMessage } from 'element-plus'
+import { themes as themeList, current as currentTheme, applyTheme } from '@/stores/theme'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const appStore = useAppStore()
+
+const themeOpen = ref(false)
+function switchTheme(id: string) {
+  applyTheme(id)
+  themeOpen.value = false
+}
+function closeThemePanel(e: MouseEvent) {
+  if (themeOpen.value && !(e.target as HTMLElement).closest('.theme-switcher')) {
+    themeOpen.value = false
+  }
+}
 
 // 通知角标
 const badgeCounts = ref<Record<string, number>>({ bill: 0, repair: 0, complaint: 0, order: 0, vote: 0, activity: 0 })
@@ -114,7 +138,6 @@ async function fetchBadges() {
   try {
     const res = await apiGet<Record<string, number>>('/admin/badge/counts')
     const d = res.data || res || {}
-    // 按 category 读取
     const keys = ['bill', 'repair', 'complaint', 'order', 'vote', 'activity']
     keys.forEach(k => { badgeRaw.value[k] = d[k] || 0 })
 
@@ -124,7 +147,6 @@ async function fetchBadges() {
 }
 
 function onBellOpen() {
-  // 打开时暂不自动清，等用户点击具体项
 }
 
 function goRoute(path: string, key: string) {
@@ -152,12 +174,14 @@ function handleLogout() {
 }
 
 onMounted(() => {
+  document.addEventListener('click', closeThemePanel)
   fetchBadges()
   timer = setInterval(fetchBadges, 30000)
   connectSSE()
 })
 
 onUnmounted(() => {
+  document.removeEventListener('click', closeThemePanel)
   if (timer) clearInterval(timer)
   disconnectSSE()
 })
@@ -224,30 +248,44 @@ function disconnectSSE() {
 <style scoped>
 .header-left { display: flex; align-items: center; gap: 14px; }
 .header-center { position: absolute; left: 50%; transform: translateX(-50%); }
-.bigscreen-btn { font-weight: 600; background: linear-gradient(135deg, #06b6d4, #3b82f6); border: none; box-shadow: 0 2px 8px rgba(6,182,212,0.3); transition: all 0.3s; }
-.bigscreen-btn:hover { box-shadow: 0 4px 16px rgba(6,182,212,0.45); transform: translateY(-1px); }
+.bigscreen-btn { font-weight: 600; background: var(--accent-gradient); border: none; box-shadow: 0 2px 8px var(--accent-shadow); transition: all 0.3s; }
+.bigscreen-btn:hover { box-shadow: 0 4px 16px var(--accent-shadow); transform: translateY(-1px); }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
 .user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 12px 4px 6px; border-radius: 24px; transition: all 0.2s; }
-.user-info:hover { background: #f1f5f9; }
-.user-name { font-size: 14px; color: #334155; font-weight: 600; }
+.user-info:hover { background: var(--bg-badge-hover); }
+.user-name { font-size: 14px; color: var(--text-2); font-weight: 600; }
 .community-tag { margin-left: 4px; }
 .notice-badge { margin-right: 8px; }
+
+/* ===== 主题切换器 ===== */
+.theme-switcher { position: relative; z-index: 9999; }
+.theme-trigger { width:36px;height:36px;background:var(--bg-input);border:1px solid var(--border-1);border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .25s;color:var(--text-3) }
+.theme-trigger:hover { border-color:var(--accent);background:var(--bg-table-hover);transform:scale(1.05) }
+.theme-panel { position:absolute;top:calc(100% + 8px);right:0;width:200px;background:var(--bg-card);border:1px solid var(--border-1);border-radius:12px;padding:8px;box-shadow:var(--shadow-modal);animation:panelIn .2s ease-out;z-index:10000 }
+@keyframes panelIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.theme-panel-title { font-size:12px;color:var(--text-5);padding:6px 10px 8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px }
+.theme-item { display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .2s }
+.theme-item:hover { background:var(--bg-table-hover) }
+.theme-item.active { background:rgba(var(--accent-rgb),.1) }
+.theme-swatch { width:24px;height:24px;border-radius:6px;flex-shrink:0;border:2px solid rgba(255,255,255,.1) }
+.theme-name { flex:1;font-size:13px;color:var(--text-2);font-weight:500 }
+.theme-check { color:var(--accent);font-weight:700;font-size:14px }
 </style>
 
 <style>
 /* 弹窗内容不在 scoped 中生效 */
-.notify-popover { padding: 0 !important; }
+.notify-popover { padding: 0 !important; background: var(--bg-card) !important; border: 1px solid var(--border-2) !important; }
 .notify-panel { max-height: 420px; overflow-y: auto; }
-.notify-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; font-weight: 600; }
-.notify-dismiss-all { font-size: 12px; color: #409EFF; cursor: pointer; font-weight: 400; }
-.notify-dismiss-all:hover { color: #337ecc; }
-.notify-empty { padding: 32px 16px; text-align: center; color: #999; font-size: 14px; }
+.notify-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border-2); font-size: 14px; font-weight: 600; color: var(--text-1); }
+.notify-dismiss-all { font-size: 12px; color: var(--accent); cursor: pointer; font-weight: 400; }
+.notify-dismiss-all:hover { opacity: 0.8; }
+.notify-empty { padding: 32px 16px; text-align: center; color: var(--text-5); font-size: 14px; }
 .notify-list { padding: 4px 0; }
 .notify-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background 0.15s; }
-.notify-item:hover { background: #f5f7fa; }
+.notify-item:hover { background: var(--bg-table-hover); }
 .notify-item .notify-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
 .notify-item .notify-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.notify-item .notify-label { font-size: 14px; color: #333; font-weight: 500; }
-.notify-item .notify-desc { font-size: 12px; color: #999; }
+.notify-item .notify-label { font-size: 14px; color: var(--text-2); font-weight: 500; }
+.notify-item .notify-desc { font-size: 12px; color: var(--text-5); }
 .notify-count { flex-shrink: 0; }
 </style>

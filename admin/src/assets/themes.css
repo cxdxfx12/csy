@@ -1,0 +1,378 @@
+/* ============================================================
+   Admin 主题系统 - 5套主题CSS变量
+   ============================================================ */
+
+/* ===== 经典蓝 (默认，原版风格) ===== */
+[data-theme="classic-blue"], :root {
+  --bg-body: #f0f2f5;
+  --bg-sidebar: #fff;
+  --bg-header: #fff;
+  --bg-card: #fff;
+  --bg-content: #f0f2f5;
+  --bg-input: #fff;
+  --bg-table-header: #f8fafc;
+  --bg-table-stripe: #fafbfc;
+  --bg-table-hover: #eff6ff;
+  --bg-footer: linear-gradient(135deg, #1a1f36 0%, #252b48 50%, #1a1f36 100%);
+  --bg-search: #fff;
+  --bg-toolbar: #fafbfc;
+  --bg-badge-hover: #f1f5f9;
+
+  --text-1: #1e293b;
+  --text-2: #334155;
+  --text-3: #475569;
+  --text-4: #64748b;
+  --text-5: #94a3b8;
+  --text-sidebar: #334155;
+  --text-footer: rgba(255,255,255,0.75);
+  --text-footer-link: rgba(167,139,250,0.85);
+  --text-footer-link-hover: #c4b5fd;
+
+  --accent: #2563eb;
+  --accent-rgb: 37,99,235;
+  --accent-light: #3b82f6;
+  --accent-gradient: linear-gradient(135deg, #2563eb, #4f46e5);
+  --accent-gradient-hover: linear-gradient(135deg, #1d4ed8, #4338ca);
+  --accent-shadow: rgba(37,99,235,0.3);
+  --accent-text: #2563eb;
+
+  --border-1: #e2e8f0;
+  --border-2: #e8ecf1;
+  --border-3: #f1f5f9;
+  --border-input: #e2e8f0;
+
+  --color-success: #059669;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
+  --shadow-dropdown: 0 8px 24px rgba(0,0,0,0.1);
+
+  --sidebar-logo-gradient: linear-gradient(135deg, #1e3a5f, #2563eb, #4f46e5);
+  --banner-gradient: linear-gradient(135deg, #0f1b35 0%, #1a3a6b 25%, #2563eb 50%, #6d28d9 80%, #4c1d95 100%);
+  --login-bg: linear-gradient(135deg, #2b6cb0, #2c5282);
+  --login-left-bg: linear-gradient(135deg, #2b6cb0, #3182ce);
+  --login-btn-bg: linear-gradient(135deg, #2b6cb0, #3182ce);
+  --login-btn-shadow: rgba(43,108,176,0.3);
+  --login-focus-border: #3182ce;
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+
+  --glass-opacity: 0;
+  --glass-border-opacity: 0;
+  --glass-blur: 0px;
+}
+
+/* ===== 液态玻璃 ===== */
+[data-theme="liquid-glass"] {
+  --bg-body: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  --bg-sidebar: rgba(255,255,255,0.06);
+  --bg-header: rgba(255,255,255,0.08);
+  --bg-card: rgba(255,255,255,0.08);
+  --bg-content: transparent;
+  --bg-input: rgba(255,255,255,0.1);
+  --bg-table-header: rgba(255,255,255,0.06);
+  --bg-table-stripe: rgba(255,255,255,0.03);
+  --bg-table-hover: rgba(99,102,241,0.1);
+  --bg-footer: rgba(0,0,0,0.4);
+  --bg-search: rgba(255,255,255,0.06);
+  --bg-toolbar: rgba(255,255,255,0.04);
+  --bg-badge-hover: rgba(255,255,255,0.1);
+
+  --text-1: #f1f5f9;
+  --text-2: #e2e8f0;
+  --text-3: #cbd5e1;
+  --text-4: #94a3b8;
+  --text-5: #64748b;
+  --text-sidebar: #e2e8f0;
+  --text-footer: rgba(255,255,255,0.7);
+  --text-footer-link: rgba(196,181,253,0.9);
+  --text-footer-link-hover: #c4b5fd;
+
+  --accent: #818cf8;
+  --accent-rgb: 129,140,248;
+  --accent-light: #a5b4fc;
+  --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --accent-gradient-hover: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --accent-shadow: rgba(99,102,241,0.4);
+  --accent-text: #a5b4fc;
+
+  --border-1: rgba(255,255,255,0.12);
+  --border-2: rgba(255,255,255,0.08);
+  --border-3: rgba(255,255,255,0.06);
+  --border-input: rgba(255,255,255,0.15);
+
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  --shadow-card: 0 4px 30px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 8px 40px rgba(99,102,241,0.2);
+  --shadow-modal: 0 25px 80px rgba(0,0,0,0.5);
+  --shadow-dropdown: 0 12px 40px rgba(0,0,0,0.4);
+
+  --sidebar-logo-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --banner-gradient: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca, #6d28d9);
+  --login-bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  --login-left-bg: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
+  --login-btn-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --login-btn-shadow: rgba(99,102,241,0.4);
+  --login-focus-border: #818cf8;
+
+  --scrollbar-thumb: rgba(255,255,255,0.2);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.3);
+
+  --glass-opacity: 1;
+  --glass-border-opacity: 1;
+  --glass-blur: 20px;
+}
+
+/* ===== 暗夜 ===== */
+[data-theme="dark-pro"] {
+  --bg-body: #111827;
+  --bg-sidebar: #1f2937;
+  --bg-header: #1f2937;
+  --bg-card: #1f2937;
+  --bg-content: #111827;
+  --bg-input: #374151;
+  --bg-table-header: #374151;
+  --bg-table-stripe: #1f2937;
+  --bg-table-hover: rgba(99,102,241,0.1);
+  --bg-footer: #0f172a;
+  --bg-search: #1f2937;
+  --bg-toolbar: #1f2937;
+  --bg-badge-hover: #374151;
+
+  --text-1: #f9fafb;
+  --text-2: #e5e7eb;
+  --text-3: #d1d5db;
+  --text-4: #9ca3af;
+  --text-5: #6b7280;
+  --text-sidebar: #e5e7eb;
+  --text-footer: rgba(255,255,255,0.7);
+  --text-footer-link: rgba(196,181,253,0.9);
+  --text-footer-link-hover: #c4b5fd;
+
+  --accent: #818cf8;
+  --accent-rgb: 129,140,248;
+  --accent-light: #a5b4fc;
+  --accent-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+  --accent-gradient-hover: linear-gradient(135deg, #4f46e5, #4338ca);
+  --accent-shadow: rgba(99,102,241,0.3);
+  --accent-text: #a5b4fc;
+
+  --border-1: #374151;
+  --border-2: #4b5563;
+  --border-3: #1f2937;
+  --border-input: #4b5563;
+
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-modal: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow-dropdown: 0 8px 24px rgba(0,0,0,0.4);
+
+  --sidebar-logo-gradient: linear-gradient(135deg, #4338ca, #6366f1);
+  --banner-gradient: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);
+  --login-bg: #111827;
+  --login-left-bg: linear-gradient(135deg, #1e1b4b, #312e81);
+  --login-btn-bg: linear-gradient(135deg, #6366f1, #4f46e5);
+  --login-btn-shadow: rgba(99,102,241,0.3);
+  --login-focus-border: #818cf8;
+
+  --scrollbar-thumb: #4b5563;
+  --scrollbar-thumb-hover: #6b7280;
+
+  --glass-opacity: 0;
+  --glass-border-opacity: 0;
+  --glass-blur: 0px;
+}
+
+/* ===== 极光 ===== */
+[data-theme="aurora"] {
+  --bg-body: linear-gradient(135deg, #042f2e, #0d3b38, #0f3029);
+  --bg-sidebar: rgba(255,255,255,0.06);
+  --bg-header: rgba(255,255,255,0.08);
+  --bg-card: rgba(255,255,255,0.07);
+  --bg-content: transparent;
+  --bg-input: rgba(255,255,255,0.1);
+  --bg-table-header: rgba(255,255,255,0.06);
+  --bg-table-stripe: rgba(255,255,255,0.03);
+  --bg-table-hover: rgba(20,184,166,0.1);
+  --bg-footer: rgba(0,0,0,0.4);
+  --bg-search: rgba(255,255,255,0.06);
+  --bg-toolbar: rgba(255,255,255,0.04);
+  --bg-badge-hover: rgba(255,255,255,0.1);
+
+  --text-1: #f0fdfa;
+  --text-2: #ccfbf1;
+  --text-3: #99f6e4;
+  --text-4: #5eead4;
+  --text-5: #2dd4bf;
+  --text-sidebar: #ccfbf1;
+  --text-footer: rgba(255,255,255,0.7);
+  --text-footer-link: rgba(94,234,212,0.9);
+  --text-footer-link-hover: #5eead4;
+
+  --accent: #2dd4bf;
+  --accent-rgb: 45,212,191;
+  --accent-light: #5eead4;
+  --accent-gradient: linear-gradient(135deg, #14b8a6, #0d9488);
+  --accent-gradient-hover: linear-gradient(135deg, #0d9488, #0f766e);
+  --accent-shadow: rgba(20,184,166,0.4);
+  --accent-text: #2dd4bf;
+
+  --border-1: rgba(255,255,255,0.12);
+  --border-2: rgba(255,255,255,0.08);
+  --border-3: rgba(255,255,255,0.05);
+  --border-input: rgba(255,255,255,0.15);
+
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  --shadow-card: 0 4px 30px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 8px 40px rgba(20,184,166,0.2);
+  --shadow-modal: 0 25px 80px rgba(0,0,0,0.5);
+  --shadow-dropdown: 0 12px 40px rgba(0,0,0,0.4);
+
+  --sidebar-logo-gradient: linear-gradient(135deg, #0d9488, #14b8a6);
+  --banner-gradient: linear-gradient(135deg, #042f2e, #0d3b38, #0f766e, #14b8a6);
+  --login-bg: linear-gradient(135deg, #042f2e, #0d3b38, #0f3029);
+  --login-left-bg: linear-gradient(135deg, rgba(13,148,136,0.3), rgba(20,184,166,0.3));
+  --login-btn-bg: linear-gradient(135deg, #14b8a6, #0d9488);
+  --login-btn-shadow: rgba(20,184,166,0.4);
+  --login-focus-border: #2dd4bf;
+
+  --scrollbar-thumb: rgba(255,255,255,0.2);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.3);
+
+  --glass-opacity: 1;
+  --glass-border-opacity: 1;
+  --glass-blur: 20px;
+}
+
+/* ===== 暮光 ===== */
+[data-theme="sunset"] {
+  --bg-body: linear-gradient(135deg, #1c1917, #292524, #1c1917);
+  --bg-sidebar: rgba(255,255,255,0.06);
+  --bg-header: rgba(255,255,255,0.08);
+  --bg-card: rgba(255,255,255,0.07);
+  --bg-content: transparent;
+  --bg-input: rgba(255,255,255,0.1);
+  --bg-table-header: rgba(255,255,255,0.06);
+  --bg-table-stripe: rgba(255,255,255,0.03);
+  --bg-table-hover: rgba(245,158,11,0.1);
+  --bg-footer: rgba(0,0,0,0.4);
+  --bg-search: rgba(255,255,255,0.06);
+  --bg-toolbar: rgba(255,255,255,0.04);
+  --bg-badge-hover: rgba(255,255,255,0.1);
+
+  --text-1: #fef3c7;
+  --text-2: #fde68a;
+  --text-3: #fcd34d;
+  --text-4: #fbbf24;
+  --text-5: #d97706;
+  --text-sidebar: #fde68a;
+  --text-footer: rgba(255,255,255,0.7);
+  --text-footer-link: rgba(251,191,36,0.9);
+  --text-footer-link-hover: #fbbf24;
+
+  --accent: #f59e0b;
+  --accent-rgb: 245,158,11;
+  --accent-light: #fbbf24;
+  --accent-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+  --accent-gradient-hover: linear-gradient(135deg, #d97706, #b45309);
+  --accent-shadow: rgba(245,158,11,0.4);
+  --accent-text: #fbbf24;
+
+  --border-1: rgba(255,255,255,0.12);
+  --border-2: rgba(255,255,255,0.08);
+  --border-3: rgba(255,255,255,0.05);
+  --border-input: rgba(255,255,255,0.15);
+
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  --shadow-card: 0 4px 30px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 8px 40px rgba(245,158,11,0.2);
+  --shadow-modal: 0 25px 80px rgba(0,0,0,0.5);
+  --shadow-dropdown: 0 12px 40px rgba(0,0,0,0.4);
+
+  --sidebar-logo-gradient: linear-gradient(135deg, #d97706, #f59e0b);
+  --banner-gradient: linear-gradient(135deg, #1c1917, #78350f, #b45309, #f59e0b);
+  --login-bg: linear-gradient(135deg, #1c1917, #292524, #1c1917);
+  --login-left-bg: linear-gradient(135deg, rgba(217,119,6,0.3), rgba(245,158,11,0.3));
+  --login-btn-bg: linear-gradient(135deg, #f59e0b, #d97706);
+  --login-btn-shadow: rgba(245,158,11,0.4);
+  --login-focus-border: #f59e0b;
+
+  --scrollbar-thumb: rgba(255,255,255,0.2);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.3);
+
+  --glass-opacity: 1;
+  --glass-border-opacity: 1;
+  --glass-blur: 20px;
+}
+
+/* ===== 玻璃效果通用类 ===== */
+[data-theme="liquid-glass"] .el-card,
+[data-theme="aurora"] .el-card,
+[data-theme="sunset"] .el-card {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="liquid-glass"] .main-sidebar,
+[data-theme="aurora"] .main-sidebar,
+[data-theme="sunset"] .main-sidebar {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-right-color: var(--border-1);
+}
+
+[data-theme="liquid-glass"] .main-header,
+[data-theme="aurora"] .main-header,
+[data-theme="sunset"] .main-header {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom-color: var(--border-1);
+}
+
+/* Element Plus 深色主题覆盖 */
+[data-theme="liquid-glass"],
+[data-theme="dark-pro"],
+[data-theme="aurora"],
+[data-theme="sunset"] {
+  --el-bg-color: var(--bg-card);
+  --el-bg-color-overlay: var(--bg-card);
+  --el-bg-color-page: var(--bg-content);
+  --el-text-color-primary: var(--text-1);
+  --el-text-color-regular: var(--text-2);
+  --el-text-color-secondary: var(--text-3);
+  --el-text-color-placeholder: var(--text-5);
+  --el-border-color: var(--border-1);
+  --el-border-color-light: var(--border-2);
+  --el-border-color-lighter: var(--border-3);
+  --el-fill-color-blank: var(--bg-input);
+  --el-fill-color-light: var(--bg-toolbar);
+  --el-color-primary: var(--accent);
+  --el-mask-color: rgba(0,0,0,0.6);
+}
+
+/* 主题切换过渡 */
+body {
+  background: var(--bg-body);
+  transition: background 0.3s;
+}
+.el-card, .el-dialog, .el-drawer, .main-sidebar, .main-header, .main-content,
+.el-table, .el-menu, .el-input__wrapper, .el-button, .el-tag {
+  transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}

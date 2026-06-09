@@ -35,14 +35,39 @@
         <a class="back-link" @click="showRegister = false">← 返回登录</a>
       </div>
     </div>
+
+    <!-- 浮动主题切换器 -->
+    <div class="theme-switcher-float">
+      <button class="theme-trigger-float" @click.stop="themeOpen = !themeOpen" title="切换主题">🎨</button>
+      <div class="theme-panel-float" v-if="themeOpen" @click.stop>
+        <div class="theme-panel-title">选择主题</div>
+        <div v-for="t in themes" :key="t.id" class="theme-item" :class="{active: current === t.id}" @click="applyTheme(t.id); themeOpen = false">
+          <span class="theme-swatch" :style="{background: `linear-gradient(135deg, ${t.preview[0]}, ${t.preview[1]})`}"></span>
+          <span class="theme-name">{{ t.icon }} {{ t.name }}</span>
+          <span v-if="current === t.id" class="theme-check">✓</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi, createAuth } from '@/shared/api.js'
 import { showToast } from '@/shared/utils.js'
+import { useTheme } from '../stores/useTheme.js'
+
+const { themes, current, applyTheme } = useTheme()
+const themeOpen = ref(false)
+
+function closeThemePanel(e) {
+  if (themeOpen.value && !e.target.closest('.theme-switcher-float')) {
+    themeOpen.value = false
+  }
+}
+onMounted(() => document.addEventListener('click', closeThemePanel))
+onUnmounted(() => document.removeEventListener('click', closeThemePanel))
 
 const route = useRoute()
 const router = useRouter()
@@ -148,28 +173,65 @@ async function fetchCommunities() {
 </script>
 
 <style scoped>
-.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 30% 20%,#312e8140 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,#1e1b4b60 0%,transparent 50%),#0a0c1a}
-.login-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:44px 32px;width:90%;max-width:380px;text-align:center;backdrop-filter:blur(30px);box-shadow:0 25px 80px rgba(0,0,0,.4),0 0 60px rgba(99,102,241,.08)}
-.logo{font-size:56px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(99,102,241,.3))}
-h1{font-size:22px;background:linear-gradient(135deg,#e0e7ff,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;font-weight:700}
-.sub{color:#64748b;font-size:13px;margin-bottom:20px}
-.comm-select{width:100%;height:50px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;cursor:pointer;appearance:auto;transition:all .2s}
-.comm-select:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.1)}
-.comm-select option{background:#1e1b4b;color:#e2e8f0}
-input{width:100%;height:50px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:#e2e8f0;transition:all .2s}
-input::placeholder{color:#475569}
-input:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.1)}
-.btn-primary{width:100%;height:50px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(99,102,241,.35)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 25px rgba(99,102,241,.45)}
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg-page);position:relative;overflow:hidden;transition:background .4s}
+/* 动态背景光斑 */
+.login-page::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:var(--blob1);border-radius:50%;animation:floatBlob1 8s ease-in-out infinite;pointer-events:none;opacity:var(--blob-opacity);transition:opacity .3s}
+.login-page::after{content:'';position:absolute;bottom:-15%;right:-10%;width:50%;height:50%;background:var(--blob2);border-radius:50%;animation:floatBlob2 10s ease-in-out infinite;pointer-events:none;opacity:var(--blob-opacity);transition:opacity .3s}
+@keyframes floatBlob1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,20px) scale(1.08)}}
+@keyframes floatBlob2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,-15px) scale(1.05)}}
+
+/* 液态玻璃卡片 */
+.login-card{position:relative;background:var(--bg-card);border:1px solid var(--border-1);border-radius:var(--r-xl);padding:44px 32px;width:90%;max-width:380px;text-align:center;backdrop-filter:var(--glass-blur-lg);-webkit-backdrop-filter:var(--glass-blur-lg);box-shadow:var(--shadow-card);animation:cardAppear .6s cubic-bezier(.4,0,.2,1) both;transition:background .3s,border-color .3s,box-shadow .3s}
+/* 顶部高光折射线 */
+.login-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:var(--highlight-line);opacity:var(--highlight-opacity);border-radius:1px;transition:opacity .3s}
+/* 内部折射光晕 */
+.login-card::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(var(--accent-rgb),.06) 0%,transparent 50%);pointer-events:none;opacity:var(--shine-opacity);transition:opacity .3s}
+@keyframes cardAppear{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.logo{font-size:56px;margin-bottom:8px;filter:drop-shadow(0 4px 16px rgba(var(--accent-rgb),.4))}
+h1{font-size:22px;background:var(--accent-text-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;font-weight:700}
+.sub{color:var(--text-3);font-size:13px;margin-bottom:20px}
+
+/* 输入框 */
+.comm-select,.login-card input[type="text"],.login-card input[type="password"]{width:100%;height:50px;background:var(--bg-input);border:1px solid var(--border-input);border-radius:var(--r-md);padding:0 16px;font-size:15px;margin-bottom:16px;outline:none;color:var(--text-1);backdrop-filter:var(--glass-blur-xs);-webkit-backdrop-filter:var(--glass-blur-xs);transition:all .3s cubic-bezier(.4,0,.2,1)}
+.comm-select{cursor:pointer;appearance:auto}
+.comm-select option{background:var(--select-bg);color:var(--text-1)}
+.comm-select:focus,.login-card input:focus{border-color:var(--border-input-focus);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12),var(--shine-top);background:var(--bg-input-focus)}
+input::placeholder{color:var(--text-5)}
+
+/* 主按钮 */
+.btn-primary{width:100%;height:50px;background:var(--accent-gradient);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:var(--r-md);font-size:16px;font-weight:600;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 20px var(--accent-shadow),var(--shine-top);backdrop-filter:var(--glass-blur-xs);-webkit-backdrop-filter:var(--glass-blur-xs);position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:var(--inner-fade);opacity:var(--shine-opacity);border-radius:var(--r-md) var(--r-md) 0 0;pointer-events:none;transition:opacity .3s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-shadow),var(--shine-top)}
+.btn-primary:active{transform:translateY(0);box-shadow:0 2px 10px var(--accent-shadow)}
 .btn-primary:disabled{opacity:.5;transform:none}
-.divider{display:flex;align-items:center;margin:20px 0;color:#475569;font-size:12px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+
+.divider{display:flex;align-items:center;margin:20px 0;color:var(--text-5);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-2),transparent)}
 .divider span{padding:0 12px}
-.btn-wechat{width:100%;height:50px;background:linear-gradient(135deg,#07c160,#06ad56);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;box-shadow:0 4px 16px rgba(7,193,96,.3)}
-.btn-wechat:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(7,193,96,.4)}
+
+/* 微信按钮 */
+.btn-wechat{width:100%;height:50px;background:var(--wechat-gradient);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:var(--r-md);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .25s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 16px var(--wechat-shadow),var(--shine-top);position:relative;overflow:hidden}
+.btn-wechat::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:var(--inner-fade);opacity:var(--shine-opacity);border-radius:var(--r-md) var(--r-md) 0 0;pointer-events:none;transition:opacity .3s}
+.btn-wechat:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--wechat-shadow),var(--shine-top)}
+.btn-wechat:active{transform:translateY(0)}
 .btn-wechat:disabled{opacity:.5;transform:none}
 .wx-icon{font-size:18px}
-.reg-title{color:#cbd5e1;font-size:15px;margin-bottom:16px;font-weight:600}
-.back-link{display:inline-block;margin-top:16px;color:#818cf8;font-size:13px;cursor:pointer;text-decoration:none;transition:color .2s}
-.back-link:hover{color:#a5b4fc}
+.reg-title{color:var(--text-2);font-size:15px;margin-bottom:16px;font-weight:600}
+.back-link{display:inline-block;margin-top:16px;color:var(--accent-light);font-size:13px;cursor:pointer;text-decoration:none;transition:all .2s}
+.back-link:hover{color:var(--accent-lighter)}
+
+/* ===== 浮动主题切换器 ===== */
+.theme-switcher-float{position:fixed;bottom:24px;right:24px;z-index:999}
+.theme-trigger-float{width:48px;height:48px;background:var(--switcher-bg);border:1px solid var(--switcher-border);border-radius:50%;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:var(--glass-blur-xs);-webkit-backdrop-filter:var(--glass-blur-xs);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.theme-trigger-float:hover{transform:scale(1.1);border-color:var(--accent);box-shadow:0 4px 20px var(--accent-shadow)}
+.theme-panel-float{position:absolute;bottom:calc(100% + 8px);right:0;width:200px;background:var(--switcher-panel-bg);border:1px solid var(--border-1);border-radius:var(--r-md);padding:8px;box-shadow:var(--shadow-modal);backdrop-filter:var(--glass-blur-lg);-webkit-backdrop-filter:var(--glass-blur-lg);animation:panelIn .2s ease-out}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.theme-panel-title{font-size:12px;color:var(--text-4);padding:6px 10px 8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.theme-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .2s}
+.theme-item:hover{background:var(--switcher-item-hover)}
+.theme-item.active{background:var(--switcher-item-active)}
+.theme-swatch{width:24px;height:24px;border-radius:6px;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
+.theme-name{flex:1;font-size:13px;color:var(--text-2);font-weight:500}
+.theme-check{color:var(--accent);font-weight:700;font-size:14px}
 </style>

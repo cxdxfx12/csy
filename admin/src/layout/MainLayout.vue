@@ -89,9 +89,9 @@ onMounted(async () => {
 
 <style scoped>
 .main-container { min-height: 100vh; }
-.main-sidebar { background: #fff; border-right: 1px solid #e2e8f0; transition: width 0.3s; overflow: hidden; display: flex; flex-direction: column; }
-.main-header { position: fixed; top: 0; right: 0; height: 60px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; z-index: 100; transition: left 0.3s; }
-.main-content { margin-top: 60px; padding: 20px; background: #f0f2f5; flex: 1; overflow: auto; }
+.main-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-1); transition: width 0.3s, background 0.3s, border-color 0.3s; overflow: hidden; display: flex; flex-direction: column; }
+.main-header { position: fixed; top: 0; right: 0; height: 60px; background: var(--bg-header); border-bottom: 1px solid var(--border-1); display: flex; align-items: center; padding: 0 20px; z-index: 9999; transition: left 0.3s, background 0.3s, border-color 0.3s; }
+.main-content { margin-top: 60px; padding: 20px; background: var(--bg-content); flex: 1; overflow: auto; transition: background 0.3s; }
 
 /* ===== 高档页面横幅 ===== */
 .premium-banner {
@@ -106,7 +106,7 @@ onMounted(async () => {
 }
 .banner-bg-layer {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, #0f1b35 0%, #1a3a6b 25%, #2563eb 50%, #6d28d9 80%, #4c1d95 100%);
+  background: var(--banner-gradient);
 }
 .banner-bg-layer::after {
   content: '';
@@ -158,7 +158,7 @@ onMounted(async () => {
 
 /* ===== 版权信息 ===== */
 .site-footer {
-  background: linear-gradient(135deg, #1a1f36 0%, #252b48 50%, #1a1f36 100%);
+  background: var(--bg-footer);
   border-top: 2px solid rgba(99, 102, 241, 0.3);
   padding: 16px 24px;
   flex-shrink: 0;
