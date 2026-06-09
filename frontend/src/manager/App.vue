@@ -2,6 +2,7 @@
   <div id="manager-app">
     <router-view />
     <GlobalToast />
+    <SmartGuide />
     <!-- 新消息弹窗 -->
     <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
       <span class="notify-icon">🔔</span>
@@ -25,6 +26,7 @@ import { createApi } from '@/shared/api.js'
 import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
 import './themes.css'
 import { useTheme } from './stores/useTheme.js'
+import SmartGuide from './components/SmartGuide.vue'
 
 useTheme()
 

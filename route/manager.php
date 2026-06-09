@@ -37,6 +37,9 @@ Route::group('manager', function () {
     Route::post('vote/close', 'manager/ManagerVote/close');
     Route::get('vote/result', 'manager/ManagerVote/result');
 
+    // 全局搜索
+    Route::get('search/global', 'manager/Search/global');
+
     // 活动管理
     Route::get('activity/list', 'manager/ManagerActivity/lists');
     Route::post('activity/add', 'manager/ManagerActivity/add');
