@@ -344,7 +344,7 @@ async function loadData() {
     if (query.fault_type) params.fault_type = query.fault_type
     if (query.status !== '') params.status = query.status
     const res = await apiGet('/admin/equipment/elevatorFaultList', { params })
-    if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
+    if (res && res.code === 0) { list.value = (res.data as any)?.list || res.data || []; total.value = (res.data as any)?.total || res.count || 0 }
   } catch (_) { list.value = []; total.value = 0 } finally { loading.value = false }
 }
 

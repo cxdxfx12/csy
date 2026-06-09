@@ -310,7 +310,7 @@ async function loadData() {
     if (query.inspection_type) params.inspection_type = query.inspection_type
     if (query.result !== '') params.result = query.result
     const res = await apiGet('/admin/equipment/elevatorInspectionList', { params })
-    if (res && res.code === 0) { list.value = res.data.list || []; total.value = res.data.total || 0 }
+    if (res && res.code === 0) { list.value = (res.data as any)?.list || res.data || []; total.value = (res.data as any)?.total || res.count || 0 }
   } catch (_) { list.value = []; total.value = 0 } finally { loading.value = false }
 }
 
