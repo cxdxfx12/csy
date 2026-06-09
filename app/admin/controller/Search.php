@@ -177,7 +177,7 @@ class Search extends BaseAdmin
     private function searchCommunity($keyword, &$results)
     {
         $list = Db::name('community')
-            ->field('id, name, address, manager_name, manager_phone')
+            ->field('id, name, address')
             ->whereNull('delete_time')
             ->where('name|address', 'like', "%{$keyword}%")
             ->limit(5)->order('id', 'desc')->select();
@@ -188,8 +188,7 @@ class Search extends BaseAdmin
                 'typeName'=> '小区',
                 'id'      => $item['id'],
                 'title'   => $item['name'],
-                'subtitle'=> ($item['address'] ?? '') .
-                            ($item['manager_name'] ? ' | 负责人: ' . $item['manager_name'] : ''),
+                'subtitle'=> $item['address'] ?? '',
                 'route'   => '/community',
                 'extra'   => ['community_id' => $item['id']],
                 'icon'    => 'OfficeBuilding',
@@ -277,11 +276,9 @@ class Search extends BaseAdmin
     {
         $q = Db::name('payment')->alias('p')
             ->leftJoin('owner o', 'o.id = p.owner_id')
-            ->leftJoin('room r', 'r.id = p.room_id')
             ->leftJoin('community c', 'c.id = p.community_id')
             ->field('p.id, p.payment_no, p.amount, p.pay_method, p.create_time,
                      o.realname as owner_name, c.name as community_name')
-            ->whereNull('p.delete_time')
             ->where('p.payment_no|o.realname|o.phone', 'like', "%{$keyword}%");
 
         if ($cid === -1) {
@@ -406,9 +403,9 @@ class Search extends BaseAdmin
     private function searchSupplier($keyword, &$results)
     {
         $list = Db::name('supplier')
-            ->field('id, name, contact, phone, category, status')
+            ->field('id, name, contact_person, contact_phone, category, status')
             ->whereNull('delete_time')
-            ->where('name|contact|phone|category', 'like', "%{$keyword}%")
+            ->where('name|contact_person|contact_phone|category', 'like', "%{$keyword}%")
             ->limit(8)->order('id', 'desc')->select();
 
         foreach ($list as $item) {
@@ -418,8 +415,8 @@ class Search extends BaseAdmin
                 'id'      => $item['id'],
                 'title'   => $item['name'],
                 'subtitle'=> ($item['category'] ? $item['category'] . ' | ' : '') .
-                            ($item['contact'] ? '联系人: ' . $item['contact'] . ' | ' : '') .
-                            ($item['phone'] ?? ''),
+                            ($item['contact_person'] ? '联系人: ' . $item['contact_person'] . ' | ' : '') .
+                            ($item['contact_phone'] ?? ''),
                 'route'   => '/supplier',
                 'extra'   => ['supplier_id' => $item['id']],
                 'icon'    => 'Shop',
