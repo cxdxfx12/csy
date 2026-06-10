@@ -1,6 +1,7 @@
 <template>
   <div class="sidebar-logo">
-    <span class="logo-text">🏢 大圣物业</span>
+    <img :src="monkeyLogo" class="sidebar-logo-img" alt="大圣物业" />
+    <span class="logo-text">大圣物业</span>
   </div>
   <div class="sidebar-menu-wrap">
     <el-scrollbar>
@@ -32,6 +33,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
 import type { MenuItem } from '@/types/api'
+import monkeyLogo from '@/assets/images/monkey-ico.png'
 
 const route = useRoute()
 const router = useRouter()
@@ -92,8 +94,9 @@ function handleSelect(index: string) {
 </script>
 
 <style scoped>
-.sidebar-logo { height: 52px; display: flex; align-items: center; justify-content: center; background: var(--sidebar-logo-gradient); flex-shrink: 0; position: relative; overflow: hidden; }
+.sidebar-logo { height: 52px; display: flex; align-items: center; justify-content: center; background: var(--sidebar-logo-gradient); flex-shrink: 0; position: relative; overflow: hidden; gap: 8px; }
 .sidebar-logo::after { content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); }
+.sidebar-logo-img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; flex-shrink: 0; }
 .logo-text { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; }
 .sidebar-menu-wrap { flex: 1; min-height: 0; }
 .sidebar-menu { border-right: none; }

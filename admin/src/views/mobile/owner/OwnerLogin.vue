@@ -1,7 +1,7 @@
 <template>
   <div class="ol-page">
     <div class="ol-hero">
-      🏠
+      <img :src="monkeyLogo" class="ol-logo" alt="大圣物业" />
       <h1>业主服务</h1>
       <p>大圣物业 · 智慧社区</p>
     </div>
@@ -32,6 +32,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import monkeyLogo from '@/assets/images/monkey-ico.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -117,6 +118,7 @@ async function fetchCommunities() {
 .ol-hero h1 { font-size: 24px; font-weight: 700; color: #1a202c; margin-top: 8px; }
 .ol-hero p { color: #a0aec0; font-size: 13px; margin-top: 4px; }
 .ol-hero > div:first-child { font-size: 56px; }
+.ol-logo { width: 64px; height: 64px; border-radius: 12px; object-fit: contain; }
 .ol-form { width: 100%; max-width: 340px; }
 .ol-select { width: 100%; height: 48px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0 14px; font-size: 15px; margin-bottom: 14px; outline: none; color: #333; cursor: pointer; appearance: auto; }
 .ol-input { display: flex; align-items: center; background: #fff; border-radius: 10px; padding: 0 14px; margin-bottom: 14px; height: 48px; gap: 10px; border: 1px solid #e2e8f0; }

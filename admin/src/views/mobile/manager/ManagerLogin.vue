@@ -1,7 +1,7 @@
 <template>
   <div class="ml-page">
     <div class="ml-hero">
-      📊
+      <img :src="monkeyLogo" class="ml-logo" alt="大圣物业" />
       <h1>领导驾驶舱</h1>
       <p>大圣物业 · 管理后台</p>
     </div>
@@ -42,6 +42,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import monkeyLogo from '@/assets/images/monkey-ico.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -169,7 +170,8 @@ async function fetchCommunities() {
 </script>
 <style scoped>
 .ml-page { min-height: 100vh; background: linear-gradient(135deg, #1a202c, #2d3748); display: flex; flex-direction: column; align-items: center; padding: 80px 24px; }
-.ml-hero { text-align: center; margin-bottom: 36px; font-size: 48px; }
+.ml-hero { text-align: center; margin-bottom: 36px; }
+.ml-logo { width: 64px; height: 64px; border-radius: 12px; object-fit: contain; }
 .ml-hero h1 { color: #fff; font-size: 22px; font-weight: 700; margin-top: 8px; }
 .ml-hero p { color: rgba(255, 255, 255, 0.6); font-size: 13px; margin-top: 4px; }
 .ml-form { width: 100%; max-width: 340px; }

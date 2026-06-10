@@ -1,7 +1,7 @@
 <template>
   <div class="sl-page">
     <div class="sl-hero">
-      <div class="sl-icon">🏢</div>
+      <div class="sl-icon"><img :src="monkeyLogo" class="sl-logo" alt="大圣物业" /></div>
       <h1>物业员工端</h1>
       <p>大圣物业管理系统</p>
     </div>
@@ -46,6 +46,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import monkeyLogo from '@/assets/images/monkey-ico.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -164,7 +165,8 @@ async function fetchCommunities() {
 <style scoped>
 .sl-page { min-height: 100vh; background: linear-gradient(180deg, #2b6cb0 0%, #2c5282 100%); display: flex; flex-direction: column; align-items: center; padding: 60px 24px; }
 .sl-hero { text-align: center; margin-bottom: 40px; }
-.sl-icon { font-size: 64px; margin-bottom: 8px; }
+.sl-icon { margin-bottom: 8px; }
+.sl-icon img { width: 72px; height: 72px; border-radius: 14px; object-fit: contain; }
 .sl-hero h1 { color: #fff; font-size: 24px; font-weight: 700; }
 .sl-hero p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-top: 4px; }
 .sl-form { width: 100%; max-width: 360px; }
