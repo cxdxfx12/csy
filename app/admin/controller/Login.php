@@ -123,7 +123,7 @@ class Login extends BaseAdmin
         $imageData = ob_get_clean();
         imagedestroy($img);
 
-        return \json_success([
+        return $this->success([
             'key'    => $key,
             'image'  => 'data:image/png;base64,' . base64_encode($imageData),
         ], '获取成功');

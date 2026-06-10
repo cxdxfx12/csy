@@ -30,7 +30,7 @@ if (!function_exists('set_request')) {
 if (!function_exists('json_success')) {
     function json_success($data = [], string $msg = '操作成功', int $code = 0): \think\response\Json
     {
-        return \think\response\Json::create([
+        return new \think\response\Json([
             'code' => $code,
             'msg'  => $msg,
             'data' => $data,
@@ -42,7 +42,7 @@ if (!function_exists('json_success')) {
 if (!function_exists('json_error')) {
     function json_error(string $msg = '操作失败', int $code = 1, $data = []): \think\response\Json
     {
-        return \think\response\Json::create([
+        return new \think\response\Json([
             'code' => $code,
             'msg'  => $msg,
             'data' => $data,
@@ -54,7 +54,7 @@ if (!function_exists('json_error')) {
 if (!function_exists('json_table')) {
     function json_table($list, int $total = 0, string $msg = '获取成功'): \think\response\Json
     {
-        return \think\response\Json::create([
+        return new \think\response\Json([
             'code'  => 0,
             'msg'   => $msg,
             'data'  => $list,
