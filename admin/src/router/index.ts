@@ -134,6 +134,19 @@ const router = createRouter({
     { path: '/mobile/owner/vehicle', name: 'OwnerVehicle', component: () => import('@/views/mobile/owner/OwnerVehicle.vue') },
     { path: '/mobile/owner/notice', name: 'OwnerNotice', component: () => import('@/views/mobile/owner/OwnerNotice.vue') },
     { path: '/mobile/owner/complaint', name: 'OwnerComplaint', component: () => import('@/views/mobile/owner/OwnerComplaint.vue') },
+    // 管理员手机端
+    { path: '/mobile/admin/login', name: 'MobileAdminLogin', component: () => import('@/views/mobile/admin/MobileAdminLogin.vue') },
+    {
+      path: '/mobile/admin',
+      component: () => import('@/views/mobile/admin/MobileAdminLayout.vue'),
+      redirect: '/mobile/admin/dashboard',
+      children: [
+        { path: 'dashboard', name: 'MobileAdminDashboard', component: () => import('@/views/mobile/admin/MobileAdminDashboard.vue'), meta: { title: '控制台' } },
+        { path: 'menus', name: 'MobileAdminMenus', component: () => import('@/views/mobile/admin/MobileAdminMenus.vue'), meta: { title: '功能菜单' } },
+        { path: 'messages', name: 'MobileAdminMessages', component: () => import('@/views/mobile/admin/MobileAdminMessages.vue'), meta: { title: '消息通知' } },
+        { path: 'profile', name: 'MobileAdminProfile', component: () => import('@/views/mobile/admin/MobileAdminProfile.vue'), meta: { title: '个人中心' } },
+      ],
+    },
   ],
 })
 
@@ -148,7 +161,7 @@ router.beforeEach((to, _from, next) => {
   if (to.path === '/login') return next()
 
   // 移动端登录页不需要认证
-  const mobileLoginPaths = ['/mobile/staff/login', '/mobile/owner/login', '/mobile/manager/login']
+  const mobileLoginPaths = ['/mobile/staff/login', '/mobile/owner/login', '/mobile/manager/login', '/mobile/admin/login']
   if (mobileLoginPaths.includes(to.path)) return next()
 
   // 移动端其他页面：需要各自端的 token
@@ -162,6 +175,11 @@ router.beforeEach((to, _from, next) => {
   }
   if (to.path.startsWith('/mobile/manager/')) {
     if (!managerToken) return next('/mobile/manager/dashboard')
+    return next()
+  }
+  // 管理员手机端需要 admin_token
+  if (to.path.startsWith('/mobile/admin/')) {
+    if (!adminToken) return next('/mobile/admin/login')
     return next()
   }
 

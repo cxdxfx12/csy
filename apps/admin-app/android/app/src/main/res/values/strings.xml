@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">大圣物业管理</string>
+    <string name="title_activity_main">大圣物业管理</string>
+    <string name="package_name">com.dasheng.admin</string>
+    <string name="custom_url_scheme">com.dasheng.admin</string>
+</resources>

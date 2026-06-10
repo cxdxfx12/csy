@@ -1,5 +1,22 @@
 <template>
-  <el-container class="main-container">
+  <!-- 手机管理端视图：隐藏侧边栏，全屏适配 -->
+  <div v-if="isMobileView" class="mobile-view-wrap">
+    <header class="mobile-view-header">
+      <div class="mvh-left" @click="backToMobile">
+        <span class="mvh-back">←</span>
+        <span class="mvh-title">{{ currentTitle || '详情' }}</span>
+      </div>
+      <div class="mvh-logo">
+        <img :src="monkeyIco" class="mvh-logo-img" />
+      </div>
+    </header>
+    <div class="mobile-view-body">
+      <router-view />
+    </div>
+  </div>
+
+  <!-- PC 桌面端视图 -->
+  <el-container v-else class="main-container">
     <el-aside :width="appStore.sidebarCollapsed ? '64px' : '240px'" class="main-sidebar">
       <Sidebar />
     </el-aside>
@@ -63,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
@@ -79,8 +96,29 @@ const router = useRouter()
 const route = useRoute()
 
 const currentTitle = computed(() => (route.meta.title as string) || '')
+const isMobileView = ref(sessionStorage.getItem('_mobile_view') === '1')
+
+// 监听路由变化：如果不在手机视图模式但 sessionStorage 有标记，清除标记
+// 如果路由变为手机端路径，也清除标记
+watch(() => route.path, (p) => {
+  if (p.startsWith('/mobile/')) {
+    sessionStorage.removeItem('_mobile_view')
+    isMobileView.value = false
+  } else if (sessionStorage.getItem('_mobile_view') === '1') {
+    isMobileView.value = true
+  } else {
+    isMobileView.value = false
+  }
+})
+
+function backToMobile() {
+  sessionStorage.removeItem('_mobile_view')
+  isMobileView.value = false
+  router.replace('/mobile/admin/menus')
+}
 
 onMounted(async () => {
+  isMobileView.value = sessionStorage.getItem('_mobile_view') === '1'
   try {
     await userStore.fetchInfo()
   } catch {
@@ -219,4 +257,22 @@ onMounted(async () => {
   color: #c4b5fd;
   text-decoration: underline;
 }
+
+/* ===== 手机管理端视图 ===== */
+.mobile-view-wrap { min-height: 100vh; max-width: 480px; margin: 0 auto; background: #f0f2f5; }
+.mobile-view-header { position: sticky; top: 0; z-index: 300; height: 48px; background: linear-gradient(135deg, #1a365d, #2b6cb0); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; }
+.mvh-left { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.mvh-back { color: #fff; font-size: 20px; font-weight: 700; }
+.mvh-title { color: #fff; font-size: 15px; font-weight: 600; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mvh-logo-img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
+.mobile-view-body { padding: 12px; min-height: calc(100vh - 48px); }
+.mobile-view-body :deep(.el-table) { font-size: 13px; }
+.mobile-view-body :deep(.el-table td),
+.mobile-view-body :deep(.el-table th) { padding: 8px 6px; }
+.mobile-view-body :deep(.el-form-item) { margin-bottom: 12px; }
+.mobile-view-body :deep(.el-button) { font-size: 13px; padding: 8px 14px; }
+.mobile-view-body :deep(.el-input__inner) { height: 38px; font-size: 14px; }
+.mobile-view-body :deep(.el-dialog) { width: 92% !important; margin-top: 10vh !important; }
+.mobile-view-body :deep(.el-pagination) { flex-wrap: wrap; justify-content: center; }
+.mobile-view-body :deep(.el-card__body) { padding: 12px; }
 </style>

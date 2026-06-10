@@ -1,0 +1,19 @@
+{
+  "appId": "com.dasheng.admin",
+  "appName": "大圣物业管理",
+  "webDir": "www",
+  "server": {
+    "url": "https://www.hbdxm.com/admin/",
+    "cleartext": true,
+    "iosScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+  "ios": {
+    "contentInset": "always",
+    "allowsLinkPreview": false,
+    "scrollEnabled": true,
+    "limitsNavigationsToAppBoundDomains": true
+  }
+}
