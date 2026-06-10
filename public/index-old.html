@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="智慧物业,物业管理系统,大圣物业,喵喵至家,杭州物业软件">
+    <meta name="description" content="大圣智慧物业管理系统——杭州喵喵至家网络有限公司出品，以科技赋能物业管理，让社区服务更高效、更温暖。">
+    <title>大圣智慧物业管理系统 - 杭州喵喵至家网络有限公司</title>
+    <link rel="stylesheet" href="/tailwind.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        .hero-btn { position:relative; overflow:hidden; backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,.35); transition:all .35s cubic-bezier(.4,0,.2,1); white-space:nowrap; }
+        .hero-btn::before {
+            content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+            transition:left .6s ease;
+        }
+        .hero-btn:hover::before { left:100%; }
+        .hero-btn:hover { transform:translateY(-3px) scale(1.02); }
+        .hero-btn-blue { background:linear-gradient(135deg,rgba(37,99,235,.78),rgba(29,78,216,.88)); color:#fff; box-shadow:0 8px 32px rgba(37,99,235,.3),inset 0 1px 0 rgba(255,255,255,.2); }
+        .hero-btn-blue:hover { box-shadow:0 14px 40px rgba(37,99,235,.5),inset 0 1px 0 rgba(255,255,255,.3)!important; }
+        .hero-btn-outline { background:rgba(255,255,255,.65); color:#1e40af; border-color:rgba(147,197,253,.5); box-shadow:0 4px 24px rgba(37,99,235,.12),inset 0 1px 0 rgba(255,255,255,.5); }
+        .hero-btn-outline:hover { background:rgba(239,246,255,.85)!important; border-color:rgba(59,130,246,.6)!important; box-shadow:0 10px 36px rgba(37,99,235,.2),inset 0 1px 0 rgba(255,255,255,.7)!important; }
+        .hero-btn-purple { background:linear-gradient(135deg,rgba(139,92,246,.78),rgba(124,58,237,.88)); color:#fff; box-shadow:0 8px 32px rgba(139,92,246,.3),inset 0 1px 0 rgba(255,255,255,.2); }
+        .hero-btn-purple:hover { box-shadow:0 14px 40px rgba(139,92,246,.5),inset 0 1px 0 rgba(255,255,255,.3)!important; }
+    </style>
+</head>
+<body class="bg-white text-dark font-sans">
+
+<!-- 导航栏 -->
+<header class="fixed w-full top-0 z-50 bg-white shadow-sm">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="/images/monkey-icon.png"
+                 alt="大圣物管LOGO"
+                 class="w-10 h-10 object-contain">
+            <div>
+                <div class="text-lg font-bold text-primary">大圣智慧物业</div>
+                <div class="text-xs text-gray-500">杭州喵喵至家网络有限公司</div>
+            </div>
+        </div>
+        <nav class="hidden md:flex gap-6 text-sm font-medium">
+            <a href="#home" class="hover:text-primary transition-colors">首页</a>
+            <a href="#features" class="hover:text-primary transition-colors">系统功能</a>
+            <a href="#scene" class="hover:text-primary transition-colors">应用场景</a>
+            <a href="#idea" class="hover:text-primary transition-colors">解决方案</a>
+            <a href="owner.html" target="_blank" class="hover:text-primary transition-colors">业主端</a>
+            <a href="staff.html" target="_blank" class="hover:text-primary transition-colors">员工端</a>
+            <a href="/admin/" target="_blank" class="hover:text-primary transition-colors">管理后台</a>
+            <a href="https://www.hbdxm.com/wg/contact.html" class="hover:text-primary transition-colors">咨询合作</a>
+        </nav>
+        <button class="md:hidden text-xl" id="menuBtn">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+</header>
+
+<!-- 首屏 -->
+<section id="home" class="pt-28 pb-20 bg-light">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+        <div>
+            <h1 class="text-[clamp(2rem,4vw,3rem)] font-bold leading-tight">
+                智慧赋能<br><span class="text-primary">新一代物业管理系统</span>
+            </h1>
+            <p class="mt-6 text-gray-600 text-lg leading-relaxed">
+                大圣智慧物业管理系统，融合物联网、大数据与AI技术，为物业企业提供全场景数字化解决方案，助力降本增效，提升业主满意度。
+            </p>
+            <div class="mt-10 flex flex-wrap" style="gap:3rem;">
+                <!-- 查看功能 -->
+                <a href="#features" class="hero-btn hero-btn-blue inline-flex items-center gap-2 px-21 py-9 rounded-lg font-semibold transition-all duration-300"
+                   style="">
+                    <i class="fa fa-cubes"></i>查看功能
+                </a>
+                <!-- 立即咨询 -->
+                <a href="#contact" class="hero-btn hero-btn-outline inline-flex items-center gap-2 px-21 py-9 rounded-lg font-semibold border-2 transition-all duration-300"
+                   style="">
+                    <i class="fa fa-comments-o"></i>立即咨询
+                </a>
+                <!-- 小区数字建模 -->
+                <a href="/3d-yanshi/" target="_blank" class="hero-btn hero-btn-purple inline-flex items-center gap-2 px-21 py-9 rounded-lg font-semibold transition-all duration-300"
+                   style="">
+                    <i class="fa fa-building-o"></i>小区数字建模
+                </a>
+            </div>
+            <!-- 统计数据 -->
+            <div class="mt-10 grid grid-cols-4 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-extrabold text-primary">500<span class="text-dark">+</span></div>
+                    <div class="text-xs text-gray-500 mt-1">服务社区</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-primary">50万<span class="text-dark">+</span></div>
+                    <div class="text-xs text-gray-500 mt-1">覆盖业主</div>
+                </div>
+                <div class="hidden sm:block">
+                    <div class="text-2xl font-extrabold text-primary">99.9<span class="text-dark">%</span></div>
+                    <div class="text-xs text-gray-500 mt-1">系统稳定性</div>
+                </div>
+                <div class="hidden sm:block">
+                    <div class="text-2xl font-extrabold text-primary">7×24<span class="text-dark">h</span></div>
+                    <div class="text-xs text-gray-500 mt-1">技术支持</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <img src="/images/welcome-girl.jpg" alt="智慧物业" class="rounded-xl shadow-lg w-full max-w-sm mx-auto h-auto object-cover">
+        </div>
+    </div>
+</section>
+
+<!-- 三端入口 -->
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- 业主端 -->
+            <a href="owner.html" target="_blank" class="block rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl shadow-sm border border-gray-100 hover:border-primary/20" style="background:linear-gradient(135deg,#EBF0FF,#F0F4FF)">
+                <span class="absolute top-5 right-5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">微信端</span>
+                <div class="text-4xl mb-4 relative z-10">🏠</div>
+                <h3 class="text-2xl font-bold text-dark mb-2 relative z-10">业主端</h3>
+                <p class="text-gray-500 text-sm mb-5 relative z-10 leading-relaxed">报修、投诉、缴费、公告、访客登记，指尖搞定物业服务。</p>
+                <span class="inline-flex items-center gap-1 text-primary font-semibold text-sm relative z-10 transition-all group-hover:gap-2">点击进入 →</span>
+            </a>
+            <!-- 员工端 -->
+            <a href="staff.html" target="_blank" class="block rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl shadow-sm border border-gray-100 hover:border-primary/20" style="background:linear-gradient(135deg,#E8F5FF,#EDF7FF)">
+                <span class="absolute top-5 right-5 px-3 py-1 rounded-full text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200">移动端</span>
+                <div class="text-4xl mb-4 relative z-10">👷</div>
+                <h3 class="text-2xl font-bold text-dark mb-2 relative z-10">员工端</h3>
+                <p class="text-gray-500 text-sm mb-5 relative z-10 leading-relaxed">接单处理、巡检打卡、收费管理，工作高效移动化。</p>
+                <span class="inline-flex items-center gap-1 text-primary font-semibold text-sm relative z-10">点击进入 →</span>
+            </a>
+            <!-- 管理后台 -->
+            <a href="/admin/" target="_blank" class="block rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl shadow-sm border border-gray-100 hover:border-primary/20" style="background:linear-gradient(135deg,#F2FCF5,#F6FFF8)">
+                <span class="absolute top-5 right-5 px-3 py-1 rounded-full text-xs font-semibold text-green-600 bg-green-50 border border-green-200">PC端</span>
+                <div class="text-4xl mb-4 relative z-10">💻</div>
+                <h3 class="text-2xl font-bold text-dark mb-2 relative z-10">管理后台</h3>
+                <p class="text-gray-500 text-sm mb-5 relative z-10 leading-relaxed">数据总览、权限管理、报表统计，全局掌控一目了然。</p>
+                <span class="inline-flex items-center gap-1 text-primary font-semibold text-sm relative z-10">点击进入 →</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 系统功能 -->
+<section id="features" class="py-20 bg-light">
+    <div class="container mx-auto px-6 text-center mb-12">
+        <p class="text-primary text-sm font-semibold tracking-widest uppercase mb-2">Core Features</p>
+        <h2 class="text-3xl font-bold">全方位物业数字化能力</h2>
+        <p class="text-gray-500 mt-3 max-w-xl mx-auto">覆盖物业管理全场景，从报修投诉到智能巡检，一站解决所有管理难题。</p>
+    </div>
+    <div class="container mx-auto px-6 grid md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-wrench text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">智能报修</h3>
+            <p class="text-gray-500 mt-2 text-sm">业主一键报修，自动派单到维修人员，实时追踪处理进度，维修效率提升60%。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-comments text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">投诉建议</h3>
+            <p class="text-gray-500 mt-2 text-sm">业主在线提交投诉建议，AI智能分类流转，闭环处理机制保障每一条反馈妥善解决。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-car text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">车辆管理</h3>
+            <p class="text-gray-500 mt-2 text-sm">车牌识别、车位管理、访客车辆登记一体化，出入自动放行，告别拥堵。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-bullhorn text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">公告推送</h3>
+            <p class="text-gray-500 mt-2 text-sm">物业通知精准触达每位业主，支持图文视频多种格式，已读未读一目了然。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-search text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">智能巡检</h3>
+            <p class="text-gray-500 mt-2 text-sm">GPS打卡巡检路线，拍照上传自动归档，隐患排查不留死角，巡查质量可追溯。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <i class="fa fa-credit-card text-primary text-3xl mb-4"></i>
+            <h3 class="text-lg font-bold">收费管理</h3>
+            <p class="text-gray-500 mt-2 text-sm">物业费、水电费在线缴纳，账单自动生成，欠费提醒智能催缴，收费率达98%。</p>
+        </div>
+    </div>
+</section>
+
+<!-- 应用场景 -->
+<section id="scene" class="py-20 bg-white">
+    <div class="container mx-auto px-6 text-center mb-12">
+        <h2 class="text-3xl font-bold">应用场景</h2>
+        <p class="text-gray-500 mt-3">适用于各类居住与商业物业场景</p>
+    </div>
+    <div class="container mx-auto px-6 grid md:grid-cols-3 gap-6">
+        <div class="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+            <img src="https://picsum.photos/id/1048/600/400" alt="住宅小区" class="w-full h-48 object-cover">
+            <div class="p-4 text-center font-medium">住宅小区</div>
+        </div>
+        <div class="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+            <img src="https://picsum.photos/id/1031/600/400" alt="商业写字楼" class="w-full h-48 object-cover">
+            <div class="p-4 text-center font-medium">商业写字楼</div>
+        </div>
+        <div class="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+            <img src="https://picsum.photos/id/1057/600/400" alt="产业园区" class="w-full h-48 object-cover">
+            <div class="p-4 text-center font-medium">产业园区</div>
+        </div>
+    </div>
+</section>
+
+<!-- 关于我们 & 为什么选择我们 -->
+<section id="idea" class="py-20 bg-light">
+    <div class="container mx-auto px-6 text-center mb-12">
+        <p class="text-primary text-sm font-semibold tracking-widest uppercase mb-2">Why Choose Us</p>
+        <h2 class="text-3xl font-bold">为什么选择大圣智慧物业</h2>
+    </div>
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+        <div>
+            <img src="https://picsum.photos/id/1076/800/500" alt="小区环境" class="rounded-xl shadow w-full">
+        </div>
+        <div class="space-y-8">
+            <div class="flex gap-4">
+                <div class="w-12 h-12 min-w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl">⚡</div>
+                <div>
+                    <h4 class="text-lg font-bold text-dark">开箱即用，快速部署</h4>
+                    <p class="text-gray-500 text-sm mt-1">云端SaaS模式，无需自建服务器，注册即用，3天完成上线。支持私有化部署，数据安全无忧。</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-12 h-12 min-w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl">📱</div>
+                <div>
+                    <h4 class="text-lg font-bold text-dark">三端协同，无缝体验</h4>
+                    <p class="text-gray-500 text-sm mt-1">业主微信端 + 员工移动端 + PC管理后台，三端数据实时同步，随时随地掌控全局。</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-12 h-12 min-w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl">🔒</div>
+                <div>
+                    <h4 class="text-lg font-bold text-dark">金融级安全防护</h4>
+                    <p class="text-gray-500 text-sm mt-1">数据加密传输存储，多层权限控制，操作日志可追溯，全面通过信息安全等级保护认证。</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-12 h-12 min-w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl">🎯</div>
+                <div>
+                    <h4 class="text-lg font-bold text-dark">持续迭代，终身升级</h4>
+                    <p class="text-gray-500 text-sm mt-1">专业研发团队持续打磨，每月功能更新，根据市场需求快速响应，合作伙伴优先体验新功能。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 联系我们 -->
+<section id="contact" class="py-20 bg-primary text-white">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold">开启智慧物业之旅</h2>
+        <p class="mt-4 opacity-90">获取专属智慧物业解决方案 · 欢迎致电咨询</p>
+        <div class="mt-12 grid md:grid-cols-4 gap-6">
+            <div>
+                <i class="fa fa-phone text-2xl mb-3"></i>
+                <h5 class="font-bold">咨询热线</h5>
+                <p class="mt-2 opacity-90 text-sm">17771300068</p>
+                <p class="mt-1 opacity-75 text-sm">19171045360</p>
+            </div>
+            <div>
+                <i class="fa fa-map-marker text-2xl mb-3"></i>
+                <h5 class="font-bold">公司地址</h5>
+                <p class="mt-2 opacity-90 text-sm">浙江省杭州市临平区怡丰城12幢</p>
+            </div>
+            <div>
+                <i class="fa fa-envelope text-2xl mb-3"></i>
+                <h5 class="font-bold">商务邮箱</h5>
+                <p class="mt-2 opacity-90 text-sm">mmzj@miaomiaozj.com</p>
+            </div>
+            <div>
+                <i class="fa fa-globe text-2xl mb-3"></i>
+                <h5 class="font-bold">官方网站</h5>
+                <p class="mt-2 opacity-90 text-sm">www.hbdxm.com</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 底部 -->
+<footer class="py-12 bg-dark text-white/70" id="about">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-10 mb-10">
+            <!-- 品牌 -->
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="/images/monkey-icon.png" alt="大圣物管LOGO" class="w-8 h-8 object-contain">
+                    <span class="text-white font-bold text-lg">大圣<span class="text-primary">智慧物业</span></span>
+                </div>
+                <p class="text-sm leading-relaxed text-white/50">
+                    大圣智慧物业管理系统，由杭州喵喵至家网络有限公司倾力打造，
+                    以科技创新驱动物业管理变革，让每一个社区都享受科技带来的便捷与温暖。
+                </p>
+                <div class="mt-4 text-sm text-white/50 space-y-1">
+                    <p>📞 17771300068 / 19171045360</p>
+                    <p>🌐 www.hbdxm.com</p>
+                </div>
+            </div>
+            <!-- 产品功能 -->
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 tracking-wider">产品功能</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">智能报修</a></li>
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">投诉建议</a></li>
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">车辆管理</a></li>
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">公告推送</a></li>
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">智能巡检</a></li>
+                    <li><a href="#features" class="text-white/50 hover:text-white transition-colors">收费管理</a></li>
+                </ul>
+            </div>
+            <!-- 快速入口 -->
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 tracking-wider">快速入口</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="owner.html" target="_blank" class="text-white/50 hover:text-white transition-colors">业主端入口</a></li>
+                    <li><a href="staff.html" target="_blank" class="text-white/50 hover:text-white transition-colors">员工端入口</a></li>
+                    <li><a href="/admin/" target="_blank" class="text-white/50 hover:text-white transition-colors">管理后台</a></li>
+                    <li><a href="#home" class="text-white/50 hover:text-white transition-colors">返回首页</a></li>
+                    <li><a href="#contact" class="text-white/50 hover:text-white transition-colors">联系我们</a></li>
+                </ul>
+            </div>
+            <!-- 启航科技运维 -->
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 tracking-wider">企业运维</h4>
+                <a href="qh/index.html" class="block text-lg font-bold text-accent hover:text-white transition-colors">
+                    <i class="fa fa-cog mr-1"></i>启航科技运维
+                </a>
+                <p class="text-xs text-white/40 mt-2">专业IT运维 · 网络安全 · 云服务托管</p>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-white/30">
+            <p>© 2026 杭州喵喵至家网络有限公司. All Rights Reserved.</p>
+            <p><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow" class="hover:text-white/50 transition-colors">鄂ICP备2025153909号</a></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 移动端菜单
+    document.getElementById('menuBtn').addEventListener('click', () => {
+        alert('移动端菜单已启用');
+    });
+
+    // 导航滚动阴影
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            header.classList.add('shadow-md');
+        } else {
+            header.classList.remove('shadow-md');
+        }
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const id = this.getAttribute('href');
+            if (id === '#') return;
+            const target = document.querySelector(id);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
