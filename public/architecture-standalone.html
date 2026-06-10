@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkPHP + Vue3 全栈运行架构图</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:40px 20px;
+}
+.page{width:100%;max-width:1400px}
+
+/* 标题 */
+.title{
+  text-align:center;font-size:28px;font-weight:800;color:#e2e8f0;
+  margin-bottom:40px;letter-spacing:2px;
+}
+.title span{background:linear-gradient(135deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* 架构容器 - 总流程 从上到下共7层 */
+.arch{counter-reset:step}
+.layer{
+  position:relative;display:flex;align-items:stretch;
+  margin-bottom:0;min-height:100px;
+}
+.layer-main{
+  flex:0 0 340px;display:flex;align-items:center;justify-content:center;
+  padding:20px 28px;position:relative;z-index:2;
+}
+.layer-badge{
+  font-size:15px;font-weight:700;padding:12px 28px;border-radius:12px;
+  text-align:center;white-space:nowrap;counter-increment:step;
+  position:relative;box-shadow:0 8px 32px rgba(0,0,0,.25);
+}
+.layer-badge::before{
+  content:counter(step);position:absolute;left:-14px;top:-14px;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;z-index:3;
+}
+
+/* 各层颜色 */
+.l1 .layer-badge{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e}
+.l1 .layer-badge::before{background:#f59e0b}
+.l2 .layer-badge{background:linear-gradient(135deg,#dcfce7,#86efac);color:#166534}
+.l2 .layer-badge::before{background:#22c55e}
+.l3 .layer-badge{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46}
+.l3 .layer-badge::before{background:#10b981}
+.l4 .layer-badge{background:linear-gradient(135deg,#ede9fe,#c4b5fd);color:#5b21b6}
+.l4 .layer-badge::before{background:#8b5cf6}
+.l5 .layer-badge{background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af}
+.l5 .layer-badge::before{background:#3b82f6}
+.l6 .layer-badge{background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d}
+.l6 .layer-badge::before{background:#ec4899}
+.l7 .layer-badge{background:linear-gradient(135deg,#ffe4e6,#fecdd3);color:#881337}
+.l7 .layer-badge::before{background:#f43f5e}
+
+/* 子项区域 */
+.layer-detail{
+  flex:1;display:flex;flex-wrap:wrap;align-items:center;
+  gap:10px;padding:20px 16px;position:relative;z-index:1;
+}
+.layer-detail::before{
+  content:'';position:absolute;left:0;top:15px;bottom:15px;
+  width:2px;background:currentColor;opacity:.3;border-radius:1px;
+}
+.tag{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:#cbd5e1;font-size:13px;padding:8px 16px;border-radius:20px;
+  white-space:nowrap;backdrop-filter:blur(8px);transition:all .25s;
+}
+.tag:hover{
+  background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);
+  color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.tag.hl1{border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.1);color:#fcd34d}
+.tag.hl2{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1);color:#86efac}
+.tag.hl3{border-color:rgba(16,185,129,.5);background:rgba(16,185,129,.1);color:#6ee7b7}
+.tag.hl4{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1);color:#c4b5fd}
+.tag.hl5{border-color:rgba(59,130,246,.5);background:rgba(59,130,246,.1);color:#93c5fd}
+.tag.hl6{border-color:rgba(236,72,153,.5);background:rgba(236,72,153,.1);color:#f9a8d4}
+.tag.hl7{border-color:rgba(244,63,94,.5);background:rgba(244,63,94,.1);color:#fecdd3}
+
+/* 流程箭头 */
+.arrow-row{
+  display:flex;align-items:center;justify-content:center;
+  padding:6px 0;margin-left:340px;
+}
+.arrow-line{
+  flex:1;height:2px;background:linear-gradient(90deg,transparent,rgba(148,163,184,.5),transparent);
+  max-width:600px;position:relative;
+}
+.arrow-label{
+  font-size:12px;color:#94a3b8;padding:4px 14px;
+  border:1px dashed rgba(148,163,184,.3);border-radius:12px;
+  white-space:nowrap;
+}
+
+/* 底部中心节点 */
+.center-node{
+  margin-top:30px;display:flex;justify-content:center;
+}
+.center-badge{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:20px 40px;border-radius:50px;
+  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(129,140,248,.15));
+  border:2px solid rgba(56,189,248,.4);
+  color:#e2e8f0;font-size:18px;font-weight:800;
+  box-shadow:0 0 60px rgba(56,189,248,.15),inset 0 1px 0 rgba(255,255,255,.1);
+  backdrop-filter:blur(12px);letter-spacing:1px;
+}
+.center-dot{
+  width:10px;height:10px;border-radius:50%;background:#38bdf8;
+  box-shadow:0 0 12px #38bdf8;animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 8px #38bdf8}
+  50%{box-shadow:0 0 20px #818cf8,0 0 40px rgba(129,140,248,.4)}
+}
+
+/* 数据流动画 */
+.data-flow{
+  position:absolute;width:6px;height:6px;border-radius:50%;
+  background:#38bdf8;box-shadow:0 0 8px #38bdf8;
+  animation:flowDown 3s ease-in-out infinite;
+}
+@keyframes flowDown{
+  0%{top:0;opacity:.2}
+  50%{opacity:1}
+  100%{top:calc(100% - 6px);opacity:.2}
+}
+
+/* 响应式 */
+@media(max-width:900px){
+  .layer{flex-direction:column}
+  .layer-main{flex:auto}
+  .arrow-row{margin-left:0}
+  .layer-detail::before{display:none}
+  .layer-detail{justify-content:center}
+  .tag{font-size:12px;padding:6px 12px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1 class="title">ThinkPHP + Vue3 <span>全栈运行架构</span></h1>
+
+<!-- 第1层：前端 Vue3 -->
+<div class="layer l1">
+  <div class="layer-main"><div class="layer-badge">前端 Vue3 框架</div></div>
+  <div class="layer-detail">
+    <span class="tag hl1">setup / 生命周期钩子</span>
+    <span class="tag hl1">模板数据绑定 (ref/reactive)</span>
+    <span class="tag hl1">Vue Router 路由跳转</span>
+    <span class="tag hl1">用户交互 / 表单提交</span>
+    <span class="tag hl1">Pinia 状态管理</span>
+    <span class="tag hl1">全局共享状态</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↓ 发起 API 请求</div></div>
+
+<!-- 第2层：Axios 请求层 -->
+<div class="layer l2">
+  <div class="layer-main"><div class="layer-badge">Axios 请求层</div></div>
+  <div class="layer-detail">
+    <span class="tag hl2">自动添加 Token</span>
+    <span class="tag hl2">请求/响应拦截器</span>
+    <span class="tag hl2">数据解包与统一提示</span>
+    <span class="tag hl2">取消重复请求</span>
+    <span class="tag hl2">401 自动跳转</span>
+    <span class="tag hl2">baseURL / 超时配置</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↓ HTTP / HTTPS 传输层</div></div>
+
+<!-- 第3层：网络通信 -->
+<div class="layer l3">
+  <div class="layer-main"><div class="layer-badge">网络通信层</div></div>
+  <div class="layer-detail">
+    <span class="tag hl3">HTTP / HTTPS 协议</span>
+    <span class="tag hl3">生产/开发环境切换</span>
+    <span class="tag hl3">跨域 CORS 处理</span>
+    <span class="tag hl3">JSON 数据交换</span>
+    <span class="tag hl3">鉴权重定向</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↓ 到达服务器</div></div>
+
+<!-- 第4层：后端入口 -->
+<div class="layer l4">
+  <div class="layer-main"><div class="layer-badge">后端入口</div></div>
+  <div class="layer-detail">
+    <span class="tag hl4">public/index.php 入口</span>
+    <span class="tag hl4">Composer 自动加载</span>
+    <span class="tag hl4">应用初始化</span>
+    <span class="tag hl4">载入 .env 环境变量</span>
+    <span class="tag hl4">接收 Request 对象</span>
+    <span class="tag hl4">路由分发 → Service</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↓ 业务处理</div></div>
+
+<!-- 第5层：后端核心（最丰富的一层） -->
+<div class="layer l5">
+  <div class="layer-main"><div class="layer-badge">ThinkPHP 核心层</div></div>
+  <div class="layer-detail">
+    <span class="tag hl5">Controller 控制器</span>
+    <span class="tag hl5">Service 服务层</span>
+    <span class="tag hl5">Middleware 中间件</span>
+    <span class="tag hl5">Model ORM模型</span>
+    <span class="tag hl5">Validate 验证器</span>
+    <span class="tag hl5">数据库事务控制</span>
+    <span class="tag hl5">第三方API调用</span>
+    <span class="tag hl5">Cache 缓存(Redis)</span>
+    <span class="tag hl5">Auth 认证 / 限流</span>
+    <span class="tag hl5">CORS / 日志记录</span>
+    <span class="tag hl5">统一响应格式</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↓ 路由层响应</div></div>
+
+<!-- 第6层：路由层 -->
+<div class="layer l6">
+  <div class="layer-main"><div class="layer-badge">路由层 route/app.php</div></div>
+  <div class="layer-detail">
+    <span class="tag hl6">api/v1 路由组</span>
+    <span class="tag hl6">RESTful 资源路由</span>
+    <span class="tag hl6">HTTP 状态码</span>
+    <span class="tag hl6">响应 code/data/msg</span>
+  </div>
+</div>
+
+<div class="arrow-row"><div class="arrow-label">↑ JSON 响应返回</div></div>
+
+<!-- 第7层：前端响应接收 -->
+<div class="layer l7">
+  <div class="layer-main"><div class="layer-badge">前端响应接收</div></div>
+  <div class="layer-detail">
+    <span class="tag hl7">响应拦截器 (错误码判断)</span>
+    <span class="tag hl7">Vue 响应式数据刷新</span>
+    <span class="tag hl7">Pinia / 组件状态更新</span>
+    <span class="tag hl7">交互闭环 → UI 更新 ✓</span>
+  </div>
+</div>
+
+<!-- 中心标识 -->
+<div class="center-node">
+  <div class="center-badge">
+    <span class="center-dot"></span>
+    ThinkPHP + Vue3 全栈数据流
+    <span class="center-dot" style="animation-delay:.5s"></span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

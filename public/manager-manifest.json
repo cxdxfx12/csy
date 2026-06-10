@@ -1,0 +1,26 @@
+{
+  "name": "小区经理工作台 - 大圣物业管理平台",
+  "short_name": "经理端",
+  "description": "大圣智慧物业经理端 - 小区管理、公告、工单调度",
+  "start_url": "/manager.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#8b5cf6",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/manager-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/manager-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

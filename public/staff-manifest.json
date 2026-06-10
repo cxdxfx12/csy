@@ -1,0 +1,26 @@
+{
+  "name": "物业员工端 - 大圣智慧物业",
+  "short_name": "员工端",
+  "description": "大圣智慧物业员工端 - 工单处理、巡检、维修",
+  "start_url": "/staff.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#10b981",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/staff-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/staff-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

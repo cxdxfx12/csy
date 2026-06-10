@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/owner/owner",
+    "pages/staff/staff",
+    "pages/manager/manager"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#1a73e8",
+    "navigationBarTitleText": "大圣物业",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
+  },
+  "sitemapLocation": "sitemap.json"
+}
