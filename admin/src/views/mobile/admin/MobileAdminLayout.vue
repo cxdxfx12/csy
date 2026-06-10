@@ -1,75 +1,143 @@
 <template>
-  <div class="mal-wrap">
-    <!-- 顶部栏 -->
-    <header class="mal-header">
-      <div class="malh-left" @click="toggleSidebar">
-        <span class="malh-avatar"><img :src="monkeyLogo" class="malh-avatar-img" /></span>
+  <div class="layout-wrap">
+    <!-- 顶部状态栏 -->
+    <header class="top-bar">
+      <div class="tb-left" @click="toggleSidebar">
+        <div class="avatar-ring">
+          <img :src="monkeyLogo" class="avatar-img" />
+        </div>
       </div>
-      <div class="malh-title">{{ pageTitle }}</div>
-      <div class="malh-right" @click="router.push('/mobile/admin/messages')">
-        <span v-if="unreadCount" class="malh-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
-        <span style="font-size:20px;">🔔</span>
+      <div class="tb-center">{{ pageTitle }}</div>
+      <div class="tb-right" @click="router.push('/mobile/admin/messages')">
+        <div class="bell-box">
+          <Icon icon="ph:bell-duotone" class="bell-icon" />
+          <span v-if="unreadCount" class="bell-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+        </div>
       </div>
     </header>
 
+    <!-- 侧滑菜单遮罩 -->
+    <Transition name="overlay">
+      <div v-if="sidebarOpen" class="sidebar-mask" @click="sidebarOpen = false" />
+    </Transition>
+
     <!-- 侧滑菜单 -->
-    <div class="mal-overlay" v-if="sidebarOpen" @click="sidebarOpen = false"></div>
-    <nav class="mal-sidebar" :class="{ open: sidebarOpen }">
-      <div class="mals-head">
-        <img :src="monkeyLogo" class="mals-logo" />
-        <div>
-          <div class="mals-name">{{ userStore.userInfo?.nickname || userStore.userInfo?.username || '管理员' }}</div>
-          <div class="mals-role">{{ userStore.userInfo?.role || '系统管理' }}</div>
+    <Transition name="drawer">
+      <nav v-if="sidebarOpen" class="sidebar-drawer">
+        <!-- 用户卡片 -->
+        <div class="sd-user">
+          <img :src="monkeyLogo" class="sdu-avatar" />
+          <div class="sdu-info">
+            <div class="sdu-name">{{ userStore.userInfo?.nickname || userStore.userInfo?.username || '管理员' }}</div>
+            <div class="sdu-badge">
+              <Icon icon="ph:shield-check-fill" />
+              {{ userStore.userInfo?.role || '系统管理员' }}
+            </div>
+          </div>
+          <Icon icon="ph:x" class="sdu-close" @click="sidebarOpen = false" />
         </div>
-      </div>
-      <div class="mals-list">
-        <div class="mals-item" @click="navigate('/mobile/admin/dashboard'); sidebarOpen=false">
-          <span class="mals-icon">📊</span> 控制台
+
+        <!-- 菜单项 -->
+        <div class="sd-menu">
+          <div
+            class="sdm-item"
+            :class="{ active: currentTab === 'dashboard' }"
+            @click="navigate('/mobile/admin/dashboard')"
+          >
+            <div class="sdmi-icon"><Icon icon="ph:gauge-duotone" /></div>
+            <span class="sdmi-label">控制台</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
+          <div
+            class="sdm-item"
+            :class="{ active: currentTab === 'menus' }"
+            @click="navigate('/mobile/admin/menus')"
+          >
+            <div class="sdmi-icon"><Icon icon="ph:grid-nine-duotone" /></div>
+            <span class="sdmi-label">功能菜单</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
+          <div
+            class="sdm-item"
+            :class="{ active: currentTab === 'messages' }"
+            @click="navigate('/mobile/admin/messages')"
+          >
+            <div class="sdmi-icon"><Icon icon="ph:bell-duotone" /></div>
+            <span class="sdmi-label">消息通知</span>
+            <span v-if="unreadCount" class="sdmi-count">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
+          <div
+            class="sdm-item"
+            :class="{ active: currentTab === 'profile' }"
+            @click="navigate('/mobile/admin/profile')"
+          >
+            <div class="sdmi-icon"><Icon icon="ph:user-circle-duotone" /></div>
+            <span class="sdmi-label">个人中心</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
+
+          <div class="sdm-divider"></div>
+
+          <div class="sdm-item" @click="goPC">
+            <div class="sdmi-icon sub"><Icon icon="ph:desktop-duotone" /></div>
+            <span class="sdmi-label">切换到PC版</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
+          <div class="sdm-item danger" @click="logout">
+            <div class="sdmi-icon danger"><Icon icon="ph:sign-out-duotone" /></div>
+            <span class="sdmi-label">退出登录</span>
+            <Icon icon="ph:caret-right" class="sdmi-arrow" />
+          </div>
         </div>
-        <div class="mals-item" @click="navigate('/mobile/admin/menus'); sidebarOpen=false">
-          <span class="mals-icon">📋</span> 功能菜单
-        </div>
-        <div class="mals-item" @click="navigate('/mobile/admin/messages'); sidebarOpen=false">
-          <span class="mals-icon">🔔</span> 消息通知
-        </div>
-        <div class="mals-item" @click="navigate('/mobile/admin/profile'); sidebarOpen=false">
-          <span class="mals-icon">👤</span> 个人中心
-        </div>
-        <div class="mals-divider"></div>
-        <div class="mals-item" @click="goPC">
-          <span class="mals-icon">💻</span> 切换到PC版
-        </div>
-        <div class="mals-item danger" @click="logout">
-          <span class="mals-icon">🚪</span> 退出登录
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </Transition>
 
     <!-- 内容区 -->
-    <div class="mal-body">
-      <router-view />
-    </div>
+    <main class="body-area">
+      <router-view v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </router-view>
+    </main>
 
     <!-- 底部Tab -->
-    <footer class="mal-tab">
-      <div class="malt-item" :class="{ active: currentTab === 'dashboard' }" @click="navigate('/mobile/admin/dashboard')">
-        <div class="malt-icon">📊</div>
-        <div class="malt-label">控制台</div>
+    <footer class="bottom-tabs">
+      <div
+        class="bt-item"
+        :class="{ active: currentTab === 'dashboard' }"
+        @click="navigate('/mobile/admin/dashboard')"
+      >
+        <Icon :icon="currentTab === 'dashboard' ? 'ph:gauge-fill' : 'ph:gauge'" class="bt-icon" />
+        <span class="bt-label">控制台</span>
       </div>
-      <div class="malt-item" :class="{ active: currentTab === 'menus' }" @click="navigate('/mobile/admin/menus')">
-        <div class="malt-icon">📋</div>
-        <div class="malt-label">功能</div>
+      <div
+        class="bt-item"
+        :class="{ active: currentTab === 'menus' }"
+        @click="navigate('/mobile/admin/menus')"
+      >
+        <Icon :icon="currentTab === 'menus' ? 'ph:grid-nine-fill' : 'ph:grid-nine'" class="bt-icon" />
+        <span class="bt-label">功能</span>
       </div>
-      <div class="malt-item" :class="{ active: currentTab === 'messages' }" @click="navigate('/mobile/admin/messages')">
-        <div class="malt-icon">
-          🔔
-          <span v-if="unreadCount" class="malt-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+      <div
+        class="bt-item"
+        :class="{ active: currentTab === 'messages' }"
+        @click="navigate('/mobile/admin/messages')"
+      >
+        <div class="bt-icon-wrap">
+          <Icon :icon="currentTab === 'messages' ? 'ph:bell-fill' : 'ph:bell'" class="bt-icon" />
+          <span v-if="unreadCount" class="bt-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
         </div>
-        <div class="malt-label">消息</div>
+        <span class="bt-label">消息</span>
       </div>
-      <div class="malt-item" :class="{ active: currentTab === 'profile' }" @click="navigate('/mobile/admin/profile')">
-        <div class="malt-icon">👤</div>
-        <div class="malt-label">我的</div>
+      <div
+        class="bt-item"
+        :class="{ active: currentTab === 'profile' }"
+        @click="navigate('/mobile/admin/profile')"
+      >
+        <Icon :icon="currentTab === 'profile' ? 'ph:user-circle-fill' : 'ph:user-circle'" class="bt-icon" />
+        <span class="bt-label">我的</span>
       </div>
     </footer>
   </div>
@@ -79,6 +147,7 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Icon } from '@iconify/vue'
 import { useUserStore } from '@/stores/user'
 import monkeyLogo from '@/assets/images/monkey-ico.png'
 
@@ -113,12 +182,17 @@ const pageTitle = computed(() => {
 function toggleSidebar() { sidebarOpen.value = !sidebarOpen.value }
 
 function navigate(path: string) {
+  sidebarOpen.value = false
   if (route.path !== path) router.push(path)
 }
 
 async function logout() {
   try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
   } catch { return }
   userStore.logout()
   ElMessage.success('已退出')
@@ -126,6 +200,7 @@ async function logout() {
 }
 
 function goPC() {
+  sidebarOpen.value = false
   router.push('/dashboard')
 }
 
@@ -137,46 +212,217 @@ async function fetchUnread() {
     })
     const d = await r.json()
     if (d.code === 0) unreadCount.value = d.data || 0
-  } catch {}
+  } catch { /* ignore */ }
 }
 
 watch(() => userStore.token, (v) => { if (v) fetchUnread() }, { immediate: true })
 </script>
 
 <style scoped>
-.mal-wrap { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #f0f2f5; position: relative; }
+.layout-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #f0f2f7;
+  position: relative;
+  overflow-x: hidden;
+}
 
-/* 顶部栏 */
-.mal-header { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 48px; background: linear-gradient(135deg, #1a365d, #2b6cb0); display: flex; align-items: center; padding: 0 12px; z-index: 200; }
-.malh-left { width: 36px; cursor: pointer; display: flex; align-items: center; }
-.malh-avatar-img { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
-.malh-title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; color: #fff; }
-.malh-right { width: 36px; text-align: right; cursor: pointer; position: relative; }
-.malh-badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; font-size: 10px; font-weight: 700; color: #fff; background: #e53e3e; border-radius: 9px; padding: 0 5px; z-index: 1; }
+/* ========== 顶部栏 ========== */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 52px;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  z-index: 200;
+  gap: 12px;
+}
+.tb-left { flex-shrink: 0; cursor: pointer; }
+.avatar-ring {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.avatar-img { width: 26px; height: 26px; border-radius: 7px; object-fit: contain; }
+.tb-center {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 1px;
+}
+.tb-right { flex-shrink: 0; cursor: pointer; }
+.bell-box { position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
+.bell-icon { font-size: 22px; color: #94a3b8; transition: color .2s; }
+.bell-box:active .bell-icon { color: #fff; }
+.bell-badge {
+  position: absolute;
+  top: -2px; right: -4px;
+  min-width: 18px; height: 18px;
+  line-height: 18px;
+  font-size: 10px; font-weight: 700;
+  color: #fff; background: #ef4444;
+  border-radius: 9px;
+  text-align: center;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border: 2px solid #1e293b;
+}
 
-/* 侧滑菜单 */
-.mal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 298; }
-.mal-sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 80vw; background: #fff; z-index: 299; transform: translateX(-100%); transition: transform .25s ease; display: flex; flex-direction: column; }
-.mal-sidebar.open { transform: translateX(0); }
-.mals-head { display: flex; align-items: center; gap: 12px; padding: 20px 16px; background: linear-gradient(135deg, #1a365d, #2b6cb0); }
-.mals-logo { width: 40px; height: 40px; border-radius: 10px; object-fit: contain; }
-.mals-name { color: #fff; font-size: 15px; font-weight: 600; }
-.mals-role { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
-.mals-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-.mals-divider { height: 1px; background: #e2e8f0; margin: 8px 16px; }
-.mals-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; font-size: 14px; color: #2d3748; cursor: pointer; }
-.mals-item:active { background: #f7f8fc; }
-.mals-item.danger { color: #e53e3e; }
-.mals-icon { font-size: 18px; width: 24px; text-align: center; }
+/* ========== 侧滑菜单 ========== */
+.sidebar-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(2px);
+  z-index: 298;
+}
+.sidebar-drawer {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 290px;
+  max-width: 80vw;
+  background: #fff;
+  z-index: 299;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 40px rgba(0,0,0,.15);
+}
 
-/* 内容区 */
-.mal-body { padding-top: 48px; padding-bottom: 60px; min-height: 100vh; }
+/* 用户卡片 */
+.sd-user {
+  padding: 24px 18px 20px;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sdu-avatar { width: 48px; height: 48px; border-radius: 14px; object-fit: contain; background: rgba(255,255,255,.15); padding: 6px; }
+.sdu-info { flex: 1; min-width: 0; }
+.sdu-name { color: #f1f5f9; font-size: 16px; font-weight: 700; }
+.sdu-badge {
+  display: flex; align-items: center; gap: 4px;
+  color: rgba(255,255,255,.6); font-size: 12px; margin-top: 4px;
+}
+.sdu-close { font-size: 22px; color: rgba(255,255,255,.5); cursor: pointer; flex-shrink: 0; padding: 4px; }
+.sdu-close:active { color: #fff; }
 
-/* 底部Tab */
-.mal-tab { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 56px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
-.malt-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; color: #a0aec0; transition: color .2s; }
-.malt-item.active { color: #2b6cb0; }
-.malt-icon { font-size: 22px; position: relative; }
-.malt-label { font-size: 11px; }
-.malt-badge { position: absolute; top: -8px; right: -14px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; font-size: 10px; font-weight: 700; color: #fff; background: #e53e3e; border-radius: 9px; padding: 0 5px; box-sizing: border-box; }
+/* 菜单 */
+.sd-menu { flex: 1; overflow-y: auto; padding: 8px 0; }
+.sdm-divider { height: 1px; background: #e2e8f0; margin: 6px 18px; }
+.sdm-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.sdm-item:active { background: #f1f5f9; }
+.sdm-item.active { background: #eff6ff; }
+.sdm-item.danger { color: #ef4444; }
+.sdmi-icon {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #475569;
+  flex-shrink: 0;
+  transition: all .2s;
+}
+.sdm-item.active .sdmi-icon { background: #eff6ff; color: #3b82f6; }
+.sdmi-icon.sub { background: #f8fafc; color: #94a3b8; }
+.sdmi-icon.danger { background: #fef2f2; color: #ef4444; }
+.sdmi-label { flex: 1; font-size: 14px; color: #334155; font-weight: 500; }
+.sdm-item.danger .sdmi-label { color: #ef4444; }
+.sdmi-arrow { font-size: 14px; color: #cbd5e1; flex-shrink: 0; }
+.sdmi-count {
+  background: #3b82f6; color: #fff;
+  font-size: 10px; font-weight: 700;
+  min-width: 20px; height: 20px;
+  line-height: 20px; text-align: center;
+  border-radius: 10px; padding: 0 6px;
+}
+
+/* 动画 */
+.overlay-enter-active, .overlay-leave-active { transition: opacity .25s ease; }
+.overlay-enter-from, .overlay-leave-to { opacity: 0; }
+.drawer-enter-active, .drawer-leave-active { transition: transform .25s ease; }
+.drawer-enter-from, .drawer-leave-to { transform: translateX(-100%); }
+
+/* ========== 内容区 ========== */
+.body-area {
+  padding-top: 52px;
+  padding-bottom: 64px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.page-enter-active, .page-leave-active { transition: opacity .2s ease, transform .2s ease; }
+.page-enter-from { opacity: 0; transform: translateX(20px); }
+.page-leave-to { opacity: 0; transform: translateX(-20px); }
+
+/* ========== 底部Tab ========== */
+.bottom-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 62px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0,0,0,.06);
+  display: flex;
+  z-index: 200;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bt-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color .2s;
+}
+.bt-item.active { color: #3b82f6; }
+.bt-icon { font-size: 24px; transition: transform .2s; }
+.bt-item:active .bt-icon { transform: scale(.9); }
+.bt-item.active .bt-icon { transform: scale(1.05); }
+.bt-icon-wrap { position: relative; display: flex; }
+.bt-label { font-size: 11px; font-weight: 500; }
+.bt-badge {
+  position: absolute;
+  top: -6px; right: -12px;
+  min-width: 18px; height: 18px;
+  line-height: 18px;
+  font-size: 10px; font-weight: 700;
+  color: #fff; background: #ef4444;
+  border-radius: 9px;
+  text-align: center;
+  padding: 0 5px;
+  box-sizing: border-box;
+}
 </style>

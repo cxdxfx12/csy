@@ -1,40 +1,90 @@
 <template>
-  <div class="mam-page">
-    <!-- 搜索 -->
-    <div class="mam-search">
-      <span>🔍</span>
-      <input v-model="searchText" placeholder="搜索功能..." />
+  <div class="menus-page">
+    <!-- 搜索栏 -->
+    <div class="search-bar" :class="{ focused: searchFocused }">
+      <Icon icon="ph:magnifying-glass-duotone" class="sb-icon" />
+      <input
+        v-model="searchText"
+        placeholder="搜功能、找模块..."
+        @focus="searchFocused = true"
+        @blur="searchFocused = false"
+      />
+      <Icon
+        v-if="searchText"
+        icon="ph:x-circle-fill"
+        class="sb-clear"
+        @click="searchText = ''"
+      />
     </div>
 
-    <!-- 菜单分类 -->
-    <div class="mam-section" v-for="cat in filteredMenus" :key="cat.name">
-      <h3 class="mam-sec-title">{{ cat.icon }} {{ cat.name }}</h3>
-      <div class="mam-grid">
-        <div class="mam-card" v-for="m in cat.children" :key="m.route" @click="jump(m.route)">
-          <div class="mamc-icon" :style="{ background: m.color }">{{ m.icon }}</div>
-          <div class="mamc-name">{{ m.name }}</div>
+    <!-- 热门入口 -->
+    <div v-if="!searchText" class="hot-section">
+      <div class="hot-scroll">
+        <div class="hot-chip" v-for="h in hotEntries" :key="h.name" @click="jump(h.route)">
+          <Icon :icon="h.icon" class="hc-icon" />
+          {{ h.name }}
         </div>
       </div>
     </div>
 
-    <!-- 无结果 -->
-    <div class="mam-empty" v-if="!filteredMenus.length">没有匹配的功能</div>
+    <!-- 菜单分类 -->
+    <div class="cat-section" v-for="cat in filteredMenus" :key="cat.name">
+      <div class="cat-header">
+        <div class="ch-icon" :style="{ background: cat.color + '14', color: cat.color }">
+          <Icon :icon="cat.icon" />
+        </div>
+        <span class="ch-title">{{ cat.name }}</span>
+        <span class="ch-count">{{ cat.children.length }}项</span>
+      </div>
+      <div class="menu-grid">
+        <div
+          class="menu-card"
+          v-for="m in cat.children"
+          :key="m.name"
+          @click="jump(m.route)"
+        >
+          <div class="mc-icon" :style="{ background: m.color + '14', color: m.color }">
+            <Icon :icon="m.icon" />
+          </div>
+          <span class="mc-name">{{ m.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 空状态 -->
+    <div v-if="!filteredMenus.length" class="empty-state">
+      <Icon icon="ph:folder-open-duotone" class="es-icon" />
+      <span class="es-text">没有匹配的功能</span>
+      <span v-if="searchText" class="es-hint">换个关键词试试</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { Icon } from '@iconify/vue'
 import { useUserStore } from '@/stores/user'
+import { getMenuIcon, getMenuColor } from '@/utils/mobileIcons'
 
 const router = useRouter()
 const userStore = useUserStore()
 const searchText = ref('')
+const searchFocused = ref(false)
 
-// 菜单颜色池
-const colors = ['#3182ce','#38a169','#dd6b20','#e53e3e','#6b46c1','#319795','#d53f8c','#2b6cb0','#c05621','#2c7a7b','#b83280','#2a4365']
+// 热门入口
+const hotEntries = [
+  { name: '工单管理', icon: 'ph:clipboard-text-duotone', route: '/repair/order' },
+  { name: '缴费记录', icon: 'ph:credit-card-duotone', route: '/charge/payment' },
+  { name: '业主信息', icon: 'ph:users-duotone', route: '/owner/index' },
+  { name: '访客登记', icon: 'ph:identification-badge-duotone', route: '/security/visitor' },
+  { name: '楼栋管理', icon: 'ph:building-office-duotone', route: '/property/building' },
+  { name: '账单管理', icon: 'ph:file-text-duotone', route: '/charge/bill' },
+  { name: '公告列表', icon: 'ph:newspaper-duotone', route: '/notice/index' },
+  { name: '车辆管理', icon: 'ph:car-duotone', route: '/parking/vehicle' },
+]
 
-// 动态菜单转分组
+// 从用户菜单构建分类
 const menuCategories = computed(() => {
   const userMenus = userStore.menus
   if (!userMenus?.length) return getDefaultMenus()
@@ -53,110 +103,88 @@ const filteredMenus = computed(() => {
 })
 
 function buildCatTree(menus: any[]): any[] {
-  const cats: any[] = []
-  let colorIdx = 0
+  const catMap = new Map<string, any>()
   for (const m of menus) {
     if (m.children?.length) {
-      cats.push({
+      catMap.set(m.name, {
         name: m.name,
+        color: getMenuColor(m.name),
         icon: getMenuIcon(m.name),
-        children: m.children.map((c: any, i: number) => ({
+        children: m.children.map((c: any) => ({
           name: c.name,
           route: c.route,
           icon: getMenuIcon(c.name),
-          color: colors[colorIdx++ % colors.length] + '18',
+          color: getMenuColor(c.name),
         })),
       })
     } else if (m.route && m.route !== '#') {
-      // 没有子菜单的直接归类
-      const other = cats.find(cc => cc.name === '其他')
-      if (other) {
-        other.children.push({
-          name: m.name,
-          route: m.route,
-          icon: getMenuIcon(m.name),
-          color: colors[colorIdx++ % colors.length] + '18',
-        })
-      } else {
-        cats.push({
-          name: '其他',
-          icon: '📌',
-          children: [{
-            name: m.name,
-            route: m.route,
-            icon: getMenuIcon(m.name),
-            color: colors[colorIdx++ % colors.length] + '18',
-          }],
+      // 未分类的放入上级或"其他"
+      const parentName = m.parentName || '其他'
+      if (!catMap.has(parentName)) {
+        catMap.set(parentName, {
+          name: parentName || '其他',
+          color: '#64748b',
+          icon: 'ph:link-duotone',
+          children: [],
         })
       }
+      catMap.get(parentName)!.children.push({
+        name: m.name,
+        route: m.route,
+        icon: getMenuIcon(m.name),
+        color: getMenuColor(m.name),
+      })
     }
   }
-  return cats
-}
-
-function getMenuIcon(name: string): string {
-  const n = name || ''
-  if (n.includes('系统') || n.includes('用户') || n.includes('角色') || n.includes('菜单')) return '⚙️'
-  if (n.includes('房产') || n.includes('小区') || n.includes('楼栋') || n.includes('房间')) return '🏘️'
-  if (n.includes('业主') || n.includes('家庭') || n.includes('投票') || n.includes('活动')) return '👤'
-  if (n.includes('收费') || n.includes('账单') || n.includes('缴费') || n.includes('财务') || n.includes('欠费') || n.includes('押金') || n.includes('发票') || n.includes('支付')) return '💰'
-  if (n.includes('报修') || n.includes('工单') || n.includes('维修')) return '🔧'
-  if (n.includes('安防') || n.includes('访客') || n.includes('巡更') || n.includes('门禁')) return '🔑'
-  if (n.includes('停车') || n.includes('车辆') || n.includes('车位') || n.includes('道闸')) return '🚗'
-  if (n.includes('公告') || n.includes('通知') || n.includes('消息') || n.includes('推送')) return '📝'
-  if (n.includes('设备') || n.includes('维保') || n.includes('电梯')) return '⚡'
-  if (n.includes('人事') || n.includes('员工') || n.includes('考勤') || n.includes('工资')) return '👔'
-  if (n.includes('供应商') || n.includes('采购') || n.includes('合同') || n.includes('评价')) return '🤝'
-  if (n.includes('打印') || n.includes('收据') || n.includes('催缴')) return '🖨️'
-  if (n.includes('微信') || n.includes('短信') || n.includes('监控')) return '📡'
-  if (n.includes('装饰') || n.includes('装修')) return '🛠️'
-  if (n.includes('租赁') || n.includes('租客')) return '🏠'
-  if (n.includes('投诉')) return '📋'
-  if (n.includes('AI') || n.includes('智能')) return '🤖'
-  if (n.includes('大屏') || n.includes('数据')) return '📊'
-  if (n.includes('SSE') || n.includes('设备')) return '🔌'
-  return '📌'
+  return Array.from(catMap.values())
 }
 
 function getDefaultMenus() {
   return [
     {
-      name: '系统管理', icon: '⚙️',
+      name: '系统管理', color: '#6366f1', icon: 'ph:gear-duotone',
       children: [
-        { name: '用户管理', route: '/system/admin', icon: '👤', color: '#3182ce18' },
-        { name: '角色管理', route: '/system/role', icon: '👥', color: '#38a16918' },
-        { name: '菜单管理', route: '/system/menu', icon: '📋', color: '#dd6b2018' },
-        { name: '系统配置', route: '/system/config', icon: '🔧', color: '#e53e3e18' },
-        { name: '操作日志', route: '/system/log', icon: '📜', color: '#6b46c118' },
+        { name: '用户管理', route: '/system/admin', icon: 'ph:user-duotone', color: '#6366f1' },
+        { name: '角色管理', route: '/system/role', icon: 'ph:user-gear-duotone', color: '#6366f1' },
+        { name: '菜单管理', route: '/system/menu', icon: 'ph:list-bullets-duotone', color: '#6366f1' },
+        { name: '系统配置', route: '/system/config', icon: 'ph:sliders-duotone', color: '#6366f1' },
+        { name: '操作日志', route: '/system/log', icon: 'ph:scroll-duotone', color: '#6366f1' },
       ],
     },
     {
-      name: '房产管理', icon: '🏘️',
+      name: '房产管理', color: '#0891b2', icon: 'ph:buildings-duotone',
       children: [
-        { name: '小区管理', route: '/property/community', icon: '🏘️', color: '#3182ce18' },
-        { name: '楼栋管理', route: '/property/building', icon: '🏗️', color: '#38a16918' },
-        { name: '房间管理', route: '/property/room', icon: '🏠', color: '#dd6b2018' },
+        { name: '小区管理', route: '/property/community', icon: 'ph:buildings-duotone', color: '#0891b2' },
+        { name: '楼栋管理', route: '/property/building', icon: 'ph:building-office-duotone', color: '#0891b2' },
+        { name: '房间管理', route: '/property/room', icon: 'ph:house-duotone', color: '#0891b2' },
       ],
     },
     {
-      name: '业主管理', icon: '👤',
+      name: '业主管理', color: '#059669', icon: 'ph:users-duotone',
       children: [
-        { name: '业主信息', route: '/owner/index', icon: '👤', color: '#3182ce18' },
-        { name: '家庭成员', route: '/owner/family', icon: '👨‍👩‍👧', color: '#38a16918' },
-        { name: '业主投票', route: '/owner/vote', icon: '🗳️', color: '#dd6b2018' },
-        { name: '社区活动', route: '/owner/activity', icon: '🎉', color: '#e53e3e18' },
-        { name: '公告通知', route: '/owner/notice', icon: '📢', color: '#6b46c118' },
-        { name: '投诉建议', route: '/owner/complaint', icon: '📋', color: '#31979518' },
+        { name: '业主信息', route: '/owner/index', icon: 'ph:user-duotone', color: '#059669' },
+        { name: '家庭成员', route: '/owner/family', icon: 'ph:users-three-duotone', color: '#059669' },
+        { name: '业主投票', route: '/owner/vote', icon: 'ph:vote-duotone', color: '#059669' },
+        { name: '社区活动', route: '/owner/activity', icon: 'ph:confetti-duotone', color: '#059669' },
+        { name: '公告通知', route: '/owner/notice', icon: 'ph:megaphone-duotone', color: '#d946ef' },
+        { name: '投诉建议', route: '/owner/complaint', icon: 'ph:chat-centered-text-duotone', color: '#d946ef' },
       ],
     },
     {
-      name: '收费管理', icon: '💰',
+      name: '收费管理', color: '#ea580c', icon: 'ph:currency-circle-dollar-duotone',
       children: [
-        { name: '收费项目', route: '/charge/item', icon: '📋', color: '#3182ce18' },
-        { name: '账单管理', route: '/charge/bill', icon: '📄', color: '#38a16918' },
-        { name: '缴费记录', route: '/charge/payment', icon: '💳', color: '#dd6b2018' },
-        { name: '财务流水', route: '/charge/finance', icon: '💰', color: '#e53e3e18' },
-        { name: '欠费管理', route: '/charge/arrears', icon: '⚠️', color: '#6b46c118' },
+        { name: '收费项目', route: '/charge/item', icon: 'ph:file-text-duotone', color: '#ea580c' },
+        { name: '账单管理', route: '/charge/bill', icon: 'ph:file-text-duotone', color: '#ea580c' },
+        { name: '缴费记录', route: '/charge/payment', icon: 'ph:credit-card-duotone', color: '#ea580c' },
+        { name: '财务流水', route: '/charge/finance', icon: 'ph:chart-line-up-duotone', color: '#ea580c' },
+        { name: '欠费管理', route: '/charge/arrears', icon: 'ph:warning-diamond-duotone', color: '#ea580c' },
+      ],
+    },
+    {
+      name: '报修管理', color: '#dc2626', icon: 'ph:wrench-duotone',
+      children: [
+        { name: '工单管理', route: '/repair/order', icon: 'ph:clipboard-text-duotone', color: '#dc2626' },
+        { name: '维修人员', route: '/repair/worker', icon: 'ph:hard-hat-duotone', color: '#dc2626' },
       ],
     },
   ]
@@ -164,24 +192,133 @@ function getDefaultMenus() {
 
 function jump(route: string) {
   if (!route || route === '#') return
-  // 标记来自手机端，PC布局会自动隐藏侧边栏适配手机
   sessionStorage.setItem('_mobile_view', '1')
   router.push(route)
 }
 </script>
 
 <style scoped>
-.mam-page { padding: 12px; }
-.mam-search { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 12px; padding: 0 14px; height: 44px; margin-bottom: 14px; border: 1px solid #e2e8f0; }
-.mam-search span { font-size: 16px; }
-.mam-search input { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; color: #1a202c; }
+.menus-page { padding: 14px; }
 
-.mam-section { margin-bottom: 16px; }
-.mam-sec-title { font-size: 14px; font-weight: 700; color: #1a202c; margin-bottom: 10px; }
-.mam-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.mam-card { display: flex; flex-direction: column; align-items: center; gap: 8px; background: #fff; border-radius: 14px; padding: 16px 8px; cursor: pointer; }
-.mam-card:active { background: #edf2f7; }
-.mamc-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-.mamc-name { font-size: 12px; color: #4a5568; text-align: center; }
-.mam-empty { padding: 40px; text-align: center; color: #a0aec0; font-size: 14px; }
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 0 16px;
+  height: 48px;
+  border: 1.5px solid transparent;
+  transition: all .25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.search-bar.focused { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.08); }
+.sb-icon { font-size: 18px; color: #94a3b8; flex-shrink: 0; transition: color .25s; }
+.search-bar.focused .sb-icon { color: #6366f1; }
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #0f172a;
+  height: 48px;
+}
+.search-bar input::placeholder { color: #94a3b8; }
+.sb-clear { font-size: 18px; color: #cbd5e1; cursor: pointer; flex-shrink: 0; }
+.sb-clear:active { color: #94a3b8; }
+
+/* 热门入口 */
+.hot-section { margin-top: 14px; overflow: hidden; }
+.hot-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.hot-scroll::-webkit-scrollbar { display: none; }
+.hot-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #fff;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.05);
+  transition: all .2s;
+}
+.hot-chip:active { background: #f1f5f9; transform: scale(.96); }
+.hc-icon { font-size: 18px; color: #6366f1; }
+
+/* 分类区域 */
+.cat-section { margin-top: 20px; }
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ch-icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.ch-title { font-size: 16px; font-weight: 700; color: #0f172a; }
+.ch-count { font-size: 11px; color: #94a3b8; background: #f1f5f9; padding: 2px 8px; border-radius: 10px; }
+
+/* 菜单网格 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 8px 14px;
+  background: #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.03);
+  transition: all .2s;
+}
+.menu-card:active { transform: scale(.95); background: #f8fafc; }
+.mc-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: transform .2s;
+}
+.menu-card:active .mc-icon { transform: scale(1.08); }
+.mc-name { font-size: 12px; color: #334155; font-weight: 500; text-align: center; line-height: 1.3; }
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 60px 20px;
+  color: #cbd5e1;
+}
+.es-icon { font-size: 48px; }
+.es-text { font-size: 14px; color: #94a3b8; }
+.es-hint { font-size: 12px; color: #cbd5e1; }
 </style>

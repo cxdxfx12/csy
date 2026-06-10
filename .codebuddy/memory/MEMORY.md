@@ -14,8 +14,9 @@
 - 仓库: https://github.com/cxdxfx12/csy.git
 - 本机无法直连 github.com:443，但 ssh.github.com:443 和 api.github.com 可达
 - SSH config 已配置 github.com 走 ssh.github.com:443
-- SSH密钥 id_ed25519 已生成，公钥未添加到GitHub账号
-- 当前远程URL为 HTTPS
+- SSH密钥 id_ed25519 已生成，公钥已添加到GitHub账号
+- Push 可用 git@github.com SSH 方式
+- ⚠️ 当前运行用户是 ccc（非 Administrator），SSH密钥在 C:\Users\ccc\.ssh\
 
 ## 服务器
 - IP 211.149.181.178，SSH 端口 22000，用户名 root，密码 cxdxfx12
@@ -28,3 +29,15 @@
 - /admin/index.html: no-cache, no-store, must-revalidate（确保用户获取最新版本）
 - /admin/assets/* 的 JS/CSS: max-age=43200 (12h，带hash可安全缓存)
 - 全局 JS/CSS 规则已排除 /admin/assets/ 避免覆盖
+
+## 手机管理端图标系统
+- 图标库：@iconify/vue + Phosphor Icons（`ph:` 前缀）
+- 图标映射文件：`admin/src/utils/mobileIcons.ts` — 定义 100+ 图标常量(`ICONS`对象) + `getMenuIcon(name)`智能匹配 + `getMenuColor(name)`颜色映射
+- 使用方式：`<Icon icon="ph:gauge-fill" />` 或 `import { ICONS } from '@/utils/mobileIcons'`
+- 所有移动端页面已使用 Phosphor Icons 替代 Emoji
+
+## 手机管理端重构 (2026-06-10)
+- 全部 6 个页面用 Vue + Phosphor Icons 完全重写
+- 设计语言：深色渐变 + 毛玻璃效果 + 圆角卡片 + Transition 动画
+- 构建前需清除缓存：`rmdir /s /q e:\ds\admin\node_modules\.vite`
+- `_mobile_view` 机制：手机端点菜单 → sessionStorage 标记 → MainLayout 切手机壳 → PC页面在480px容器内渲染
