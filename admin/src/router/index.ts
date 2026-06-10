@@ -145,6 +145,13 @@ const router = createRouter({
         { path: 'menus', name: 'MobileAdminMenus', component: () => import('@/views/mobile/admin/MobileAdminMenus.vue'), meta: { title: '功能菜单' } },
         { path: 'messages', name: 'MobileAdminMessages', component: () => import('@/views/mobile/admin/MobileAdminMessages.vue'), meta: { title: '消息通知' } },
         { path: 'profile', name: 'MobileAdminProfile', component: () => import('@/views/mobile/admin/MobileAdminProfile.vue'), meta: { title: '个人中心' } },
+        // 高频模块专用移动端页面
+        { path: 'property', name: 'MobileProperty', component: () => import('@/views/mobile/admin/MobileProperty.vue'), meta: { title: '房产管理' } },
+        { path: 'owner', name: 'MobileOwner', component: () => import('@/views/mobile/admin/MobileOwner.vue'), meta: { title: '业主管理' } },
+        { path: 'charge', name: 'MobileCharge', component: () => import('@/views/mobile/admin/MobileCharge.vue'), meta: { title: '收费管理' } },
+        { path: 'repair', name: 'MobileRepair', component: () => import('@/views/mobile/admin/MobileRepair.vue'), meta: { title: '报修管理' } },
+        { path: 'notice', name: 'MobileNotice', component: () => import('@/views/mobile/admin/MobileNotice.vue'), meta: { title: '公告通知' } },
+        { path: 'system', name: 'MobileSystem', component: () => import('@/views/mobile/admin/MobileSystem.vue'), meta: { title: '系统管理' } },
       ],
     },
   ],

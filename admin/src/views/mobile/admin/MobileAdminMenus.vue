@@ -190,8 +190,38 @@ function getDefaultMenus() {
   ]
 }
 
+// 高频模块路由映射：直接跳转到专用手机页面
+const mobileRouteMap: Record<string, string> = {
+  '/property/community': '/mobile/admin/property',
+  '/property/building': '/mobile/admin/property',
+  '/property/room': '/mobile/admin/property',
+  '/owner/index': '/mobile/admin/owner',
+  '/owner/family': '/mobile/admin/owner',
+  '/charge/bill': '/mobile/admin/charge',
+  '/charge/payment': '/mobile/admin/charge',
+  '/charge/item': '/mobile/admin/charge',
+  '/repair/order': '/mobile/admin/repair',
+  '/repair/worker': '/mobile/admin/repair',
+  '/notice/index': '/mobile/admin/notice',
+  '/system/admin': '/mobile/admin/system',
+  '/system/role': '/mobile/admin/system',
+  '/system/menu': '/mobile/admin/system',
+  '/system/config': '/mobile/admin/system',
+  '/system/log': '/mobile/admin/system',
+  '/system/PushDevice': '/mobile/admin/system',
+  '/system/SseEvent': '/mobile/admin/system',
+  '/system/pushConfig': '/mobile/admin/system',
+  '/system/ServiceVendor': '/mobile/admin/system',
+}
+
 function jump(route: string) {
   if (!route || route === '#') return
+  // 高频模块：跳转到专用手机端页面
+  if (mobileRouteMap[route]) {
+    router.push(mobileRouteMap[route])
+    return
+  }
+  // 其他模块：用 _mobile_view 壳渲染 PC 页面
   sessionStorage.setItem('_mobile_view', '1')
   router.push(route)
 }
