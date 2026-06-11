@@ -149,7 +149,10 @@ class Owner extends BaseAdmin
             $this->validateCommunityAccess($data['community_id']);
         }
 
-        unset($data['id'], $data['room_id']);
+        // 过滤非 owner 表字段（前端表单可能附带 community_name 等展示字段）
+        unset($data['id'], $data['room_id'], $data['community_name'],
+              $data['room_number'], $data['rooms'], $data['room_count'],
+              $data['wx_bound'], $data['openid_masked']);
 
         if (isset($data['password']) && !empty($data['password'])) {
             $data['password'] = encrypt_password($data['password']);

@@ -20,11 +20,13 @@
       <!-- 微信绑定已有账号 -->
       <template v-if="showBind">
         <p class="bind-tip">该微信尚未绑定员工账号，请输入已有账号进行绑定</p>
-        <input v-model="bindUser" type="text" placeholder="管理员账号" />
+        <input v-model="bindUser" type="text" placeholder="管理员账号 / 维修工手机号" />
         <input v-model="bindPwd" type="password" placeholder="登录密码" />
         <button class="btn-primary" @click="doBind" :disabled="bindLoading" style="margin-top:8px">
           {{ bindLoading ? '绑定中...' : '绑定并登录' }}
         </button>
+        <p class="bind-guide">没有账号？请联系小区管理员申请开通</p>
+        <button class="btn-back" @click="showBind=false;wxOpenid='';wxCid=0">返回登录</button>
       </template>
     </div>
   </div>
@@ -146,4 +148,7 @@ input:focus{border-color:#667eea}
 .btn-wechat:disabled{opacity:.6}
 .wx-icon{font-size:20px}
 .bind-tip{color:#666;font-size:13px;margin-top:20px;margin-bottom:8px}
+.bind-guide{color:#999;font-size:12px;margin-top:12px;text-align:center}
+.btn-back{width:100%;height:40px;background:transparent;color:#999;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;cursor:pointer;margin-top:8px}
+.btn-back:active{background:#f3f4f6}
 </style>

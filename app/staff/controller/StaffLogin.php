@@ -230,16 +230,22 @@ class StaffLogin extends BaseStaff
         $source = ''; // 用于 JWT，防止跨表 ID 碰撞
 
         if ($staff && verify_password($password, $staff['password'])) {
-            if ($staff['status'] != 1) return $this->error('账户已被禁用');
+            if ($staff['status'] != 1) return $this->error('账户已被禁用，请联系管理员');
             $staffId = $staff['id'];
             $staffType = 'admin';
             $source = 'admin';
             $userInfo = ['id' => $staff['id'], 'username' => $staff['username'], 'nickname' => $staff['nickname'], 'avatar' => $staff['avatar']];
+        } elseif ($staff) {
+            // admin_user 存在但密码错误 → 直接返回，不查 repair_worker
+            return $this->error('密码错误');
         } else {
             // 兜底：尝试 repair_worker 手机号绑定
             $worker = Db::name('repair_worker')->where('phone', $username)->where('status', 1)->find();
-            if (!$worker || empty($worker['password']) || !verify_password($password, $worker['password'])) {
-                return $this->error('用户名或密码错误');
+            if (!$worker) {
+                return $this->error('账号不存在，请检查用户名或联系管理员');
+            }
+            if (empty($worker['password']) || !verify_password($password, $worker['password'])) {
+                return $this->error('密码错误');
             }
             $staffId = $worker['id'];
             $staffType = 'worker';

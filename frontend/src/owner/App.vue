@@ -34,7 +34,7 @@
 import { ref, reactive, computed, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
-import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
+import { showToast, playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
 import AiChatWidget from './components/AiChatWidget.vue'
 
 const route = useRoute()
@@ -139,9 +139,21 @@ onBeforeMount(() => {
   const wcToken = q.get('wechat_token')
   if (wcToken) {
     localStorage.setItem('owner_token', wcToken)
+    const isNew = q.get('new_user') === '1'
+    const claimable = parseInt(q.get('claimable') || '0')
     const cleanUrl = window.location.origin + window.location.pathname + window.location.hash
     window.history.replaceState({}, '', cleanUrl)
     router.replace('/home')
+    // 新用户引导提示
+    if (isNew) {
+      setTimeout(() => {
+        if (claimable > 0) {
+          showToast(`检测到您有 ${claimable} 个可认领的业主档案，请前往首页认领以使用完整功能`, 6000)
+        } else {
+          showToast('欢迎使用！您当前为游客身份，部分功能受限。请前往首页完善个人信息', 5000)
+        }
+      }, 800)
+    }
   }
   // 仅在已登录状态下拉取角标
   if (isLoggedIn.value) {

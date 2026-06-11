@@ -181,12 +181,20 @@ class Login extends BaseApi
         $openid = $result['openid'] ?? '';
 
         // 登录或创建用户
-        $token = $this->loginByOpenid($openid, $communityId, $wxConfig);
+        $result = $this->loginByOpenid($openid, $communityId, $wxConfig);
+        $token = $result['token'];
 
-        // 重定向回前端，带上 token
+        // 重定向回前端，带上 token + 新用户标记
         $domain = WechatService::getOAuthDomain();
         $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
-        $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
+        $params = 'wechat_token=' . urlencode($token);
+        if ($result['is_new']) {
+            $params .= '&new_user=1';
+            if ($result['claimable'] > 0) {
+                $params .= '&claimable=' . $result['claimable'];
+            }
+        }
+        $finalUrl = $domain . $redirectTo . $sep . $params;
         return redirect($finalUrl);
     }
 
@@ -432,8 +440,13 @@ class Login extends BaseApi
      * 通过 openid 登录
      * @return string JWT token
      */
-    private function loginByOpenid(string $openid, int $communityId, array $wxConfig): string
+    /**
+     * 通过 openid 登录
+     * @return array ['token' => JWT, 'is_new' => bool, 'claimable' => int]
+     */
+    private function loginByOpenid(string $openid, int $communityId, array $wxConfig): array
     {
+        $isNew = false;
         $owner = Db::name('owner')->where('openid', $openid)->whereNull('delete_time')->find();
 
         if (!$owner) {
@@ -456,6 +469,7 @@ class Login extends BaseApi
                     $owner = Db::name('owner')->where('id', $unclaimedOwner['id'])->find();
                 } else {
                     // 新建用户
+                    $isNew = true;
                     $phonePlaceholder = 'WX_' . substr(md5($openid), 0, 8);
                     $newOwnerId = Db::name('owner')->insertGetId([
                         'community_id'    => $communityId,
@@ -474,7 +488,13 @@ class Login extends BaseApi
             }
         }
 
-        return $this->_makeToken($owner);
+        $claimable = $isNew ? $this->countClaimableOwners($communityId) : 0;
+
+        return [
+            'token'     => $this->_makeToken($owner),
+            'is_new'    => $isNew,
+            'claimable' => $claimable,
+        ];
     }
 
     /**
