@@ -194,9 +194,14 @@ class Dashboard extends BaseManager
     public function communityList()
     {
         $ids = $this->request->managedCommunityIds ?? [];
-        if (empty($ids)) return $this->success([], '暂无管理的小区');
-        $list = Db::name('community')->whereIn('id', $ids)->where('delete_time', null)
-            ->field('id, name, code, address')->order('id', 'asc')->select();
+        $mgr  = $this->request->managerInfo ?? [];
+        $roleId = $mgr['role_id'] ?? 0;
+        // 超管且 community_ids 为空 → 返回全部小区
+        $isSuperAll = ($roleId == 1) && empty($ids);
+        if (empty($ids) && !$isSuperAll) return $this->success([], '暂无管理的小区');
+        $query = Db::name('community')->where('delete_time', null);
+        if (!$isSuperAll) $query = $query->whereIn('id', $ids);
+        $list = $query->field('id, name, code, address')->order('id', 'asc')->select();
         return $this->success($list);
     }
 

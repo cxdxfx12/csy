@@ -33,24 +33,24 @@ class BaseManager extends BaseController
             $token = $this->request->param('token', '');
         }
         if (empty($token)) {
-            $this->error('请先登录', 401);
+            $this->throwError('请先登录');
         }
 
         try {
             $jwtConfig = config('jwt');
             $decoded = JWT::decode($token, new Key($jwtConfig['key'], $jwtConfig['algorithm']));
             if ($decoded->type !== 'manager') {
-                $this->error('无效的登录类型', 401);
+                $this->throwError('无效的登录类型');
             }
             $user = Db::name('admin_user')->where('id', $decoded->sub)->where('status', 1)->find();
             if (!$user) {
-                $this->error('用户不存在或已被禁用', 401);
+                $this->throwError('用户不存在或已被禁用');
             }
 
             // 角色权限校验：经理端仅限超管(1)、系统管理员(2)、项目经理(3)
             $roleId = $user['role_id'] ?? 0;
             if (!in_array($roleId, [1, 2, 3])) {
-                $this->error('无权限访问经理端', 403);
+                $this->throwError('无权限访问经理端');
             }
 
             $this->managerId   = $user['id'];
@@ -58,12 +58,20 @@ class BaseManager extends BaseController
 
             // 从 community_ids 中取第一个小区作为默认管理小区
             $allIds = array_values(array_filter(array_map('intval', explode(',', $user['community_ids'] ?? ''))));
-            $this->communityId = !empty($allIds) ? $allIds[0] : 0;
 
-            // 支持前端通过 X-Community-Id 请求头切换小区（需在管理的范围内）
+            // 超管(role_id=1) community_ids 为空时视为管理全部小区
+            $isSuperAdmin = ($roleId == 1) && empty($allIds);
+
+            // 支持前端通过 X-Community-Id 请求头切换小区（超管允许任意，否则需在管理的范围内）
             $reqCid = intval($this->request->header('X-Community-Id', 0));
-            if ($reqCid > 0 && in_array($reqCid, $allIds)) {
+            if ($reqCid > 0 && ($isSuperAdmin || in_array($reqCid, $allIds))) {
                 $this->communityId = $reqCid;
+            } elseif ($isSuperAdmin) {
+                // 超管未传 X-Community-Id 时，取第一个小区作为默认
+                $first = Db::name('community')->where('delete_time', null)->order('id', 'asc')->value('id');
+                $this->communityId = $first ? intval($first) : 0;
+            } else {
+                $this->communityId = !empty($allIds) ? $allIds[0] : 0;
             }
 
             $this->request->managerId   = $this->managerId;
@@ -71,7 +79,7 @@ class BaseManager extends BaseController
             $this->request->communityId = $this->communityId;
             $this->request->managedCommunityIds = $allIds;
         } catch (\Exception $e) {
-            $this->error('登录已过期，请重新登录', 401);
+            $this->throwError('登录已过期，请重新登录');
         }
     }
 
