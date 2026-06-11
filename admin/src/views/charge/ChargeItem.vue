@@ -112,8 +112,7 @@ function openForm(row?: any) {
 }
 
 async function submitForm() {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
+  try { await formRef.value?.validate() } catch { return }
   submitting.value = true
   try {
     const url = form.id ? '/admin/charge/itemEdit' : '/admin/charge/itemAdd'
@@ -121,6 +120,8 @@ async function submitForm() {
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false
     loadData()
+  } catch {
+    // 错误已在 request 拦截器中提示
   } finally { submitting.value = false }
 }
 

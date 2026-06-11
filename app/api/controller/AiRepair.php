@@ -12,22 +12,43 @@ class AiRepair extends BaseController
 {
     protected $noAuth = ['chat', 'submit', 'quickTypes', 'query'];
 
-    // 报修类型词库
-    private $typeKeywords = [
-        '水电' => ['漏水', '水管', '水龙头', '下水道', '马桶', '堵塞', '停水', '跳闸', '停电', '灯泡', '灯', '开关', '插座', '电线', '短路', '电路', '电表'],
-        '空调' => ['空调', '制冷', '不热', '不冷', '暖风', '通风', '出风口', '空调管', '外机', '压缩机'],
-        '门窗' => ['门', '窗', '门锁', '把手', '钥匙', '门禁', '窗户', '玻璃', '铝合金', '推拉', '防盗门', '门卡'],
-        '墙面' => ['墙', '裂缝', '漏水', '发霉', '起皮', '掉皮', '墙纸', '油漆', '渗水', '返潮'],
-        '燃气' => ['煤气', '天然气', '燃气', '灶', '打不着', '漏气', '燃气表', '气味'],
-        '电梯' => ['电梯', '困人', '停运', '抖动', '异响', '超时'],
-        '安保' => ['监控', '摄像头', '门禁', '可视', '对讲', '报警', '消防', '烟雾', '灭火器'],
-        '卫生' => ['垃圾', '清扫', '保洁', '卫生', '异味', '蟑螂', '老鼠', '虫害'],
-        '停车' => ['车位', '停车', '车库', '道闸', '车牌', '充电桩'],
-        '其他' => [],
-    ];
+    // 报修类型词库（优先从数据库读取，不配置则用默认值）
+    private function getTypeKeywords(): array
+    {
+        $cfg = Db::name('config')->where('key', 'ai_type_keywords')->value('value');
+        if (!empty($cfg)) {
+            $data = json_decode($cfg, true);
+            // 确保是关联数组格式（新格式）
+            if (is_array($data) && !isset($data[0])) {
+                if (!isset($data['其他'])) $data['其他'] = [];
+                return $data;
+            }
+        }
+        // 默认值
+        return [
+            '水电' => ['漏水', '水管', '水龙头', '下水道', '马桶', '堵塞', '停水', '跳闸', '停电', '灯泡', '灯', '开关', '插座', '电线', '短路', '电路', '电表'],
+            '空调' => ['空调', '制冷', '不热', '不冷', '暖风', '通风', '出风口', '空调管', '外机', '压缩机'],
+            '门窗' => ['门', '窗', '门锁', '把手', '钥匙', '门禁', '窗户', '玻璃', '铝合金', '推拉', '防盗门', '门卡'],
+            '墙面' => ['墙', '裂缝', '发霉', '起皮', '掉皮', '墙纸', '油漆', '渗水', '返潮'],
+            '燃气' => ['煤气', '天然气', '燃气', '灶', '打不着', '漏气', '燃气表', '气味'],
+            '电梯' => ['电梯', '困人', '停运', '抖动', '异响', '超时'],
+            '安保' => ['监控', '摄像头', '门禁', '可视', '对讲', '报警', '消防', '烟雾', '灭火器'],
+            '卫生' => ['垃圾', '清扫', '保洁', '卫生', '异味', '蟑螂', '老鼠', '虫害'],
+            '停车' => ['车位', '停车', '车库', '道闸', '车牌', '充电桩'],
+            '其他' => [],
+        ];
+    }
 
-    // 紧急程度词库
-    private $urgentKeywords = ['紧急', '马上', '立刻', '赶紧', '快', '爆', '着火', '漏气', '触电', '困人', '坍塌', '危机', '严重'];
+    // 紧急程度词库（优先从数据库读取）
+    private function getUrgentKeywords(): array
+    {
+        $cfg = Db::name('config')->where('key', 'ai_urgent_keywords')->value('value');
+        if (!empty($cfg)) {
+            $data = json_decode($cfg, true);
+            if (is_array($data)) return $data;
+        }
+        return ['紧急', '马上', '立刻', '赶紧', '快', '爆', '着火', '漏气', '触电', '困人', '坍塌', '危机', '严重'];
+    }
 
     // 工单状态标签
     private $statusLabels = [
@@ -88,7 +109,7 @@ class AiRepair extends BaseController
         // 分析报修类型
         $repairType = '其他';
         $maxScore = 0;
-        foreach ($this->typeKeywords as $type => $keywords) {
+        foreach ($this->getTypeKeywords() as $type => $keywords) {
             $score = 0;
             foreach ($keywords as $kw) {
                 if (mb_strpos($msgLower, $kw) !== false) $score++;
@@ -98,7 +119,7 @@ class AiRepair extends BaseController
 
         // 分析紧急程度
         $isUrgent = false;
-        foreach ($this->urgentKeywords as $kw) {
+        foreach ($this->getUrgentKeywords() as $kw) {
             if (mb_strpos($msgLower, $kw) !== false) { $isUrgent = true; break; }
         }
 
@@ -276,20 +297,23 @@ class AiRepair extends BaseController
         ]);
     }
 
-    // 快速报修类型列表
+    // 快速报修类型列表（动态从数据库读取）
     public function quickTypes()
     {
-        return $this->success([
-            ['id' => '水电', 'name' => '水电维修', 'icon' => '🔧', 'examples' => '漏水、跳闸、灯不亮'],
-            ['id' => '空调', 'name' => '空调维修', 'icon' => '❄️', 'examples' => '不制冷、异响、漏水'],
-            ['id' => '门窗', 'name' => '门窗维修', 'icon' => '🚪', 'examples' => '门锁坏、窗户关不上'],
-            ['id' => '墙面', 'name' => '墙面维修', 'icon' => '🧱', 'examples' => '裂缝、发霉、渗水'],
-            ['id' => '燃气', 'name' => '燃气维修', 'icon' => '🔥', 'examples' => '打不着火、漏气'],
-            ['id' => '电梯', 'name' => '电梯故障', 'icon' => '🛗', 'examples' => '停运、困人、异响'],
-            ['id' => '安保', 'name' => '安保消防', 'icon' => '🛡️', 'examples' => '监控坏、消防故障'],
-            ['id' => '卫生', 'name' => '卫生保洁', 'icon' => '🧹', 'examples' => '垃圾堆积、异味'],
-            ['id' => '停车', 'name' => '停车问题', 'icon' => '🅿️', 'examples' => '车位被占、道闸故障'],
-        ]);
+        $keywords = $this->getTypeKeywords();
+        $list = [];
+        $iconMap = ['水电'=>'🔧','空调'=>'❄️','门窗'=>'🚪','墙面'=>'🧱','燃气'=>'🔥',
+                     '电梯'=>'🛗','安保'=>'🛡️','卫生'=>'🧹','停车'=>'🅿️','其他'=>'📋'];
+        foreach ($keywords as $type => $kws) {
+            if ($type === '其他') continue;
+            $list[] = [
+                'id'       => $type,
+                'name'     => $type . '维修',
+                'icon'     => $iconMap[$type] ?? '🔧',
+                'examples' => implode('、', array_slice($kws, 0, 3)),
+            ];
+        }
+        return $this->success($list);
     }
 
     // 查询工单进度（公开API）
@@ -476,6 +500,7 @@ class AiRepair extends BaseController
             return 1; // 默认水
         }
 
+        // 已知类型映射表
         $map = [
             '空调' => 6,   // 家电
             '门窗' => 4,
@@ -488,6 +513,7 @@ class AiRepair extends BaseController
             '其他' => 8,
         ];
 
+        // 如果在已知映射表中，直接用；否则回退为 8（其他）
         return $map[$aiTypeLower] ?? 8;
     }
 
@@ -498,12 +524,12 @@ class AiRepair extends BaseController
             '水电'  => ['水电'],
             '空调'  => ['家电'],
             '门窗'  => ['门窗'],
-            '墙面'  => [],       // 无专门墙面工，走兜底
-            '燃气'  => [],       // 无专门燃气工，走兜底
-            '电梯'  => [],       // 走兜底
-            '安保'  => [],       // 走兜底
-            '卫生'  => [],       // 走兜底
-            '停车'  => [],       // 走兜底
+            '墙面'  => [],
+            '燃气'  => [],
+            '电梯'  => [],
+            '安保'  => [],
+            '卫生'  => [],
+            '停车'  => [],
             '其他'  => [],
         ];
         return $map[$aiType] ?? [];

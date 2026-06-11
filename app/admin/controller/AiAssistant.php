@@ -119,20 +119,74 @@ class AiAssistant extends BaseAdmin
             ->order('date', 'asc')
             ->select();
 
-        // 报修类型统计（根据聊天生成的报修单）
-        $byType = Db::name('repair_order')->alias('r')
-            ->field('r.type, count(*) as cnt')
-            ->whereNotNull('r.type')
-            ->group('r.type')
+        // 报修类型名称映射
+        $typeMap = [1 => '水电-水', 2 => '水电-电', 3 => '燃气', 4 => '门窗', 5 => '管道/墙面', 6 => '家电/空调', 7 => '网络', 8 => '其他'];
+
+        // 报修类型统计（按 repair_order.type 分组）
+        $byTypeRows = Db::name('repair_order')
+            ->field("IFNULL(type,8) as type_id, count(*) as cnt")
+            ->group('type_id')
             ->order('cnt', 'desc')
             ->select();
 
+        // 组装带名称的类型统计 + 各状态数量
+        $byType = [];
+        foreach ($byTypeRows as $row) {
+            $tid = (int)$row['type_id'];
+            $name = $typeMap[$tid] ?? ('类型' . $tid);
+            $byType[] = [
+                'type_id'   => $tid,
+                'type_name' => $name,
+                'count'     => (int)$row['cnt'],
+            ];
+        }
+
+        // 总报修单数 & 按状态分布
+        $repairTotal = Db::name('repair_order')->count();
+        $statusRows = Db::name('repair_order')
+            ->field("status, count(*) as cnt")
+            ->group('status')
+            ->select();
+        $statusNames = [
+            0 => '待派单', 1 => '已接单', 2 => '维修中', 3 => '已完成',
+            4 => '已评价', 5 => '已取消', -1 => '已关闭',
+        ];
+        $statusList = [];
+        foreach ($statusRows as $row) {
+            $sid = (int)$row['status'];
+            $statusList[] = [
+                'status'     => $sid,
+                'status_name'=> $statusNames[$sid] ?? ('状态' . $sid),
+                'count'      => (int)$row['cnt'],
+            ];
+        }
+
+        // AI识别的报修类型（从 ai_chat_log 的 repair_type 字段）
+        $aiTypeRows = Db::name('ai_chat_log')
+            ->field("repair_type, count(*) as cnt")
+            ->where('action', 'in', ['submit','confirm'])
+            ->where('repair_type', '<>', '')
+            ->whereNotNull('repair_type')
+            ->group('repair_type')
+            ->order('cnt', 'desc')
+            ->select();
+        $aiTypes = [];
+        foreach ($aiTypeRows as $row) {
+            $aiTypes[] = [
+                'type'  => $row['repair_type'],
+                'count' => (int)$row['cnt'],
+            ];
+        }
+
         return $this->success([
-            'total_chats' => $totalChats,
-            'today_chats' => $todayChats,
-            'week_chats' => $weekChats,
-            'trend' => $trend,
-            'by_type' => $byType,
+            'total_chats'   => $totalChats,
+            'today_chats'   => $todayChats,
+            'week_chats'    => $weekChats,
+            'trend'         => $trend,
+            'by_type'       => $byType,
+            'repair_total'  => $repairTotal,
+            'status_list'   => $statusList,
+            'ai_types'      => $aiTypes,
         ]);
     }
 }

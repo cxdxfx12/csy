@@ -1,0 +1,339 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img "大圣物业" [ref=e6]
+      - generic [ref=e7]: 大圣物业
+    - menubar [ref=e138]:
+      - menuitem "数据概览" [expanded] [ref=e139]:
+        - generic [ref=e140] [cursor=pointer]:
+          - img [ref=e142]
+          - generic [ref=e144]: 数据概览
+          - img [ref=e146]
+        - menu [ref=e148]:
+          - menuitem "数据概览" [ref=e149] [cursor=pointer]:
+            - img [ref=e151]
+            - generic [ref=e153]: 数据概览
+      - menuitem "系统管理" [ref=e154]:
+        - generic [ref=e155] [cursor=pointer]:
+          - img [ref=e157]
+          - generic [ref=e159]: 系统管理
+          - img [ref=e161]
+      - menuitem "房产管理" [ref=e163]:
+        - generic [ref=e164] [cursor=pointer]:
+          - img [ref=e166]
+          - generic [ref=e168]: 房产管理
+          - img [ref=e170]
+      - menuitem "业主管理" [ref=e172]:
+        - generic [ref=e173] [cursor=pointer]:
+          - img [ref=e175]
+          - generic [ref=e177]: 业主管理
+          - img [ref=e179]
+      - menuitem "收费管理" [ref=e181]:
+        - generic [ref=e182] [cursor=pointer]:
+          - img [ref=e184]
+          - generic [ref=e188]: 收费管理
+          - img [ref=e190]
+      - menuitem "报修管理" [ref=e192]:
+        - generic [ref=e193] [cursor=pointer]:
+          - img [ref=e195]
+          - generic [ref=e197]: 报修管理
+          - img [ref=e199]
+      - menuitem "安保管理" [ref=e201]:
+        - generic [ref=e202] [cursor=pointer]:
+          - img [ref=e204]
+          - generic [ref=e207]: 安保管理
+          - img [ref=e209]
+      - menuitem "停车管理" [ref=e211]:
+        - generic [ref=e212] [cursor=pointer]:
+          - img [ref=e214]
+          - generic [ref=e216]: 停车管理
+          - img [ref=e218]
+      - menuitem "公告通知" [ref=e220]:
+        - generic [ref=e221] [cursor=pointer]:
+          - img [ref=e223]
+          - generic [ref=e227]: 公告通知
+          - img [ref=e229]
+      - menuitem "设备管理" [ref=e231]:
+        - generic [ref=e232] [cursor=pointer]:
+          - img [ref=e234]
+          - generic [ref=e239]: 设备管理
+          - img [ref=e241]
+      - menuitem "投诉建议" [ref=e243]:
+        - generic [ref=e244] [cursor=pointer]:
+          - img [ref=e246]
+          - generic [ref=e248]: 投诉建议
+          - img [ref=e250]
+      - menuitem "打印中心" [ref=e252]:
+        - generic [ref=e253] [cursor=pointer]:
+          - img [ref=e255]
+          - generic [ref=e257]: 打印中心
+          - img [ref=e259]
+      - menuitem "物业人员" [ref=e261]:
+        - generic [ref=e262] [cursor=pointer]:
+          - img [ref=e264]
+          - generic [ref=e266]: 物业人员
+          - img [ref=e268]
+      - menuitem "外部供应商" [ref=e270]:
+        - generic [ref=e271] [cursor=pointer]:
+          - img [ref=e273]
+          - generic [ref=e275]: 外部供应商
+          - img [ref=e277]
+      - menuitem "支付管理" [ref=e279]:
+        - generic [ref=e280] [cursor=pointer]:
+          - img [ref=e282]
+          - generic [ref=e285]: 支付管理
+          - img [ref=e287]
+      - menuitem "IoT设备管理" [ref=e289] [cursor=pointer]:
+        - img [ref=e291]
+        - generic [ref=e294]: IoT设备管理
+      - menuitem "公众号管理" [ref=e295]:
+        - generic [ref=e296] [cursor=pointer]:
+          - img [ref=e298]
+          - generic [ref=e301]: 公众号管理
+          - img [ref=e303]
+      - menuitem "监控管理" [ref=e305]:
+        - generic [ref=e306] [cursor=pointer]:
+          - img [ref=e308]
+          - generic [ref=e310]: 监控管理
+          - img [ref=e312]
+      - menuitem "AI助手管理" [active] [ref=e314] [cursor=pointer]:
+        - img [ref=e316]
+        - generic [ref=e318]: AI助手管理
+      - menuitem "短信管理" [ref=e319]:
+        - generic [ref=e320] [cursor=pointer]:
+          - img [ref=e322]
+          - generic [ref=e325]: 短信管理
+          - img [ref=e327]
+      - menuitem "微信用户" [ref=e329] [cursor=pointer]:
+        - img [ref=e331]
+        - generic [ref=e333]: 微信用户
+      - menuitem "装修管理" [ref=e334]:
+        - generic [ref=e335] [cursor=pointer]:
+          - img [ref=e337]
+          - generic [ref=e342]: 装修管理
+          - img [ref=e344]
+      - menuitem "租凭管理" [ref=e346]:
+        - generic [ref=e347] [cursor=pointer]:
+          - img [ref=e349]
+          - generic [ref=e351]: 租凭管理
+          - img [ref=e353]
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - button [ref=e14] [cursor=pointer]:
+          - img [ref=e16]
+        - navigation "面包屑" [ref=e18]:
+          - generic [ref=e19]:
+            - link "工作台" [ref=e20]
+            - text: /
+          - link "AI助手管理" [ref=e363]
+      - button "数据大屏" [ref=e24] [cursor=pointer]:
+        - img [ref=e26]
+        - generic [ref=e28]: 数据大屏
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - button [ref=e31] [cursor=pointer]:
+            - img [ref=e33]
+          - superscript [ref=e355]: 99+
+        - button "🎨" [ref=e38] [cursor=pointer]
+        - button "超级管理员" [ref=e356] [cursor=pointer]:
+          - img [ref=e43]
+          - generic [ref=e45]: 超级管理员
+    - generic [ref=e47]:
+      - tablist [ref=e51]:
+        - tab "📊 控制台" [ref=e52]
+        - tab "AI助手管理" [selected] [ref=e364]:
+          - text: AI助手管理
+          - img [ref=e366]
+      - generic [ref=e53]:
+        - tabpanel "AI助手管理"
+    - main [ref=e54]:
+      - generic [ref=e60]:
+        - heading "AI助手管理" [level=1] [ref=e368]
+        - paragraph [ref=e62]:
+          - generic [ref=e63]: 工作台
+          - generic [ref=e64]: /
+          - generic [ref=e65]: AI助手管理
+      - generic [ref=e369]:
+        - generic [ref=e371]:
+          - heading "AI 助手管理" [level=2] [ref=e372]:
+            - img [ref=e374]
+            - text: AI 助手管理
+          - paragraph [ref=e377]: 智能报修助手配置 · 今日对话17次
+        - generic [ref=e378]:
+          - generic [ref=e382]:
+            - img [ref=e385]
+            - generic [ref=e388]:
+              - generic [ref=e389]: "126"
+              - generic [ref=e390]: 累计对话
+          - generic [ref=e394]:
+            - img [ref=e397]
+            - generic [ref=e399]:
+              - generic [ref=e400]: "17"
+              - generic [ref=e401]: 今日对话
+          - generic [ref=e405]:
+            - img [ref=e408]
+            - generic [ref=e410]:
+              - generic [ref=e411]: "126"
+              - generic [ref=e412]: 近7天
+          - generic [ref=e416]:
+            - img [ref=e419]
+            - generic [ref=e422]:
+              - generic [ref=e423]: "8"
+              - generic [ref=e424]: 报修类型
+        - generic [ref=e425]:
+          - tablist [ref=e429]:
+            - tab "AI 配置" [selected] [ref=e430]
+            - tab "对话记录" [ref=e431]
+            - tab "数据统计" [ref=e432]
+          - tabpanel "AI 配置" [ref=e434]:
+            - generic [ref=e437]:
+              - generic [ref=e438]:
+                - generic [ref=e439]: 问候语
+                - textbox "问候语" [ref=e442]:
+                  - /placeholder: 首次对话欢迎语
+                  - text: 您好！我是大圣物业AI助手，请问有什么可以帮您？
+              - generic [ref=e443]:
+                - generic [ref=e444]: 操作提示
+                - textbox "操作提示" [ref=e448]:
+                  - /placeholder: 如：直接描述您的问题，我会自动生成报修单
+                  - text: "[\"查询物业费\",\"报修漏水\",\"报修电梯\",\"缴纳费用\"]"
+              - separator [ref=e449]:
+                - generic [ref=e450]: 报修类型关键词配置
+              - generic [ref=e451]:
+                - generic [ref=e452]:
+                  - generic [ref=e453]: 漏水
+                  - button "添加" [ref=e454] [cursor=pointer]:
+                    - generic [ref=e455]:
+                      - img [ref=e457]
+                      - text: 添加
+                  - button "删除类型" [ref=e459] [cursor=pointer]:
+                    - generic [ref=e460]: 删除类型
+                - generic [ref=e461]:
+                  - generic [ref=e462] [cursor=pointer]:
+                    - generic [ref=e463]: 漏水
+                    - button "关闭此标签" [ref=e464]:
+                      - img [ref=e466]
+                  - generic [ref=e468] [cursor=pointer]:
+                    - generic [ref=e469]: 水管
+                    - button "关闭此标签" [ref=e470]:
+                      - img [ref=e472]
+                  - generic [ref=e474] [cursor=pointer]:
+                    - generic [ref=e475]: 渗水
+                    - button "关闭此标签" [ref=e476]:
+                      - img [ref=e478]
+              - generic [ref=e480]:
+                - generic [ref=e481]:
+                  - generic [ref=e482]: 电路
+                  - button "添加" [ref=e483] [cursor=pointer]:
+                    - generic [ref=e484]:
+                      - img [ref=e486]
+                      - text: 添加
+                  - button "删除类型" [ref=e488] [cursor=pointer]:
+                    - generic [ref=e489]: 删除类型
+                - generic [ref=e490]:
+                  - generic [ref=e491] [cursor=pointer]:
+                    - generic [ref=e492]: 停电
+                    - button "关闭此标签" [ref=e493]:
+                      - img [ref=e495]
+                  - generic [ref=e497] [cursor=pointer]:
+                    - generic [ref=e498]: 跳闸
+                    - button "关闭此标签" [ref=e499]:
+                      - img [ref=e501]
+                  - generic [ref=e503] [cursor=pointer]:
+                    - generic [ref=e504]: 灯不亮
+                    - button "关闭此标签" [ref=e505]:
+                      - img [ref=e507]
+              - generic [ref=e509]:
+                - generic [ref=e510]:
+                  - generic [ref=e511]: 电梯
+                  - button "添加" [ref=e512] [cursor=pointer]:
+                    - generic [ref=e513]:
+                      - img [ref=e515]
+                      - text: 添加
+                  - button "删除类型" [ref=e517] [cursor=pointer]:
+                    - generic [ref=e518]: 删除类型
+                - generic [ref=e519]:
+                  - generic [ref=e520] [cursor=pointer]:
+                    - generic [ref=e521]: 电梯
+                    - button "关闭此标签" [ref=e522]:
+                      - img [ref=e524]
+                  - generic [ref=e526] [cursor=pointer]:
+                    - generic [ref=e527]: 困人
+                    - button "关闭此标签" [ref=e528]:
+                      - img [ref=e530]
+                  - generic [ref=e532] [cursor=pointer]:
+                    - generic [ref=e533]: 停运
+                    - button "关闭此标签" [ref=e534]:
+                      - img [ref=e536]
+              - generic [ref=e538]:
+                - generic [ref=e539]:
+                  - generic [ref=e540]: 卫生
+                  - button "添加" [ref=e541] [cursor=pointer]:
+                    - generic [ref=e542]:
+                      - img [ref=e544]
+                      - text: 添加
+                  - button "删除类型" [ref=e546] [cursor=pointer]:
+                    - generic [ref=e547]: 删除类型
+                - generic [ref=e548]:
+                  - generic [ref=e549] [cursor=pointer]:
+                    - generic [ref=e550]: 异味
+                    - button "关闭此标签" [ref=e551]:
+                      - img [ref=e553]
+                  - generic [ref=e555] [cursor=pointer]:
+                    - generic [ref=e556]: 垃圾
+                    - button "关闭此标签" [ref=e557]:
+                      - img [ref=e559]
+                  - generic [ref=e561] [cursor=pointer]:
+                    - generic [ref=e562]: 保洁
+                    - button "关闭此标签" [ref=e563]:
+                      - img [ref=e565]
+              - button "添加报修类型" [ref=e567] [cursor=pointer]:
+                - generic [ref=e568]:
+                  - img [ref=e570]
+                  - text: 添加报修类型
+              - separator [ref=e572]:
+                - generic [ref=e573]: 紧急程度关键词
+              - generic [ref=e574]:
+                - generic [ref=e575] [cursor=pointer]:
+                  - generic [ref=e576]: 电梯困人
+                  - button "关闭此标签" [ref=e577]:
+                    - img [ref=e579]
+                - generic [ref=e581] [cursor=pointer]:
+                  - generic [ref=e582]: 漏电
+                  - button "关闭此标签" [ref=e583]:
+                    - img [ref=e585]
+                - generic [ref=e587] [cursor=pointer]:
+                  - generic [ref=e588]: 着火
+                  - button "关闭此标签" [ref=e589]:
+                    - img [ref=e591]
+                - generic [ref=e593] [cursor=pointer]:
+                  - generic [ref=e594]: 水管爆裂
+                  - button "关闭此标签" [ref=e595]:
+                    - img [ref=e597]
+                - button [ref=e599] [cursor=pointer]:
+                  - img [ref=e602]
+              - button "保存配置" [ref=e605] [cursor=pointer]:
+                - generic [ref=e606]: 保存配置
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - strong [ref=e122]: 杭州喵喵至家网络有限公司
+        - text: ·倾力打造·
+        - strong [ref=e123]: 大圣智慧物业管理系统
+      - generic [ref=e124]:
+        - generic [ref=e125]:
+          - text: 客服电话：
+          - link "17771300068" [ref=e126] [cursor=pointer]:
+            - /url: tel:17771300068
+          - text: /
+          - link "19171045360" [ref=e127] [cursor=pointer]:
+            - /url: tel:19171045360
+        - generic [ref=e128]: "|"
+        - link "www.hbdxm.com" [ref=e129] [cursor=pointer]:
+          - /url: https://www.hbdxm.com
+        - generic [ref=e130]: "|"
+        - link "鄂ICP备2025153909号" [ref=e131] [cursor=pointer]:
+          - /url: https://beian.miit.gov.cn/
+  - generic [ref=e132] [cursor=pointer]:
+    - img "大圣导航" [ref=e134]
+    - generic [ref=e136]: 导航

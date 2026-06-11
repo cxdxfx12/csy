@@ -1,0 +1,207 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e29]:
+    - complementary [ref=e30]:
+      - generic [ref=e31]:
+        - img "大圣物业" [ref=e32]
+        - generic [ref=e33]: 大圣物业
+      - menubar [ref=e38]:
+        - menuitem "数据概览" [expanded] [ref=e39]:
+          - generic [ref=e40] [cursor=pointer]:
+            - img [ref=e42]
+            - generic [ref=e44]: 数据概览
+            - img [ref=e46]
+          - menu [ref=e48]:
+            - menuitem "数据概览" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+              - generic [ref=e53]: 数据概览
+        - menuitem "系统管理" [ref=e54]:
+          - generic [ref=e55] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: 系统管理
+            - img [ref=e61]
+        - menuitem "房产管理" [ref=e63]:
+          - generic [ref=e64] [cursor=pointer]:
+            - img [ref=e66]
+            - generic [ref=e68]: 房产管理
+            - img [ref=e70]
+        - menuitem "业主管理" [ref=e72]:
+          - generic [ref=e73] [cursor=pointer]:
+            - img [ref=e75]
+            - generic [ref=e77]: 业主管理
+            - img [ref=e79]
+        - menuitem "收费管理" [ref=e81]:
+          - generic [ref=e82] [cursor=pointer]:
+            - img [ref=e84]
+            - generic [ref=e88]: 收费管理
+            - img [ref=e90]
+        - menuitem "报修管理" [ref=e92]:
+          - generic [ref=e93] [cursor=pointer]:
+            - img [ref=e95]
+            - generic [ref=e97]: 报修管理
+            - img [ref=e99]
+        - menuitem "安保管理" [ref=e101]:
+          - generic [ref=e102] [cursor=pointer]:
+            - img [ref=e104]
+            - generic [ref=e107]: 安保管理
+            - img [ref=e109]
+        - menuitem "停车管理" [ref=e111]:
+          - generic [ref=e112] [cursor=pointer]:
+            - img [ref=e114]
+            - generic [ref=e116]: 停车管理
+            - img [ref=e118]
+        - menuitem "公告通知" [ref=e120]:
+          - generic [ref=e121] [cursor=pointer]:
+            - img [ref=e123]
+            - generic [ref=e127]: 公告通知
+            - img [ref=e129]
+        - menuitem "设备管理" [ref=e131]:
+          - generic [ref=e132] [cursor=pointer]:
+            - img [ref=e134]
+            - generic [ref=e139]: 设备管理
+            - img [ref=e141]
+        - menuitem "投诉建议" [ref=e143]:
+          - generic [ref=e144] [cursor=pointer]:
+            - img [ref=e146]
+            - generic [ref=e148]: 投诉建议
+            - img [ref=e150]
+        - menuitem "打印中心" [ref=e152]:
+          - generic [ref=e153] [cursor=pointer]:
+            - img [ref=e155]
+            - generic [ref=e157]: 打印中心
+            - img [ref=e159]
+        - menuitem "物业人员" [ref=e161]:
+          - generic [ref=e162] [cursor=pointer]:
+            - img [ref=e164]
+            - generic [ref=e166]: 物业人员
+            - img [ref=e168]
+        - menuitem "外部供应商" [ref=e170]:
+          - generic [ref=e171] [cursor=pointer]:
+            - img [ref=e173]
+            - generic [ref=e175]: 外部供应商
+            - img [ref=e177]
+        - menuitem "支付管理" [ref=e179]:
+          - generic [ref=e180] [cursor=pointer]:
+            - img [ref=e182]
+            - generic [ref=e185]: 支付管理
+            - img [ref=e187]
+        - menuitem "IoT设备管理" [ref=e189] [cursor=pointer]:
+          - img [ref=e191]
+          - generic [ref=e194]: IoT设备管理
+        - menuitem "公众号管理" [ref=e195]:
+          - generic [ref=e196] [cursor=pointer]:
+            - img [ref=e198]
+            - generic [ref=e201]: 公众号管理
+            - img [ref=e203]
+        - menuitem "监控管理" [ref=e205]:
+          - generic [ref=e206] [cursor=pointer]:
+            - img [ref=e208]
+            - generic [ref=e210]: 监控管理
+            - img [ref=e212]
+        - menuitem "AI助手管理" [ref=e214] [cursor=pointer]:
+          - img [ref=e216]
+          - generic [ref=e218]: AI助手管理
+        - menuitem "短信管理" [ref=e219]:
+          - generic [ref=e220] [cursor=pointer]:
+            - img [ref=e222]
+            - generic [ref=e225]: 短信管理
+            - img [ref=e227]
+        - menuitem "微信用户" [ref=e229] [cursor=pointer]:
+          - img [ref=e231]
+          - generic [ref=e233]: 微信用户
+        - menuitem "装修管理" [ref=e234]:
+          - generic [ref=e235] [cursor=pointer]:
+            - img [ref=e237]
+            - generic [ref=e242]: 装修管理
+            - img [ref=e244]
+        - menuitem "租凭管理" [ref=e246]:
+          - generic [ref=e247] [cursor=pointer]:
+            - img [ref=e249]
+            - generic [ref=e251]: 租凭管理
+            - img [ref=e253]
+    - generic [ref=e255]:
+      - generic [ref=e256]:
+        - generic [ref=e257]:
+          - button [ref=e258] [cursor=pointer]:
+            - img [ref=e260]
+          - navigation "面包屑" [ref=e262]:
+            - generic [ref=e263]:
+              - link "工作台" [ref=e264]
+              - text: /
+            - link "控制台" [ref=e266]
+        - button "数据大屏" [ref=e268] [cursor=pointer]:
+          - img [ref=e270]
+          - generic [ref=e272]: 数据大屏
+        - generic [ref=e273]:
+          - generic [ref=e274]:
+            - button [ref=e275] [cursor=pointer]:
+              - img [ref=e277]
+            - superscript [ref=e281]: 99+
+          - button "🎨" [ref=e283] [cursor=pointer]
+          - button "超级管理员" [ref=e285] [cursor=pointer]:
+            - img [ref=e288]
+            - generic [ref=e290]: 超级管理员
+      - generic [ref=e292]:
+        - tablist [ref=e296]:
+          - tab "📊 控制台" [selected] [ref=e297]
+        - generic [ref=e298]:
+          - tabpanel "📊 控制台"
+      - main [ref=e299]:
+        - generic [ref=e305]:
+          - heading "控制台" [level=1] [ref=e306]
+          - paragraph [ref=e307]:
+            - generic [ref=e308]: 工作台
+            - generic [ref=e309]: /
+            - generic [ref=e310]: 控制台
+        - generic [ref=e315]:
+          - heading "📊 数据概览" [level=2] [ref=e316]
+          - generic [ref=e317]:
+            - generic [ref=e320]:
+              - generic [ref=e321]: 🏘️
+              - generic [ref=e322]:
+                - generic [ref=e323]: 管理小区
+                - generic [ref=e324]: "7"
+            - generic [ref=e327]:
+              - generic [ref=e328]: 👤
+              - generic [ref=e329]:
+                - generic [ref=e330]: 业主总数
+                - generic [ref=e331]: "5810"
+            - generic [ref=e334]:
+              - generic [ref=e335]: 💰
+              - generic [ref=e336]:
+                - generic [ref=e337]: 本月收费
+                - generic [ref=e338]: ¥1,061.40
+            - generic [ref=e341]:
+              - generic [ref=e342]: 📋
+              - generic [ref=e343]:
+                - generic [ref=e344]: 待缴费总额
+                - generic [ref=e345]: ¥3,824.40
+            - generic [ref=e348]:
+              - generic [ref=e349]: 🔧
+              - generic [ref=e350]:
+                - generic [ref=e351]: 待处理工单
+                - generic [ref=e352]: "34"
+      - generic [ref=e370]:
+        - generic [ref=e371]:
+          - strong [ref=e373]: 杭州喵喵至家网络有限公司
+          - text: ·倾力打造·
+          - strong [ref=e374]: 大圣智慧物业管理系统
+        - generic [ref=e375]:
+          - generic [ref=e376]:
+            - text: 客服电话：
+            - link "17771300068" [ref=e377] [cursor=pointer]:
+              - /url: tel:17771300068
+            - text: /
+            - link "19171045360" [ref=e378] [cursor=pointer]:
+              - /url: tel:19171045360
+          - generic [ref=e379]: "|"
+          - link "www.hbdxm.com" [ref=e380] [cursor=pointer]:
+            - /url: https://www.hbdxm.com
+          - generic [ref=e381]: "|"
+          - link "鄂ICP备2025153909号" [ref=e382] [cursor=pointer]:
+            - /url: https://beian.miit.gov.cn/
+    - generic [ref=e383] [cursor=pointer]:
+      - img "大圣导航" [ref=e385]
+      - generic [ref=e387]: 导航
+  - alert [ref=e388]:
+    - img [ref=e390]
+    - paragraph [ref=e392]: 登录成功

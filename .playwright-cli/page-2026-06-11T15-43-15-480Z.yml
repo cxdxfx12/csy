@@ -1,0 +1,381 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img "大圣物业" [ref=e6]
+      - generic [ref=e7]: 大圣物业
+    - menubar [ref=e12]:
+      - menuitem "数据概览" [ref=e13]:
+        - generic [ref=e14] [cursor=pointer]:
+          - img [ref=e16]
+          - generic [ref=e18]: 数据概览
+          - img [ref=e20]
+      - menuitem "系统管理" [ref=e22]:
+        - generic [ref=e23] [cursor=pointer]:
+          - img [ref=e25]
+          - generic [ref=e27]: 系统管理
+          - img [ref=e29]
+      - menuitem "房产管理" [ref=e31]:
+        - generic [ref=e32] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e36]: 房产管理
+          - img [ref=e38]
+      - menuitem "业主管理" [ref=e40]:
+        - generic [ref=e41] [cursor=pointer]:
+          - img [ref=e43]
+          - generic [ref=e45]: 业主管理
+          - img [ref=e47]
+      - menuitem "收费管理" [ref=e49]:
+        - generic [ref=e50] [cursor=pointer]:
+          - img [ref=e52]
+          - generic [ref=e56]: 收费管理
+          - img [ref=e58]
+      - menuitem "报修管理" [ref=e60]:
+        - generic [ref=e61] [cursor=pointer]:
+          - img [ref=e63]
+          - generic [ref=e65]: 报修管理
+          - img [ref=e67]
+      - menuitem "安保管理" [ref=e69]:
+        - generic [ref=e70] [cursor=pointer]:
+          - img [ref=e72]
+          - generic [ref=e75]: 安保管理
+          - img [ref=e77]
+      - menuitem "停车管理" [ref=e79]:
+        - generic [ref=e80] [cursor=pointer]:
+          - img [ref=e82]
+          - generic [ref=e84]: 停车管理
+          - img [ref=e86]
+      - menuitem "公告通知" [ref=e88]:
+        - generic [ref=e89] [cursor=pointer]:
+          - img [ref=e91]
+          - generic [ref=e95]: 公告通知
+          - img [ref=e97]
+      - menuitem "设备管理" [ref=e99]:
+        - generic [ref=e100] [cursor=pointer]:
+          - img [ref=e102]
+          - generic [ref=e107]: 设备管理
+          - img [ref=e109]
+      - menuitem "投诉建议" [ref=e111]:
+        - generic [ref=e112] [cursor=pointer]:
+          - img [ref=e114]
+          - generic [ref=e116]: 投诉建议
+          - img [ref=e118]
+      - menuitem "打印中心" [ref=e120]:
+        - generic [ref=e121] [cursor=pointer]:
+          - img [ref=e123]
+          - generic [ref=e125]: 打印中心
+          - img [ref=e127]
+      - menuitem "物业人员" [ref=e129]:
+        - generic [ref=e130] [cursor=pointer]:
+          - img [ref=e132]
+          - generic [ref=e134]: 物业人员
+          - img [ref=e136]
+      - menuitem "外部供应商" [ref=e138]:
+        - generic [ref=e139] [cursor=pointer]:
+          - img [ref=e141]
+          - generic [ref=e143]: 外部供应商
+          - img [ref=e145]
+      - menuitem "支付管理" [ref=e147]:
+        - generic [ref=e148] [cursor=pointer]:
+          - img [ref=e150]
+          - generic [ref=e153]: 支付管理
+          - img [ref=e155]
+      - menuitem "IoT设备管理" [ref=e157] [cursor=pointer]:
+        - img [ref=e159]
+        - generic [ref=e162]: IoT设备管理
+      - menuitem "公众号管理" [ref=e163]:
+        - generic [ref=e164] [cursor=pointer]:
+          - img [ref=e166]
+          - generic [ref=e169]: 公众号管理
+          - img [ref=e171]
+      - menuitem "监控管理" [ref=e173]:
+        - generic [ref=e174] [cursor=pointer]:
+          - img [ref=e176]
+          - generic [ref=e178]: 监控管理
+          - img [ref=e180]
+      - menuitem "AI助手管理" [ref=e182] [cursor=pointer]:
+        - img [ref=e184]
+        - generic [ref=e186]: AI助手管理
+      - menuitem "短信管理" [ref=e187]:
+        - generic [ref=e188] [cursor=pointer]:
+          - img [ref=e190]
+          - generic [ref=e193]: 短信管理
+          - img [ref=e195]
+      - menuitem "微信用户" [ref=e197] [cursor=pointer]:
+        - img [ref=e199]
+        - generic [ref=e201]: 微信用户
+      - menuitem "装修管理" [ref=e202]:
+        - generic [ref=e203] [cursor=pointer]:
+          - img [ref=e205]
+          - generic [ref=e210]: 装修管理
+          - img [ref=e212]
+      - menuitem "租凭管理" [ref=e214]:
+        - generic [ref=e215] [cursor=pointer]:
+          - img [ref=e217]
+          - generic [ref=e219]: 租凭管理
+          - img [ref=e221]
+  - generic [ref=e223]:
+    - generic [ref=e224]:
+      - generic [ref=e225]:
+        - button [ref=e226] [cursor=pointer]:
+          - img [ref=e228]
+        - navigation "面包屑" [ref=e230]:
+          - generic [ref=e231]:
+            - link "工作台" [ref=e232]
+            - text: /
+          - link "AI助手管理" [ref=e234]
+      - button "数据大屏" [ref=e236] [cursor=pointer]:
+        - img [ref=e238]
+        - generic [ref=e240]: 数据大屏
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - button [ref=e243] [cursor=pointer]:
+            - img [ref=e245]
+          - superscript [ref=e249]: 99+
+        - button "🎨" [ref=e251] [cursor=pointer]
+        - button "超级管理员" [ref=e253] [cursor=pointer]:
+          - img [ref=e256]
+          - generic [ref=e258]: 超级管理员
+    - generic [ref=e260]:
+      - tablist [ref=e264]:
+        - tab "📊 控制台" [ref=e265]
+        - tab "AI助手管理" [selected] [ref=e266]:
+          - text: AI助手管理
+          - img [ref=e268]
+      - generic [ref=e270]:
+        - tabpanel "AI助手管理"
+    - main [ref=e271]:
+      - generic [ref=e277]:
+        - heading "AI助手管理" [level=1] [ref=e278]
+        - paragraph [ref=e279]:
+          - generic [ref=e280]: 工作台
+          - generic [ref=e281]: /
+          - generic [ref=e282]: AI助手管理
+      - generic [ref=e287]:
+        - generic [ref=e289]:
+          - heading "AI 助手管理" [level=2] [ref=e290]:
+            - img [ref=e292]
+            - text: AI 助手管理
+          - paragraph [ref=e295]: 智能报修助手配置 · 今日对话17次
+        - generic [ref=e296]:
+          - generic [ref=e300]:
+            - img [ref=e303]
+            - generic [ref=e306]:
+              - generic [ref=e307]: "126"
+              - generic [ref=e308]: 累计对话
+          - generic [ref=e312]:
+            - img [ref=e315]
+            - generic [ref=e317]:
+              - generic [ref=e318]: "17"
+              - generic [ref=e319]: 今日对话
+          - generic [ref=e323]:
+            - img [ref=e326]
+            - generic [ref=e328]:
+              - generic [ref=e329]: "126"
+              - generic [ref=e330]: 近7天
+          - generic [ref=e334]:
+            - img [ref=e337]
+            - generic [ref=e340]:
+              - generic [ref=e341]: "8"
+              - generic [ref=e342]: 报修类型
+        - generic [ref=e343]:
+          - tablist [ref=e347]:
+            - tab "AI 配置" [ref=e348]
+            - tab "对话记录" [ref=e349]
+            - tab "数据统计" [active] [selected] [ref=e350] [cursor=pointer]
+          - tabpanel "数据统计" [ref=e352]:
+            - generic [ref=e362]:
+              - generic [ref=e364]:
+                - generic [ref=e365]: 📋 报修类型分布（共 47 单）
+                - generic [ref=e368]:
+                  - table [ref=e370]:
+                    - rowgroup [ref=e375]:
+                      - row "报修类型 单数 占比" [ref=e376]:
+                        - columnheader "报修类型" [ref=e377]:
+                          - generic [ref=e378]: 报修类型
+                        - columnheader "单数" [ref=e379]:
+                          - generic [ref=e380]: 单数
+                        - columnheader "占比" [ref=e381]:
+                          - generic [ref=e382]: 占比
+                  - table [ref=e387]:
+                    - rowgroup [ref=e392]:
+                      - row "水电-水 27 57.4%" [ref=e393]:
+                        - cell "水电-水" [ref=e394]:
+                          - generic [ref=e395]: 水电-水
+                        - cell "27" [ref=e396]:
+                          - generic [ref=e399]: "27"
+                        - cell "57.4%" [ref=e400]:
+                          - generic [ref=e401]: 57.4%
+                      - row "燃气 5 10.6%" [ref=e402]:
+                        - cell "燃气" [ref=e403]:
+                          - generic [ref=e404]: 燃气
+                        - cell "5" [ref=e405]:
+                          - generic [ref=e408]: "5"
+                        - cell "10.6%" [ref=e409]:
+                          - generic [ref=e410]: 10.6%
+                      - row "水电-电 4 8.5%" [ref=e411]:
+                        - cell "水电-电" [ref=e412]:
+                          - generic [ref=e413]: 水电-电
+                        - cell "4" [ref=e414]:
+                          - generic [ref=e417]: "4"
+                        - cell "8.5%" [ref=e418]:
+                          - generic [ref=e419]: 8.5%
+                      - row "家电/空调 3 6.4%" [ref=e420]:
+                        - cell "家电/空调" [ref=e421]:
+                          - generic [ref=e422]: 家电/空调
+                        - cell "3" [ref=e423]:
+                          - generic [ref=e426]: "3"
+                        - cell "6.4%" [ref=e427]:
+                          - generic [ref=e428]: 6.4%
+                      - row "其他 3 6.4%" [ref=e429]:
+                        - cell "其他" [ref=e430]:
+                          - generic [ref=e431]: 其他
+                        - cell "3" [ref=e432]:
+                          - generic [ref=e435]: "3"
+                        - cell "6.4%" [ref=e436]:
+                          - generic [ref=e437]: 6.4%
+                      - row "门窗 2 4.3%" [ref=e438]:
+                        - cell "门窗" [ref=e439]:
+                          - generic [ref=e440]: 门窗
+                        - cell "2" [ref=e441]:
+                          - generic [ref=e444]: "2"
+                        - cell "4.3%" [ref=e445]:
+                          - generic [ref=e446]: 4.3%
+                      - row "管道/墙面 2 4.3%" [ref=e447]:
+                        - cell "管道/墙面" [ref=e448]:
+                          - generic [ref=e449]: 管道/墙面
+                        - cell "2" [ref=e450]:
+                          - generic [ref=e453]: "2"
+                        - cell "4.3%" [ref=e454]:
+                          - generic [ref=e455]: 4.3%
+                      - row "网络 1 2.1%" [ref=e456]:
+                        - cell "网络" [ref=e457]:
+                          - generic [ref=e458]: 网络
+                        - cell "1" [ref=e459]:
+                          - generic [ref=e462]: "1"
+                        - cell "2.1%" [ref=e463]:
+                          - generic [ref=e464]: 2.1%
+                  - table [ref=e466]:
+                    - rowgroup [ref=e471]:
+                      - row "合计 47 100%" [ref=e472]:
+                        - cell "合计" [ref=e473]:
+                          - generic [ref=e474]: 合计
+                        - cell "47" [ref=e475]:
+                          - generic [ref=e476]: "47"
+                        - cell "100%" [ref=e477]:
+                          - generic [ref=e478]: 100%
+              - generic [ref=e480]:
+                - generic [ref=e481]: 📊 报修单状态分布
+                - generic [ref=e484]:
+                  - table [ref=e486]:
+                    - rowgroup [ref=e490]:
+                      - row "状态 数量" [ref=e491]:
+                        - columnheader "状态" [ref=e492]:
+                          - generic [ref=e493]: 状态
+                        - columnheader "数量" [ref=e494]:
+                          - generic [ref=e495]: 数量
+                  - table [ref=e500]:
+                    - rowgroup [ref=e504]:
+                      - row "已接单 3" [ref=e505]:
+                        - cell "已接单" [ref=e506]:
+                          - generic [ref=e507]: 已接单
+                        - cell "3" [ref=e508]:
+                          - generic [ref=e511]: "3"
+                      - row "维修中 32" [ref=e512]:
+                        - cell "维修中" [ref=e513]:
+                          - generic [ref=e514]: 维修中
+                        - cell "32" [ref=e515]:
+                          - generic [ref=e518]: "32"
+                      - row "已评价 2" [ref=e519]:
+                        - cell "已评价" [ref=e520]:
+                          - generic [ref=e521]: 已评价
+                        - cell "2" [ref=e522]:
+                          - generic [ref=e525]: "2"
+                      - row "已取消 5" [ref=e526]:
+                        - cell "已取消" [ref=e527]:
+                          - generic [ref=e528]: 已取消
+                        - cell "5" [ref=e529]:
+                          - generic [ref=e532]: "5"
+                      - row "状态6 5" [ref=e533]:
+                        - cell "状态6" [ref=e534]:
+                          - generic [ref=e535]: 状态6
+                        - cell "5" [ref=e536]:
+                          - generic [ref=e539]: "5"
+            - generic [ref=e540]:
+              - generic [ref=e541]: 🤖 AI 识别报修类型（来自对话记录）
+              - generic [ref=e544]:
+                - table [ref=e546]:
+                  - rowgroup [ref=e550]:
+                    - row "AI 分类 生成单数" [ref=e551]:
+                      - columnheader "AI 分类" [ref=e552]:
+                        - generic [ref=e553]: AI 分类
+                      - columnheader "生成单数" [ref=e554]:
+                        - generic [ref=e555]: 生成单数
+                - table [ref=e560]:
+                  - rowgroup [ref=e564]:
+                    - row "水电 24" [ref=e565]:
+                      - cell "水电" [ref=e566]:
+                        - generic [ref=e569]: 水电
+                      - cell "24" [ref=e570]:
+                        - strong [ref=e572]: "24"
+                    - row "燃气 12" [ref=e573]:
+                      - cell "燃气" [ref=e574]:
+                        - generic [ref=e577]: 燃气
+                      - cell "12" [ref=e578]:
+                        - strong [ref=e580]: "12"
+                    - row "空调 8" [ref=e581]:
+                      - cell "空调" [ref=e582]:
+                        - generic [ref=e585]: 空调
+                      - cell "8" [ref=e586]:
+                        - strong [ref=e588]: "8"
+                    - row "停车 6" [ref=e589]:
+                      - cell "停车" [ref=e590]:
+                        - generic [ref=e593]: 停车
+                      - cell "6" [ref=e594]:
+                        - strong [ref=e596]: "6"
+                    - row "电梯 6" [ref=e597]:
+                      - cell "电梯" [ref=e598]:
+                        - generic [ref=e601]: 电梯
+                      - cell "6" [ref=e602]:
+                        - strong [ref=e604]: "6"
+                    - row "门窗 4" [ref=e605]:
+                      - cell "门窗" [ref=e606]:
+                        - generic [ref=e609]: 门窗
+                      - cell "4" [ref=e610]:
+                        - strong [ref=e612]: "4"
+                    - row "安保 2" [ref=e613]:
+                      - cell "安保" [ref=e614]:
+                        - generic [ref=e617]: 安保
+                      - cell "2" [ref=e618]:
+                        - strong [ref=e620]: "2"
+                    - row "墙面 2" [ref=e621]:
+                      - cell "墙面" [ref=e622]:
+                        - generic [ref=e625]: 墙面
+                      - cell "2" [ref=e626]:
+                        - strong [ref=e628]: "2"
+                    - row "卫生 2" [ref=e629]:
+                      - cell "卫生" [ref=e630]:
+                        - generic [ref=e633]: 卫生
+                      - cell "2" [ref=e634]:
+                        - strong [ref=e636]: "2"
+    - generic [ref=e638]:
+      - generic [ref=e639]:
+        - strong [ref=e641]: 杭州喵喵至家网络有限公司
+        - text: ·倾力打造·
+        - strong [ref=e642]: 大圣智慧物业管理系统
+      - generic [ref=e643]:
+        - generic [ref=e644]:
+          - text: 客服电话：
+          - link "17771300068" [ref=e645] [cursor=pointer]:
+            - /url: tel:17771300068
+          - text: /
+          - link "19171045360" [ref=e646] [cursor=pointer]:
+            - /url: tel:19171045360
+        - generic [ref=e647]: "|"
+        - link "www.hbdxm.com" [ref=e648] [cursor=pointer]:
+          - /url: https://www.hbdxm.com
+        - generic [ref=e649]: "|"
+        - link "鄂ICP备2025153909号" [ref=e650] [cursor=pointer]:
+          - /url: https://beian.miit.gov.cn/
+  - generic [ref=e651] [cursor=pointer]:
+    - img "大圣导航" [ref=e653]
+    - generic [ref=e655]: 导航

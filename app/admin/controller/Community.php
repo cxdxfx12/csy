@@ -37,6 +37,10 @@ class Community extends BaseAdmin
         foreach ($allowFields as $f) {
             if (isset($data[$f])) $filtered[$f] = $data[$f];
         }
+        // 自动生成唯一编码，避免 uk_code 唯一索引冲突
+        if (empty($filtered['code'])) {
+            $filtered['code'] = 'CM_' . date('YmdHis') . '_' . substr(md5(uniqid(mt_rand(), true)), 0, 6);
+        }
         $filtered['create_time'] = date('Y-m-d H:i:s');
         Db::name('community')->insert($filtered);
         return $this->success([], '添加成功');
@@ -54,6 +58,13 @@ class Community extends BaseAdmin
             if (isset($data[$f])) $filtered[$f] = $data[$f];
         }
         if (empty($filtered['id'])) return $this->error('参数错误');
+        // 如果 code 被清空，保留原值
+        if (empty($filtered['code'])) {
+            $item = Db::name('community')->where('id', $filtered['id'])->find();
+            if ($item && !empty($item['code'])) {
+                $filtered['code'] = $item['code'];
+            }
+        }
         Db::name('community')->where('id', $filtered['id'])->update($filtered);
         return $this->success([], '修改成功');
     }

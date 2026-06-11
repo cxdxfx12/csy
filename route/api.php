@@ -550,6 +550,8 @@ Route::group('api/admin', function () {
 
     // SSE事件
     Route::get('system/sseEventList', 'admin/SseEvent/lists');
+    // SSE 实时推送流
+    Route::get('sse/stream', 'admin/AdminSse/stream');
 
     // 服务商
     Route::get('system/serviceVendorList', 'admin/ServiceVendor/lists');

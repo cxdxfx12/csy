@@ -135,8 +135,7 @@ function openForm(row?: any) {
 }
 
 async function submitForm() {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
+  try { await formRef.value?.validate() } catch { return }
   submitting.value = true
   try {
     const url = form.id ? '/admin/repair/workerEdit' : '/admin/repair/workerAdd'

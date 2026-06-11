@@ -237,8 +237,7 @@ function openHandle(row: any) {
   handleVisible.value = true
 }
 async function submitHandle() {
-  const valid = await handleFormRef.value?.validate().catch(() => false)
-  if (!valid) return
+  try { await handleFormRef.value?.validate() } catch { return }
   submitting.value = true
   try {
     await apiPost('/admin/complaint/handle', {

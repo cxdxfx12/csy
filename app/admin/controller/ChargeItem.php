@@ -24,8 +24,13 @@ class ChargeItem extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        unset($data['id']); // 移除 id 字段，让 MySQL 自增
         $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
+        // 自动生成唯一编码，避免 uk_code 唯一索引冲突
+        if (empty($data['code'])) {
+            $data['code'] = 'CI_' . date('YmdHis') . '_' . substr(md5(uniqid(mt_rand(), true)), 0, 6);
+        }
         Db::name('charge_item')->insert($data);
         return $this->success([], '添加成功');
     }
@@ -37,7 +42,12 @@ class ChargeItem extends BaseAdmin
         if (!$item) return $this->error('收费项目不存在');
         $this->validateCommunityAccess($item['community_id'] ?? 0);
         if (!empty($data['community_id'])) $this->validateCommunityAccess($data['community_id']);
-        Db::name('charge_item')->where('id', $data['id'])->update($data);
+        unset($data['id']); // id 不可修改
+        // 如果 code 被清空，保留原值
+        if (empty($data['code']) && !empty($item['code'])) {
+            $data['code'] = $item['code'];
+        }
+        Db::name('charge_item')->where('id', $item['id'])->update($data);
         return $this->success([], '修改成功');
     }
 

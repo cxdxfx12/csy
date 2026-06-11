@@ -95,14 +95,56 @@
 
       <!-- ===== 数据统计 ===== -->
       <el-tab-pane label="数据统计" name="stats">
-        <el-row :gutter="16" style="margin-bottom:16px">
+        <el-row :gutter="16" style="margin-bottom:16px" class="stats-tab-charts">
           <el-col :span="12">
-            <el-card shadow="hover"><div ref="trendChart" style="height:300px"></div></el-card>
+            <el-card shadow="hover"><div ref="trendChart" class="chart-type" style="height:320px"></div></el-card>
           </el-col>
           <el-col :span="12">
-            <el-card shadow="hover"><div ref="typeChart" style="height:300px"></div></el-card>
+            <el-card shadow="hover"><div ref="statusChart" class="chart-status" style="height:320px"></div></el-card>
           </el-col>
         </el-row>
+
+        <!-- 报修类型明细表 -->
+        <el-row :gutter="16" style="margin-bottom:16px">
+          <el-col :span="12">
+            <el-card shadow="never">
+              <template #header><span style="font-weight:600">📋 报修类型分布（共 {{ stats.repair_total||0 }} 单）</span></template>
+              <el-table :data="stats.by_type||[]" stripe size="small" show-summary :summary-method="typeSummary">
+                <el-table-column prop="type_name" label="报修类型" min-width="120" />
+                <el-table-column prop="count" label="单数" width="80" align="center">
+                  <template #default="{row}"><el-tag size="small">{{ row.count }}</el-tag></template>
+                </el-table-column>
+                <el-table-column label="占比" width="90" align="center">
+                  <template #default="{row}">{{ ((row.count/(stats.repair_total||1))*100).toFixed(1) }}%</template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </el-col>
+          <el-col :span="12">
+            <el-card shadow="never">
+              <template #header><span style="font-weight:600">📊 报修单状态分布</span></template>
+              <el-table :data="stats.status_list||[]" stripe size="small">
+                <el-table-column prop="status_name" label="状态" min-width="100" />
+                <el-table-column prop="count" label="数量" width="80" align="center">
+                  <template #default="{row}"><el-tag :type="statusTagType(row.status)" size="small">{{ row.count }}</el-tag></template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </el-col>
+        </el-row>
+
+        <!-- AI 识别类型统计 -->
+        <el-card shadow="never">
+          <template #header><span style="font-weight:600">🤖 AI 识别报修类型（来自对话记录）</span></template>
+          <el-table :data="stats.ai_types||[]" stripe size="small">
+            <el-table-column prop="type" label="AI 分类" min-width="120">
+              <template #default="{row}"><el-tag type="warning">{{ row.type }}</el-tag></template>
+            </el-table-column>
+            <el-table-column prop="count" label="生成单数" width="100" align="center">
+              <template #default="{row}"><strong>{{ row.count }}</strong></template>
+            </el-table-column>
+          </el-table>
+        </el-card>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -118,7 +160,7 @@ const activeTab = ref('config')
 const hLoading = ref(false), cfgSaving = ref(false)
 const histories = ref<any[]>([])
 const hTotal = ref(0)
-const trendChart = ref(), typeChart = ref()
+const trendChart = ref(), typeChart = ref(), statusChart = ref()
 
 const stats = reactive<any>({ total_chats: 0, today_chats: 0, week_chats: 0, trend: [], by_type: [] })
 const hQuery = reactive({ page: 1, limit: 15, keyword: '', date_range: [] as string[] })
@@ -188,34 +230,64 @@ async function loadHistory() {
 
 function renderCharts() {
   nextTick(() => {
-    if (trendChart.value) {
-      const c = echarts.init(trendChart.value)
-      c.setOption({
-        title: { text: '对话趋势（近7天）', left: 'center', textStyle: { fontSize: 14 } },
-        tooltip: { trigger: 'axis' },
-        xAxis: { type: 'category', data: (stats.trend||[]).map((t:any)=>t.date) },
-        yAxis: { type: 'value', name: '对话数' },
-        series: [{ data: (stats.trend||[]).map((t:any)=>t.cnt), type: 'line', smooth: true, areaStyle: { opacity: 0.3 }, itemStyle: { color: '#409EFF' } }],
-      })
-    }
-    if (typeChart.value) {
-      const c = echarts.init(typeChart.value)
-      c.setOption({
-        title: { text: '报修类型分布', left: 'center', textStyle: { fontSize: 14 } },
-        tooltip: { trigger: 'item' },
-        series: [{
-          type: 'pie', radius: ['45%','70%'],
-          data: (stats.by_type||[]).map((t:any)=>({ name: t.type, value: t.cnt })),
-          label: { formatter: '{b}\n{c}单' },
-        }],
-      })
-    }
+    setTimeout(() => {
+      // 左侧：报修类型分布 - 饼图
+      const el1 = trendChart.value || document.querySelector('.chart-type')
+      if (el1 && el1.offsetWidth > 0) {
+        const c1 = echarts.init(el1)
+        const typeData = (stats.by_type||[]).map((t:any)=>({ name: t.type_name, value: t.count }))
+        c1.setOption({
+          title: { text: '报修类型分布', subtext: `共 ${stats.repair_total||0} 单`, left: 'center', textStyle: { fontSize: 15, fontWeight:'bold' }, subtextStyle:{fontSize:12,color:'#999'} },
+          tooltip: { trigger: 'item', formatter: '{b}: {c}单 ({d}%)' },
+          legend: { orient: 'vertical', left: 'left', top: 'middle', type: 'scroll' },
+          color: ['#5470C6','#91CC75','#FAC858','#EE6666','#73C0DE','#3BA272','#FC8452','#9A60B4','#EA7CCC'],
+          series: [{
+            type: 'pie', radius: ['40%', '68%'], center: ['60%', '55%'],
+            data: typeData,
+            label: { formatter: '{b}\n{d}%', fontSize: 11 },
+            emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' } },
+            animationType: 'scale',
+          }],
+        })
+        c1.resize()
+      }
+      // 右侧：状态分布 - 饼图
+      const el2 = statusChart.value || document.querySelector('.chart-status')
+      if (el2 && el2.offsetWidth > 0) {
+        const c2 = echarts.init(el2)
+        const statusData = (stats.status_list||[]).map((s:any)=>({ name: s.status_name, value: s.count }))
+        const statusColorMap: Record<string,string> = {'待接单':'#909399','已接单':'#E6A23C','维修中':'#409EFF','已完成':'#67C23A','已评价':'#67C23A','已取消':'#F56C6C','已关闭':'#909399'}
+        c2.setOption({
+          title: { text: '报修单状态分布', left: 'center', textStyle: { fontSize: 15, fontWeight:'bold' } },
+          tooltip: { trigger: 'item', formatter: '{b}: {c}单 ({d}%)' },
+          legend: { orient: 'vertical', left: 'left', top: 'middle', type: 'scroll' },
+          color: statusData.map((d:any)=>statusColorMap[d.name]||'#5470C6'),
+          series: [{
+            type: 'pie', radius: ['40%', '68%'], center: ['60%', '55%'],
+            data: statusData,
+            label: { formatter: '{b}\n{d}%', fontSize: 11 },
+            emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' } },
+            animationType: 'scale',
+          }],
+        })
+        c2.resize()
+      }
+    }, 300)
   })
+}
+
+function typeSummary(param: any) {
+  const total = param.data.reduce((s:number, r:any) => s + r.count, 0)
+  return ['合计', total, '100%']
+}
+function statusTagType(status: number): string {
+  const m: any = {'0':'info','1':'warning','2':'primary','3':'success','4':'success','5':'danger','-1':'info'}
+  return (m[String(status)] as string) || 'info'
 }
 
 watch(() => activeTab.value, (v) => { if (v==='history') loadHistory(); if (v==='stats') loadStats() })
 
-onMounted(() => { loadConfig(); loadStats() })
+onMounted(() => { loadConfig(); /* loadStats deferred to tab switch */ })
 </script>
 
 <style scoped>

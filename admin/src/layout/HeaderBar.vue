@@ -102,6 +102,10 @@ const badgeRaw = ref<Record<string, number>>({ bill: 0, repair: 0, complaint: 0,
 let timer: any = null
 let sseConnection: EventSource | null = null
 let sseReconnectTimer: any = null
+let sseRetryCount = 0
+const SSE_MAX_RETRIES = 10
+const SSE_BASE_DELAY = 2000
+const SSE_MAX_DELAY = 60000
 const SEEN_KEY = 'admin_badge_seen'
 
 const notifyMeta: Record<string, { icon: string; label: string; route: string; badgeType: any }> = {
@@ -198,6 +202,7 @@ function connectSSE() {
 
     sseConnection.addEventListener('connected', () => {
       console.log('[Admin SSE] 实时推送已连接')
+      sseRetryCount = 0
       if (sseReconnectTimer) { clearTimeout(sseReconnectTimer); sseReconnectTimer = null }
     })
 
@@ -225,14 +230,16 @@ function connectSSE() {
       sseConnection?.close()
     })
 
-    sseConnection.addEventListener('error', () => {
-      console.warn('[Admin SSE] 连接断开')
-      sseConnection?.close()
-    })
-
     sseConnection.onerror = () => {
       sseConnection?.close()
-      sseReconnectTimer = setTimeout(connectSSE, 3000)
+      sseRetryCount++
+      if (sseRetryCount <= SSE_MAX_RETRIES) {
+        const delay = Math.min(SSE_BASE_DELAY * Math.pow(2, sseRetryCount - 1), SSE_MAX_DELAY)
+        console.warn(`[Admin SSE] 连接断开，${delay/1000}s 后重试 (${sseRetryCount}/${SSE_MAX_RETRIES})`)
+        sseReconnectTimer = setTimeout(connectSSE, delay)
+      } else {
+        console.warn('[Admin SSE] 重试次数已用尽，停止连接')
+      }
     }
   } catch (e) {
     console.warn('[Admin SSE] 连接失败，使用轮询模式')
@@ -240,6 +247,7 @@ function connectSSE() {
 }
 
 function disconnectSSE() {
+  sseRetryCount = SSE_MAX_RETRIES + 1 // 阻止重连
   if (sseConnection) { sseConnection.close(); sseConnection = null }
   if (sseReconnectTimer) { clearTimeout(sseReconnectTimer); sseReconnectTimer = null }
 }

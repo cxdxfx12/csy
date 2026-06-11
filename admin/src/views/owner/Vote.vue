@@ -227,8 +227,7 @@ function openForm(row?: any) {
   dialogVisible.value = true
 }
 async function submitForm() {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
+  try { await formRef.value?.validate() } catch { return }
   submitting.value = true
   try {
     const validOptions = form.options.filter((o: string) => o.trim())

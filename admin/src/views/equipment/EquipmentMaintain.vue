@@ -95,8 +95,7 @@ function openForm() {
 }
 
 async function submitForm() {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
+  try { await formRef.value?.validate() } catch { return }
   submitting.value = true
   try {
     await apiPost('/admin/equipment/maintainAdd', { ...form })

@@ -1,0 +1,119 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img "大圣物业" [ref=e6]
+      - generic [ref=e7]: 大圣物业
+    - generic [ref=e10]:
+      - generic:
+        - menubar
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - button [ref=e14] [cursor=pointer]:
+          - img [ref=e16]
+        - navigation "面包屑" [ref=e18]:
+          - generic [ref=e19]:
+            - link "工作台" [ref=e20]
+            - text: /
+          - link "AI助手管理" [ref=e22]
+      - button "数据大屏" [ref=e24] [cursor=pointer]:
+        - img [ref=e26]
+        - generic [ref=e28]: 数据大屏
+      - generic [ref=e29]:
+        - button [ref=e31] [cursor=pointer]:
+          - img [ref=e33]
+        - button "🎨" [ref=e38] [cursor=pointer]
+        - button "管理员" [ref=e40] [cursor=pointer]:
+          - img [ref=e43]
+          - generic [ref=e45]: 管理员
+    - generic [ref=e47]:
+      - tablist [ref=e51]:
+        - tab "📊 控制台" [ref=e52]
+        - tab "AI助手管理" [selected] [ref=e53]:
+          - text: AI助手管理
+          - img [ref=e55]
+      - generic [ref=e57]:
+        - tabpanel "AI助手管理"
+    - main [ref=e58]:
+      - generic [ref=e64]:
+        - heading "AI助手管理" [level=1] [ref=e65]
+        - paragraph [ref=e66]:
+          - generic [ref=e67]: 工作台
+          - generic [ref=e68]: /
+          - generic [ref=e69]: AI助手管理
+      - generic [ref=e74]:
+        - generic [ref=e76]:
+          - heading "AI 助手管理" [level=2] [ref=e77]:
+            - img [ref=e79]
+            - text: AI 助手管理
+          - paragraph [ref=e82]: 智能报修助手配置 · 今日对话0次
+        - generic [ref=e83]:
+          - generic [ref=e87]:
+            - img [ref=e90]
+            - generic [ref=e93]:
+              - generic [ref=e94]: "0"
+              - generic [ref=e95]: 累计对话
+          - generic [ref=e99]:
+            - img [ref=e102]
+            - generic [ref=e104]:
+              - generic [ref=e105]: "0"
+              - generic [ref=e106]: 今日对话
+          - generic [ref=e110]:
+            - img [ref=e113]
+            - generic [ref=e115]:
+              - generic [ref=e116]: "0"
+              - generic [ref=e117]: 近7天
+          - generic [ref=e121]:
+            - img [ref=e124]
+            - generic [ref=e127]:
+              - generic [ref=e128]: "0"
+              - generic [ref=e129]: 报修类型
+        - generic [ref=e130]:
+          - tablist [ref=e134]:
+            - tab "AI 配置" [selected] [ref=e135]
+            - tab "对话记录" [ref=e136]
+            - tab "数据统计" [ref=e137] [cursor=pointer]
+          - tabpanel "AI 配置" [ref=e139]:
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]: 问候语
+                - textbox "问候语" [ref=e147]:
+                  - /placeholder: 首次对话欢迎语
+              - generic [ref=e148]:
+                - generic [ref=e149]: 操作提示
+                - textbox "操作提示" [ref=e153]:
+                  - /placeholder: 如：直接描述您的问题，我会自动生成报修单
+              - separator [ref=e154]:
+                - generic [ref=e155]: 报修类型关键词配置
+              - button "添加报修类型" [ref=e156] [cursor=pointer]:
+                - generic [ref=e157]:
+                  - img [ref=e159]
+                  - text: 添加报修类型
+              - separator [ref=e161]:
+                - generic [ref=e162]: 紧急程度关键词
+              - button [ref=e164] [cursor=pointer]:
+                - img [ref=e167]
+              - button "保存配置" [ref=e170] [cursor=pointer]:
+                - generic [ref=e171]: 保存配置
+    - generic [ref=e173]:
+      - generic [ref=e174]:
+        - strong [ref=e176]: 杭州喵喵至家网络有限公司
+        - text: ·倾力打造·
+        - strong [ref=e177]: 大圣智慧物业管理系统
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - text: 客服电话：
+          - link "17771300068" [ref=e180] [cursor=pointer]:
+            - /url: tel:17771300068
+          - text: /
+          - link "19171045360" [ref=e181] [cursor=pointer]:
+            - /url: tel:19171045360
+        - generic [ref=e182]: "|"
+        - link "www.hbdxm.com" [ref=e183] [cursor=pointer]:
+          - /url: https://www.hbdxm.com
+        - generic [ref=e184]: "|"
+        - link "鄂ICP备2025153909号" [ref=e185] [cursor=pointer]:
+          - /url: https://beian.miit.gov.cn/
+  - generic [ref=e186] [cursor=pointer]:
+    - img "大圣导航" [ref=e188]
+    - generic [ref=e190]: 导航

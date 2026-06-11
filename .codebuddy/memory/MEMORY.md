@@ -9,6 +9,8 @@
 - Node.js: C:\Program Files\nodejs\ (v24.16.0)
 - 构建命令: `cmd: set PATH=C:\Program Files\nodejs;%PATH% && cd /d e:\ds\admin && npm run build`
 - ⚠️ nginx root = /www/wwwroot/www.hbdxm.com/public，前端文件必须放到 public/admin/assets/ 和 public/admin/index.html
+- ⚠️ **每次构建后必须同步全部 assets/ 文件**！只上传 index.html + index-*.js/css 不够，因为 JS chunk 间有动态 import 依赖，缺文件会白屏
+- SSH 部署专用参数：readyTimeout=10000，SFTP 比 shell exec 更稳定，批量写用 createWriteStream
 
 ## GitHub
 - 仓库: https://github.com/cxdxfx12/csy.git
