@@ -11,6 +11,10 @@ class StaffRepair extends BaseStaff
      */
     protected function getCurrentWorker()
     {
+        // 如果是维修工直接登录（staffInfo.is_worker），直接按 id 查
+        if ($this->staffInfo && !empty($this->staffInfo['is_worker'])) {
+            return Db::name('repair_worker')->where('id', $this->staffInfo['id'])->find();
+        }
         $adminUser = Db::name('admin_user')->where('id', $this->staffId)->find();
         if ($adminUser && $adminUser['phone']) {
             return Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
@@ -32,7 +36,7 @@ class StaffRepair extends BaseStaff
         $status = $this->request->param('status', '');
         if ($status !== '') $where[] = ['ro.status', '=', $status];
 
-        // 已派单/处理中/已完成 均只显示指派给自己的单
+        // 状态 2/3/4/5/6 只显示指派给自己的；状态 1 本小区所有人都可见（可抢单）
         if (in_array((int)$status, [2, 3, 4, 5, 6])) {
             $where[] = ['ro.assignee_id', '=', $worker['id']];
         }
@@ -40,7 +44,8 @@ class StaffRepair extends BaseStaff
         $total = Db::name('repair_order')->alias('ro')->where($where)->count();
         $list = Db::name('repair_order')->alias('ro')
             ->leftJoin('room r', 'r.id = ro.room_id')
-            ->field('ro.*, r.room_number, r.building_name')
+            ->leftJoin('community c', 'c.id = ro.community_id')
+            ->field('ro.*, r.room_number, r.building_name, c.name as community_name, ro.reporter as contact, ro.reporter_phone as phone')
             ->where($where)->page($page, $limit)->order('ro.id', 'desc')->select();
         return $this->success(['list' => $list, 'total' => $total]);
     }
@@ -53,7 +58,8 @@ class StaffRepair extends BaseStaff
 
         $info = Db::name('repair_order')->alias('ro')
             ->leftJoin('room r', 'r.id = ro.room_id')
-            ->field('ro.*, r.room_number, r.building_name')
+            ->leftJoin('community c', 'c.id = ro.community_id')
+            ->field('ro.*, r.room_number, r.building_name, c.name as community_name, ro.reporter as contact, ro.reporter_phone as phone')
             ->where('ro.id', $id)
             ->where('ro.community_id', $worker['community_id'])
             ->find();
@@ -85,6 +91,27 @@ class StaffRepair extends BaseStaff
             'status' => 3,
         ]);
         return $this->success([], '接单成功');
+    }
+
+    /**
+     * 抢单：本小区工人主动认领待处理的工单
+     */
+    public function claim()
+    {
+        $id = $this->request->post('id', 0);
+        $worker = $this->getCurrentWorker();
+        if (!$worker) return $this->error('未找到员工信息');
+
+        $order = Db::name('repair_order')->where('id', $id)->find();
+        if (!$order) return $this->error('工单不存在');
+        if ((int)$order['status'] !== 1) return $this->error('该工单已分配，不可抢单');
+        if ((int)$order['community_id'] !== (int)$worker['community_id']) return $this->error('工单不在您的小区');
+
+        Db::name('repair_order')->where('id', $id)->update([
+            'assignee_id' => $worker['id'],
+            'status' => 2,
+        ]);
+        return $this->success([], '抢单成功，请尽快处理');
     }
 
     public function finish()

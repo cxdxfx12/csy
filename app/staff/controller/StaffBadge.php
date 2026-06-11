@@ -17,11 +17,7 @@ class StaffBadge extends BaseStaff
         $info = $this->staffInfo;
         // 维修工
         if (!empty($info['is_worker'])) {
-            $adminUser = Db::name('admin_user')->where('id', $this->staffId)->find();
-            if ($adminUser && $adminUser['phone']) {
-                $worker = Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
-                if ($worker) return $worker['community_id'];
-            }
+            return $info['community_id'] ?? 0;
         }
         // 普通物业员工
         return $info['community_id'] ?? 0;
@@ -34,11 +30,7 @@ class StaffBadge extends BaseStaff
     {
         $info = $this->staffInfo;
         if (!empty($info['is_worker'])) {
-            $adminUser = Db::name('admin_user')->where('id', $this->staffId)->find();
-            if ($adminUser && $adminUser['phone']) {
-                $worker = Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
-                if ($worker) return $worker['id'];
-            }
+            return $info['id'];
         }
         return 0;
     }

@@ -12,18 +12,24 @@
         <span class="community-tag" v-if="profile.community_name">{{ profile.community_name }}</span>
       </div>
     </div>
-    <!-- 负责楼栋 -->
+    <!-- 负责楼栋（可折叠） -->
     <div class="building-section" v-if="profile && profile.buildings && profile.buildings.length > 0">
-      <div class="section-title">📋 我负责的楼栋</div>
-      <div class="building-list">
-        <div class="building-item" v-for="b in profile.buildings" :key="b.id">
-          <span class="building-icon">🏢</span>
-          <div class="building-info">
-            <strong>{{ b.name }}</strong>
-            <small>{{ b.community_name }} · {{ b.floor_count }}层 · {{ b.total_rooms }}户</small>
+      <div class="section-header" @click="buildingsOpen = !buildingsOpen">
+        <span class="section-title">📋 我负责的楼栋</span>
+        <span class="section-arrow" :class="{ open: buildingsOpen }">{{ buildingsOpen ? '▲' : '▼' }}</span>
+        <span class="building-count">{{ profile.buildings.length }}栋</span>
+      </div>
+      <transition name="collapse">
+        <div class="building-list" v-show="buildingsOpen">
+          <div class="building-item" v-for="b in profile.buildings" :key="b.id">
+            <span class="building-icon">🏢</span>
+            <div class="building-info">
+              <strong>{{ b.name }}</strong>
+              <small>{{ b.community_name }} · {{ b.floor_count }}层 · {{ b.total_rooms }}户</small>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
     <div class="grid">
       <router-link to="/repair" class="card" @click="dismissBadge('repair')"><span>🔧</span><label>报修处理</label><b v-if="badges.repair>0">{{ badges.repair > 99 ? '99+' : badges.repair }}</b></router-link>
@@ -47,6 +53,7 @@ const auth = createAuth('staff_token')
 const profile = ref(null)
 const badges = reactive({ repair: 0, charge: 0, order: 0, complaint: 0 })
 const badgesRaw = reactive({ repair: 0, charge: 0, order: 0, complaint: 0 })
+const buildingsOpen = ref(false) // 楼栋列表默认收起
 let timer = null
 
 onMounted(async () => {
@@ -95,11 +102,19 @@ header h1{font-size:20px;color:#1f2937}
 .user-card strong{display:block;font-size:16px}
 .user-card small{color:#9ca3af;font-size:13px}
 .community-tag{display:inline-block;margin-top:4px;padding:2px 10px;background:#e0f2fe;color:#0369a1;font-size:12px;border-radius:10px;font-weight:500}
-/* 负责楼栋 */
-.building-section{margin-bottom:20px}
-.section-title{font-size:15px;font-weight:600;color:#1f2937;margin-bottom:10px}
-.building-list{display:flex;flex-direction:column;gap:8px}
-.building-item{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+/* 负责楼栋（可折叠） */
+.building-section{margin-bottom:20px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.section-header{display:flex;align-items:center;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.section-title{font-size:15px;font-weight:600;color:#1f2937;margin-bottom:0;flex:1}
+.section-arrow{font-size:11px;color:#9ca3af;margin-right:6px;transition:transform .2s}
+.section-arrow.open{transform:rotate(180deg)}
+.building-count{font-size:12px;color:#9ca3af;background:#f3f4f6;padding:2px 8px;border-radius:10px}
+.building-list{display:flex;flex-direction:column;gap:1px;padding:0 14px 10px}
+.collapse-enter-active,.collapse-leave-active{transition:all .25s ease;overflow:hidden}
+.collapse-enter-from,.collapse-leave-to{max-height:0;opacity:0}
+.collapse-enter-to,.collapse-leave-from{max-height:600px;opacity:1}
+.building-item{padding:10px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f3f4f6}
+.building-item:last-child{border-bottom:none}
 .building-icon{font-size:28px}
 .building-info strong{display:block;font-size:14px;color:#1f2937}
 .building-info small{font-size:12px;color:#9ca3af}

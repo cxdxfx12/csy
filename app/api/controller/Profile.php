@@ -15,7 +15,16 @@ class Profile extends BaseApi
 
     public function edit()
     {
-        $data = $this->request->post();
+        // 安全：字段白名单，防止批量赋值越权修改 community_id/status/type 等敏感字段
+        $raw = $this->request->post();
+        $allowed = ['realname','avatar','email','gender','birthday','id_card','emergency_contact','emergency_phone'];
+        $data = [];
+        foreach ($allowed as $f) {
+            if (array_key_exists($f, $raw)) {
+                $data[$f] = $raw[$f];
+            }
+        }
+        if (empty($data)) return $this->error('无有效修改字段');
         Db::name('owner')->where('id', $this->ownerId)->update($data);
         return $this->success([], '修改成功');
     }

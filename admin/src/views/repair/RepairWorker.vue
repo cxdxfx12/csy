@@ -37,7 +37,7 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" :title="formTitle" width="560px" destroy-on-close @opened="loadStaffList">
+      <el-dialog v-model="dialogVisible" :title="formTitle" width="560px" destroy-on-close @opened="loadStaffList">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="关联员工" prop="staff_id">
           <el-select v-model="form.staff_id" filterable placeholder="选择员工档案中的员工" style="width:100%;" @change="onStaffChange">
@@ -50,6 +50,9 @@
         </el-form-item>
         <el-form-item label="姓名"><el-input v-model="form.name" placeholder="自动从员工档案获取" disabled /></el-form-item>
         <el-form-item label="手机号"><el-input v-model="form.phone" placeholder="自动从员工档案获取" disabled /></el-form-item>
+        <el-form-item label="登录密码">
+          <el-input v-model="form.password" type="password" :placeholder="form.id ? '留空不修改密码' : '设置登录密码'" show-password autocomplete="new-password" />
+        </el-form-item>
         <el-form-item label="所属小区"><el-input v-model="form.community_name" placeholder="自动从员工档案获取" disabled /></el-form-item>
         <el-form-item label="专长"><el-input v-model="form.specialty" placeholder="如：水电、门窗、家电、管道" /></el-form-item>
         <el-form-item label="状态">
@@ -80,7 +83,7 @@ const communities = ref<any[]>([])
 const staffList = ref<any[]>([])
 
 const query = reactive({ keyword: '', community_id: undefined as any, page: 1, limit: 15 })
-const form = reactive<any>({ id: 0, staff_id: undefined, name: '', phone: '', community_name: '', specialty: '', status: 1 })
+const form = reactive<any>({ id: 0, staff_id: undefined, name: '', phone: '', password: '', community_name: '', specialty: '', status: 1 })
 const rules = { staff_id: [{ required: true, message: '请选择关联员工', trigger: 'change' }] }
 
 function resetQuery() { query.keyword = ''; query.community_id = undefined; query.page = 1; loadData() }
@@ -121,11 +124,12 @@ function openForm(row?: any) {
     Object.assign(form, {
       id: row.id, staff_id: row.staff_id || undefined,
       name: row.name, phone: row.phone,
+      password: '', // 编辑时不展示旧密码
       community_name: row.community_name || '',
       specialty: row.type || row.specialty || '', status: row.status
     })
   } else {
-    Object.assign(form, { id: 0, staff_id: undefined, name: '', phone: '', community_name: '', specialty: '', status: 1 })
+    Object.assign(form, { id: 0, staff_id: undefined, name: '', phone: '', password: '', community_name: '', specialty: '', status: 1 })
   }
   dialogVisible.value = true
 }

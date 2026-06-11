@@ -8,12 +8,39 @@ class StaffProfile extends BaseStaff
 {
     public function info()
     {
-        $staffId = $this->staffId;
-        // 如果有 staffInfo（ds_staff 表记录），使用 staffInfo.id
-        if (!empty($this->staffInfo['id']) && empty($this->staffInfo['is_worker'])) {
-            $staffId = $this->staffInfo['id'];
+        // 维修工：从 staffInfo 获取信息（BaseStaff::auth 已正确解析）
+        if (!empty($this->staffInfo['is_worker'])) {
+            $workerInfo = $this->staffInfo;
+            $communityId = $workerInfo['community_id'] ?? 0;
+            
+            $staff = [
+                'id'               => $workerInfo['id'],
+                'username'         => $workerInfo['phone'] ?? '',
+                'nickname'         => $workerInfo['realname'] ?? '',
+                'avatar'           => $workerInfo['avatar'] ?? '',
+                'phone'            => $workerInfo['phone'] ?? '',
+                'community_id'     => $communityId,
+                'community_name'   => $communityId ? (Db::name('community')->where('id', $communityId)->value('name') ?? '') : '',
+                'is_worker'        => true,
+            ];
+            
+            // 查询负责的楼栋（按 community_id）
+            $buildings = Db::name('building')
+                ->where('community_id', $communityId)
+                ->whereNull('delete_time')
+                ->field('id, name, community_id, floor_count, unit_count, total_rooms')
+                ->order('sort', 'asc')
+                ->limit(20)
+                ->select();
+            foreach ($buildings as &$b) {
+                $b['community_name'] = Db::name('community')->where('id', $b['community_id'])->value('name') ?? '';
+            }
+            $staff['buildings'] = $buildings;
+            
+            return $this->success($staff);
         }
         
+        // 管理员/普通员工：走原逻辑
         $staff = Db::name('admin_user')->where('id', $this->staffId)->field('id,username,nickname,avatar,email,phone,last_login_time')->find();
         // 补充小区信息
         $communityId = $this->staffInfo['community_id'] ?? 0;

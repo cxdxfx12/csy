@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="智慧物业,物业管理系统,大圣物业,喵喵至家,杭州物业软件">
+<meta name="description" content="大圣智慧物业管理系统about页 - 杭州喵喵至家网络有限公司">
+<title>关于我们 - 大圣智慧物业管理系统</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg-primary:#0a0e27;--bg-card:rgba(30,41,59,0.5);--bg-card-hover:rgba(30,41,59,0.8);--accent:#f59e0b;--accent-dark:#d97706;--text-white:#fff;--text-muted:rgba(255,255,255,0.7);--text-dim:rgba(255,255,255,0.5);--border-color:rgba(255,255,255,0.08);--border-hover:rgba(245,158,11,0.3);--gradient-1:linear-gradient(135deg,#f59e0b,#d97706)}
+body{font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg-primary);color:var(--text-white);line-height:1.6;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* Navbar */
+.navbar{background:var(--bg-primary);border-bottom:1px solid rgba(255,255,255,0.1);position:sticky;top:0;z-index:1000;backdrop-filter:blur(10px)}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-size:20px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}.logo-icon{font-size:24px;color:var(--accent)}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap}
+.nav-link{color:var(--text-muted);padding:8px 16px;border-radius:10px;font-size:14px;font-weight:500;transition:all .3s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:var(--accent);background:rgba(245,158,11,0.1)}.nav-link.active{font-weight:600}
+.cta-btn{background:var(--accent-dark);color:#fff;padding:10px 28px;border-radius:25px;font-size:15px;font-weight:500;border:none;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.cta-btn:hover{background:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(217,119,6,0.4)}
+
+/* Main */
+.container{max-width:1200px;margin:0 auto;padding:60px 20px}
+.page-hero{text-align:center;padding:80px 0 60px}
+.page-hero h1{font-size:42px;font-weight:700;margin-bottom:16px;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-hero p{font-size:18px;color:var(--text-muted);max-width:650px;margin:0 auto}
+.section-title{font-size:32px;text-align:center;margin-bottom:16px;font-weight:600}
+.section-subtitle{text-align:center;color:var(--text-dim);margin-bottom:50px;font-size:16px}
+
+/* Cards */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px;margin-bottom:80px}
+.card{background:var(--bg-card);border-radius:16px;padding:36px;border:1px solid var(--border-color);transition:all .3s}
+.card:hover{transform:translateY(-5px);border-color:var(--border-hover);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.card-icon{width:56px;height:56px;background:var(--gradient-1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px}
+.card h3{font-size:21px;margin-bottom:12px}
+.card p{color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:16px}
+.badge-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.badge{background:rgba(99,102,241,0.15);color:#a5b4fc;padding:5px 14px;border-radius:6px;font-size:13px}
+
+/* Overview box */
+.overview-box{background:linear-gradient(135deg,rgba(30,41,59,0.8),rgba(15,23,42,0.95));border-radius:20px;padding:50px;margin-bottom:80px;border:1px solid rgba(255,255,255,0.05)}
+.overview-box h2{font-size:26px;margin-bottom:20px;color:var(--accent)}
+.overview-box p{font-size:17px;line-height:1.85;color:var(--text-muted);margin-bottom:24px}
+.tags{display:flex;gap:12px;flex-wrap:wrap}
+.tag{background:rgba(245,158,11,0.15);color:#fbbf24;padding:9px 22px;border-radius:8px;font-size:14px;border:1px solid rgba(245,158,11,0.25)}
+
+/* Stats */
+.stats-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin:50px 0;text-align:center}
+.stat-item{text-align:center;padding:20px 30px}
+.stat-num{font-size:38px;font-weight:700;color:var(--accent);display:block}
+.stat-label{font-size:14px;color:var(--text-dim)}
+
+/* Timeline */
+.timeline{position:relative;max-width:800px;margin:0 auto 80px;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),rgba(245,158,11,0.2))}
+.tl-item{position:relative;margin-bottom:35px;padding-left:30px}
+.tl-item::before{content:'';position:absolute;left:-27px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:3px solid var(--bg-primary)}
+.tl-time{display:inline-block;background:var(--accent);color:#000;padding:3px 14px;border-radius:6px;font-size:13px;font-weight:700;margin-bottom:8px}
+.tl-item h4{font-size:18px;margin-bottom:6px}
+.tl-item p{color:var(--text-muted);font-size:14px}
+
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:80px}
+.price-card{background:var(--bg-card);border-radius:20px;padding:40px 32px;border:1px solid var(--border-color);text-align:center;transition:all .3s;position:relative}
+.price-card:hover{transform:translateY(-5px);border-color:var(--border-hover)}
+.price-card.popular{border-color:var(--accent);background:rgba(245,158,11,0.06)}
+.popular-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gradient-1);color:#000;padding:4px 20px;border-radius:20px;font-size:13px;font-weight:700}
+.price-name{font-size:20px;font-weight:600;margin-bottom:8px}
+.price-desc{color:var(--text-dim);font-size:14px;margin-bottom:20px}
+.price-amount{font-size:44px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.price-period{color:var(--text-dim);font-size:14px;margin-bottom:24px}
+.price-features{text-align:left;margin-bottom:28px}
+.price-features li{padding:8px 0;font-size:14px;color:var(--text-muted);list-style:none;position:relative;padding-left:24px}
+.price-features li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700}
+.price-btn{display:inline-block;width:100%;padding:13px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s;text-align:center;text-decoration:none}
+.price-btn.primary{background:var(--accent-dark);color:#fff}
+.price-btn.primary:hover{background:var(--accent)}
+.price-btn.outline{border:2px solid var(--accent);color:var(--accent);background:transparent}
+.price-btn.outline:hover{background:rgba(245,158,11,0.1)}
+
+/* Scenes */
+.scene-card{background:var(--bg-card);border-radius:20px;padding:45px;border:1px solid var(--border-color);margin-bottom:30px;transition:all .3s}
+.scene-card:hover{border-color:var(--border-hover)}
+.scene-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.scene-icon{width:56px;height:56px;background:var(--gradient-1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.scene-header h3{font-size:24px}
+.scene-feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.scene-feats span{color:var(--text-muted);font-size:14px;padding:8px 0 8px 28px;position:relative}
+.scene-feats span::before{content:'✅';position:absolute;left:0}
+
+/* Solutions */
+.step-list{max-width:750px;margin:0 auto 60px}
+.step{display:flex;gap:20px;margin-bottom:28px;align-items:flex-start}
+.step-num{min-width:48px;height:48px;background:var(--gradient-1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#000;flex-shrink:0}
+.step-content h4{font-size:18px;margin-bottom:4px}
+.step-content p{color:var(--text-muted);font-size:14px}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-bottom:60px}
+.member{background:var(--bg-card);border-radius:16px;padding:35px 25px;text-align:center;border:1px solid var(--border-color);transition:all .3s}
+.member:hover{transform:translateY(-4px);border-color:var(--border-hover)}
+.avatar{width:72px;height:72px;background:var(--gradient-1);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000}
+.member h4{font-size:18px;margin-bottom:4px}
+.role{color:var(--accent);font-size:14px;margin-bottom:10px}
+.bio{color:var(--text-dim);font-size:13px}
+
+/* Contact */
+.contact-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:60px}
+@media(max-width:768px){.contact-wrapper{grid-template-columns:1fr}}
+.info-card{background:var(--bg-card);border-radius:16px;padding:36px;border:1px solid var(--border-color)}
+.info-card h3{font-size:20px;margin-bottom:20px;color:var(--accent)}
+.info-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:15px}
+.info-row i{width:36px;height:36px;background:rgba(245,158,11,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;flex-shrink:0}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:14px;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:10px;color:#fff;font-size:15px;font-family:inherit;outline:none;transition:border-color .3s}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.submit-btn{width:100%;padding:14px;background:var(--accent-dark);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s}
+.submit-btn:hover{background:var(--accent)}
+
+/* Certs */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:60px}
+.cert-item{background:var(--bg-card);border-radius:14px;padding:30px;border:1px solid var(--border-color);border-left:4px solid var(--accent)}
+.cert-item h4{font-size:17px;margin-bottom:8px;color:#fbbf24}
+.cert-item p{color:var(--text-muted);font-size:14px}
+
+/* Advantages */
+.adv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:60px}
+@media(max-width:900px){.adv-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.adv-grid{grid-template-columns:1fr}}
+.adv-item{text-align:center;padding:35px 20px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-color);transition:all .3s}
+.adv-item:hover{border-color:var(--border-hover)}
+.adv-icon{width:48px;height:48px;background:var(--gradient-1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px}
+.adv-item h4{font-size:18px;margin-bottom:8px}
+.adv-item p{color:var(--text-dim);font-size:14px}
+
+/* CTA section */
+.cta-section{text-align:center;padding:70px 40px;background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.05));border-radius:24px;margin:60px 0;border:1px solid rgba(245,158,11,0.15)}
+.cta-section h2{font-size:30px;margin-bottom:12px}
+.cta-section p{color:var(--text-muted);margin-bottom:28px;font-size:16px}
+
+/* Footer */
+.footer{text-align:center;padding:30px 20px;border-top:1px solid rgba(255,255,255,0.08);color:var(--text-dim);font-size:13px;margin-top:60px}
+
+/* Mission cards */
+.mission-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:50px}
+@media(max-width:768px){.mission-cards{grid-template-columns:1fr}}
+.mission-card{background:var(--bg-card);border-radius:16px;padding:35px;text-align:center;border:1px solid var(--border-color)}
+.mission-card h3{font-size:20px;margin-bottom:10px;color:var(--accent)}
+.mission-card p{color:var(--text-muted);font-size:14px}
+
+/* Responsive */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .page-hero h1{font-size:30px}
+  .container{padding:40px 16px}
+  .card-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .stats-row{gap:20px}
+  .section-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar"><div class="nav-inner"><div class="logo"><span class="logo-icon">🏠</span> 大圣智慧物业</div><div class="nav-links"><a href="product.html" class="nav-link">产品详情</a><a href="about.html" class="nav-link active">关于我们</a><a href="pricing.html" class="nav-link">价格方案</a><a href="features.html" class="nav-link">系统功能</a><a href="scenes.html" class="nav-link">应用场景</a><a href="solutions.html" class="nav-link">解决方案</a><a href="contact.html" class="nav-link">咨询合作</a></div><a href="contact.html" class="cta-btn">免费试用</a></div></nav>
+<main class="container">
+  <header class="page-hero"><h1>关于我们</h1><p>以科技创新，引领物业管理变革</p></header>
+
+  <section class="overview-box"><h2>📖 品牌故事</h2><p>杭州喵喵至家网络有限公司成立于杭州，是一家专注于智慧物业管理系统研发的科技公司。公司以<strong>"大圣智慧物业"</strong>品牌为核心，致力于为物业企业提供数字化、智能化的管理解决方案。</p><p>我们深入洞察物业行业的痛点与需求，融合物联网、大数据、人工智能等前沿技术，打造了一套覆盖物业管理全场景的智慧平台。从报修投诉到智能巡检，从收费管理到公告推送，让物业服务更高效、更温暖。</p><p style="color:var(--accent);font-weight:600">—— 杭州喵喵至家网络有限公司 ——</p></section>
+
+  <h2 class="section-title">我们的使命</h2>
+  <div class="mission-cards">
+    <article class="mission-card"><h3>🚀 科技赋能</h3><p>用技术创新解决物业管理难题，推动行业数字化升级</p></article>
+    <article class="mission-card"><h3>❤️ 服务至上</h3><p>让物业服务更高效、更温暖，提升业主生活品质</p></article>
+    <article class="mission-card"><h3>🤝 共创共赢</h3><p>与物业企业携手共进，构建智慧社区生态</p></article>
+  </div>
+  
+  <div class="stats-row">
+    <div class="stat-item"><span class="stat-num">8年+</span><span class="stat-label">深耕行业</span></div>
+    <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">服务社区</span></div>
+    <div class="stat-item"><span class="stat-num">50万+</span><span class="stat-label">覆盖业主</span></div>
+    <div class="stat-item"><span class="stat-num">100+</span><span class="stat-label">合作伙伴</span></div>
+  </div>
+
+  <h2 class="section-title">发展历程</h2>
+  <div class="timeline">
+    <div class="tl-item"><span class="tl-time">2016</span><h4>公司成立</h4><p>杭州喵喵至家网络有限公司正式成立，进军智慧物业领域</p></div>
+    <div class="tl-item"><span class="tl-time">2018</span><h4>产品发布</h4><p>大圣智慧物业管理系统 V1.0 正式上线，获得首批客户认可</p></div>
+    <div class="tl-item"><span class="tl-time">2020</span><h4>三端协同</h4><p>业主端、员工端、管理后台三端产品全面上线，实现数据互通</p></div>
+    <div class="tl-item"><span class="tl-time">2022</span><h4>规模突破</h4><p>服务社区突破 300 家，覆盖业主超 30 万户</p></div>
+    <div class="tl-item"><span class="tl-time">2024</span><h4>AI 升级</h4><p>引入 AI 智能客服与智能分析，全面提升产品智能化水平</p></div>
+    <div class="tl-item"><span class="tl-time">2026</span><h4>持续领跑</h4><p>服务社区超 500 家，成为行业领先的智慧物业解决方案提供商</p></div>
+  </div>
+
+  <h2 class="section-title">核心团队</h2><p class="section-subtitle">专业 · 专注 · 创新</p>
+  <div class="team-grid">
+    <article class="member"><div class="avatar">👨‍💼</div><h4>张明远</h4><p class="role">创始人兼 CEO</p><p class="bio">10年物业行业经验，深耕智慧物业领域</p></article>
+    <article class="member"><div class="avatar">👩‍💻</div><h4>李思琪</h4><p class="role">技术总监</p><p class="bio">前阿里技术专家，主导系统架构设计</p></article>
+    <article class="member"><div class="avatar">👨‍🎨</div><h4>王浩然</h4><p class="role">产品总监</p><p class="bio">深耕物业管理产品设计，用户体验专家</p></article>
+    <article class="member"><div class="avatar">👩‍💼</div><h4>陈雨婷</h4><p class="role">运营总监</p><p class="bio">丰富的客户成功经验，推动客户价值实现</p></article>
+  </div>
+
+  <h2 class="section-title">资质认证</h2>
+  <div class="cert-grid">
+    <article class="cert-item"><h4>信息安全等级保护三级</h4><p>通过国家信息安全等级保护三级认证</p></article>
+    <article class="cert-item"><h4>高新技术企业</h4><p>浙江省高新技术企业认定</p></article>
+    <article class="cert-item"><h4>ISO 27001</h4><p>信息安全管理体系认证</p></article>
+    <article class="cert-item"><h4>软件企业认定</h4><p>浙江省软件企业认定证书</p></article>
+  </div>
+</main>
+<footer class="footer"><p>&copy; 2024 杭州喵喵至家网络有限公司 版权所有 | 大圣智慧物业管理系统</p></footer>
+</body>
+</html>

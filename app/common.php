@@ -124,13 +124,22 @@ if (!function_exists('verify_password')) {
      */
     function verify_password(string $password, string $hash): bool
     {
+        // 空密码不匹配
+        if (empty($hash)) return false;
         // bcrypt 哈希以 $2y$ / $2b$ / $2a$ 开头
         if (strlen($hash) >= 4 && strpos($hash, '$2') === 0) {
             return password_verify($password, $hash);
         }
         // 兼容旧版 md5(md5($pwd).$salt)
         $salt = 'JUD6FCtZsqrmVXc2apev4TRn3O8gAhxbSlH9wfPN';
-        return $hash === md5(md5($password) . $salt);
+        if ($hash === md5(md5($password) . $salt)) {
+            return true;
+        }
+        // 兼容明文存储（自动升级为 bcrypt）
+        if ($hash === $password) {
+            return true;
+        }
+        return false;
     }
 }
 

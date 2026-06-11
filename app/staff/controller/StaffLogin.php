@@ -22,11 +22,48 @@ class StaffLogin extends BaseStaff
         }
         login_rate_limit_record($ip);
 
+        $source = ''; // 'admin' | 'worker' — 区分 JWT sub 来源，防止跨表 ID 碰撞
         $staff = Db::name('admin_user')->where('username', $username)->find();
-        if (!$staff || !verify_password($password, $staff['password'])) {
-            return $this->error('用户名或密码错误');
+        if ($staff && verify_password($password, $staff['password'])) {
+            if ($staff['status'] != 1) return $this->error('账户已禁用');
+            $source = 'admin';
+            $staffId = $staff['id'];
+            $staffInfo = ['id' => $staff['id'], 'username' => $staff['username'], 'nickname' => $staff['nickname'], 'avatar' => $staff['avatar']];
+        } else {
+            // 兜底：尝试 repair_worker 表（支持手机号、姓名、员工工号登录）
+            $worker = Db::name('repair_worker')
+                ->where('status', 1)
+                ->where('phone', $username)
+                ->find();
+            if (!$worker) {
+                $worker = Db::name('repair_worker')
+                    ->where('status', 1)
+                    ->where('name', $username)
+                    ->find();
+            }
+            // 若未找到，尝试通过 staff 表的工号匹配
+            if (!$worker) {
+                $worker = Db::name('repair_worker')
+                    ->alias('rw')
+                    ->leftJoin('staff s', 's.id = rw.staff_id')
+                    ->where('rw.status', 1)
+                    ->where('s.job_no', $username)
+                    ->whereNull('s.delete_time')
+                    ->field('rw.*')
+                    ->find();
+            }
+
+            if (!$worker || empty($worker['password'])) {
+                return $this->error('用户名或密码错误');
+            }
+            if (!verify_password($password, $worker['password'])) {
+                return $this->error('用户名或密码错误');
+            }
+            // 维修工登录：用 repair_worker.id 签发 token（type=staff）
+            $source = 'worker';
+            $staffId = $worker['id'];
+            $staffInfo = ['id' => $worker['id'], 'username' => $worker['phone'] ?: $username, 'nickname' => $worker['name'], 'avatar' => $worker['avatar'] ?? '', 'is_worker' => true];
         }
-        if ($staff['status'] != 1) return $this->error('账户已禁用');
 
         $jwtConfig = config('jwt');
         $now = time();
@@ -34,19 +71,15 @@ class StaffLogin extends BaseStaff
             'iss' => $jwtConfig['iss'],
             'iat' => $now,
             'exp' => $now + 86400,
-            'sub' => $staff['id'],
+            'sub' => $staffId,
             'type' => 'staff',
+            'source' => $source,
         ];
         $token = JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
 
         return $this->success([
             'token' => $token,
-            'userInfo' => [
-                'id' => $staff['id'],
-                'username' => $staff['username'],
-                'nickname' => $staff['nickname'],
-                'avatar' => $staff['avatar'],
-            ],
+            'userInfo' => $staffInfo,
         ], '登录成功');
     }
 
@@ -143,18 +176,40 @@ class StaffLogin extends BaseStaff
                 'exp' => $now + 86400,
                 'sub' => $staff['id'],
                 'type' => 'staff',
+                'source' => 'admin',
             ];
             $token = JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
-
             $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
             $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
             return redirect($finalUrl);
-        } else {
-            // 没有绑定账号 → 跳转到登录页，提示先绑定
+        }
+
+        // 兜底：检查 repair_worker 的 openid
+        $worker = Db::name('repair_worker')
+            ->where('openid', $openid)
+            ->where('status', 1)
+            ->find();
+        if ($worker) {
+            $jwtConfig = config('jwt');
+            $now = time();
+            $payload = [
+                'iss' => $jwtConfig['iss'],
+                'iat' => $now,
+                'exp' => $now + 86400,
+                'sub' => $worker['id'],
+                'type' => 'staff',
+                'source' => 'worker',
+            ];
+            $token = JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
             $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
-            $finalUrl = $domain . $redirectTo . $sep . 'wx_openid=' . urlencode($openid) . '&wx_cid=' . $communityId . '&action=wx_bind';
+            $finalUrl = $domain . $redirectTo . $sep . 'wechat_token=' . urlencode($token);
             return redirect($finalUrl);
         }
+
+        // 没有绑定账号 → 跳转到登录页，提示先绑定
+        $sep = (strpos($redirectTo, '?') === false) ? '?' : '&';
+        $finalUrl = $domain . $redirectTo . $sep . 'wx_openid=' . urlencode($openid) . '&wx_cid=' . $communityId . '&action=wx_bind';
+        return redirect($finalUrl);
     }
 
     // ========== 微信绑定已有账号 ==========
@@ -169,19 +224,39 @@ class StaffLogin extends BaseStaff
         if (empty($username) || empty($password)) return $this->error('请输入用户名和密码');
 
         $staff = Db::name('admin_user')->where('username', $username)->find();
-        if (!$staff || !verify_password($password, $staff['password'])) {
-            return $this->error('用户名或密码错误');
+        $staffType = 'admin'; // admin_user or repair_worker
+        $staffId = 0;
+        $userInfo = [];
+        $source = ''; // 用于 JWT，防止跨表 ID 碰撞
+
+        if ($staff && verify_password($password, $staff['password'])) {
+            if ($staff['status'] != 1) return $this->error('账户已被禁用');
+            $staffId = $staff['id'];
+            $staffType = 'admin';
+            $source = 'admin';
+            $userInfo = ['id' => $staff['id'], 'username' => $staff['username'], 'nickname' => $staff['nickname'], 'avatar' => $staff['avatar']];
+        } else {
+            // 兜底：尝试 repair_worker 手机号绑定
+            $worker = Db::name('repair_worker')->where('phone', $username)->where('status', 1)->find();
+            if (!$worker || empty($worker['password']) || !verify_password($password, $worker['password'])) {
+                return $this->error('用户名或密码错误');
+            }
+            $staffId = $worker['id'];
+            $staffType = 'worker';
+            $source = 'worker';
+            $userInfo = ['id' => $worker['id'], 'username' => $worker['phone'], 'nickname' => $worker['name'], 'avatar' => $worker['avatar'] ?? '', 'is_worker' => true];
         }
-        if ($staff['status'] != 1) return $this->error('账户已被禁用');
 
         // 检查该 openid 是否已被其他账号绑定
-        $existByOpenid = Db::name('admin_user')->where('openid', $openid)->where('id', '<>', $staff['id'])->whereNull('delete_time')->find();
-        if ($existByOpenid) {
-            return $this->error('该微信已被其他账号绑定');
+        if ($staffType === 'admin') {
+            $existByOpenid = Db::name('admin_user')->where('openid', $openid)->where('id', '<>', $staffId)->whereNull('delete_time')->find();
+            if ($existByOpenid) return $this->error('该微信已被其他账号绑定');
+            Db::name('admin_user')->where('id', $staffId)->update(['openid' => $openid]);
+        } else {
+            $existByOpenid = Db::name('repair_worker')->where('openid', $openid)->where('id', '<>', $staffId)->find();
+            if ($existByOpenid) return $this->error('该微信已被其他维修工绑定');
+            Db::name('repair_worker')->where('id', $staffId)->update(['openid' => $openid]);
         }
-
-        // 绑定 openid
-        Db::name('admin_user')->where('id', $staff['id'])->update(['openid' => $openid]);
 
         $jwtConfig = config('jwt');
         $now = time();
@@ -189,19 +264,15 @@ class StaffLogin extends BaseStaff
             'iss' => $jwtConfig['iss'],
             'iat' => $now,
             'exp' => $now + 86400,
-            'sub' => $staff['id'],
+            'sub' => $staffId,
             'type' => 'staff',
+            'source' => $source,
         ];
         $token = JWT::encode($payload, $jwtConfig['key'], $jwtConfig['algorithm']);
 
         return $this->success([
             'token' => $token,
-            'userInfo' => [
-                'id' => $staff['id'],
-                'username' => $staff['username'],
-                'nickname' => $staff['nickname'],
-                'avatar' => $staff['avatar'],
-            ],
+            'userInfo' => $userInfo,
         ], '微信绑定成功');
     }
 

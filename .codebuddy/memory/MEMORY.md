@@ -21,9 +21,10 @@
 ## 服务器
 - IP 211.149.181.178，SSH 端口 22000，用户名 root，密码 cxdxfx12
 - nginx root: /www/wwwroot/www.hbdxm.com/public/（= /home/wwwroot/www.hbdxm.com/public/，/www → /home 软链接）
-- **PHP 应用根目录**: /home/wwwroot/www.hbdxm.com/（不是 public/！）
-- 前端文件: 部署到 /home/wwwroot/www.hbdxm.com/public/admin/
-- PHP 文件: 部署到 /home/wwwroot/www.hbdxm.com/（route/、app/、extend/、config/ 等）
+- **PHP 应用根目录**: /www/wwwroot/www.hbdxm.com/（app/、route/、extend/、config/ 等在根目录，不是在 public/ 下！）
+- 前端文件: 部署到 /www/wwwroot/www.hbdxm.com/public/admin/
+- PHP 文件: 部署到 /www/wwwroot/www.hbdxm.com/app/... 等对应的应用根目录
+- ⚠️ public/app/ 是废弃副本，框架不会加载这里的代码！务必部署到根目录的 app/
 
 ## Nginx 缓存配置 (2026-06-08)
 - /admin/index.html: no-cache, no-store, must-revalidate（确保用户获取最新版本）
@@ -41,3 +42,9 @@
 - 设计语言：深色渐变 + 毛玻璃效果 + 圆角卡片 + Transition 动画
 - 构建前需清除缓存：`rmdir /s /q e:\ds\admin\node_modules\.vite`
 - `_mobile_view` 机制：手机端点菜单 → sessionStorage 标记 → MainLayout 切手机壳 → PC页面在480px容器内渲染
+
+## 维修工登录 (2026-06-11)
+- repair_worker 表也支持员工端登录，字段：phone/name/password（明文或bcrypt）
+- StaffLogin::login() 先查 admin_user，未找到则依次按 phone → name → staff.job_no 查找 repair_worker
+- verify_password() 兼容 bcrypt、旧版 md5(md5+salt)、明文三种格式
+- ThinkPHP 6 闭包 WHERE(`where(function($q){$q->where(...)->whereOr(...);})`) 行为不可靠，OR 条件改用分步查询

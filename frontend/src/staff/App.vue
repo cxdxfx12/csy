@@ -2,8 +2,8 @@
   <div id="staff-app">
     <router-view />
     <GlobalToast />
-    <!-- 新消息弹窗 -->
-    <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
+    <!-- 新消息弹窗（仅登录状态显示） -->
+    <div class="notify-popup" :class="{show:notifyShow}" v-if="isLoggedIn" @click="goNotify">
       <span class="notify-icon">🔔</span>
       <div class="notify-body">
         <strong>{{ notifyTitle }}</strong>
@@ -11,8 +11,8 @@
       </div>
       <button class="notify-close" @click.stop="notifyShow=false">✕</button>
     </div>
-    <!-- 右上角通知小字 -->
-    <div class="pillar-popup" :class="{show:pillarShow}" @click="goPillar">
+    <!-- 右上角通知小字（仅登录状态显示） -->
+    <div class="pillar-popup" :class="{show:pillarShow}" v-if="isLoggedIn" @click="goPillar">
       <span>📬</span><span>{{ pillarMsg }}</span>
       <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
     </div>
@@ -29,7 +29,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
+import { ref, reactive, computed, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
 import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
@@ -37,6 +37,9 @@ import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, 
 const route = useRoute()
 const router = useRouter()
 const api = createApi('/api/staff', 'staff_token')
+
+// 是否已登录（有 token 且不在登录页）
+const isLoggedIn = computed(() => !!localStorage.getItem('staff_token') && route.path !== '/login')
 
 // 角标数字
 const badges = reactive({ repair: 0, charge: 0, order: 0, complaint: 0, vote: 0, activity: 0 })
@@ -176,6 +179,7 @@ async function fetchBadges() {
 }
 
 function goPillar() {
+  if (!isLoggedIn.value) return
   if (pillarRoute.value) {
     const key = pillarRoute.value.substring(1)
     if (['repair','charge','order','complaint'].includes(key)) dismissBadge(key)
@@ -186,6 +190,7 @@ function goPillar() {
 
 // 点击弹窗跳转
 function goNotify() {
+  if (!isLoggedIn.value) return
   if (notifyRoute.value) {
     const key = notifyRoute.value.substring(1)
     if (['repair','charge','order','complaint'].includes(key)) dismissBadge(key)
@@ -204,10 +209,10 @@ function dismissBadge(key) {
 
 onBeforeMount(() => {
   if (localStorage.getItem('staff_token') && route.path === '/login') router.replace('/home')
-  if (localStorage.getItem('staff_token')) {
+  // 仅在已登录（非登录页）状态下才拉取角标和建立SSE
+  if (isLoggedIn.value) {
     fetchBadges()
     timer = setInterval(fetchBadges, 30000)
-    // 同时建立 SSE 实时推送连接（即时通知，轮询做兜底）
     connectSSE()
   }
 })

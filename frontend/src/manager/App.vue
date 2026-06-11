@@ -3,8 +3,8 @@
     <router-view />
     <GlobalToast />
     <SmartGuide v-if="isLoggedIn" />
-    <!-- 新消息弹窗 -->
-    <div class="notify-popup" :class="{show:notifyShow}" @click="goNotify">
+    <!-- 新消息弹窗（仅登录状态显示） -->
+    <div class="notify-popup" :class="{show:notifyShow}" v-if="isLoggedIn" @click="goNotify">
       <span class="notify-icon">🔔</span>
       <div class="notify-body">
         <strong>{{ notifyTitle }}</strong>
@@ -12,8 +12,8 @@
       </div>
       <button class="notify-close" @click.stop="notifyShow=false">✕</button>
     </div>
-    <!-- 右上角通知小字 -->
-    <div class="pillar-popup" :class="{show:pillarShow}" @click="goPillar">
+    <!-- 右上角通知小字（仅登录状态显示） -->
+    <div class="pillar-popup" :class="{show:pillarShow}" v-if="isLoggedIn" @click="goPillar">
       <span>📬</span><span>{{ pillarMsg }}</span>
       <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
     </div>
@@ -108,6 +108,7 @@ async function fetchBadges() {
 }
 
 function goNotify() {
+  if (!isLoggedIn.value) return
   if (notifyRoute.value) {
     router.push(notifyRoute.value)
   }
@@ -115,6 +116,7 @@ function goNotify() {
 }
 
 function goPillar() {
+  if (!isLoggedIn.value) return
   if (pillarRoute.value) {
     router.push(pillarRoute.value)
   }
@@ -130,7 +132,8 @@ onBeforeMount(() => {
     return
   }
   if (localStorage.getItem('manager_token') && route.path === '/login') router.replace('/dashboard')
-  if (localStorage.getItem('manager_token')) {
+  // 仅在已登录状态下拉取角标
+  if (isLoggedIn.value) {
     fetchBadges()
     timer = setInterval(fetchBadges, 30000)
   }

@@ -525,6 +525,8 @@ CREATE TABLE IF NOT EXISTS `ds_repair_worker` (
   `avg_rating` decimal(3,2) NOT NULL DEFAULT '0.00' COMMENT '平均评分',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1在职 0离职',
   `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注',
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '登录密码(bcrypt)',
+  `openid` varchar(64) NOT NULL DEFAULT '' COMMENT '微信openid',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `delete_time` datetime DEFAULT NULL COMMENT '删除时间',

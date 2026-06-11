@@ -103,10 +103,22 @@ class Claim extends BaseApi
                 'status' => 0,
             ]);
 
-            // 更新当前微信用户为真实手机号和真实姓名
+            // 更新当前微信用户为真实手机号和真实姓名，同时迁移其他档案字段
             $updateData = ['phone' => $phone];
+            // 姓名
             if (!empty($target['realname']) && $target['realname'] !== '微信用户') {
                 $updateData['realname'] = $target['realname'];
+            }
+            // 迁入更多档案信息（保留微信端已有数据优先）
+            $migrateFields = ['id_card','gender','birthday','email','avatar','emergency_contact','emergency_phone','remark'];
+            foreach ($migrateFields as $f) {
+                if (!empty($target[$f]) && empty($ownerInfo[$f])) {
+                    $updateData[$f] = $target[$f];
+                }
+            }
+            // 类型：取最高等级（业主 > 家属 > 租户，1 > 2 > 3）
+            if (($target['type'] ?? 1) < ($ownerInfo['type'] ?? 1)) {
+                $updateData['type'] = $target['type'];
             }
             Db::name('owner')->where('id', $ownerId)->update($updateData);
 

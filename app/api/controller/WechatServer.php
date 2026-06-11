@@ -141,20 +141,36 @@ class WechatServer
                 }
                 Db::name('owner')->where('id', $existing['id'])->update($update);
             } else {
-                // 用 openid 生成唯一占位手机号，避免 phone 字段 UNIQUE 约束冲突
-                $placeholderPhone = 'WX_' . strtoupper(substr(md5($openid), 0, 8));
-                Db::name('owner')->insert([
-                    'community_id'    => $communityId,
-                    'realname'        => '微信用户',
-                    'phone'           => $placeholderPhone,
-                    'password'        => '',
-                    'openid'          => $openid,
-                    'type'            => 1,
-                    'status'          => 1,
-                    'register_time'   => date('Y-m-d H:i:s'),
-                    'last_login_time' => date('Y-m-d H:i:s'),
-                    'create_time'     => date('Y-m-d H:i:s'),
-                ]);
+                // 先尝试绑定到同小区有房产但未绑微信的业主
+                $unclaimed = Db::name('owner')->alias('o')
+                    ->join('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
+                    ->where('o.community_id', $communityId)
+                    ->where('o.status', 1)->where('o.openid', '')
+                    ->where('o.phone', 'not like', 'WX_%')->where('o.phone', 'not like', 'ARCHIVED_%')->where('o.phone', '<>', '')
+                    ->whereNull('o.delete_time')->group('o.id')->limit(2)->column('o.id');
+
+                if (count($unclaimed) === 1) {
+                    // 唯一匹配 → 直接绑定
+                    Db::name('owner')->where('id', $unclaimed[0])->update([
+                        'openid'          => $openid,
+                        'last_login_time' => date('Y-m-d H:i:s'),
+                    ]);
+                } else {
+                    // 新建微信用户（占位手机号避免唯一约束冲突）
+                    $placeholderPhone = 'WX_' . strtoupper(substr(md5($openid), 0, 8));
+                    Db::name('owner')->insert([
+                        'community_id'    => $communityId,
+                        'realname'        => '微信用户',
+                        'phone'           => $placeholderPhone,
+                        'password'        => '',
+                        'openid'          => $openid,
+                        'type'            => 1,
+                        'status'          => 1,
+                        'register_time'   => date('Y-m-d H:i:s'),
+                        'last_login_time' => date('Y-m-d H:i:s'),
+                        'create_time'     => date('Y-m-d H:i:s'),
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             error_log('[WechatServer] subscribe error: ' . $e->getMessage());

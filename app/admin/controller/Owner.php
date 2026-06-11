@@ -13,22 +13,26 @@ class Owner extends BaseAdmin
         $cid     = $this->getFilteredCommunityId();
         $type    = $this->request->param('type', 0);
 
-        // count 直接查 owner 表，不 JOIN
-        $cntQuery = Db::name('owner')->whereNull('delete_time');
+        // count 直接查 owner 表，不 JOIN（排除归档和禁用记录）
+        $cntQuery = Db::name('owner')->whereNull('delete_time')
+            ->where('status', '<>', 0)
+            ->where('phone', 'not like', 'ARCHIVED_%');
         if ($keyword)     $cntQuery->where('realname|phone|id_card', 'like', "%{$keyword}%");
         if ($cid === -1)  $cntQuery->where('community_id', 'in', $this->request->boundCommunityIds);
         elseif ($cid > 0) $cntQuery->where('community_id', $cid);
         if ($type)        $cntQuery->where('type', $type);
         $total = $cntQuery->count();
 
-        // list 查 + JOIN（排除密码字段）
+        // list 查 + JOIN（排除密码字段、归档记录）
         $ownerFields = ['o.id','o.community_id','o.realname','o.gender','o.phone','o.openid','o.wechat_unionid',
             'o.id_card','o.birthday','o.email','o.avatar','o.type','o.status','o.remark',
             'o.register_time','o.last_login_time','o.create_time','o.update_time'];
         $listQuery = Db::name('owner')->alias('o')
             ->leftJoin('community c', 'c.id = o.community_id')
             ->field(implode(',', $ownerFields) . ', c.name as community_name')
-            ->whereNull('`o`.`delete_time`');
+            ->whereNull('`o`.`delete_time`')
+            ->where('`o`.`status`', '<>', 0)
+            ->where('`o`.`phone`', 'not like', 'ARCHIVED_%');
         if ($keyword)     $listQuery->where('o.realname|o.phone|o.id_card', 'like', "%{$keyword}%");
         if ($cid === -1)  $listQuery->where('`o`.`community_id`', 'in', $this->request->boundCommunityIds);
         elseif ($cid > 0) $listQuery->where('`o`.`community_id`', '=', intval($cid));

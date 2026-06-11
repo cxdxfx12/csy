@@ -25,10 +25,10 @@
       </button>
       <!-- 绑定已有账号 -->
       <template v-if="showBind">
-        <p class="sl-bind-tip">该微信尚未绑定员工账号，请输入已有账号进行绑定</p>
+        <p class="sl-bind-tip">该微信尚未绑定账号，请输入已有员工账号或维修工手机号进行绑定</p>
         <div class="sl-input">
           <span class="sli-icon">👤</span>
-          <input v-model="bindUser" placeholder="管理员账号" />
+          <input v-model="bindUser" placeholder="员工账号或手机号" />
         </div>
         <div class="sl-input">
           <span class="sli-icon">🔒</span>

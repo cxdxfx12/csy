@@ -2,9 +2,11 @@
   <div class="page">
     <header><button class="back" @click="$router.back()">←</button><h1>报修处理</h1></header>
     <div class="tabs">
+      <button :class="{active:tab===1}" @click="tab=1;loadList()">待处理</button>
       <button :class="{active:tab===2}" @click="tab=2;loadList()">待接单</button>
       <button :class="{active:tab===3}" @click="tab=3;loadList()">处理中</button>
-      <button :class="{active:tab===4}" @click="tab=4;loadList()">已完成</button>
+      <button :class="{active:tab===4}" @click="tab=4;loadList()">待验收</button>
+      <button :class="{active:tab===5}" @click="tab=5;loadList()">已完成</button>
     </div>
     <div v-if="loading" class="loading">加载中...</div>
     <div v-else-if="!list.length" class="empty">暂无工单</div>
@@ -17,10 +19,11 @@
         <div class="item-title">{{ item.title || item.content || '报修工单' }}</div>
         <div class="item-info">
           <span>🏘️ {{ item.community_name || '--' }}</span>
-          <span>🏠 {{ item.room_no || '--' }}</span>
-          <span>👤 {{ item.contact || '--' }}</span>
+          <span>🏠 {{ item.room_number || item.building_name || '--' }}</span>
+          <span>👤 {{ item.contact || item.reporter || '--' }}</span>
         </div>
         <div class="item-actions">
+          <button v-if="tab===1" class="btn-act btn-c" @click="claimOrder(item.id)">抢单</button>
           <button v-if="tab===2" class="btn-act btn-a" @click="acceptRepair(item.id)">接单</button>
           <button v-if="tab===3" class="btn-act btn-b" @click="finishRepair(item.id)">完工</button>
           <button class="btn-act btn-c" @click="showDetail(item)">详情</button>
@@ -35,11 +38,12 @@
           <p><label>标题</label> {{ detail.title || '--' }}</p>
           <p><label>描述</label> {{ detail.content || detail.description || '--' }}</p>
           <p><label>小区</label> {{ detail.community_name || '--' }}</p>
-          <p><label>房号</label> {{ detail.room_no || '--' }}</p>
-          <p><label>联系人</label> {{ detail.contact || '--' }}</p>
-          <p><label>电话</label> {{ detail.phone || '--' }}</p>
+          <p><label>房号</label> {{ detail.room_number || detail.building_name || '--' }}</p>
+          <p><label>联系人</label> {{ detail.contact || detail.reporter || '--' }}</p>
+          <p><label>电话</label> {{ detail.phone || detail.reporter_phone || '--' }}</p>
           <p><label>状态</label> {{ stText(detail.status) }}</p>
           <p><label>报修时间</label> {{ detail.create_time || '--' }}</p>
+          <p v-if="detail.finish_time"><label>完成时间</label> {{ detail.finish_time || '--' }}</p>
         </div>
         <button class="btn-primary" @click="detail=null">关闭</button>
       </div>
@@ -66,6 +70,12 @@ async function loadList() {
   if (res.code === 0) list.value = Array.isArray(res.data) ? res.data : (res.data?.list || [])
   loading.value = false
 }
+async function claimOrder(id) {
+  if (!confirm('确认抢单？')) return
+  const res = await api('/repair/claim', { method: 'POST', body: JSON.stringify({ id }) })
+  showToast(res.code === 0 ? '抢单成功' : res.msg)
+  if (res.code === 0) loadList()
+}
 async function acceptRepair(id) {
   const res = await api('/repair/accept', { method: 'POST', body: JSON.stringify({ id }) })
   showToast(res.code === 0 ? '接单成功' : res.msg)
@@ -86,8 +96,8 @@ async function showDetail(item) {
 header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 header h1{font-size:18px}
 .back{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 8px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
-.tabs button{flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:13px;cursor:pointer}
+.tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs button{flex-shrink:0;padding:8px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;white-space:nowrap}
 .tabs button.active{background:#2563eb;color:#fff;border-color:#2563eb}
 .loading,.empty{text-align:center;padding:40px 0;color:#9ca3af}
 .list{display:flex;flex-direction:column;gap:12px}

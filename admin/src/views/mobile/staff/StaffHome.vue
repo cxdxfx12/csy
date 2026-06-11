@@ -1,7 +1,10 @@
 ﻿<template>
   <MobileLayout title="物业工作台" :showTab="true" :tabs="tabsList">
     <div class="pd">
-      <div class="sh-user">👤 {{ user?.nickname || '员工' }}</div>
+      <div class="sh-user">
+        <span>👤 {{ user?.nickname || '员工' }}</span>
+        <span class="sh-logout" @click="handleLogout">退出</span>
+      </div>
       <div class="sh-stats">
         <div class="shs-item">
           <div class="shs-num">{{ stats.pending }}</div>
@@ -30,7 +33,11 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import MobileLayout from '../MobileLayout.vue'
+
+const router = useRouter()
 
 interface TabItem { path: string; icon: string; label: string }
 
@@ -44,6 +51,20 @@ const tabsList: TabItem[] = [
   { path: '/mobile/staff/charge', icon: '💰', label: '收费' },
   { path: '/mobile/staff/patrol', icon: '🚔', label: '巡更' },
 ]
+
+async function handleLogout() {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+  } catch { return }
+  localStorage.removeItem('staff_token')
+  localStorage.removeItem('staff_community_id')
+  ElMessage.success('已退出')
+  router.replace('/mobile/staff/login')
+}
 
 onMounted(async () => {
   try {
@@ -61,7 +82,9 @@ onMounted(async () => {
 </script>
 <style scoped>
 .pd { padding: 4px 0; }
-.sh-user { font-size: 18px; font-weight: 700; color: #1a202c; margin-bottom: 16px; padding: 16px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; }
+.sh-user { font-size: 18px; font-weight: 700; color: #1a202c; margin-bottom: 16px; padding: 16px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+.sh-logout { font-size: 13px; font-weight: 500; color: #e53e3e; cursor: pointer; padding: 4px 12px; border: 1px solid #fed7d7; border-radius: 6px; background: #fff5f5; }
+.sh-logout:active { background: #fed7d7; }
 .sh-stats { display: flex; gap: 10px; margin-bottom: 16px; }
 .shs-item { flex: 1; background: #fff; border-radius: 12px; padding: 16px; text-align: center; border: 1px solid #e2e8f0; font-size: 13px; color: #a0aec0; }
 .shs-num { font-size: 28px; font-weight: 700; color: #2b6cb0; margin-bottom: 4px; }

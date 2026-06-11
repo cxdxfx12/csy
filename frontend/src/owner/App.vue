@@ -2,8 +2,8 @@
   <div id="owner-app">
     <router-view />
     <GlobalToast />
-    <!-- 新消息弹窗 -->
-    <div v-if="notifyShow" class="notify-popup show" @click="goNotify">
+    <!-- 新消息弹窗（仅登录状态显示） -->
+    <div v-if="notifyShow && isLoggedIn" class="notify-popup show" @click="goNotify">
       <span class="notify-icon">🔔</span>
       <div class="notify-body">
         <strong>{{ notifyTitle }}</strong>
@@ -11,8 +11,8 @@
       </div>
       <button class="notify-close" @click.stop="notifyShow=false">✕</button>
     </div>
-    <!-- 右上角通知小字 -->
-    <div v-if="pillarShow" class="pillar-popup show" @click="goPillar">
+    <!-- 右上角通知小字（仅登录状态显示） -->
+    <div v-if="pillarShow && isLoggedIn" class="pillar-popup show" @click="goPillar">
       <span>📬</span><span>{{ pillarMsg }}</span>
       <button class="pillar-close" @click.stop="pillarShow=false">✕</button>
     </div>
@@ -31,7 +31,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onBeforeMount, onUnmounted } from 'vue'
+import { ref, reactive, computed, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createApi } from '@/shared/api.js'
 import { playNotificationSound, pillarMsg, pillarShow, pillarRoute, showPillar, hidePillar } from '@/shared/utils.js'
@@ -40,6 +40,9 @@ import AiChatWidget from './components/AiChatWidget.vue'
 const route = useRoute()
 const router = useRouter()
 const api = createApi('/api/api', 'owner_token')
+
+// 是否已登录（有 token 且不在登录/注册页）
+const isLoggedIn = computed(() => !!localStorage.getItem('owner_token') && route.path !== '/login' && route.path !== '/register')
 
 const badges = reactive({ bill: 0, repair: 0, notice: 0, complaint: 0, vote: 0, activity: 0 })
 const badgesRaw = reactive({ bill: 0, repair: 0, notice: 0, complaint: 0, vote: 0, activity: 0 })
@@ -104,6 +107,7 @@ async function fetchBadges() {
 }
 
 function goPillar() {
+  if (!isLoggedIn.value) return
   if (pillarRoute.value) {
     const key = pillarRoute.value.substring(1)
     if (['bill','repair','notice','complaint','vote','activity'].includes(key)) dismissBadge(key)
@@ -113,6 +117,7 @@ function goPillar() {
 }
 
 function goNotify() {
+  if (!isLoggedIn.value) return
   if (notifyRoute.value) {
     dismissBadge(notifyRoute.value.substring(1))
     router.push(notifyRoute.value)
@@ -138,7 +143,8 @@ onBeforeMount(() => {
     window.history.replaceState({}, '', cleanUrl)
     router.replace('/home')
   }
-  if (localStorage.getItem('owner_token')) {
+  // 仅在已登录状态下拉取角标
+  if (isLoggedIn.value) {
     fetchBadges()
     timer = setInterval(fetchBadges, 30000)
   }

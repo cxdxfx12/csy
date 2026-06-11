@@ -16,6 +16,7 @@ Route::group('staff', function () {
     Route::get('repair/list', 'staff/StaffRepair/lists');
     Route::get('repair/detail', 'staff/StaffRepair/detail');
     Route::post('repair/accept', 'staff/StaffRepair/accept');
+    Route::post('repair/claim', 'staff/StaffRepair/claim');
     Route::post('repair/finish', 'staff/StaffRepair/finish');
 
     // 抄表录入

@@ -208,11 +208,14 @@ class AiRepair extends BaseController
             $location = implode(' ', $addrParts);
         }
 
+        // 确定工单所属小区
+        $resolvedCommunityId = $ownerId > 0 ? ($ownerData['community_id'] ?? $communityId) : $communityId;
+
         $orderData = [
             'order_no'       => build_order_no('DSR'),
             'title'          => $title,
             'content'        => $content . ($location ? ' [位置: ' . $location . ']' : ''),
-            'community_id'   => $ownerId > 0 ? ($ownerData['community_id'] ?? $communityId) : $communityId,
+            'community_id'   => $resolvedCommunityId,
             'owner_id'       => $ownerId,
             'room_id'        => $roomData['id'] ?? 0,
             'reporter'       => $name,
@@ -223,8 +226,8 @@ class AiRepair extends BaseController
             'create_time'    => date('Y-m-d H:i:s'),
         ];
 
-        // 关联维修类型工人（按工单类型智能匹配）
-        $worker = $this->assignWorkerByType($aiType);
+        // 按工单类型+本小区智能匹配维修工人
+        $worker = $this->assignWorkerByType($aiType, $resolvedCommunityId);
         if ($worker) {
             $orderData['assignee_id'] = $worker['id'];
             $orderData['status'] = 2; // 自动派单
@@ -506,15 +509,16 @@ class AiRepair extends BaseController
         return $map[$aiType] ?? [];
     }
 
-    // 按报修类型智能分配维修工人
-    private function assignWorkerByType($aiType)
+    // 按报修类型 + 小区智能分配维修工人
+    private function assignWorkerByType($aiType, $communityId)
     {
         $keywords = $this->aiTypeToWorkerTypes($aiType);
 
-        // 优先按类型匹配工人（优先派给接单少的）
+        // 优先按类型 + 小区匹配工人（优先派给接单少的）
         foreach ($keywords as $kw) {
             $workers = Db::name('repair_worker')
                 ->where('status', 1)
+                ->where('community_id', $communityId)
                 ->where('type', 'like', '%' . $kw . '%')
                 ->order('order_count asc')
                 ->limit(20)
@@ -524,9 +528,10 @@ class AiRepair extends BaseController
             }
         }
 
-        // 兜底：随机选一个在线工人（优先接单少的）
+        // 兜底：本小区内随机选一个在线工人（优先接单少的）
         $workers = Db::name('repair_worker')
             ->where('status', 1)
+            ->where('community_id', $communityId)
             ->order('order_count asc')
             ->limit(20)
             ->select();

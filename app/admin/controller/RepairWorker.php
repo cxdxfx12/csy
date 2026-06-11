@@ -23,6 +23,12 @@ class RepairWorker extends BaseAdmin
             ->where($where)->page($page, $limit)->order('rw.id', 'desc')->select();
         foreach ($list as &$row) {
             $row['specialty'] = $row['type'] ?? '';
+            // 统计该工人已分配的工单总数（排除已删除）
+            $row['order_count'] = Db::name('repair_order')
+                ->where('assignee_id', $row['id'])
+                ->whereNull('delete_time')
+                ->count();
+            unset($row['password'], $row['openid']);
         }
         return $this->table($list, $total);
     }
@@ -45,6 +51,12 @@ class RepairWorker extends BaseAdmin
             $data['name'] = $staff['realname'];
             $data['phone'] = $staff['phone'];
             $data['community_id'] = $staff['community_id'] ?? 0;
+        }
+        // 密码处理
+        if (!empty($data['password'])) {
+            $data['password'] = encrypt_password($data['password']);
+        } else {
+            unset($data['password']);
         }
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('repair_worker')->insert($data);
@@ -69,6 +81,12 @@ class RepairWorker extends BaseAdmin
             $data['name'] = $staff['realname'];
             $data['phone'] = $staff['phone'];
             $data['community_id'] = $staff['community_id'] ?? 0;
+        }
+        // 密码处理：空则不变，有值则加密
+        if (!empty($data['password'])) {
+            $data['password'] = encrypt_password($data['password']);
+        } else {
+            unset($data['password']);
         }
         Db::name('repair_worker')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');

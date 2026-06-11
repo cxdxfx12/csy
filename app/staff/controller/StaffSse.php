@@ -42,24 +42,72 @@ class StaffSse extends BaseStaff
                 return;
             }
 
-            // 查找员工信息（与 BaseStaff::auth 同样逻辑）
-            $staffInfo = \think\facade\Db::name('staff')->where('id', $staffId)->find();
+            // 来源标记，防止 admin_user 和 repair_worker 跨表 ID 碰撞
+            $source = $payload['source'] ?? '';
+
+            // 查找员工信息
+            $staffInfo = null;
             $isWorker = false;
             $workerId = 0;
             $communityId = 0;
 
-            if (!$staffInfo && $staffId) {
+            if ($source === 'worker') {
+                // 维修工：sub = repair_worker.id
+                $worker = \think\facade\Db::name('repair_worker')->where('id', $staffId)->where('status', 1)->find();
+                if ($worker) {
+                    $isWorker = true;
+                    $workerId = $worker['id'];
+                    $communityId = $worker['community_id'];
+                }
+            } elseif ($source === 'admin') {
+                // 管理员：sub = admin_user.id
                 $adminUser = \think\facade\Db::name('admin_user')->where('id', $staffId)->find();
-                if ($adminUser && $adminUser['phone']) {
-                    $worker = \think\facade\Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
+                if ($adminUser) {
+                    $allowedRoles = config('staff.allowed_roles', [2, 3, 4, 5, 6, 7, 8]);
+                    if (!in_array((int)$adminUser['role_id'], $allowedRoles)) {
+                        $this->sendSseError('无效的凭证类型');
+                        return;
+                    }
+                    if ($adminUser['phone']) {
+                        $worker = \think\facade\Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
+                        if ($worker) {
+                            $isWorker = true;
+                            $workerId = $worker['id'];
+                            $communityId = $worker['community_id'];
+                        }
+                    }
+                    if (!$isWorker) {
+                        $commIds = array_values(array_filter(array_map('intval', explode(',', $adminUser['community_ids'] ?? ''))));
+                        $communityId = $commIds[0] ?? 0;
+                    }
+                }
+            } else {
+                // 向后兼容旧 token（无 source 字段）
+                $staffInfo = \think\facade\Db::name('staff')->where('id', $staffId)->find();
+
+                if (!$staffInfo && $staffId) {
+                    $adminUser = \think\facade\Db::name('admin_user')->where('id', $staffId)->find();
+                    if ($adminUser && $adminUser['phone']) {
+                        $worker = \think\facade\Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
+                        if ($worker) {
+                            $isWorker = true;
+                            $workerId = $worker['id'];
+                            $communityId = $worker['community_id'];
+                        }
+                    }
+                }
+                // 兜底：JWT sub 直接是 repair_worker.id
+                if (!$staffInfo && !$isWorker && $staffId) {
+                    $worker = \think\facade\Db::name('repair_worker')->where('id', $staffId)->where('status', 1)->find();
                     if ($worker) {
                         $isWorker = true;
                         $workerId = $worker['id'];
                         $communityId = $worker['community_id'];
                     }
                 }
-            } else if ($staffInfo) {
-                $communityId = $staffInfo['community_id'] ?? 0;
+                if ($staffInfo) {
+                    $communityId = $staffInfo['community_id'] ?? 0;
+                }
             }
 
         } catch (\Exception $e) {

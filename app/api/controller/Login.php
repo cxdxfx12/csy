@@ -261,10 +261,26 @@ class Login extends BaseApi
         }
 
         // 新建业主记录
+        // 检查是否存在同小区、有房产但未绑微信的业主记录（可直接绑定而非新建）
+        $unclaimedOwner = $this->findUnclaimedOwner($communityId);
+        if ($unclaimedOwner) {
+            // 存在唯一未绑定微信的业主 → 直接挂载 openid，不新建
+            Db::name('owner')->where('id', $unclaimedOwner['id'])->update([
+                'openid'          => $openid,
+                'wechat_unionid'  => $unionid,
+                'last_login_time' => date('Y-m-d H:i:s'),
+            ]);
+            $unclaimedOwner['openid'] = $openid;
+            $unclaimedOwner['wechat_unionid'] = $unionid;
+            return $this->issueToken($unclaimedOwner, '微信登录成功（已关联档案）');
+        }
+
+        // 无匹配记录 → 新建微信用户
+        $phonePlaceholder = 'WX_' . substr(md5($openid), 0, 8);  // 避免 phone='' 触发唯一约束
         $newOwnerId = Db::name('owner')->insertGetId([
             'community_id'    => $communityId,
             'realname'        => '微信用户',
-            'phone'           => '',
+            'phone'           => $phonePlaceholder,
             'password'        => '',
             'openid'          => $openid,
             'wechat_unionid'  => $unionid,
@@ -276,7 +292,12 @@ class Login extends BaseApi
         ]);
 
         $newOwner = Db::name('owner')->where('id', $newOwnerId)->find();
-        return $this->issueToken($newOwner, '微信登录成功（新用户）');
+        $extraData = [];
+        $claimableCount = $this->countClaimableOwners($communityId);
+        if ($claimableCount > 0) {
+            $extraData['claimableCount'] = $claimableCount;
+        }
+        return $this->issueToken($newOwner, '微信登录成功（新用户）', $extraData);
     }
 
     // ========== 微信绑定/解绑（需已登录）==========
@@ -378,7 +399,7 @@ class Login extends BaseApi
     /**
      * 签发 JWT token + 更新登录时间（包装为 JSON 响应）
      */
-    private function issueToken(array $owner, string $msg = '登录成功')
+    private function issueToken(array $owner, string $msg = '登录成功', array $extraData = [])
     {
         if ($owner['status'] != 1) {
             return $this->error('账户已被禁用');
@@ -386,7 +407,7 @@ class Login extends BaseApi
 
         $token = $this->_makeToken($owner);
 
-        return $this->success([
+        $data = [
             'token'    => $token,
             'userInfo' => [
                 'id'           => $owner['id'],
@@ -396,8 +417,15 @@ class Login extends BaseApi
                 'openid'       => $owner['openid'] ? '已绑定' : '',
                 'community_id' => $owner['community_id'],
             ],
-            'isNew' => empty($owner['phone']), // 新微信用户标记
-        ], $msg);
+            'isNew' => (empty($owner['phone']) || strpos($owner['phone'], 'WX_') === 0), // 占位手机号=新用户
+        ];
+
+        // 合并额外数据（如 claimableCount）
+        if (!empty($extraData)) {
+            $data = array_merge($data, $extraData);
+        }
+
+        return $this->success($data, $msg);
     }
 
     /**
@@ -418,23 +446,81 @@ class Login extends BaseApi
                 ]);
                 $owner = Db::name('owner')->where('id', $deleted['id'])->find();
             } else {
-                // 新建用户
-                $newOwnerId = Db::name('owner')->insertGetId([
-                    'community_id'    => $communityId,
-                    'realname'        => '微信用户',
-                    'phone'           => '',
-                    'password'        => '',
-                    'openid'          => $openid,
-                    'type'            => 1,
-                    'status'          => 1,
-                    'register_time'   => date('Y-m-d H:i:s'),
-                    'last_login_time' => date('Y-m-d H:i:s'),
-                    'create_time'     => date('Y-m-d H:i:s'),
-                ]);
-                $owner = Db::name('owner')->where('id', $newOwnerId)->find();
+                // 检查是否可直接绑定到已有业主
+                $unclaimedOwner = $this->findUnclaimedOwner($communityId);
+                if ($unclaimedOwner) {
+                    Db::name('owner')->where('id', $unclaimedOwner['id'])->update([
+                        'openid'          => $openid,
+                        'last_login_time' => date('Y-m-d H:i:s'),
+                    ]);
+                    $owner = Db::name('owner')->where('id', $unclaimedOwner['id'])->find();
+                } else {
+                    // 新建用户
+                    $phonePlaceholder = 'WX_' . substr(md5($openid), 0, 8);
+                    $newOwnerId = Db::name('owner')->insertGetId([
+                        'community_id'    => $communityId,
+                        'realname'        => '微信用户',
+                        'phone'           => $phonePlaceholder,
+                        'password'        => '',
+                        'openid'          => $openid,
+                        'type'            => 1,
+                        'status'          => 1,
+                        'register_time'   => date('Y-m-d H:i:s'),
+                        'last_login_time' => date('Y-m-d H:i:s'),
+                        'create_time'     => date('Y-m-d H:i:s'),
+                    ]);
+                    $owner = Db::name('owner')->where('id', $newOwnerId)->find();
+                }
             }
         }
 
         return $this->_makeToken($owner);
+    }
+
+    /**
+     * 查找同小区中唯一一个有房产但未绑定微信的业主
+     * 条件：openid 为空、状态正常、有真实手机号、拥有关联房间
+     * 仅当唯一匹配时返回，防止误绑他人
+     */
+    private function findUnclaimedOwner(int $communityId): ?array
+    {
+        // 找到所有符合条件的潜在业主 ID
+        $candidates = Db::name('owner')->alias('o')
+            ->join('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
+            ->join('room r', 'r.id = ocr.room_id')
+            ->where('o.community_id', $communityId)
+            ->where('o.status', 1)
+            ->where('o.openid', '')
+            ->where('o.phone', 'not like', 'WX_%')
+            ->where('o.phone', 'not like', 'ARCHIVED_%')
+            ->where('o.phone', '<>', '')
+            ->whereNull('o.delete_time')
+            ->group('o.id')
+            ->column('o.id');
+
+        // 只有唯一候选人才自动绑定，避免安全风险
+        if (count($candidates) !== 1) {
+            return null;
+        }
+
+        return Db::name('owner')->where('id', $candidates[0])->find();
+    }
+
+    /**
+     * 统计可认领的业主数量（用于前台提示）
+     */
+    private function countClaimableOwners(int $communityId): int
+    {
+        return Db::name('owner')->alias('o')
+            ->join('owner_room ocr', 'ocr.owner_id = o.id AND ocr.delete_time IS NULL')
+            ->where('o.community_id', $communityId)
+            ->where('o.status', 1)
+            ->where('o.openid', '')
+            ->where('o.phone', 'not like', 'WX_%')
+            ->where('o.phone', 'not like', 'ARCHIVED_%')
+            ->where('o.phone', '<>', '')
+            ->whereNull('o.delete_time')
+            ->group('o.id')
+            ->count();
     }
 }
