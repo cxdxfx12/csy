@@ -291,9 +291,19 @@ class StaffLogin extends BaseStaff
     {
         $oldPwd = $this->request->post('old_password', '');
         $newPwd = $this->request->post('new_password', '');
-        $staff = Db::name('admin_user')->where('id', $this->staffId)->find();
-        if (!verify_password($oldPwd, $staff['password'])) return $this->error('原密码错误');
-        Db::name('admin_user')->where('id', $this->staffId)->update(['password' => encrypt_password($newPwd)]);
+        // 根据 JWT source 区分修改哪张表的密码
+        $source = request()->staffInfo['is_worker'] ?? false ? 'worker' : 'admin';
+        if ($source === 'worker') {
+            $worker = Db::name('repair_worker')->where('id', $this->staffId)->find();
+            if (!$worker) return $this->error('账号不存在');
+            if (!verify_password($oldPwd, $worker['password'])) return $this->error('原密码错误');
+            Db::name('repair_worker')->where('id', $this->staffId)->update(['password' => encrypt_password($newPwd)]);
+        } else {
+            $staff = Db::name('admin_user')->where('id', $this->staffId)->find();
+            if (!$staff) return $this->error('账号不存在');
+            if (!verify_password($oldPwd, $staff['password'])) return $this->error('原密码错误');
+            Db::name('admin_user')->where('id', $this->staffId)->update(['password' => encrypt_password($newPwd)]);
+        }
         return $this->success([], '修改成功');
     }
 }

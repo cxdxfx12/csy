@@ -87,6 +87,14 @@ class AdminUser extends BaseAdmin
         }
         $data['community_ids'] = $communityIds;
 
+        // 手机号若与维修人员重复，登录后身份会关联到维修工
+        if (!empty($data['phone'])) {
+            $dupWorker = Db::name('repair_worker')->where('phone', $data['phone'])->find();
+            if ($dupWorker) {
+                return $this->error('手机号已被维修人员「' . $dupWorker['name'] . '」使用，请更换手机号');
+            }
+        }
+
         $data['password'] = encrypt_password($data['password']);
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('admin_user')->insert($data);
@@ -122,6 +130,17 @@ class AdminUser extends BaseAdmin
             return $this->error('请为小区级角色绑定至少一个小区');
         }
         $data['community_ids'] = $communityIds;
+
+        // 手机号若与维修人员重复，登录后身份会关联到维修工（仅变更时校验）
+        if (!empty($data['phone'])) {
+            $oldPhone = Db::name('admin_user')->where('id', $id)->value('phone') ?? '';
+            if ($data['phone'] !== $oldPhone) {
+                $dupWorker = Db::name('repair_worker')->where('phone', $data['phone'])->find();
+                if ($dupWorker) {
+                    return $this->error('手机号已被维修人员「' . $dupWorker['name'] . '」使用，请更换手机号');
+                }
+            }
+        }
 
         // 密码处理
         if (isset($data['password']) && !empty($data['password'])) {

@@ -85,7 +85,13 @@ function dismissBadge(key) {
   badges[key] = 0
 }
 
-function logout() { auth.removeToken(); router.replace('/login') }
+function logout() {
+  auth.removeToken()
+  const url = window.location.origin + '/owner.html?logout=' + Date.now()
+  setTimeout(() => {
+    try { top.location.replace(url) } catch (_) { window.location.replace(url) }
+  }, 50)
+}
 
 function isPlaceholderPhone(p) {
   return !p || p.startsWith('WX_');

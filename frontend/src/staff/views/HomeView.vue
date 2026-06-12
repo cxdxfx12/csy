@@ -45,9 +45,7 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { createApi, createAuth } from '@/shared/api.js'
-const router = useRouter()
 const api = createApi('/api/staff', 'staff_token')
 const auth = createAuth('staff_token')
 const profile = ref(null)
@@ -88,8 +86,16 @@ function dismissBadge(key) {
 }
 
 function logout() {
-  auth.removeToken()
-  router.replace('/login')
+  // 清除所有 staff 相关的 localStorage
+  localStorage.removeItem('staff_token')
+  localStorage.removeItem('staff_community_id')
+  localStorage.removeItem('staff_badge_seen')
+  // 微信 WebView 会拦截同域 location 跳转，导致页面不刷新
+  // 用 setTimeout 确保状态写入，再用 top.location 绕过微信 iframe 封装
+  const url = window.location.origin + '/staff.html?logout=' + Date.now()
+  setTimeout(() => {
+    try { top.location.replace(url) } catch (_) { window.location.replace(url) }
+  }, 50)
 }
 </script>
 <style scoped>

@@ -68,6 +68,7 @@ class BaseStaff extends BaseController
                     if ($adminUser['status'] != 1) {
                         $this->throwError('账户已禁用');
                     }
+                    $commIds = array_values(array_filter(array_map('intval', explode(',', $adminUser['community_ids'] ?? ''))));
                     if ($adminUser['phone']) {
                         // 用 admin_user.phone 匹配 repair_worker（维修工关联到管理账号）
                         $worker = Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
@@ -76,19 +77,20 @@ class BaseStaff extends BaseController
                                 'id'           => $worker['id'],
                                 'realname'     => $worker['name'],
                                 'phone'        => $worker['phone'],
-                                'community_id' => $worker['community_id'],
+                                'community_id' => $commIds[0] ?? $worker['community_id'],
+                                'community_ids' => $adminUser['community_ids'] ?? '',
                                 'status'       => $worker['status'],
                                 'is_worker'    => true,
                             ];
                         }
                     }
                     if (!$this->staffInfo) {
-                        $commIds = array_values(array_filter(array_map('intval', explode(',', $adminUser['community_ids'] ?? ''))));
                         $this->staffInfo = [
                             'id'           => $adminUser['id'],
                             'realname'     => $adminUser['nickname'] ?: $adminUser['username'],
                             'phone'        => $adminUser['phone'] ?? '',
                             'community_id' => $commIds[0] ?? 0,
+                            'community_ids' => $adminUser['community_ids'] ?? '',
                             'status'       => 1,
                         ];
                     }
@@ -106,6 +108,7 @@ class BaseStaff extends BaseController
                         if (!in_array((int)$adminUser['role_id'], $allowedRoles)) {
                             $this->throwError('无效的凭证类型');
                         }
+                        $commIds = array_values(array_filter(array_map('intval', explode(',', $adminUser['community_ids'] ?? ''))));
                         if ($adminUser['phone']) {
                             $worker = Db::name('repair_worker')->where('phone', $adminUser['phone'])->find();
                             if ($worker) {
@@ -113,19 +116,20 @@ class BaseStaff extends BaseController
                                     'id'           => $worker['id'],
                                     'realname'     => $worker['name'],
                                     'phone'        => $worker['phone'],
-                                    'community_id' => $worker['community_id'],
+                                    'community_id' => $commIds[0] ?? $worker['community_id'],
+                                    'community_ids' => $adminUser['community_ids'] ?? '',
                                     'status'       => $worker['status'],
                                     'is_worker'    => true,
                                 ];
                             }
                         }
                         if (!$this->staffInfo && $adminUser['status'] == 1) {
-                            $commIds = array_values(array_filter(array_map('intval', explode(',', $adminUser['community_ids'] ?? ''))));
                             $this->staffInfo = [
                                 'id'           => $adminUser['id'],
                                 'realname'     => $adminUser['nickname'] ?: $adminUser['username'],
                                 'phone'        => $adminUser['phone'] ?? '',
                                 'community_id' => $commIds[0] ?? 0,
+                                'community_ids' => $adminUser['community_ids'] ?? '',
                                 'status'       => 1,
                             ];
                         }

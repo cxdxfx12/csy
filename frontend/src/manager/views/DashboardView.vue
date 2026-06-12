@@ -816,7 +816,10 @@ async function loadTabData() {
 
 function logout() {
   auth.removeToken()
-  router.replace('/login')
+  const url = window.location.origin + '/manager.html?logout=' + Date.now()
+  setTimeout(() => {
+    try { top.location.replace(url) } catch (_) { window.location.replace(url) }
+  }, 50)
 }
 </script>
 
