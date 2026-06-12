@@ -27,6 +27,14 @@
 - 前端文件: 部署到 /www/wwwroot/www.hbdxm.com/public/admin/
 - PHP 文件: 部署到 /www/wwwroot/www.hbdxm.com/app/... 等对应的应用根目录
 - ⚠️ public/app/ 是废弃副本，框架不会加载这里的代码！务必部署到根目录的 app/
+- 🔧 **PHP文件部署用 `_deploy.bat`**：`_deploy.bat app\admin\controller\XXX.php`，自动映射路径不会出错
+- 路径映射表（`_deploy.bat` 自动处理）：
+  | 本地路径 | 远程路径 |
+  | `app\*` | `/www/wwwroot/www.hbdxm.com/app/*` |
+  | `extend\*` | `/www/wwwroot/www.hbdxm.com/extend/*` |
+  | `route\*` | `/www/wwwroot/www.hbdxm.com/route/*` |
+  | `config\*` | `/www/wwwroot/www.hbdxm.com/config/*` |
+  | `admin\dist\*` | `/www/wwwroot/www.hbdxm.com/public/admin/*` |
 
 ## Nginx 缓存配置 (2026-06-08)
 - /admin/index.html: no-cache, no-store, must-revalidate（确保用户获取最新版本）
@@ -50,3 +58,32 @@
 - StaffLogin::login() 先查 admin_user，未找到则依次按 phone → name → staff.job_no 查找 repair_worker
 - verify_password() 兼容 bcrypt、旧版 md5(md5+salt)、明文三种格式
 - ThinkPHP 6 闭包 WHERE(`where(function($q){$q->where(...)->whereOr(...);})`) 行为不可靠，OR 条件改用分步查询
+
+## 上线部署检查清单 (2026-06-13)
+
+### 🔴 致命（必须改）
+1. **auth_key 硬编码**：`JUD6FCtZsqrmVXc2apev4TRn3O8gAhxbSlH9wfPN` 写在 `config/app.php`、`app/common.php` 和根目录测试脚本中 → 移到 `.env` 用 `env()` 读，线上换新值
+2. **根目录测试/调试文件**：47 个 `_test_*.js`、12 个 `_debug_*.js/php` 含数据库密码、SSH 密码、IP → **全部删除**，.gitignore 加 `_test_*`、`_debug_*`、`_*check*.php`
+3. **nginx 无 HTTPS**：仅监听 80，无 SSL → 配 Let's Encrypt 证书，强制 HTTPS
+4. **nginx server_name** 是 `dasheng.local` → 改为 `www.hbdxm.com`
+
+### 🟠 高优
+5. **nginx 缺安全头**：加 HSTS / X-Frame-Options / X-Content-Type-Options / CSP
+6. **Redis 无密码** `127.0.0.1:6379` → 设密码
+7. **数据库 root 弱密码** → 建专用低权限账号
+8. **APP_ENV=local** → 改为 `production`
+9. **CORS 含 localhost:5173/3000** → 上线后移除
+10. **admin 密码弱** → 改强密码
+
+### 🟡 建议
+11. **缺定时任务**：账单生成、催缴、日志清理 → 配 crontab
+12. **旧 md5 密码兼容** → 逐步强制 bcrypt，关明文兜底
+13. **根目录垃圾文件清理**：`2`、`kfuser.html`、`_pack.php` 等
+14. **.env SMS 配置空** → 补充阿里云短信 Key
+
+### ✅ 已确认 OK
+- APP_DEBUG=false, app_trace=false, display_errors=0
+- SQL debug 关闭
+- 支付/微信密钥脱敏返回
+- DEMO_MODE=false
+- 日志按天分文件保留30天

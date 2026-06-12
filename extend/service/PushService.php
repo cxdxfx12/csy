@@ -358,7 +358,7 @@ class PushService
                 ->where('target_id', $targetId);
         }
 
-        $events = $query->select()->toArray();
+        $events = $query->select();
 
         // 标记为SSE未读（保留在数据库供历史查询）
         foreach ($events as &$e) {

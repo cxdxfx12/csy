@@ -75,6 +75,8 @@ class Login extends BaseAdmin
         $_SESSION['admin_captcha']      = $code;
         $_SESSION['admin_captcha_key']  = $key;
         $_SESSION['admin_captcha_time'] = time();
+        // 提前关闭 session 写入锁，防止阻塞后续登录请求
+        session_write_close();
 
         // 生成验证码图片（不依赖字体文件）
         $width = 130; $height = 44;

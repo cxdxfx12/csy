@@ -137,7 +137,10 @@ watch(permVisible, (val) => {
 
 async function submitPermission() {
   // 默认父子联动模式：getCheckedKeys 只返回全选的叶子节点
-  const ids = permTreeRef.value?.getCheckedKeys() || []
+  // getHalfCheckedKeys 返回半选的父节点，也必须保存否则树结构断裂
+  const checked = permTreeRef.value?.getCheckedKeys() || []
+  const halfChecked = permTreeRef.value?.getHalfCheckedKeys() || []
+  const ids = [...checked, ...halfChecked]
   permSubmitting.value = true
   try {
     await apiPost('/admin/role/savePermission', { role_id: permRoleId.value, menu_ids: ids })

@@ -137,8 +137,8 @@ onMounted(async () => {
       stats.value = [
         { icon: 'ph:buildings-duotone', label: '管理小区', value: data.communityCount || data.community_count || data[0]?.value || 0, color: '#6366f1', action: () => goMenu('房产') },
         { icon: 'ph:users-duotone', label: '业主总数', value: data.ownerCount || data.owner_count || data[1]?.value || 0, color: '#059669', action: () => goMenu('业主') },
-        { icon: 'ph:currency-circle-dollar-duotone', label: '本月实收', value: data.monthIncome || data.month_income ? ('¥' + data.monthIncome || data.month_income) : (data[2]?.value ? '¥' + data[2].value : '¥0'), color: '#ea580c', action: () => goMenu('收费') },
-        { icon: 'ph:clipboard-text-duotone', label: '待处理工单', value: data.pendingOrders || data.pending_orders || data[3]?.value || 0, color: '#dc2626', action: () => goMenu('报修') },
+        { icon: 'ph:currency-circle-dollar-duotone', label: '本月实收', value: data.monthIncome || data.month_income ? ('¥' + (data.monthIncome || data.month_income)) : (data[2]?.value || '¥0'), color: '#ea580c', action: () => goMenu('收费') },
+        { icon: 'ph:clipboard-text-duotone', label: '待处理工单', value: data.pendingOrders || data.pending_orders || data[4]?.value || 0, color: '#dc2626', action: () => goMenu('报修') },
       ]
     }
   } catch { /* ignore */ }
