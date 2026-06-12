@@ -74,6 +74,16 @@ class Role extends BaseAdmin
         $allMenus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
         $checkedMenuIds = Db::name('role_menu')->where('role_id', $roleId)->column('menu_id');
 
+        // 预定义角色（admin/manager/service/finance/security/engineer）：
+        // 硬编码权限对应的菜单也要显示为已勾选
+        $role = Db::name('role')->where('id', $roleId)->find();
+        if ($role) {
+            $hardcodedIds = $this->getHardcodedCheckedMenuIds($role, $allMenus);
+            if (!empty($hardcodedIds)) {
+                $checkedMenuIds = array_values(array_unique(array_merge($checkedMenuIds, $hardcodedIds)));
+            }
+        }
+
         // 只返回叶子节点的选中ID，避免 el-tree setCheckedKeys 时
         // 父节点被设为 checked 后自动选中所有子节点
         $parentIds = [];

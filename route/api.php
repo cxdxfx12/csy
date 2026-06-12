@@ -560,6 +560,7 @@ Route::group('api/admin', function () {
     Route::post('system/serviceVendorDelete', 'admin/ServiceVendor/delete');
 
     // 租凭管理 - 房源
+    Route::get('lease/vacantRooms', 'admin/LeaseProperty/vacantRooms');
     Route::get('lease/leasePropertyList', 'admin/LeaseProperty/lists');
     Route::post('lease/leasePropertyAdd', 'admin/LeaseProperty/add');
     Route::post('lease/leasePropertyEdit', 'admin/LeaseProperty/edit');

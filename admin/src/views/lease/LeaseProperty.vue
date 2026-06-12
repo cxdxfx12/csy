@@ -130,14 +130,53 @@
     <!-- 编辑弹窗 -->
     <el-dialog v-model="dialogVisible" :title="editId?'编辑房源信息':'录入新房源'" width="760px" destroy-on-close :close-on-click-modal="false" class="property-dialog">
       <el-form :model="form" ref="formRef" label-width="90px">
+        <!-- 房间数据联动选取器（住宅/公寓时可用） -->
+        <div class="room-picker-bar" v-if="isRoomDataAvailable">
+          <div class="room-picker-header">
+            <span class="room-picker-icon"><el-icon><Connection /></el-icon></span>
+            <span>房间管理数据联动</span>
+            <el-tag size="small" type="success" effect="plain">自动填充</el-tag>
+          </div>
+          <div class="room-picker-body">
+            <el-select v-model="selectedRoomId" filterable clearable :loading="vacantRoomsLoading"
+                       placeholder="选择房间管理中的空置房产，自动填充下方信息..."
+                       @change="onRoomSelect" @clear="clearRoomAutoFill"
+                       :no-data-text="vacantRoomsLoaded ? '暂无符合条件的空置房间' : '选择小区和类型后自动加载'"
+                       style="width:100%">
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+              <el-option v-for="r in vacantRooms" :key="r.id" :label="labelRoom(r)" :value="r.id">
+                <div class="room-option">
+                  <div class="room-option-main">
+                    <span class="room-option-name">{{ r.building_name }} {{ r.room_number }}</span>
+                    <span class="room-option-area">{{ r.area||0 }}㎡ {{ r.layout||'' }}</span>
+                  </div>
+                  <div class="room-option-sub">
+                    <span>{{ r.community_name }}</span>
+                    <span>{{ r.floor }}层 · {{ orientLabel(r.orientation) }}</span>
+                    <span>{{ decorateLabel(r.decorate_status) }}</span>
+                  </div>
+                </div>
+              </el-option>
+            </el-select>
+            <div class="room-picker-hint" v-if="!selectedRoomId">
+              <el-icon><InfoFilled /></el-icon> 选取房间后将自动填充：房源名称、小区、楼层、面积、朝向、装修
+            </div>
+            <div class="room-picker-hint success" v-else>
+              <el-icon><CircleCheck /></el-icon> 已关联房间：{{ form.building_name }} {{ form.room_number }}，信息已自动填充，也可手动修改
+            </div>
+          </div>
+        </div>
+
         <div class="form-section">
           <div class="section-title"><el-icon><InfoFilled /></el-icon>基本信息</div>
           <el-row :gutter="16">
-            <el-col :span="12"><el-form-item label="房源名称" required><el-input v-model="form.property_name" placeholder="如：阳光花园3栋201"/></el-form-item></el-col>
-            <el-col :span="12"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="房源名称" required><el-input v-model="form.property_name" :placeholder="isRoomDataAvailable ? '选择上方房间自动生成，或手动输入...' : '如：阳光花园3栋201'"/></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="所属小区"><el-select v-model="form.community_id" style="width:100%" clearable @change="onCommunityChange"><el-option v-for="c in communities" :key="c.id" :label="c.name" :value="c.id"/></el-select></el-form-item></el-col>
           </el-row>
           <el-row :gutter="16">
-            <el-col :span="12"><el-form-item label="房源类型"><el-select v-model="form.property_type" style="width:100%"><el-option label="住宅" value="住宅"/><el-option label="公寓" value="公寓"/><el-option label="商铺" value="商铺"/><el-option label="办公室" value="办公室"/><el-option label="仓库" value="仓库"/><el-option label="车位" value="车位"/></el-select></el-form-item></el-col>
+            <el-col :span="12"><el-form-item label="房源类型"><el-select v-model="form.property_type" style="width:100%" @change="onTypeChange"><el-option label="住宅" value="住宅"/><el-option label="公寓" value="公寓"/><el-option label="商铺" value="商铺"/><el-option label="办公室" value="办公室"/><el-option label="仓库" value="仓库"/><el-option label="车位" value="车位"/></el-select></el-form-item></el-col>
             <el-col :span="6"><el-form-item label="楼层"><el-input-number v-model="form.floor" :min="0" controls-position="right" style="width:100%"/></el-form-item></el-col>
             <el-col :span="6"><el-form-item label="建筑面积(㎡)"><el-input v-model="form.area_built" placeholder="如：86.5"/></el-form-item></el-col>
             <el-col :span="6"><el-form-item label="实用面积(㎡)"><el-input v-model="form.area_used" placeholder="如：72.0"/></el-form-item></el-col>
@@ -180,7 +219,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { apiGet, apiPost } from '@/utils/request'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { House, Plus, OfficeBuilding, CircleCheck, Lock, Money, Search, Grid, List, FolderOpened, Location, FullScreen, Brush, Compass, Edit, Delete, InfoFilled, EditPen } from '@element-plus/icons-vue'
+import { House, Plus, OfficeBuilding, CircleCheck, Lock, Money, Search, Grid, List, FolderOpened, Location, FullScreen, Brush, Compass, Edit, Delete, InfoFilled, EditPen, Connection } from '@element-plus/icons-vue'
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -191,14 +230,29 @@ const editId = ref(0)
 const viewMode = ref<'card'|'table'>('card')
 const formRef = ref()
 
+// 房间数据联动
+const vacantRooms = ref<any[]>([])
+const vacantRoomsLoading = ref(false)
+const vacantRoomsLoaded = ref(false)
+const selectedRoomId = ref<number | null>(null)
+
 const query = reactive({ page:1, limit:12, keyword:'', property_type:'', status:'', decoration:'', community_id:undefined as any })
 const communities = ref<any[]>([])
 const form = reactive<any>({
-  community_id:0, building_id:0, room_id:0, property_name:'', property_type:'住宅',
+  community_id:0, building_id:0, room_id:0, building_name:'', room_number:'', property_name:'', property_type:'住宅',
   floor:1, area_built:'', area_used:'', decoration:'精装', direction:'南', feature_tags:'',
   monthly_rent:'', deposit_months:2, min_lease_months:12, property_tax:'',
   status:'可租', publish_time:'', cover_image:'', images:'', description:'', remark:''
 })
+
+// 是否显示房间数据联动（住宅/公寓）
+const isRoomDataAvailable = computed(() => {
+  return ['住宅','公寓'].includes(form.property_type)
+})
+
+function orientLabel(o: string) { const m: Record<string,string>={东:'东',南:'南',西:'西',北:'北',东南:'东南',西南:'西南',东北:'东北',西北:'西北',南北:'南北'}; return m[o] || o }
+function decorateLabel(d: any) { const m: Record<number,string> = {0:'毛坯',1:'简装',2:'精装',3:'豪装'}; return m[Number(d)] || '' }
+function labelRoom(r: any) { return `${r.building_name||''} ${r.room_number||''} (${r.area||0}㎡) - ${r.community_name||''}` }
 
 const stats = computed(()=>{
   const data = list.value||[]
@@ -238,17 +292,97 @@ async function loadData(){
   finally{loading.value=false}
 }
 
-function openForm(row?:any){
-  if(row){editId.value=row.id;Object.keys(form).forEach(k=>{if(row[k]!==undefined)(form as any)[k]=row[k]})}
-  else{editId.value=0;Object.assign(form,{community_id:0,building_id:0,room_id:0,property_name:'',property_type:'住宅',floor:1,area_built:'',area_used:'',decoration:'精装',direction:'南',feature_tags:'',monthly_rent:'',deposit_months:2,min_lease_months:12,property_tax:'',status:'可租',publish_time:'',cover_image:'',images:'',description:'',remark:''})}
-  dialogVisible.value=true
+function openForm(row?: any) {
+  if (row) {
+    editId.value = row.id
+    Object.keys(form).forEach(k => { if (row[k] !== undefined) (form as any)[k] = row[k] })
+    selectedRoomId.value = row.room_id > 0 ? row.room_id : null
+  } else {
+    editId.value = 0
+    Object.assign(form, {
+      community_id:0, building_id:0, room_id:0, building_name:'', room_number:'',
+      property_name:'', property_type:'住宅', floor:1, area_built:'', area_used:'',
+      decoration:'精装', direction:'南', feature_tags:'', monthly_rent:'',
+      deposit_months:2, min_lease_months:12, property_tax:'', status:'可租',
+      publish_time:'', cover_image:'', images:'', description:'', remark:''
+    })
+    selectedRoomId.value = null
+    vacantRooms.value = []
+    vacantRoomsLoaded.value = false
+  }
+  dialogVisible.value = true
+  if (isRoomDataAvailable.value) loadVacantRooms()
+}
+
+async function loadVacantRooms() {
+  if (!isRoomDataAvailable.value) return
+  vacantRoomsLoading.value = true
+  try {
+    const p: any = { property_type: form.property_type }
+    if (form.community_id) p.community_id = form.community_id
+    const res: any = await apiGet('/admin/lease/vacantRooms', p)
+    if (res && (res.code === 0 || res.code === undefined)) {
+      vacantRooms.value = res.data || []
+    }
+    vacantRoomsLoaded.value = true
+  } catch (_) { vacantRooms.value = [] }
+  finally { vacantRoomsLoading.value = false }
+}
+
+function onRoomSelect(roomId: number) {
+  const room = vacantRooms.value.find((r: any) => r.id === roomId)
+  if (!room) return
+  // 自动填充表单
+  form.community_id = room.community_id || 0
+  form.building_id   = room.building_id || 0
+  form.room_id       = room.id
+  form.building_name = room.building_name || ''
+  form.room_number   = room.room_number || ''
+  form.property_name = `${room.community_name||''} ${room.building_name||''} ${room.room_number||''}`.trim()
+  form.floor         = Number(room.floor) || 1
+  form.area_built    = room.area || ''
+  form.area_used     = room.usable_area || ''
+  form.direction     = room.orientation || '南'
+  // 装修状态映射
+  const decoMap: Record<number,string> = {0:'毛坯',1:'简装',2:'精装',3:'豪装'}
+  form.decoration    = decoMap[Number(room.decorate_status)] || '精装'
+}
+
+function clearRoomAutoFill() {
+  selectedRoomId.value = null
+  form.building_id   = 0
+  form.room_id       = 0
+  form.building_name = ''
+  form.room_number   = ''
+  // 不清除其他字段，保留用户可能的修改
+}
+
+function onTypeChange() {
+  selectedRoomId.value = null
+  form.building_id = 0
+  form.room_id = 0
+  form.building_name = ''
+  form.room_number = ''
+  if (isRoomDataAvailable.value) {
+    loadVacantRooms()
+  } else {
+    vacantRooms.value = []
+    vacantRoomsLoaded.value = false
+  }
+}
+
+function onCommunityChange() {
+  if (isRoomDataAvailable.value) loadVacantRooms()
 }
 
 async function handleSubmit(){
   submitting.value=true
   try{
     const url=editId.value?'/admin/lease/leasePropertyEdit':'/admin/lease/leasePropertyAdd'
-    const payload={...form,id:editId.value||undefined}
+    const payload: any = { ...form }
+    delete payload.building_name
+    delete payload.room_number
+    if (editId.value) payload.id = editId.value
     const res:any=await apiPost(url,payload)
     if(res&&(res.code===0||res.code===undefined)){ElMessage.success(editId.value?'房源已更新':'房源已录入');dialogVisible.value=false;loadData()}
   }catch(_){}
@@ -315,6 +449,17 @@ watch([()=>query.page,()=>query.limit],()=>loadData())
 
 .property-dialog :deep(.el-dialog__header){border-bottom:1px solid #f0f2f5;padding:20px 24px}
 .property-dialog :deep(.el-dialog__body){padding:24px}
+.room-picker-bar{background:linear-gradient(135deg,#f0f9ff 0%,#ecfdf5 100%);border:1px solid #bae6fd;border-radius:12px;padding:16px 20px;margin-bottom:20px}
+.room-picker-header{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#0369a1;margin-bottom:12px}
+.room-picker-icon{display:flex;align-items:center}
+.room-picker-body{display:flex;flex-direction:column;gap:8px}
+.room-picker-hint{display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b}
+.room-picker-hint.success{color:#16a34a}
+.room-option{padding:4px 0}
+.room-option-main{display:flex;justify-content:space-between;align-items:center;font-weight:500}
+.room-option-name{color:#1a202c}
+.room-option-area{color:#2563eb;font-size:12px}
+.room-option-sub{display:flex;gap:10px;font-size:11px;color:#94a3b8;margin-top:3px}
 .form-section{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #f0f2f5}
 .form-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .section-title{font-size:14px;font-weight:700;color:#1a365d;margin-bottom:16px;display:flex;align-items:center;gap:8px}

@@ -399,6 +399,7 @@ Route::group('admin', function () {
     Route::post('admin/equipment/elevatorInspectionDelete', 'admin/ElevatorInspection/delete');
 
     // 可租赁房源
+    Route::get('admin/lease/vacantRooms', 'admin/LeaseProperty/vacantRooms');
     Route::get('admin/lease/leasePropertyList', 'admin/LeaseProperty/lists');
     Route::post('admin/lease/leasePropertyAdd', 'admin/LeaseProperty/add');
     Route::post('admin/lease/leasePropertyEdit', 'admin/LeaseProperty/edit');

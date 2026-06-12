@@ -207,8 +207,35 @@ class BaseAdmin extends BaseController
      */
     protected function getRolePermissions($code)
     {
-        // 公共模块：所有角色通用（Login 提供 info/logout 等基础接口）
-        // Community 加入公共列表，其 add/edit/delete 内部已限制仅 role_id<=2，list 按绑定小区过滤
+        $base = $this->getHardcodedControllersForCode($code);
+
+        if ($base !== null) {
+            // 预定义角色（role_id>2 且非 *）：也支持通过 UI/role_menu 表动态扩展权限
+            // 只做加法不做减法，硬编码的白名单始终保留
+            if ($base !== '*') {
+                $roleId = $this->adminInfo['role_id'] ?? 0;
+                if ($roleId > 2) {
+                    // 传入空 common，只获取 role_menu 表中实际分配的额外控制器
+                    $dynamic = $this->getCustomRolePermissions([]);
+                    if (!empty($dynamic)) {
+                        $base = array_values(array_unique(array_merge($base, $dynamic)));
+                    }
+                }
+            }
+            return $base;
+        }
+
+        // 自定义角色（code 不在预定义 maps 中）：完全由 ds_role_menu + ds_menu.permission 推导
+        $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community', 'Search'];
+        return $this->getCustomRolePermissions($common);
+    }
+
+    /**
+     * 获取预定义角色的硬编码控制器列表（含公共模块）
+     * @return array|null null=非预定义角色, '*'=全部权限, array=控制器名列表
+     */
+    protected function getHardcodedControllersForCode(string $code): ?array
+    {
         $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community', 'Search'];
 
         $maps = [
@@ -251,25 +278,35 @@ class BaseAdmin extends BaseController
             ]),
         ];
 
-        if (isset($maps[$code])) {
-            $base = $maps[$code];
-            // 预定义角色（role_id>2 且非 *）：也支持通过 UI/role_menu 表动态扩展权限
-            // 只做加法不做减法，硬编码的白名单始终保留
-            if ($base !== '*') {
-                $roleId = $this->adminInfo['role_id'] ?? 0;
-                if ($roleId > 2) {
-                    // 传入空 common，只获取 role_menu 表中实际分配的额外控制器
-                    $dynamic = $this->getCustomRolePermissions([]);
-                    if (!empty($dynamic)) {
-                        $base = array_values(array_unique(array_merge($base, $dynamic)));
-                    }
-                }
-            }
-            return $base;
+        return $maps[$code] ?? null;
+    }
+
+    /**
+     * 根据预定义角色编码和全量菜单，返回硬编码权限对应的菜单ID集合
+     * 用于权限管理界面回显已勾选的菜单
+     */
+    protected function getHardcodedCheckedMenuIds(array $role, array $allMenus): array
+    {
+        $code = $role['code'] ?? '';
+        $controllers = $this->getHardcodedControllersForCode($code);
+        if ($controllers === null) return [];
+
+        // 超管：所有菜单
+        if ($controllers === '*') {
+            return array_column($allMenus, 'id');
         }
 
-        // 自定义角色（code 不在预定义 maps 中）：完全由 ds_role_menu + ds_menu.permission 推导
-        return $this->getCustomRolePermissions($common);
+        // 控制器 → 菜单ID 映射
+        $permMap = $this->buildPermissionMap();
+        $menuIds = [];
+        foreach ($allMenus as $menu) {
+            $perm = $menu['permission'] ?? '';
+            if (empty($perm)) continue;
+            if (isset($permMap[$perm]) && in_array($permMap[$perm], $controllers)) {
+                $menuIds[] = $menu['id'];
+            }
+        }
+        return $menuIds;
     }
 
     /**
