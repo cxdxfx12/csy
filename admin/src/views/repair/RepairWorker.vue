@@ -138,11 +138,15 @@ async function submitForm() {
   try { await formRef.value?.validate() } catch { return }
   submitting.value = true
   try {
+    const payload: any = { ...form }
+    delete payload.id // 新增时去除 id=0，避免干扰后端 insert
     const url = form.id ? '/admin/repair/workerEdit' : '/admin/repair/workerAdd'
-    await apiPost(url, { ...form })
+    await apiPost(url, payload)
     ElMessage.success(form.id ? '修改成功' : '添加成功')
     dialogVisible.value = false
     loadData()
+  } catch {
+    // 错误已在 request 拦截器中通过 ElMessage.error 提示
   } finally { submitting.value = false }
 }
 

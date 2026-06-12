@@ -62,6 +62,7 @@ class Attendance extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateStaffCommunity($data['staff_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
         Db::name('staff_attendance')->insert($data);
         return $this->success([], '添加成功');
@@ -91,6 +92,9 @@ class Attendance extends BaseAdmin
         if (empty($staffIds)) {
             return $this->error('请选择员工');
         }
+
+        // 验证所有员工都在管辖小区内
+        $this->validateStaffIdsCommunity($staffIds);
 
         $records = [];
         foreach ($staffIds as $sid) {

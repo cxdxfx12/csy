@@ -46,6 +46,7 @@ class Vote extends BaseAdmin
             return $this->error('至少需要2个有效选项');
         }
 
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
         $data['status'] = $data['status'] ?? 1;
         $voteId = Db::name('vote')->insertGetId($data);
@@ -78,6 +79,7 @@ class Vote extends BaseAdmin
             return $this->error('至少需要2个有效选项');
         }
 
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         Db::name('vote')->where('id', $id)->update($data);
 
         Db::name('vote_option')->where('vote_id', $id)->delete();
@@ -98,6 +100,8 @@ class Vote extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('vote')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('vote')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -123,6 +127,7 @@ class Vote extends BaseAdmin
         $id = $this->request->post('id', 0);
         $vote = Db::name('vote')->where('id', $id)->find();
         if (!$vote) return $this->error('投票不存在');
+        $this->validateCommunityAccess($vote['community_id'] ?? 0);
         if ($vote['status'] != 1) return $this->error('只有草稿状态才能发布');
         Db::name('vote')->where('id', $id)->update(['status' => 2]);
         return $this->success([], '发布成功');
@@ -133,6 +138,7 @@ class Vote extends BaseAdmin
         $id = $this->request->post('id', 0);
         $vote = Db::name('vote')->where('id', $id)->find();
         if (!$vote) return $this->error('投票不存在');
+        $this->validateCommunityAccess($vote['community_id'] ?? 0);
         if (!in_array($vote['status'], [1, 2])) return $this->error('当前状态不能结束投票');
         Db::name('vote')->where('id', $id)->update(['status' => 3, 'end_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '投票已结束');

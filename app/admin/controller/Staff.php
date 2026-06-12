@@ -60,6 +60,7 @@ class Staff extends BaseAdmin
         }
         $data['create_time'] = date('Y-m-d H:i:s');
         $data['entry_date'] = $data['entry_date'] ?: date('Y-m-d');
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         Db::name('staff')->insert($data);
         return $this->success([], '添加成功');
     }
@@ -84,6 +85,7 @@ class Staff extends BaseAdmin
                 return $this->error('该工号已存在');
             }
         }
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         Db::name('staff')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
     }
@@ -91,6 +93,10 @@ class Staff extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('staff')->where('id', $id)->find();
+        if ($record) {
+            $this->validateCommunityAccess($record['community_id'] ?? 0);
+        }
         Db::name('staff')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }

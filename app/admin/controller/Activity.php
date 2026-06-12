@@ -35,6 +35,7 @@ class Activity extends BaseAdmin
     public function add()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         $data['create_time'] = date('Y-m-d H:i:s');
         $data['status'] = $data['status'] ?? 2; // 默认"报名中"，业主端立即可见
         $data['current_participants'] = 0;
@@ -46,6 +47,7 @@ class Activity extends BaseAdmin
     public function edit()
     {
         $data = $this->request->post();
+        $this->validateCommunityAccess($data['community_id'] ?? 0);
         Db::name('activity')->where('id', $data['id'])->update($data);
         return $this->success([], '修改成功');
     }
@@ -53,6 +55,8 @@ class Activity extends BaseAdmin
     public function delete()
     {
         $id = $this->request->post('id', 0);
+        $record = Db::name('activity')->where('id', $id)->find();
+        if ($record) $this->validateCommunityAccess($record['community_id'] ?? 0);
         Db::name('activity')->where('id', $id)->update(['delete_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '删除成功');
     }
@@ -75,6 +79,7 @@ class Activity extends BaseAdmin
         $id = $this->request->post('id', 0);
         $activity = Db::name('activity')->where('id', $id)->find();
         if (!$activity) return $this->error('活动不存在');
+        $this->validateCommunityAccess($activity['community_id'] ?? 0);
         if ($activity['status'] != 1) return $this->error('只有草稿状态才能发布');
         Db::name('activity')->where('id', $id)->update(['status' => 2]);
         return $this->success([], '已发布，开始接受报名');
@@ -85,6 +90,7 @@ class Activity extends BaseAdmin
         $id = $this->request->post('id', 0);
         $activity = Db::name('activity')->where('id', $id)->find();
         if (!$activity) return $this->error('活动不存在');
+        $this->validateCommunityAccess($activity['community_id'] ?? 0);
         if (!in_array($activity['status'], [1, 2])) return $this->error('当前状态不能开始活动');
         Db::name('activity')->where('id', $id)->update(['status' => 3]);
         return $this->success([], '活动已开始');
@@ -95,6 +101,7 @@ class Activity extends BaseAdmin
         $id = $this->request->post('id', 0);
         $activity = Db::name('activity')->where('id', $id)->find();
         if (!$activity) return $this->error('活动不存在');
+        $this->validateCommunityAccess($activity['community_id'] ?? 0);
         if (!in_array($activity['status'], [2, 3])) return $this->error('当前状态不能结束活动');
         Db::name('activity')->where('id', $id)->update(['status' => 4, 'end_time' => date('Y-m-d H:i:s')]);
         return $this->success([], '活动已结束');
@@ -105,6 +112,7 @@ class Activity extends BaseAdmin
         $id = $this->request->post('id', 0);
         $activity = Db::name('activity')->where('id', $id)->find();
         if (!$activity) return $this->error('活动不存在');
+        $this->validateCommunityAccess($activity['community_id'] ?? 0);
         if (in_array($activity['status'], [4, 5])) return $this->error('活动已结束或已取消');
         Db::name('activity')->where('id', $id)->update(['status' => 5]);
         return $this->success([], '活动已取消');

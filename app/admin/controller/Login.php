@@ -537,6 +537,10 @@ class Login extends BaseAdmin
 
         // 获取角色和权限
         $role = Db::name('role')->where('id', $admin['role_id'])->find();
+        // 临时注入 adminInfo，确保 getCustomRolePermissions 能读取到正确的 role_id
+        // 登录不走 auth()，此时 $this->adminInfo 为空，自定义角色会因 role_id=0 回退到公共权限
+        $this->adminInfo = $admin;
+        $this->request->adminInfo = $admin;
         $allowedControllers = $admin['role_id'] == 1 ? '*' : $this->getRolePermissions($role['code'] ?? '');
         $menus = [];
         if ($admin['role_id'] == 1) {
@@ -561,10 +565,10 @@ class Login extends BaseAdmin
             }
         }
 
-        // 补充小区信息（仅角色3-7需要）
+        // 补充小区信息（小区级角色需要）
         $communityIds = $admin['community_ids'] ?? '';
         $communityName = '';
-        if (in_array($admin['role_id'], [3, 4, 5, 6, 7]) && !empty($communityIds)) {
+        if (in_array($admin['role_id'], [3, 4, 5, 6, 7, 8]) && !empty($communityIds)) {
             $ids = array_filter(explode(',', $communityIds));
             if (!empty($ids)) {
                 $communityName = Db::name('community')->where('id', intval($ids[0]))->value('name') ?? '';
@@ -584,6 +588,10 @@ class Login extends BaseAdmin
                 'community_name' => $communityName,
             ],
             'menus' => tree_list($menus),
+            'debug' => [
+                'allowedControllers' => is_array($allowedControllers) ? array_values($allowedControllers) : $allowedControllers,
+                'menuCount'          => count($menus),
+            ],
         ], $msg);
     }
 }

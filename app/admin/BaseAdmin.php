@@ -164,6 +164,44 @@ class BaseAdmin extends BaseController
     }
 
     /**
+     * 验证员工ID是否在当前管理员管辖的小区内
+     * 超管不受限；非超管只能操作管辖小区内的员工
+     * @param int $staffId
+     */
+    protected function validateStaffCommunity($staffId): void
+    {
+        $staffId = intval($staffId);
+        if ($staffId <= 0) return;
+        $roleId = $this->adminInfo['role_id'] ?? 0;
+        if ($roleId <= 2) return;
+        $boundIds = $this->request->boundCommunityIds ?? [];
+        if (empty($boundIds)) return;
+        $staff = \think\facade\Db::name('staff')->where('id', $staffId)->find();
+        if ($staff && !in_array(intval($staff['community_id'] ?? 0), $boundIds)) {
+            $this->throwError('所选员工不在您管辖的小区范围内');
+        }
+    }
+
+    /**
+     * 批量验证员工ID是否在管辖范围内
+     * @param array $staffIds
+     */
+    protected function validateStaffIdsCommunity(array $staffIds): void
+    {
+        $roleId = $this->adminInfo['role_id'] ?? 0;
+        if ($roleId <= 2) return;
+        $boundIds = $this->request->boundCommunityIds ?? [];
+        if (empty($boundIds)) return;
+        $invalidIds = \think\facade\Db::name('staff')
+            ->whereIn('id', $staffIds)
+            ->whereNotIn('community_id', $boundIds)
+            ->column('id');
+        if (!empty($invalidIds)) {
+            $this->throwError('所选员工不在您管辖的小区范围内');
+        }
+    }
+
+    /**
      * 获取角色可访问的控制器列表
      * 预定义角色(code→硬编码列表) + 自定义角色(code→读取 ds_role_menu 推导)
      */
@@ -385,6 +423,14 @@ class BaseAdmin extends BaseController
             'iot:device'             => 'Iot',
             // AI 助手管理
             'ai:assistant'           => 'AiAssistant',
+            // 停车 - 道闸
+            'parking:gateConfig'     => 'GateConfig',
+            'parking:gateDevice'     => 'GateDevice',
+            // 安防 - 门禁
+            'security:access_config' => 'AccessConfig',
+            'security:access_device' => 'AccessDevice',
+            // 监控管理
+            'monitoring:surveillanceConfig' => 'SurveillanceConfig',
         ];
     }
 }

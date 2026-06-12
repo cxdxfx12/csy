@@ -37,6 +37,8 @@ class RepairWorker extends BaseAdmin
     {
         $data = $this->request->post();
         unset($data['community_name']); // 表中无此字段，仅用于前端展示
+        // 去除无关字段，避免干扰 INSERT
+        unset($data['id']);
         if (isset($data['specialty'])) {
             $data['type'] = $data['specialty'];
             unset($data['specialty']);
@@ -48,18 +50,38 @@ class RepairWorker extends BaseAdmin
             if (!$staff) {
                 return $this->error('所选员工不存在或已离职');
             }
+            // 验证该员工是否在当前管理员管辖小区内
+            $boundIds = $this->request->boundCommunityIds;
+            if (is_array($boundIds) && count($boundIds) > 0) {
+                if (!in_array(intval($staff['community_id'] ?? 0), $boundIds)) {
+                    return $this->error('所选员工不在您管辖的小区范围内');
+                }
+            }
             $data['name'] = $staff['realname'];
             $data['phone'] = $staff['phone'];
             $data['community_id'] = $staff['community_id'] ?? 0;
+        }
+        // 如果 community_id 为空或未设置，取管理员管辖的第一个小区
+        if (empty($data['community_id']) && !empty($this->request->boundCommunityIds)) {
+            $data['community_id'] = is_array($this->request->boundCommunityIds)
+                ? $this->request->boundCommunityIds[0]
+                : $this->request->boundCommunityIds;
         }
         // 密码处理
         if (!empty($data['password'])) {
             $data['password'] = encrypt_password($data['password']);
         } else {
-            unset($data['password']);
+            $data['password'] = ''; // NOT NULL 字段必须给值
         }
         $data['create_time'] = date('Y-m-d H:i:s');
-        Db::name('repair_worker')->insert($data);
+
+        try {
+            Db::name('repair_worker')->insert($data);
+        } catch (\Throwable $e) {
+            $msg = '添加维修人员失败: ' . $e->getMessage();
+            file_put_contents(RUNTIME_PATH . 'log' . DS . 'error.log', date('Y-m-d H:i:s') . ' ' . $msg . ' | data=' . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
+            return $this->error('添加失败：' . $e->getMessage());
+        }
         return $this->success([], '添加成功');
     }
 
@@ -77,6 +99,13 @@ class RepairWorker extends BaseAdmin
             $staff = Db::name('staff')->where('id', $staffId)->where('delete_time', null)->find();
             if (!$staff) {
                 return $this->error('所选员工不存在或已离职');
+            }
+            // 验证该员工是否在当前管理员管辖小区内
+            $boundIds = $this->request->boundCommunityIds;
+            if (is_array($boundIds) && count($boundIds) > 0) {
+                if (!in_array(intval($staff['community_id'] ?? 0), $boundIds)) {
+                    return $this->error('所选员工不在您管辖的小区范围内');
+                }
             }
             $data['name'] = $staff['realname'];
             $data['phone'] = $staff['phone'];
@@ -112,6 +141,11 @@ class RepairWorker extends BaseAdmin
         if ($includeId) $usedIds = $usedIds->where('staff_id', '<>', intval($includeId));
         $usedIds = $usedIds->column('staff_id');
         $query = Db::name('staff')->where('delete_time', null)->where('status', 1);
+        // 限制在当前管理员管辖的小区范围内
+        $boundIds = $this->request->boundCommunityIds;
+        if (is_array($boundIds) && count($boundIds) > 0) {
+            $query->whereIn('community_id', $boundIds);
+        }
         if ($communityId) $query->where('community_id', $communityId);
         if (!empty($usedIds)) $query->whereNotIn('id', $usedIds);
         $list = $query->field('id, job_no, realname, phone, department, position, community_id')

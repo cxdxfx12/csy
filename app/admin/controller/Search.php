@@ -45,7 +45,7 @@ class Search extends BaseAdmin
         $this->searchVehicle($keyword, $cid, $boundIds, $results);
 
         // ========== 8. 搜索员工 ==========
-        $this->searchStaff($keyword, $results);
+        $this->searchStaff($keyword, $cid, $boundIds, $results);
 
         // ========== 9. 搜索公告 ==========
         $this->searchNotice($keyword, $cid, $boundIds, $results);
@@ -340,13 +340,19 @@ class Search extends BaseAdmin
     }
 
     // ========== 员工搜索 ==========
-    private function searchStaff($keyword, &$results)
+    private function searchStaff($keyword, $cid, $boundIds, &$results)
     {
-        $list = Db::name('staff')
+        $query = Db::name('staff')
             ->field('id, realname, phone, department, position, status')
             ->whereNull('delete_time')
-            ->where('realname|phone|department|position', 'like', "%{$keyword}%")
-            ->limit(8)->order('id', 'desc')->select();
+            ->where('realname|phone|department|position', 'like', "%{$keyword}%");
+        // 小区角色数据隔离
+        if ($cid === -1) {
+            $query->where('community_id', 'in', $boundIds);
+        } elseif ($cid > 0) {
+            $query->where('community_id', $cid);
+        }
+        $list = $query->limit(8)->order('id', 'desc')->select();
 
         foreach ($list as $item) {
             $results[] = [

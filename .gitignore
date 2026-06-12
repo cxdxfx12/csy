@@ -29,6 +29,16 @@ Thumbs.db
 # 打包/压缩
 *.rar
 *.zip
+*.tar.gz
+
+# 前端构建产物
+/public/admin/assets/
+
+# 临时文件
+/*.txt
+/history_*.md
+/_menu_perms.txt
+/_admin_build.tar.gz
 
 # 图片截图
 *.png

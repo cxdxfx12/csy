@@ -98,7 +98,13 @@ class Salary extends BaseAdmin
     {
         $data = $this->request->post();
         $month = $data['salary_month'] ?? date('Y-m');
-        $staffIds = Db::name('staff')->where('status', 1)->column('id');
+        $staffQuery = Db::name('staff')->where('status', 1);
+        // 小区角色数据隔离：只生成管辖小区内员工的工资
+        $boundIds = $this->request->boundCommunityIds;
+        if (is_array($boundIds) && count($boundIds) > 0) {
+            $staffQuery->whereIn('community_id', $boundIds);
+        }
+        $staffIds = $staffQuery->column('id');
 
         $count = 0;
         foreach ($staffIds as $sid) {
