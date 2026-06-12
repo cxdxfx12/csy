@@ -23,7 +23,7 @@ class Device extends BaseAdmin
              FROM ds_access_device WHERE delete_time IS NULL)
         ";
 
-        $pdo = Db::name('device')->getPdo();
+        $pdo = Db::connect()->getPdo();
         $where = [];
         $binds = [];
         if ($cid === -1 && !empty($this->request->boundCommunityIds)) {
@@ -111,7 +111,7 @@ class Device extends BaseAdmin
 
         $whereSQL = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        $pdo = Db::name('device')->getPdo();
+        $pdo = Db::connect()->getPdo();
 
         // 计数
         $countSQL = "SELECT COUNT(*) as cnt FROM ({$unionSQL}) as u {$whereSQL}";

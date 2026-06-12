@@ -28,7 +28,7 @@ class AdminUser extends BaseAdmin
         $roleNames = array_to_keyval(Db::name('role')->select());
         // 仅需要小区隔离的角色才查询小区名
         $needCommunityRoles = [3, 4, 5, 6, 7, 8]; // 物管经理、客服主管、财务专员、安保主管、工程主管、小区管理员
-        $needCommunity = !empty(array_intersect(array_column($list, 'role_id'), $needCommunityRoles));
+        $needCommunity = !empty(array_intersect(array_column($list->toArray(), 'role_id'), $needCommunityRoles));
         $communityNames = [];
         if ($needCommunity) {
             $communityNames = array_to_keyval(Db::name('community')->whereNull('delete_time')->select());

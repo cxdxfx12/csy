@@ -49,7 +49,7 @@
     </el-dialog>
 
     <el-dialog v-model="permVisible" title="权限设置" width="480px" destroy-on-close>
-      <el-tree ref="permTreeRef" :data="menus" :props="{ label: 'name', children: 'children' }" show-checkbox node-key="id" :default-checked-keys="checkedIds" />
+      <el-tree ref="permTreeRef" :data="menus" :props="{ label: 'name', children: 'children' }" show-checkbox node-key="id" :default-checked-keys="checkedIds" :default-expanded-keys="defaultExpandedIds" />
       <template #footer>
         <el-button @click="permVisible = false">取消</el-button>
         <el-button type="primary" @click="submitPermission" :loading="permSubmitting">保存</el-button>
@@ -76,6 +76,7 @@ const permTreeRef = ref<any>(null)
 const formTitle = ref('添加角色')
 const menus = ref<any[]>([])
 const checkedIds = ref<number[]>([])
+const defaultExpandedIds = ref<number[]>([])
 const permRoleId = ref(0)
 
 const query = reactive({ keyword: '', page: 1, limit: 15 })
@@ -118,6 +119,8 @@ async function openPermission(row: any) {
     const r = await apiGet('/admin/role/permission', { role_id: row.id })
     menus.value = r.data?.menus || []
     checkedIds.value = r.data?.checkedMenuIds || []
+    // 默认展开所有一级菜单
+    defaultExpandedIds.value = (r.data?.menus || []).filter((m: any) => !m.parent_id).map((m: any) => m.id)
     permVisible.value = true
   } catch {}
 }
@@ -128,16 +131,16 @@ watch(permVisible, (val) => {
   nextTick(() => {
     setTimeout(() => {
       permTreeRef.value?.setCheckedKeys(checkedIds.value)
-    }, 50)
+    }, 80)
   })
 })
 
 async function submitPermission() {
+  // 默认父子联动模式：getCheckedKeys 只返回全选的叶子节点
   const ids = permTreeRef.value?.getCheckedKeys() || []
-  const halfIds = permTreeRef.value?.getHalfCheckedKeys() || []
   permSubmitting.value = true
   try {
-    await apiPost('/admin/role/savePermission', { role_id: permRoleId.value, menu_ids: [...ids, ...halfIds] })
+    await apiPost('/admin/role/savePermission', { role_id: permRoleId.value, menu_ids: ids })
     ElMessage.success('权限保存成功')
     permVisible.value = false
   } finally { permSubmitting.value = false }

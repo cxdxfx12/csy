@@ -130,7 +130,7 @@ class ManagerVote extends BaseManager
 
         $options = Db::name('vote_option')->where('vote_id', $id)->order('sort', 'asc')->select();
         $vote['options']      = $options;
-        $vote['total_votes']  = array_sum(array_column($options, 'count'));
+        $vote['total_votes']  = array_sum(array_column($options->toArray(), 'count'));
 
         return $this->success($vote);
     }

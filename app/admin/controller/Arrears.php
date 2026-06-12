@@ -15,7 +15,7 @@ class Arrears extends BaseAdmin
         $cid = $this->getFilteredCommunityId();
         $keyword = trim($this->request->param('keyword', ''));
 
-        $pdo = Db::name('bill')->getPdo();
+        $pdo = Db::connect()->getPdo();
 
         // 子查询：每间房的欠费汇总
         $billSubWhere = "WHERE b.delete_time IS NULL AND b.status IN (1,2)";
@@ -131,8 +131,8 @@ class Arrears extends BaseAdmin
         $roomsData = $this->getOwnerArrearsRooms($ownerId);
         if (empty($roomsData)) return $this->error('该业主名下无欠费房间');
 
-        $pdo = Db::name('bill')->getPdo();
-        $pdo->beginTransaction();
+        $pdo = Db::connect()->getPdo();
+        Db::startTrans();
         try {
             $now = date('Y-m-d H:i:s');
             $allBillDetails = [];
@@ -184,9 +184,9 @@ class Arrears extends BaseAdmin
                 }
             }
 
-            $pdo->commit();
+            Db::commit();
         } catch (\Exception $e) {
-            $pdo->rollBack();
+            Db::rollback();
             return $this->error('催单失败：' . $e->getMessage());
         }
 
@@ -306,7 +306,7 @@ class Arrears extends BaseAdmin
         $ownerId = intval($this->request->param('owner_id', 0));
         if (!$ownerId) return $this->error('请选择业主');
 
-        $pdo = Db::name('bill_dunning')->getPdo();
+        $pdo = Db::connect()->getPdo();
         $stmt = $pdo->prepare("
             SELECT d.*, r.room_number, r.building_name, a.nickname as admin_name 
             FROM ds_bill_dunning d 
@@ -395,8 +395,8 @@ class Arrears extends BaseAdmin
      */
     private function recordOwnerDunning($roomsData, $ownerId, $remark, $channel)
     {
-        $pdo = Db::name('bill')->getPdo();
-        $pdo->beginTransaction();
+        $pdo = Db::connect()->getPdo();
+        Db::startTrans();
         try {
             $now = date('Y-m-d H:i:s');
             foreach ($roomsData as $rd) {
@@ -423,9 +423,9 @@ class Arrears extends BaseAdmin
                     $stmt->execute([$now, $b['id']]);
                 }
             }
-            $pdo->commit();
+            Db::commit();
         } catch (\Exception $e) {
-            $pdo->rollback();
+            Db::rollback();
             throw $e;
         }
     }

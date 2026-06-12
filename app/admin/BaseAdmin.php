@@ -210,12 +210,17 @@ class BaseAdmin extends BaseController
         $base = $this->getHardcodedControllersForCode($code);
 
         if ($base !== null) {
-            // 预定义角色（role_id>2 且非 *）：也支持通过 UI/role_menu 表动态扩展权限
-            // 只做加法不做减法，硬编码的白名单始终保留
             if ($base !== '*') {
                 $roleId = $this->adminInfo['role_id'] ?? 0;
                 if ($roleId > 2) {
-                    // 传入空 common，只获取 role_menu 表中实际分配的额外控制器
+                    // 如果 role_menu 表中有记录，说明用户通过 UI 设置过权限，完全按 DB 来
+                    $hasRoleMenu = Db::name('role_menu')->where('role_id', $roleId)->count() > 0;
+                    if ($hasRoleMenu) {
+                        // 用 DB 记录推导控制器，兜底公共模块
+                        $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community', 'Search'];
+                        return $this->getCustomRolePermissions($common);
+                    }
+                    // 无 DB 记录 → 首次使用，用硬编码兜底，同时合并动态（做加法）
                     $dynamic = $this->getCustomRolePermissions([]);
                     if (!empty($dynamic)) {
                         $base = array_values(array_unique(array_merge($base, $dynamic)));
@@ -234,7 +239,7 @@ class BaseAdmin extends BaseController
      * 获取预定义角色的硬编码控制器列表（含公共模块）
      * @return array|null null=非预定义角色, '*'=全部权限, array=控制器名列表
      */
-    protected function getHardcodedControllersForCode(string $code): ?array
+    protected function getHardcodedControllersForCode(string $code): array|string|null
     {
         $common = ['Profile', 'Dashboard', 'Upload', 'Login', 'AdminBadge', 'Community', 'Search'];
 
@@ -285,7 +290,7 @@ class BaseAdmin extends BaseController
      * 根据预定义角色编码和全量菜单，返回硬编码权限对应的菜单ID集合
      * 用于权限管理界面回显已勾选的菜单
      */
-    protected function getHardcodedCheckedMenuIds(array $role, array $allMenus): array
+    protected function getHardcodedCheckedMenuIds(array $role, $allMenus): array
     {
         $code = $role['code'] ?? '';
         $controllers = $this->getHardcodedControllersForCode($code);
@@ -293,7 +298,7 @@ class BaseAdmin extends BaseController
 
         // 超管：所有菜单
         if ($controllers === '*') {
-            return array_column($allMenus, 'id');
+            return array_column($allMenus->toArray(), 'id');
         }
 
         // 控制器 → 菜单ID 映射

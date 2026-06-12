@@ -74,31 +74,21 @@ class Role extends BaseAdmin
         $allMenus = Db::name('menu')->where('status', 1)->order('sort', 'asc')->select();
         $checkedMenuIds = Db::name('role_menu')->where('role_id', $roleId)->column('menu_id');
 
-        // 预定义角色（admin/manager/service/finance/security/engineer）：
-        // 硬编码权限对应的菜单也要显示为已勾选
-        $role = Db::name('role')->where('id', $roleId)->find();
-        if ($role) {
-            $hardcodedIds = $this->getHardcodedCheckedMenuIds($role, $allMenus);
-            if (!empty($hardcodedIds)) {
-                $checkedMenuIds = array_values(array_unique(array_merge($checkedMenuIds, $hardcodedIds)));
-            }
-        }
-
-        // 只返回叶子节点的选中ID，避免 el-tree setCheckedKeys 时
-        // 父节点被设为 checked 后自动选中所有子节点
-        $parentIds = [];
+        // 不再合并硬编码权限基线：用户通过 UI 保存什么就是什么，回显与 DB 完全一致。
+        $checkedMenuIds = array_values($checkedMenuIds);
+        
+        // 确保 checkedMenuIds 中的 ID 都在菜单表中存在
+        $allMenuIds = [];
         foreach ($allMenus as $menu) {
-            if ($menu['parent_id'] > 0) {
-                $parentIds[$menu['parent_id']] = true;
-            }
+            $allMenuIds[$menu['id']] = true;
         }
-        $leafCheckedIds = array_values(array_filter($checkedMenuIds, function ($id) use ($parentIds) {
-            return !isset($parentIds[$id]);
+        $checkedMenuIds = array_values(array_filter($checkedMenuIds, function ($id) use ($allMenuIds) {
+            return isset($allMenuIds[$id]);
         }));
 
         return $this->success([
             'menus'           => tree_list($allMenus),
-            'checkedMenuIds'  => $leafCheckedIds,
+            'checkedMenuIds'  => $checkedMenuIds,
         ]);
     }
 
@@ -118,5 +108,31 @@ class Role extends BaseAdmin
             Db::name('role_menu')->insertAll($data);
         }
         return $this->success([], '权限保存成功');
+    }
+
+    // 临时诊断：查看某角色当前权限（使用后请删除）
+    public function debugMenu()
+    {
+        $roleId = (int)$this->request->param('role_id', 3);
+        $role = Db::name('role')->where('id', $roleId)->find();
+        $rows = Db::name('role_menu')->alias('rm')
+            ->join('ds_menu m', 'm.id = rm.menu_id')
+            ->where('rm.role_id', $roleId)
+            ->field('rm.menu_id, m.name')
+            ->order('rm.menu_id')
+            ->select();
+        return $this->success([
+            'role' => $role['name'] ?? '?',
+            'count' => count($rows),
+            'items' => $rows,
+        ]);
+    }
+
+    // 临时：清空某角色权限（使用后请删除）
+    public function resetPermission()
+    {
+        $roleId = (int)$this->request->post('role_id', 3);
+        Db::name('role_menu')->where('role_id', $roleId)->delete();
+        return $this->success([], '已清空权限');
     }
 }

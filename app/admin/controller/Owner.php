@@ -40,11 +40,11 @@ class Owner extends BaseAdmin
         $list = $listQuery->order('o.id', 'desc')->page($page, $limit)->select();
 
         // 附录：关联房间（批量查询，避免 N+1）
-        $ownerIds = array_unique(array_column($list, 'id'));
+        $ownerIds = array_unique(array_column($list->toArray(), 'id'));
         $roomMap = [];
         if (!empty($ownerIds)) {
             $placeholders = implode(',', array_fill(0, count($ownerIds), '?'));
-            $pdo = Db::name('owner_room')->getPdo();
+            $pdo = Db::connect()->getPdo();
             $stmt = $pdo->prepare(
                 "SELECT ocr.owner_id, r.room_number, r.building_name, r.area 
                  FROM `ds_owner_room` ocr 
@@ -109,7 +109,7 @@ class Owner extends BaseAdmin
         $data['register_time'] = date('Y-m-d H:i:s');
         $data['create_time']   = date('Y-m-d H:i:s');
 
-        Db::name('owner')->getPdo()->beginTransaction();
+        Db::startTrans();
         try {
             $ownerId = Db::name('owner')->insertGetId($data);
 
@@ -127,9 +127,9 @@ class Owner extends BaseAdmin
                 ]);
                 Db::name('community')->where('id', $data['community_id'])->inc('owner_count')->update();
             }
-            Db::name('owner')->getPdo()->commit();
+            Db::commit();
         } catch (\Exception $e) {
-            Db::name('owner')->getPdo()->rollBack();
+            Db::rollback();
             return $this->error('添加失败：' . $e->getMessage());
         }
         return $this->success([], '添加成功');
@@ -175,7 +175,7 @@ class Owner extends BaseAdmin
             }
         }
 
-        Db::name('owner')->getPdo()->beginTransaction();
+        Db::startTrans();
         try {
             Db::name('owner')->where('id', $id)->update($data);
 
@@ -210,9 +210,9 @@ class Owner extends BaseAdmin
                     'owner_id' => $id, 'status' => 2,
                 ]);
             }
-            Db::name('owner')->getPdo()->commit();
+            Db::commit();
         } catch (\Exception $e) {
-            Db::name('owner')->getPdo()->rollBack();
+            Db::rollback();
             return $this->error('修改失败：' . $e->getMessage());
         }
         return $this->success([], '修改成功');

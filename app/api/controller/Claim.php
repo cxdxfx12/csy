@@ -72,7 +72,7 @@ class Claim extends BaseApi
             return $this->error('该手机号对应的业主暂无登记房产，请联系物业');
         }
 
-        Db::name('owner')->getPdo()->beginTransaction();
+        Db::startTrans();
         try {
             // 将目标业主的房产归属转移到当前微信用户
             foreach ($rooms as $room) {
@@ -146,14 +146,14 @@ class Claim extends BaseApi
                 ->whereNull('delete_time')
                 ->update(['owner_id' => $ownerId]);
 
-            Db::name('owner')->getPdo()->commit();
+            Db::commit();
 
             return $this->success([
                 'room_count' => count($rooms),
                 'realname'   => $updateData['realname'] ?? '微信用户',
             ], '认领成功！已绑定 ' . count($rooms) . ' 套房产');
         } catch (\Exception $e) {
-            Db::name('owner')->getPdo()->rollBack();
+            Db::rollback();
             // 调试日志，生产环境可写文件
             error_log('[Claim] ' . $e->getMessage() . ' line:' . $e->getLine());
             return $this->error('认领失败，请稍后重试或联系物业');

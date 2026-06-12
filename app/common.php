@@ -147,7 +147,7 @@ if (!function_exists('tree_list')) {
     /**
      * 将数据转为树形结构
      */
-    function tree_list(array $data, int $parentId = 0, string $idField = 'id', string $parentField = 'parent_id', string $childrenField = 'children'): array
+    function tree_list(iterable $data, int $parentId = 0, string $idField = 'id', string $parentField = 'parent_id', string $childrenField = 'children'): array
     {
         $tree = [];
         foreach ($data as $item) {
@@ -290,7 +290,7 @@ if (!function_exists('array_to_keyval')) {
     /**
      * 数组转键值对
      */
-    function array_to_keyval(array $list, string $keyField = 'id', string $valField = 'name'): array
+    function array_to_keyval(iterable $list, string $keyField = 'id', string $valField = 'name'): array
     {
         $result = [];
         foreach ($list as $item) {

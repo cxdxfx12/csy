@@ -46,7 +46,7 @@ class IotData extends BaseController
             ->select();
 
         // 批量获取最新数据：先取全部数据按id倒序，PHP中去重只留每个设备第一条
-        $didList = array_column($devices, 'id');
+        $didList = array_column($devices->toArray(), 'id');
         $latestData = [];
         if (!empty($didList)) {
             $dataRows = Db::name('iot_device_data')
