@@ -32,6 +32,11 @@ abstract class BaseController
         return new Json(['code' => 0, 'msg' => '获取成功', 'data' => $list, 'count' => $total, 'time' => time()]);
     }
 
+    protected function tableWithSummary($list, int $total = 0, array $summary = []): Json
+    {
+        return new Json(['code' => 0, 'msg' => '获取成功', 'data' => $list, 'count' => $total, '_summary' => $summary, 'time' => time()]);
+    }
+
     protected function getPage(): array
     {
         $page = (int) ($_REQUEST['page'] ?? 1);

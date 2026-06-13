@@ -16,18 +16,18 @@
   </div>
 
   <!-- PC 桌面端视图 -->
-  <el-container v-else class="main-container">
-    <el-aside :width="appStore.sidebarCollapsed ? '64px' : '240px'" class="main-sidebar">
+  <el-container v-else class="main-container" :class="{ 'bigscreen-mode': isBigscreen }">
+    <el-aside v-if="!isBigscreen" :width="appStore.sidebarCollapsed ? '64px' : '240px'" class="main-sidebar">
       <Sidebar />
     </el-aside>
     <el-container>
-      <el-header class="main-header" :style="{ left: appStore.sidebarCollapsed ? '64px' : '240px' }">
+      <el-header v-if="!isBigscreen" class="main-header" :style="{ left: appStore.sidebarCollapsed ? '64px' : '240px' }">
         <HeaderBar />
       </el-header>
-      <TabsView />
-      <el-main class="main-content">
+      <TabsView v-if="!isBigscreen" />
+      <el-main class="main-content" :style="isBigscreen ? { marginTop: 0, padding: 0 } : {}">
         <!-- 高档页面横幅 -->
-        <div class="premium-banner" v-if="currentTitle">
+        <div class="premium-banner" v-if="currentTitle && !isBigscreen">
           <div class="banner-bg-layer"></div>
           <div class="banner-glow glow-1"></div>
           <div class="banner-glow glow-2"></div>
@@ -51,7 +51,7 @@
       </el-main>
 
       <!-- 版权信息 -->
-      <footer class="site-footer">
+      <footer v-if="!isBigscreen" class="site-footer">
         <div class="footer-inner">
           <img :src="monkeyIco" alt="" class="footer-logo" />
           <div class="footer-info">
@@ -97,6 +97,7 @@ const route = useRoute()
 
 const currentTitle = computed(() => (route.meta.title as string) || '')
 const isMobileView = ref(sessionStorage.getItem('_mobile_view') === '1')
+const isBigscreen = computed(() => route.path === '/bigscreen' || route.path.startsWith('/bigscreen'))
 
 // 监听路由变化：如果不在手机视图模式但 sessionStorage 有标记，清除标记
 // 如果路由变为手机端路径，也清除标记
@@ -129,6 +130,7 @@ onMounted(async () => {
 
 <style scoped>
 .main-container { min-height: 100vh; }
+.bigscreen-mode { overflow: hidden; }
 .main-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-1); transition: width 0.3s, background 0.3s, border-color 0.3s; overflow: hidden; display: flex; flex-direction: column; }
 .main-header { position: fixed; top: 0; right: 0; height: 60px; background: var(--bg-header); border-bottom: 1px solid var(--border-1); display: flex; align-items: center; padding: 0 20px; z-index: 9999; transition: left 0.3s, background 0.3s, border-color 0.3s; }
 .main-content { margin-top: 60px; padding: 20px; background: var(--bg-content); flex: 1; overflow: auto; transition: background 0.3s; }

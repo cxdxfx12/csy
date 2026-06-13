@@ -35,7 +35,19 @@ class Bill extends BaseAdmin
             ->where($where)
             ->page($page, $limit)->order('b.id', 'desc')->select();
 
-        return $this->table($list, $total);
+        // 统计摘要（供移动端使用）
+        $summaryQ = Db::name('bill')->alias('b')->where($where);
+        $pendingCount = (clone $summaryQ)->where('b.status', 1)->count();
+        $partialCount = (clone $summaryQ)->where('b.status', 2)->count();
+        $paidCount = (clone $summaryQ)->where('b.status', 3)->count();
+        $totalAmount = $summaryQ->sum('b.total_amount');
+
+        return $this->tableWithSummary($list, $total, [
+            'pending'      => $pendingCount,
+            'partial'      => $partialCount,
+            'paid'         => $paidCount,
+            'total_amount' => round((float)$totalAmount, 2),
+        ]);
     }
 
     public function add()

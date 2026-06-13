@@ -38,7 +38,21 @@ class RepairOrder extends BaseAdmin
             $row['type_name'] = $typeMap[$row['type']] ?? '未知';
         }
 
-        return $this->table($list, $total);
+        // 统计各状态数量（用于移动端卡片）
+        $summaryBase = Db::name('repair_order')->alias('ro')
+            ->where($where);
+        if ($status !== '') {
+            $_summary = ['pending' => 0, 'assigned' => 0, 'processing' => 0, 'completed' => 0];
+        } else {
+            $_summary = [
+                'pending'     => (clone $summaryBase)->where('ro.status', 1)->count(),
+                'assigned'    => (clone $summaryBase)->where('ro.status', 2)->count(),
+                'processing'  => (clone $summaryBase)->where('ro.status', 3)->count(),
+                'completed'   => (clone $summaryBase)->where('ro.status', 4)->count(),
+            ];
+        }
+
+        return $this->tableWithSummary($list, $total, $_summary);
     }
 
     public function add()

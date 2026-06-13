@@ -17,7 +17,8 @@
         "intervention/image": "^3.3",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "monolog/monolog": "^3.0",
-        "gregwar/captcha": "^1.2"
+        "gregwar/captcha": "^1.2",
+        "topthink/framework": "^8.1"
     },
     "autoload": {
         "psr-4": {

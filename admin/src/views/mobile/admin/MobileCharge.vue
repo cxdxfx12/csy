@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="mcc-right">
-          <span class="mcc-amount">¥{{ item.price }}/{{ item.unit || '户' }}</span>
+          <span class="mcc-amount">¥{{ item.unit_price }}/{{ item.unit || '户' }}</span>
         </div>
       </div>
 
